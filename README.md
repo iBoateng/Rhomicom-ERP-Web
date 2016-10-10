@@ -36,7 +36,7 @@ Sofware Requirements
 =======================
 1. All Operating Systems
 2. PostgreSQL Database 9.3 or later (Can be hosted on any Operating System)
-4. Java 1.6 or later
+3. Java 1.6 or later
 
 =====================
 Hardware Requirements
