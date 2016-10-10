@@ -46,9 +46,8 @@ Same hardware requirements for above Sofware requirements
 ==================================================
 Technologies/Tools Used (Credits/Acknowledgements)
 ==================================================
-1. Java-(Netbeans)
+1. Java 1.8-(Netbeans 8.1)
 2. PHP 5.6 or later
-3. HTML/CSS (Bootstrap3.3.6)
-4. javascript/jQuery 1.11.3
-5. TIBCO JasperSoft Studio 6.2.0
-6. PostgreSQL Database 9.3
+3. HTML/CSS/javascript (Bootstrap3.3.6, Datatables Plugin, Bootstrap Dialog, SummerNote,jQuery 1.11.3, fontawesome 4)
+4. TIBCO JasperSoft Studio 6.2.0
+5. PostgreSQL Database 9.3
