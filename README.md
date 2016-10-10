@@ -5,6 +5,7 @@ Rhomicom Enterprise Resource Planning System is a complete ERP system proudly st
 The company behind this project is Rhomicom Systems Tech. Ltd.(http://rhomicom.com)
 The software can be used to manage both backend and front-end operations of all kinds of institutions and organisations.
 The sample is currently hosted on https://portal.rhomicom.com
+
 =======================================
 Various Modules being worked on are
 =======================================
@@ -36,6 +37,7 @@ Sofware Requirements
 1. All Operating Systems
 2. PostgreSQL Database 9.3 or later (Can be hosted on any Operating System)
 4. Java 1.6 or later
+
 =====================
 Hardware Requirements
 =====================
