@@ -1,7 +1,7 @@
 <?php $cntent = "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
 					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
-						<span style=\"text-decoration:underline;\">Home</span><span class=\"divider\"> > </span>
+						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> / </span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
 						<span style=\"text-decoration:none;\">My Inbox</span>

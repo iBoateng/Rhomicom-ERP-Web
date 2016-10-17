@@ -8,8 +8,6 @@ body {
     padding-bottom: 40px;
     color: #5a5a5a;
 }
-
-
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
 
@@ -113,12 +111,12 @@ body {
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     .carousel .item {height: 250px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 400px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 300px !important;}
     .carousel-caption h1 {font-size:30px !important;}
 }
 @media screen and (min-width: 1200px) {
     .carousel .item {height: 320px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 450px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 350px !important;}
     .carousel-caption h1 {font-size:36px !important;}
 }
 
@@ -483,9 +481,11 @@ li { cursor: pointer; cursor: hand; }
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
+    margin-bottom: 10px !important;
 }
-.breadcrumb li:hover {
+.breadcrumb li span:first-child:hover {
     color:#ccc !important;
+    text-decoration: underline !important;
 }
 /* Start by setting display:none to make this hidden.
    Then we position it in relation to the viewport window
@@ -517,7 +517,7 @@ li { cursor: pointer; cursor: hand; }
 /* When the body has the loading class, we turn
    the scrollbar off with overflow:hidden */
 body.mdlloading {
-    overflow: hidden;   
+    overflow: auto;   
 }
 
 /* Anytime the body has the loading class, our
@@ -527,4 +527,58 @@ body.mdlloading .modalLdng {
 }
 .nav>li>a>img {
     max-width: 45px !important;
+}
+.custDiv{
+    margin: 0px;
+    min-height: 400px;
+    padding: 10px;
+    border:1px solid #eee;
+    border-top: none !important;
+}
+.mainMenuCells{
+    margin: 3px;
+    padding: 10px;
+}
+#img1Test,#imgQrCode{
+    width: 203px;
+    height: 249px;
+}
+#input1Test{
+    max-width:100%;
+}
+.basic_person_fs1{
+    border: 1px solid #eee !important;
+    padding: 0 20px 5px 10px !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+    box-shadow:  0px 0px 0px 0px #000;
+    min-height: 385px;
+    border-radius: 10px;
+}
+.basic_person_fs2{
+    border: 1px solid #eee !important;
+    padding: 0 20px 10px 10px !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+    box-shadow:  0px 0px 0px 0px #000;
+    min-height: 330px;
+    border-radius: 10px;
+}
+.basic_person_fs3{
+    border: 1px solid #eee !important;
+    padding: 0 20px 5px 10px !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+    box-shadow:  0px 0px 0px 0px #000;
+    min-height: 290px;
+    border-radius: 10px;
+}
+.basic_person_lg{
+    border: 1px solid #eee !important;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+    box-shadow:  0px 0px 0px 0px #000;
+    text-align: center;
 }

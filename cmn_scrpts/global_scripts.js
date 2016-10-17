@@ -120,7 +120,6 @@ function openATab(slctr, linkArgs)
         $body = $("body");
         var $this = $(slctr + 'tab');
         var targ = slctr;
-        $this.tab('show');
         var xmlhttp;
         if (window.XMLHttpRequest)
         {
@@ -134,52 +133,26 @@ function openATab(slctr, linkArgs)
         {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
             {
-                if (linkArgs == 'grp=40&typ=2')
+                if (linkArgs.indexOf("grp=40&typ=2") !== -1)
                 {
-                    loadCss("cmn_scrpts/bootstrap336/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css", function () {
-                    });
-                    /* loadCss("cmn_scrpts/datatables/DataTables-1.10.11/css/jquery.dataTables.min.css", function () {
-                     });*/
-                    loadScript("cmn_scrpts/bootstrap336/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js", function () {
-                        loadScript("cmn_scrpts/bootstrap336/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js", function () {
-                            $(targ).html(xmlhttp.responseText);
-                            $(document).ready(function () {
-                                var table = $('#example').DataTable({
-                                    "scrollX": true
-                                });
-                                $('#example tbody').on('click', 'tr', function () {
-                                    if ($(this).hasClass('selected')) {
-                                        $(this).removeClass('selected');
-                                    } else {
-                                        table.$('tr.selected').removeClass('selected');
-                                        $(this).addClass('selected');
-                                    }
-                                });
-                                $('#example tbody')
-                                        .on('mouseenter', 'tr', function () {
-                                            if ($(this).hasClass('highlight')) {
-                                                $(this).removeClass('highlight');
-                                            } else {
-                                                table.$('tr.highlight').removeClass('highlight');
-                                                $(this).addClass('highlight');
-                                            }
-                                            /*var colIdx = table.cell(this).index().row;
-                                             $(table.cells().nodes()).removeClass('highlight');
-                                             $(table.row(colIdx).nodes()).addClass('highlight');*/
-                                        });
-                                $("#example td").eq(2).html(
-                                        "<button type=\"button\" class=\"btn btn-primary btn-sm\">" +
-                                        "<span class=\"glyphicon glyphicon-star\" aria-hidden=\"true\"></span></button>");
-                            });
-
-                        });
-
-                    });
-                } else
+                    $this.tab('show');
+                    loadScript("app/cmncde/myinbox.js", function () {
+                    prepareInbox($this, $body, targ, xmlhttp.responseText);});
+                }
+                else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
+                {
+                    loadScript("app/prs/prsn.js", function () {
+                    $(targ).html(xmlhttp.responseText);
+                $this.tab('show');
+                $body.removeClass("mdlloading");
+                }); 
+            }
+                else
                 {
                     $(targ).html(xmlhttp.responseText);
-                }
+                $this.tab('show');
                 $body.removeClass("mdlloading");
+                }
             }
         };
         xmlhttp.open("POST", "index.php", true);

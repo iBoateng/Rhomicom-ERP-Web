@@ -78,10 +78,10 @@ if (strpos($srchFor, "%") === FALSE) {
 $cntent = "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
 					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
-						<span style=\"text-decoration:underline;\">Home</span><span class=\"divider\"> > </span>
+						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> / </span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:underline;\">All Modules</span><span class=\"divider\"> > </span>
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"> / </span>
 					</li>";
 if ($lgn_num > 0 && $canview === true) {
     //echo $pgNo;
@@ -185,7 +185,7 @@ if ($lgn_num > 0 && $canview === true) {
 						<span style=\"text-decoration:none;\">Person Records Menu</span>
 					</li>
                                        </ul>
-                                     </div><br/>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
+                                     </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
                     padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
       <h3>FUNCTIONS UNDER THE PERSONAL RECORDS MANAGER</h3>
       <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
@@ -245,35 +245,27 @@ if ($lgn_num > 0 && $canview === true) {
     } else {
         $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=8&typ=1');\">
-						<span style=\"text-decoration:underline;\">Person Records Menu</span>
+						<span style=\"text-decoration:none;\">Person Records Menu</span>
     </li>";
         if ($pgNo == 1) {
-            echo $cntent . "<li onclick = \"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> > </span><span style=\"text-decoration:none;\">Personal Profile</span>
-					</li>
-                                       </ul>
-                                     </div>" . "Personal Profile";
+            require "profile.php";
         } else if ($pgNo == 2) {
-            echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> > </span><span style=\"text-decoration:none;\">Data Change Requests</span>
-					</li>
-                                       </ul>
-                                     </div>" . "Data Change Requests";
+            require "edit_profile.php";
         } else if ($pgNo == 3) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> > </span><span style=\"text-decoration:none;\">Grade Progression Requests</span>
+						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Grade Progression Requests</span>
 					</li>
                                        </ul>
                                      </div>" . "Grade Progression Requests";
         } else if ($pgNo == 4) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> > </span><span style=\"text-decoration:none;\">Leave of Absence Requests</span>
+						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Leave of Absence Requests</span>
 					</li>
                                        </ul>
                                      </div>" . "Leave of Absence Requests";
         } else if ($pgNo == 5) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> > </span><span style=\"text-decoration:none;\">Data Administrator</span>
+						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Data Administrator</span>
 					</li>
                                        </ul>
                                      </div>" . "Data Administrator";
@@ -434,13 +426,13 @@ if ($lgn_num > 0 && $canview === true) {
             }
         } else if ($pgNo == 6) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> > </span><span style=\"text-decoration:none;\">Self-Service Managers</span>
+						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Self-Service Managers</span>
 					</li>
                                        </ul>
                                      </div>" . "Self-Service Managers";
         } else if ($pgNo == 7) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> > </span><span style=\"text-decoration:none;\">Send Bulk Messages</span>
+						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Send Bulk Messages</span>
 					</li>
                                        </ul>
                                      </div>" . "Send Bulk Messages";
@@ -938,6 +930,77 @@ function uploadDaImage($prsnid, &$nwImgLoc) {
         }
     }
     return FALSE;
+}
+
+function prsn_ChngRqst_Exist($pkID) {
+    $sqlStr = "select 1 from self.self_prsn_chng_rqst WHERE (person_id=$pkID)
+           and rqst_status in ('Initiated','Requires Approval')";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
+}
+
+function prsn_Record_Exist($pkID) {
+    $sqlStr = "select person_id FROM self.self_prsn_names_nos WHERE (person_id=$pkID)";
+    //echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while (loc_db_num_rows($result) > 0) {
+        return true;
+    }
+    return false;
+}
+
+
+function get_SelfPrsnDet($pkID) {
+    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
+          title, first_name, sur_name \"surname\", other_names, org.get_org_name(org_id) organisation, 
+          gender, marital_status, 
+          to_char(to_timestamp(date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth\", 
+          place_of_birth, religion, 
+          res_address residential_address, pstl_addrs postal_address, email, 
+          cntct_no_tel tel, cntct_no_mobl mobile, 
+          cntct_no_fax fax, hometown, nationality, 
+          (CASE WHEN lnkd_firm_org_id>0 THEN 
+          scm.get_cstmr_splr_name(lnkd_firm_org_id)
+              ELSE 
+              new_company
+              END) \"Linked Firm/ Workplace \", 
+          (CASE WHEN lnkd_firm_org_id>0 THEN 
+           scm.get_cstmr_splr_site_name(lnkd_firm_site_id)
+              ELSE 
+              new_company_loc
+              END) \"Branch \"    
+          FROM self.self_prsn_names_nos a 
+    WHERE (a.person_id=$pkID)";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_PrsnDet($pkID) {
+    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
+          title, first_name, sur_name \"surname\", other_names, org.get_org_name(org_id) organisation, 
+          gender, marital_status, 
+          to_char(to_timestamp(date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth\", 
+          place_of_birth, religion, 
+          res_address residential_address, pstl_addrs postal_address, email, 
+          cntct_no_tel tel, cntct_no_mobl mobile, 
+          cntct_no_fax fax, hometown, nationality, 
+          (CASE WHEN lnkd_firm_org_id>0 THEN 
+          scm.get_cstmr_splr_name(lnkd_firm_org_id)
+              ELSE 
+              new_company
+              END) \"Linked Firm/ Workplace \", 
+          (CASE WHEN lnkd_firm_org_id>0 THEN 
+           scm.get_cstmr_splr_site_name(lnkd_firm_site_id)
+              ELSE 
+              new_company_loc
+              END) \"Branch \"  
+          FROM prs.prsn_names_nos a 
+    WHERE (a.person_id=$pkID)";
+    $result = executeSQLNoParams($strSql);
+    return $result;
 }
 
 ?>

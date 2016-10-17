@@ -191,16 +191,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div class="form-group">
                                     <div class="input-group margin-bottom-sm">
                                         <span class="input-group-addon"><i class="fa fa-user fa-fw fa-border"></i></span>
-                                        <input class="form-control" type="text" id="usrnm" name="usrnm" value="<?php echo $sUNAME; ?>" placeholder="<?php echo $placeHolder1; ?>" <?php echo $rdonly; ?> 
-                                               onchange="showHint(this.value, 'fullName', 'grp=1&typ=11&q=Users Full Name');" 
-                                               onkeyup="showHint(this.value, 'fullName', 'grp=1&typ=11&q=Users Full Name');" 
+                                        <input class="form-control" type="text" id="usrnm" name="usrnm" value="<?php echo $sUNAME; ?>" placeholder="<?php echo $placeHolder1; ?>" <?php echo $rdonly; ?>
+                                               onchange="showHint(this.value, 'fullName', 'grp=1&typ=11&q=Users Full Name');"
+                                               onkeyup="showHint(this.value, 'fullName', 'grp=1&typ=11&q=Users Full Name');"
                                                onblur="showHint(this.value, 'fullName', 'grp=1&typ=11&q=Users Full Name');" />
                                     </div>
                                 </div>
                                 <?php
                                 if ($lgn_num > 0) {
                                     if (test_prmssns($dfltPrvldgs[17], "System Administration")) {
-                                        ?>                                                                 
+                                        ?>
                                         <p class="others">
                                             <button type="button" name="sendLink" class="btn btn-md btn-default btn-block otherButton" onclick="chngePswdPage('send_link');">Send Password Reset Link</button>
                                         </p>
@@ -243,13 +243,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <button type="button" name="cancel" class="btn btn-md btn-default btn-block otherButton" onclick="window.location = 'index.php';">Return to Home Page</button>
                                 </p>
 
-                            </form> 
+                            </form>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">&nbsp;</div>
             </div>
-            <div class="row" style="min-height:25px;height: -webkit-calc(18vh);height: -moz-calc(18vh);height: calc(18vh);background-color: rgba(0,0,0,0.22);">                
+            <div class="row" style="min-height:25px;height: -webkit-calc(18vh);height: -moz-calc(18vh);height: calc(18vh);background-color: rgba(0,0,0,0.22);">
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </div>
             <div class="row" style="min-height:25px;height: 25px;background-color: rgba(0,0,0,0.32);">
@@ -278,13 +278,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <!-- jQuery -->
         <script src="cmn_scrpts/jquery-1.11.3.min.js"></script>
         <!-- Bootstrap Core JavaScript -->
-        <script src="cmn_scrpts/bootstrap336/js/bootstrap.min.js"></script>
+        <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
     </body>
     </html>
     <?php
-    /* } else {
-      //echo $lgn_num."-LGN_NUM-".$error;
-      ?>
-      <?php
-      } */
 }?>

@@ -111,7 +111,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         //$body.removeClass("mdlloading");
                     } else
                     {
-                        document.getElementById("loginDiv").innerHTML = "<p style=\"padding:10px;margin:50px;\"><img style=\"width:80px;height:80px;display:inline;float:none;margin-right:auto;clear: left;\" src='cmn_images/ajax-loader7.gif'/></p>";
+                        document.getElementById("loginDiv").innerHTML = "<p style=\"padding:10px;margin:50px;\"><img style=\"width:80px;height:80px;display:inline;float:none;margin-right:auto;clear: left;\" src='cmn_scrpts/images/ajax-loader7.gif'/></p>";
                     }
                 };
 
@@ -260,13 +260,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="col-md-4 text-center" style="">
                             <div class="container" style="padding:25px;margin-bottom: 10px;background-color: rgba(0,0,0,0.32);min-height: 200px;">
                                 <h1>About Portal</h1>
-                                Lorem Ipsum Tinach
+                                Lorem Ipsum dolor sit
                             </div>
                         </div>                                                
                         <div class="col-md-4 text-center" style="">
                             <div class="container" style="padding:25px;margin-bottom: 10px;background-color: rgba(0,0,0,0.32);min-height: 200px;">
                                 <h1>Instructions</h1>
-                                Lorem Ipsum Tinach
+                                Lorem Ipsum dolor sit
                             </div>
                         </div>
                         <div class="col-md-4 text-center" style="">
@@ -326,7 +326,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <!-- jQuery -->
             <script src="cmn_scrpts/jquery-1.11.3.min.js"></script>
             <!-- Bootstrap Core JavaScript -->
-            <script src="cmn_scrpts/bootstrap336/js/bootstrap.min.js"></script>
+            <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
             <script type="text/javascript">
                 $body = $("body");
                 $body.removeClass("mdlloading");

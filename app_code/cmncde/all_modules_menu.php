@@ -36,13 +36,13 @@ $canview = test_prmssns($dfltPrvldgs[0], $mdlNms[0]) || test_prmssns("View Self-
 $cntent = "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
 					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
-						<span style=\"text-decoration:underline;\">Home</span><span class=\"divider\"> > </span>
+						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> / </span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
 						<span style=\"text-decoration:none;\">All Modules</span>
 					</li>
 				</ul>
-			</div><br/>";
+			</div>";
 if ($lgn_num > 0 && $canview === true) {
     $grpcntr = 0;
     $cntent.="<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em; padding:5px 10px 15px 10px;border:1px solid #ccc;\">";
