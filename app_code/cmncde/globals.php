@@ -874,7 +874,7 @@ function getModuleID($mdl_name) {
 }
 
 function getPrvldgID($prvldg_name, $ModuleName) {
-//Example priviledge 'View Security Module'
+    //Example priviledge 'View Security Module'
     $sqlStr = "SELECT prvldg_id from sec.sec_prvldgs where (prvldg_name = '" .
             loc_db_escape_string($prvldg_name) . "' AND module_id = " .
             getModuleID($ModuleName) . ")";

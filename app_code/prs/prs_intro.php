@@ -78,10 +78,10 @@ if (strpos($srchFor, "%") === FALSE) {
 $cntent = "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
 					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
-						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> / </span>
+						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> | </span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"> / </span>
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"> | </span>
 					</li>";
 if ($lgn_num > 0 && $canview === true) {
     //echo $pgNo;
@@ -225,7 +225,7 @@ if ($lgn_num > 0 && $canview === true) {
             }
             //showPageDetails('$pageHtmlID', $No);
             $cntent.= "<div class=\"col-md-3 colmd3special2\">
-        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$No');\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$No&vtyp=0');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
@@ -253,19 +253,19 @@ if ($lgn_num > 0 && $canview === true) {
             require "edit_profile.php";
         } else if ($pgNo == 3) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Grade Progression Requests</span>
+						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Grade Progression Requests</span>
 					</li>
                                        </ul>
                                      </div>" . "Grade Progression Requests";
         } else if ($pgNo == 4) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Leave of Absence Requests</span>
+						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Leave of Absence Requests</span>
 					</li>
                                        </ul>
                                      </div>" . "Leave of Absence Requests";
         } else if ($pgNo == 5) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Data Administrator</span>
+						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Data Administrator</span>
 					</li>
                                        </ul>
                                      </div>" . "Data Administrator";
@@ -426,13 +426,13 @@ if ($lgn_num > 0 && $canview === true) {
             }
         } else if ($pgNo == 6) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Self-Service Managers</span>
+						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Self-Service Managers</span>
 					</li>
                                        </ul>
                                      </div>" . "Self-Service Managers";
         } else if ($pgNo == 7) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Send Bulk Messages</span>
+						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Send Bulk Messages</span>
 					</li>
                                        </ul>
                                      </div>" . "Send Bulk Messages";
@@ -952,9 +952,18 @@ function prsn_Record_Exist($pkID) {
     return false;
 }
 
+function get_RqstStatus($pkID) {
+    $sqlStr = "select rqst_status from self.self_prsn_chng_rqst WHERE (person_id=$pkID)
+           and rqst_id = (select coalesce(max(rqst_id),0) from self.self_prsn_chng_rqst WHERE (person_id=$pkID))";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 'Approved';
+}
 
 function get_SelfPrsnDet($pkID) {
-    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
+    $strSql = "SELECT a.person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
           title, first_name, sur_name \"surname\", other_names, org.get_org_name(org_id) organisation, 
           gender, marital_status, 
           to_char(to_timestamp(date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth\", 
@@ -971,15 +980,23 @@ function get_SelfPrsnDet($pkID) {
            scm.get_cstmr_splr_site_name(lnkd_firm_site_id)
               ELSE 
               new_company_loc
-              END) \"Branch \"    
-          FROM self.self_prsn_names_nos a 
+              END) \"Branch \", 
+          b.prsn_type \"Relation Type\", 
+          b.prn_typ_asgnmnt_rsn \"Cause of Relation\", 
+            b.further_details \"Further Details\", 
+            to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Start Date \", 
+            to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \" 
+            FROM self.self_prsn_names_nos a 
+            LEFT OUTER JOIN pasn.prsn_prsntyps b 
+            ON (a.person_id = b.person_id and 
+           b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) 
     WHERE (a.person_id=$pkID)";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
 function get_PrsnDet($pkID) {
-    $strSql = "SELECT person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
+    $strSql = "SELECT a.person_id mt, local_id_no \"ID No.\", img_location \"Person's Picture\", 
           title, first_name, sur_name \"surname\", other_names, org.get_org_name(org_id) organisation, 
           gender, marital_status, 
           to_char(to_timestamp(date_of_birth,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Date of Birth\", 
@@ -996,11 +1013,222 @@ function get_PrsnDet($pkID) {
            scm.get_cstmr_splr_site_name(lnkd_firm_site_id)
               ELSE 
               new_company_loc
-              END) \"Branch \"  
-          FROM prs.prsn_names_nos a 
+              END) \"Branch \", 
+          b.prsn_type \"Relation Type\", 
+          b.prn_typ_asgnmnt_rsn \"Cause of Relation\", 
+            b.further_details \"Further Details\", 
+            to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Start Date \", 
+            to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \" 
+            FROM prs.prsn_names_nos a  
+            LEFT OUTER JOIN pasn.prsn_prsntyps b 
+            ON (a.person_id = b.person_id and 
+           b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id))  
     WHERE (a.person_id=$pkID)";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
+
+function get_AllNtnlty($pkID) {
+    $strSql = "SELECT ntnlty_id mt, nationality \"Country\", national_id_typ national_id_type, 
+        id_number, date_issued, expiry_date, other_info other_information 
+          FROM prs.prsn_national_ids WHERE ((person_id = $pkID))";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_AllNtnlty_Self($pkID) {
+    $strSql = "SELECT ntnlty_id mt, nationality \"Country\", national_id_typ national_id_type, 
+        id_number, date_issued, expiry_date, other_info other_information 
+          FROM self.self_prsn_national_ids WHERE ((person_id = $pkID))";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function getAllRltvs($pkID) {
+    $strSql = "SELECT a.local_id_no \"Relative's ID No.\", 
+        trim(a.title || ' ' || a.sur_name || 
+           ', ' || a.first_name || ' ' || a.other_names) \"Relative's full_name\", 
+            b.relationship_type, b.relative_prsn_id mt, b.rltv_id mt
+               FROM prs.prsn_relatives b 
+                   LEFT OUTER JOIN prs.prsn_names_nos a 
+                   ON b.relative_prsn_id = a.person_id 
+                   WHERE ((b.person_id = $pkID)) ORDER BY b.relationship_type, a.local_id_no";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_PrsnTypes($pkID) {
+    $strSql = "SELECT person_id mt, prsn_type person_type, 
+        prn_typ_asgnmnt_rsn reason_for_this_person_type, 
+        further_details, 
+to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
+            FROM pasn.prsn_prsntyps WHERE ((person_id =  $pkID)) 
+                ORDER BY valid_end_date DESC, valid_start_date DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_EducBkgrd($pkID) {
+    $strSql = "SELECT educ_id mt, course_name, school_institution \"school/institution\", 
+        school_location, 
+       to_char(to_timestamp(course_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+        to_char(to_timestamp(course_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date, 
+        cert_obtained certificate_obtained, cert_type certificate_type, 
+        date_cert_awarded date_awarded  
+      FROM prs.prsn_education a WHERE ((person_id = $pkID)) 
+      ORDER BY a.course_end_date DESC, a.course_start_date DESC, 1 DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_WrkBkgrd($pkID) {
+    $strSql = "SELECT wrk_exprnc_id mt, job_name_title \"job name/title\", institution_name, job_location, 
+        to_char(to_timestamp(job_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+        to_char(to_timestamp(job_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date, job_description, 
+        feats_achvments \"feats/achievements\"
+        FROM prs.prsn_work_experience a 
+        WHERE ((person_id = $pkID)) 
+        ORDER BY a.job_end_date DESC, a.job_start_date DESC, 1 DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_SkillNature($pkID) {
+    $strSql = "SELECT skills_id mt, languages, hobbies, interests, 
+       conduct, attitude, to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"valid_start_date\", 
+        to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"valid_end_date\"
+        FROM prs.prsn_skills_nature a WHERE ((person_id = $pkID)) 
+        ORDER BY a.valid_end_date DESC, a.valid_start_date DESC, 1 DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_PrsExtrDataGrpCols($grpnm, $org_ID) {
+    $strSql = "SELECT extra_data_cols_id, column_no, column_label, attchd_lov_name, 
+       column_data_type, column_data_category, data_length, 
+       CASE WHEN data_dsply_type='T' THEN 'Tabular' ELSE 'Detail' END, 
+       org_id, no_cols_tblr_dsply, col_order, csv_tblr_col_nms 
+        FROM prs.prsn_extra_data_cols 
+        WHERE column_data_category= '" . loc_db_escape_string($grpnm) .
+            "' and org_id = " . $org_ID . " and column_label !='' ORDER BY col_order, column_no, extra_data_cols_id";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_PrsExtrDataGrps($org_ID) {
+    $strSql = "SELECT column_data_category, MIN(extra_data_cols_id) , MIN(col_order)  
+        FROM prs.prsn_extra_data_cols 
+        WHERE org_id =$org_ID and column_label !='' 
+            GROUP BY column_data_category ORDER BY 3, 2, 1";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_PrsExtrData($pkID, $colNum = "1") {
+    $colNms = array("data_col1", "data_col2", "data_col3", "data_col4",
+        "data_col5", "data_col6", "data_col7", "data_col8", "data_col9", "data_col10",
+        "data_col11", "data_col12", "data_col13", "data_col14", "data_col15", "data_col16",
+        "data_col17", "data_col18", "data_col19", "data_col20", "data_col21", "data_col22",
+        "data_col23", "data_col24", "data_col25", "data_col26", "data_col27", "data_col28",
+        "data_col29", "data_col30", "data_col31", "data_col32", "data_col33", "data_col34",
+        "data_col35", "data_col36", "data_col37", "data_col38", "data_col39", "data_col40",
+        "data_col41", "data_col42", "data_col43", "data_col44", "data_col45", "data_col46",
+        "data_col47", "data_col48", "data_col49", "data_col50");
+    $strSql = "SELECT " . $colNms[$colNum - 1] . ", extra_data_id 
+  FROM prs.prsn_extra_data a WHERE ((person_id = $pkID))";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+function get_PrsExtrData_Self($pkID, $colNum = "1") {
+    $colNms = array("data_col1", "data_col2", "data_col3", "data_col4",
+        "data_col5", "data_col6", "data_col7", "data_col8", "data_col9", "data_col10",
+        "data_col11", "data_col12", "data_col13", "data_col14", "data_col15", "data_col16",
+        "data_col17", "data_col18", "data_col19", "data_col20", "data_col21", "data_col22",
+        "data_col23", "data_col24", "data_col25", "data_col26", "data_col27", "data_col28",
+        "data_col29", "data_col30", "data_col31", "data_col32", "data_col33", "data_col34",
+        "data_col35", "data_col36", "data_col37", "data_col38", "data_col39", "data_col40",
+        "data_col41", "data_col42", "data_col43", "data_col44", "data_col45", "data_col46",
+        "data_col47", "data_col48", "data_col49", "data_col50");
+    $strSql = "SELECT " . $colNms[$colNum - 1] . ", extra_data_id 
+  FROM self.self_prsn_extra_data a WHERE ((person_id = $pkID))";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+function get_DivsGrps($pkID) {
+    $strSql = "SELECT a.prsn_div_id mt, a.div_id mt, org.get_div_name(a.div_id) group_name, 
+        to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date, 
+COALESCE((select b.div_typ_id from org.org_divs_groups b where a.div_id = b.div_id),-1) mt,
+gst.get_pssbl_val(COALESCE((select b.div_typ_id from org.org_divs_groups b where a.div_id = b.div_id),-1)) group_type
+       FROM pasn.prsn_divs_groups a WHERE ((person_id = $pkID)) 
+           ORDER BY a.valid_end_date DESC, a.valid_start_date DESC, 1 DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_SitesLocs($pkID) {
+    $strSql = "SELECT a.prsn_loc_id mt, a.location_id mt, 
+(select b.location_code_name from org.org_sites_locations b where b.location_id = a.location_id) site_name,       
+to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date  
+            FROM pasn.prsn_locations a 
+            WHERE ((person_id = $pkID))
+                ORDER BY a.valid_end_date DESC, a.valid_start_date DESC, 1 DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Spvsrs($pkID) {
+    $strSql = "SELECT row_id mt, supervisor_prsn_id mt, 
+        prs.get_prsn_loc_id(supervisor_prsn_id) id_of_supervisor,
+        prs.get_prsn_name(supervisor_prsn_id) name_of_supervisor,
+        to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
+      FROM pasn.prsn_supervisors a WHERE ((person_id = $pkID))
+                ORDER BY a.valid_end_date DESC, a.valid_start_date DESC, 1 DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Jobs($pkID) {
+    $strSql = "SELECT a.row_id mt, a.job_id mt, 
+        (select b.job_code_name from org.org_jobs b where b.job_id = a.job_id) job_name,
+        to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date 
+      FROM pasn.prsn_jobs a
+       WHERE ((person_id = $pkID)) 
+                ORDER BY a.valid_end_date DESC, a.valid_start_date DESC, 1 DESC";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Grades($pkID) {
+    $strSql = "SELECT a.row_id mt, a.grade_id mt, 
+        (select b.grade_code_name from org.org_grades b where b.grade_id = a.grade_id) grade_name,
+        to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
+     FROM pasn.prsn_grades a WHERE ((person_id = $pkID))";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Pos($pkID) {
+    $strSql = "SELECT a.row_id mt, a.position_id mt, 
+        (select b.position_code_name from org.org_positions b where b.position_id = a.position_id) pos_name,
+        to_char(to_timestamp(valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') start_date, 
+        to_char(to_timestamp(valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') end_date
+      FROM pasn.prsn_positions a WHERE ((person_id = $pkID))";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
 ?>

@@ -1,7 +1,7 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
     echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> / </span><span style=\"text-decoration:none;\">Data Change Requests</span>
+						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Data Change Requests</span>
 					</li>
                                        </ul>
                                      </div>";

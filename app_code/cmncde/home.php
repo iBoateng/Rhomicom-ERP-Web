@@ -108,7 +108,7 @@
                 </ol>
                 <div class="carousel-inner" role="listbox">
                     <div class="item active">
-                        <img class="first-slide" src="cmn_images/<?php echo $lgn_image;?>" alt="First slide">
+                        <img class="first-slide" src="cmn_images/<?php echo $lgn_image; ?>" alt="First slide">
                         <div class="container">
                             <div class="carousel-caption">
                                 <h1>Example headline.</h1>
@@ -152,45 +152,44 @@
                 <!--<h3 class="page-header" style="padding:2px;">Welcome, Ing. Kofi Ababio Lawson</h3>-->
             </div>
         </div>
-<div class="row">
-    <div class="col-md-3 colmd3special1">
-        <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#myinbox', 'grp=40&typ=2');">
-            <img src="cmn_images/openfileicon.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-            <span class="wordwrap1"> Inbox & Worklist</span>
-        </button>
-    </div>
-    <div class="col-md-3 colmd3special1">
-        <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allarticles', 'grp=40&typ=3');">
-            <img src="cmn_images/Notebook.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-            <span class="wordwrap1"> Articles & Notices</span>
-        </button>
-    </div>
-    <div class="col-md-3 colmd3special1">
-        <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=8&typ=1');">
-            <img src="cmn_images/person.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-            <span class="wordwrap1"> Personal Records</span>
-        </button>
-    </div>
-    <div class="col-md-3 colmd3special1">
-        <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=5');">
-            <img src="cmn_images/election.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-            <span class="wordwrap1"> Elections Centre</span>
-        </button>
-    </div>
-    <div class="col-md-3 colmd3special1" id="gnrlDshBrd">
-        <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=5');">
-            <img src="cmn_images/dashboard220.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-            <span class="wordwrap1"> General Dashboard</span>
-        </button>
-    </div>
-    <div class="col-md-3 colmd3special1" id="otherMdls">
-        <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=5');">
-            <img src="cmn_images/Home.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-            <span class="wordwrap1"> All Other Modules</span>
-        </button>
-    </div>
-</div>
-        
+        <div class="row">
+            <div class="col-md-3 colmd3special1">
+                <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#myinbox', 'grp=40&typ=2');">
+                    <img src="cmn_images/openfileicon.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
+                    <span class="wordwrap1"> Inbox & Worklist</span>
+                </button>
+            </div>
+            <div class="col-md-3 colmd3special1">
+                <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allarticles', 'grp=40&typ=3');">
+                    <img src="cmn_images/Notebook.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
+                    <span class="wordwrap1"> Articles & Notices</span>
+                </button>
+            </div>
+            <div class="col-md-3 colmd3special1">
+                <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=8&typ=1');">
+                    <img src="cmn_images/person.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
+                    <span class="wordwrap1"> Personal Records</span>
+                </button>
+            </div>
+            <div class="col-md-3 colmd3special1">
+                <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=5');">
+                    <img src="cmn_images/election.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
+                    <span class="wordwrap1"> Elections Centre</span>
+                </button>
+            </div>
+            <div class="col-md-3 colmd3special1" id="gnrlDshBrd">
+                <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=5');">
+                    <img src="cmn_images/dashboard220.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
+                    <span class="wordwrap1"> General Dashboard</span>
+                </button>
+            </div>
+            <div class="col-md-3 colmd3special1" id="otherMdls">
+                <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=5');">
+                    <img src="cmn_images/Home.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
+                    <span class="wordwrap1"> All Other Modules</span>
+                </button>
+            </div>
+        </div>
         <!-- Main jumbotron for a primary marketing message or call to action
         <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 5px;">
             <div class="container-fluid" style="padding:0px 10px 0px 20px !important;">

@@ -103,7 +103,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <!-- BEGIN LOGO -->
                     <div class="page-logo">
                         <div style="float:left;left: 0.5%; min-width:90%;">
-                            <img src="cmn_images/<?php echo $app_image1; ?>" style="float:left;height:60px; width:auto; margin:5px; position: relative; vertical-align: middle;" id="mainLogo"/>
+                            <a href="index.php"><img src="cmn_images/<?php echo $app_image1; ?>" style="float:left;height:60px; width:auto; margin:5px; position: relative; vertical-align: middle;" id="mainLogo"/></a>
                             <a class="navbar-brand" href="index.php" style="<?php echo $forecolors; ?>"><?php echo $app_name; ?></a>
                         </div> 
                         <div class="menu-toggler sidebar-toggler" style="float:right;">
@@ -435,12 +435,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <!-- END PAGE HEAD-->
                         <!-- BEGIN PAGE BASE CONTENT -->
                         <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist" style="padding-top:0px;" id="navtabheaders">
+                        <ul class="nav nav-tabs rho-hideable-tabs" role="tablist" style="padding-top:0px;" id="navtabheaders">
                             <li class="active"><a href="#home" id="hometab" data-toggle="tab" data-rhodata="1"><i class="fa fa-home fa-fw"></i><span class="nav-label">Home</span><span class="badge bg-success" style="background: none;">&nbsp;</span></a></li>
                             <li><a href="#myinbox" id="myinboxtab" data-toggle="tabajax" data-rhodata="2"><i class="fa fa-envelope fa-fw"></i><span class="nav-label">My Inbox&nbsp;&nbsp;</span><span class="badge bg-success" style="background-color: lime;">7</span></a></li>
                             <li><a href="#allarticles" id="allarticlestab" data-toggle="tabajax" data-rhodata="3"><i class="fa fa-file-text-o fa-fw"></i><span class="nav-label">All Articles&nbsp;&nbsp;</span><span class="badge bg-success" style="background-color: #f0ad4e;">24</span></a></li>
                             <li><a href="#profile" id="profiletab" data-toggle="tabajax" data-rhodata="4"><i class="fa fa-user fa-fw"></i><span class="nav-label">Profile&nbsp;&nbsp;</span><span class="badge bg-success" style="background: none;">&nbsp;</span></a></li>
-                            <li><a href="#allmodules" id="allmodulestab" data-toggle="tabajax" data-rhodata="5"><i class="fa fa-sitemap fa-fw"></i><span class="nav-label">All Apps/Modules&nbsp;&nbsp;</span><span class="badge bg-success" style="background-color: cyan;color:#333;">13</span></a></li>
+                            <li><a href="#allmodules" id="allmodulestab" data-toggle="tabajax" data-rhodata="5"><i class="fa fa-sitemap fa-fw"></i><span class="nav-label">All Apps/Modules&nbsp;&nbsp;</span><span class="badge bg-success" style="background-color: cyan;color:#333;" id="appsMdlsCnt">13</span></a></li>
                         </ul>
 
                         <!-- Tab panes -->
@@ -479,7 +479,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
                 <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
                 <script src="cmn_scrpts/bootstrap337/bootstrap3-dialog/js/bootstrap-dialog.min.js"></script>
-                <script type="application/javascript" src="cmn_scrpts/global_scripts.js?v=<?php echo $radomNo; ?>"></script>
+                <script type="application/javascript" src="cmn_scrpts/global_scripts.js"></script>
+                <link href="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+                <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js"></script>
+                <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js"></script>
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('[data-toggle="tooltip"]').tooltip();

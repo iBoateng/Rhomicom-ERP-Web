@@ -1,5 +1,4 @@
 <?php
-
 //session_start();
 $menuItems = array("Summary Dashboard", "Personal Records", "Bills/Payments", "Events & Attendance",
     "Elections Centre", "e-Library & e-Learning", "Accounting",
@@ -36,7 +35,7 @@ $canview = test_prmssns($dfltPrvldgs[0], $mdlNms[0]) || test_prmssns("View Self-
 $cntent = "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
 					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
-						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> / </span>
+						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> | </span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
 						<span style=\"text-decoration:none;\">All Modules</span>
@@ -45,6 +44,7 @@ $cntent = "<div>
 			</div>";
 if ($lgn_num > 0 && $canview === true) {
     $grpcntr = 0;
+    $appCntr = 0;
     $cntent.="<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em; padding:5px 10px 15px 10px;border:1px solid #ccc;\">";
     for ($i = 0; $i < count($menuItems); $i++) {
         if ($i > 0) {
@@ -61,7 +61,7 @@ if ($lgn_num > 0 && $canview === true) {
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
     </div>";
-
+        $appCntr+=1;
         if ($grpcntr == 3 || $i == count($menuItems) - 1) {
             $cntent.= "</div>";
             $grpcntr = 0;
@@ -70,5 +70,13 @@ if ($lgn_num > 0 && $canview === true) {
         }
     }
     echo "</div>" . $cntent;
+    ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#appsMdlsCnt").html("<?php echo $appCntr; ?>");
+        });
+    </script>
+
+    <?php
 }
 ?>
