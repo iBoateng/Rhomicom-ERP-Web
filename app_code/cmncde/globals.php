@@ -886,7 +886,7 @@ function getPrvldgID($prvldg_name, $ModuleName) {
 }
 
 function doSlctdRolesHvThisPrvldg($inp_prvldg_id) {
-//Checks whether a given role 'system administrator' has a given priviledge
+    //Checks whether a given role 'system administrator' has a given priviledge
     global $ssnRoles;
     $slctdRl = ";" . $ssnRoles . ";";
     $sqlStr = "SELECT role_id FROM sec.sec_roles_n_prvldgs WHERE ((prvldg_id = " .
@@ -894,7 +894,7 @@ function doSlctdRolesHvThisPrvldg($inp_prvldg_id) {
                 AND (now() between to_timestamp(valid_start_date|| ' 00:00:00','YYYY-MM-DD HH24:MI:SS') " .
             "AND to_timestamp(valid_end_date || ' 23:59:59','YYYY-MM-DD HH24:MI:SS')))";
     $result = executeSQLNoParams($sqlStr);
-//echo $sqlStr;
+    //echo $sqlStr;
     if (loc_db_num_rows($result) > 0) {
         return true;
     } else {

@@ -1,14 +1,12 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($vwtyp == "0") {
-        echo $cntent;
-        ?>
-        <li onclick="openATab('#allmodules', 'grp=8&typ=1&pg=<?php echo $pgNo; ?>');">
-            <span class="divider"> | </span><span style="text-decoration:none;">Personal Profile</span>
-        </li>
-        </ul>
-        </div>
-        <?php
+       echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
+						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Personal Profile</span>
+					</li>
+                                       </ul>
+                                     </div>";
+        
         $prsnid = $_SESSION['PRSN_ID'];
         $orgID = $_SESSION['ORG_ID'];
         $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
@@ -32,7 +30,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 ?>
                 <div style="margin-bottom: 10px;">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-sm"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
                         <button type="button" class="btn btn-default btn-sm"><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button>
                     </div>
                 </div>
@@ -52,8 +50,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=2" href="#prflOrgAsgnRO" id="prflOrgAsgnROtab">Organisational Assignments</a></li>
                         <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=3" href="#prflCVRO" id="prflCVROtab">CV</a></li>
                         <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=4" href="#prflOthrInfoRO" id="prflOthrInfoROtab">Other Information</a></li>
-                    </ul>  
-
+                    </ul>
                     <div class="row">                  
                         <div class="col-md-12">
                             <div class="custDiv"> 
@@ -702,7 +699,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <?php
     } else if ($vwtyp == "3") {
         /* Curiculumn Vitae */
-
         $prsnid = $_SESSION['PRSN_ID'];
         $orgID = $_SESSION['ORG_ID'];
         $pkID = $prsnid;
@@ -841,7 +837,48 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <?php
     } else if ($vwtyp == "4") {
         /* Other Information */
-        echo "Other Information";
+        $prsnid = $_SESSION['PRSN_ID'];
+        $orgID = $_SESSION['ORG_ID'];
+        $pkID = $prsnid;
+        $cntr = 0;
+        $table_id = getMdlGrpID("Person Data", $mdlNm);
+        $ext_inf_tbl_name = "prs.prsn_all_other_info_table";
+        $ext_inf_seq_name = "prs.prsn_all_other_info_table_dflt_row_id_seq";
+        $row_pk_id = $pkID;
+        ?>
+
+        <div  class="col-md-12">
+            <table class="table table-striped table-bordered table-responsive otherInfoTblsRO" cellspacing="0" width="100%" style="width:100%;">
+                <thead>
+                    <tr>
+                        <!--<th>No.</th>-->
+                        <th>Category</th>
+                        <th>Label</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($pkID > 0) {
+                        $brghtsqlStr = "";
+                        $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr, $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
+                        while ($row1 = loc_db_fetch_array($result1)) {
+                            $cntr+=1;
+                            ?>
+                            <tr>
+                                <!--<td><?php echo $cntr; ?></td>-->
+                                <td><?php echo $row1[0]; ?></td>
+                                <td><?php echo $row1[1]; ?></td>
+                                <td><?php echo $row1[2]; ?></td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
     }
 }
 ?>

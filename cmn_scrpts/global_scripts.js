@@ -124,11 +124,11 @@ function openATab(slctr, linkArgs)
         if (window.XMLHttpRequest)
         {
             xmlhttp = new XMLHttpRequest();
-        } else
+        } 
+        else
         {
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-
         xmlhttp.onreadystatechange = function ()
         {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
@@ -142,17 +142,10 @@ function openATab(slctr, linkArgs)
                 } 
                 else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
                 {
-                    loadScript("app/prs/prsn.js?v=18", function () {
-                        if (linkArgs.indexOf("&pg=0") === -1)
-                        {
-                            $this.tab('show');
-                            prepareProfileRO(linkArgs, $body, targ, xmlhttp.responseText);
-                        } 
-                        else {
-                            $(targ).html(xmlhttp.responseText);
-                            $this.tab('show');
-                            $body.removeClass("mdlloading");
-                        }
+                    /*$.fn.datepicker.defaults.format = "dd-M-yyyy";*/
+                    loadScript("app/prs/prsn.js?v=29", function () {
+                        $this.tab('show');
+                        prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
                     });
 
                 } 

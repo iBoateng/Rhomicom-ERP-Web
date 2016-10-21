@@ -3,7 +3,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num <= 0) {
         //echo $lgn_num; 
         ?>
-    <?php
+        <?php
     } else {
         $prsnid = $_SESSION['PRSN_ID'];
         $orgID = $_SESSION['ORG_ID'];
@@ -14,59 +14,62 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . '.png';
         if (file_exists($ftp_src) && !file_exists($fullPemDest)) {
             copy("$ftp_src", "$fullPemDest");
-//echo $fullPemDest;
+            //echo $fullPemDest;
         } else if (!file_exists($fullPemDest)) {
             $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
             copy("$ftp_src", "$fullPemDest");
-//echo $ftp_src;
+            //echo $ftp_src;
         }
         ?> 
         <link href="cmn_scrpts/carousel.css" rel="stylesheet">
+        <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+        <link href="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />  
+        <link href="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/css/bootstrap-datetimepicker.min.css"  rel="stylesheet" type="text/css" />     
         <style>
             .icon-bar{<?php echo $bckcolorshv; ?>}
             .nav.navbar-top-links > li > a:hover,
             .nav.navbar-top-links > li > a:focus{
                 <?php echo $forecolors; ?>
-        <?php echo $bckcolorshv; ?>
+                <?php echo $bckcolorshv; ?>
                 text-decoration: none;
             }
             .nav.navbar-top-links > li > a{
                 <?php echo $forecolors; ?>
-        <?php echo $bckcolors_home; ?>
+                <?php echo $bckcolors_home; ?>
                 text-decoration: none;
             }
             .nav.nav-tabs > li > a:hover,
             .nav.nav-tabs > li > a:focus{
                 <?php echo $forecolors; ?>
-        <?php echo $bckcolorshv; ?>
+                <?php echo $bckcolorshv; ?>
                 text-decoration: none;
             }
             .nav.nav-tabs>li.active>a, 
             .nav.nav-tabs>li.active>a:focus, 
             .nav.nav-tabs>li.active>a:hover {
                 <?php echo $forecolors; ?>
-        <?php echo $bckcolors_home; ?>
+                <?php echo $bckcolors_home; ?>
                 border:1px solid <?php echo $bckcolorOnly; ?>
             }
 
             .page-header.navbar {
                 <?php echo $bckcolors_home; ?>
-        <?php echo $forecolors; ?>
+                <?php echo $forecolors; ?>
                 border-bottom: 1px solid #fff;
             }
             .page-top {
                 <?php echo $bckcolors_home; ?>
-        <?php echo $forecolors; ?>
+                <?php echo $forecolors; ?>
             }
             .page-sidebar, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover {
-        <?php echo $bckcolors_home; ?>
+                <?php echo $bckcolors_home; ?>
             }
             .page-sidebar .page-sidebar-menu>li.open>a, 
             .page-sidebar .page-sidebar-menu>li:hover>a, 
             .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li.open>a, 
             .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li:hover>a {
                 <?php echo $bckcolorshv; ?>
-        <?php echo $forecolors; ?>
+                <?php echo $forecolors; ?>
             }
             .page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
                 display: block;
@@ -76,20 +79,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 font-size: 14px;
                 font-weight: 400;
                 <?php echo $bckcolors_home; ?>
-        <?php echo $forecolors; ?>
+                <?php echo $forecolors; ?>
             }
             .page-sidebar .page-sidebar-menu .sub-menu>li.active>a, .page-sidebar .page-sidebar-menu .sub-menu>li.open>a, .page-sidebar .page-sidebar-menu .sub-menu>li:hover>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu>li.active>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu>li.open>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu>li:hover>a {
                 <?php echo $bckcolorshv; ?>
-        <?php echo $forecolors; ?>
+                <?php echo $forecolors; ?>
             }
             @media (max-width: 767px){
                 .page-top {
                     <?php echo $bckcolorshv; ?>
-        <?php echo $forecolors; ?>
+                    <?php echo $forecolors; ?>
                 }
                 .nav.navbar-top-links > li > a{
                     <?php echo $forecolors; ?>
-        <?php echo $bckcolorshv; ?>
+                    <?php echo $bckcolorshv; ?>
                     text-decoration: none;
                 }
             }
@@ -141,7 +144,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </a>
                                 </li>
                                 <li class="dropdown">
-                                    <a href="javascript:openATab('#allmodules', 'grp=8&typ=1&pg=1');"  data-toggle="tooltip" title="User Profile!" data-placement="bottom" >
+                                    <a href="javascript:openATab('#allmodules', 'grp=8&typ=1&pg=1&vtyp=0');"  data-toggle="tooltip" title="User Profile!" data-placement="bottom" >
                                         <span class="username" style="<?php echo $forecolors; ?>font-weight: bold;"> <?php echo $usrName; ?> </span>
                                         <!-- DOC: Do not remove below empty space(&nbsp;) as its purposely used -->
                                         <img alt="" class="img-circle" src="<?php echo $pemDest . $nwFileName; ?>" style="height: 45px !important; width: auto !important;"> 
@@ -446,7 +449,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="home">
-        <?php require 'app_code/cmncde/home.php'; ?>
+                                <?php require 'app_code/cmncde/home.php'; ?>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="myinbox"></div>
                             <div role="tabpanel" class="tab-pane" id="allarticles"></div>
@@ -477,12 +480,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <script src="cmn_scrpts/jquery-1.12.3.min.js"></script>
                 <!-- Bootstrap Core JavaScript -->
                 <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
-                <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
                 <script src="cmn_scrpts/bootstrap337/bootstrap3-dialog/js/bootstrap-dialog.min.js"></script>
-                <script type="application/javascript" src="cmn_scrpts/global_scripts.js"></script>
-                <link href="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+                <script type="application/javascript" src="cmn_scrpts/global_scripts.js"></script> 
                 <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js"></script>
-                <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js"></script>
+                <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js"></script>        
+                <script type="text/javascript" src="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/js/bootstrap-datetimepicker.min.js"></script>
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('[data-toggle="tooltip"]').tooltip();

@@ -1231,4 +1231,46 @@ function get_Pos($pkID) {
     $result = executeSQLNoParams($strSql);
     return $result;
 }
+function getAllwdExtInfosNVals($searchWord, $searchIn,
+      $offset, $limit_size, &$brghtsqlStr, $tblID,
+          $row_id_val, $valTbl, $Org_id)
+        {
+           $strSql = "";
+            $whrCls = "";
+
+            if ($searchIn == "Value")
+            {
+                $whrCls = " AND (tbl1.othr_inf ilike '" .
+                     loc_db_escape_string($searchWord) . "' or tbl1.othr_inf IS NULL) ";
+            }
+            else if ($searchIn == "Extra Info Label")
+            {
+                $whrCls = " AND (tbl1.other_info_label ilike '" .
+                     loc_db_escape_string($searchWord) . "' or tbl1.other_info_category ilike '" .
+                     loc_db_escape_string($searchWord) . "') ";
+
+            }
+            $strSql = "SELECT tbl1.* FROM (SELECT b.pssbl_value other_info_category, 
+          COALESCE((select c.other_info_label from " . $valTbl . " c " .
+               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))), b.pssbl_value) other_info_label, 
+         COALESCE((select c.other_info_value from " . $valTbl . " c " .
+               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),'') othr_inf, " .
+               "a.comb_info_id, a.table_id, COALESCE((select c.dflt_row_id from " . $valTbl . " c " .
+               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),-1) othr_inf_row_id " .
+               "FROM sec.sec_allwd_other_infos a " .
+               "LEFT OUTER JOIN gst.gen_stp_lov_values b ON (a.other_info_id = b.pssbl_value_id) " .
+               "WHERE((a.is_enabled = '1')  AND (a.table_id = " . $tblID . ") AND (b.allowed_org_ids like '%," . $Org_id .
+               ",%') AND (((select c.other_info_value from " . $valTbl . " c " .
+               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) ilike '" .
+               loc_db_escape_string($searchWord) . "') OR ((select c.other_info_value from " . $valTbl . " c " .
+               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) is null))) " .
+               " UNION 
+                  SELECT c.other_info_category, c.other_info_label, c.other_info_value othr_inf, 99999999 comb_info_id, -1 table_id, c.dflt_row_id from " . $valTbl .
+               " c  WHERE c.tbl_othr_inf_combntn_id<=0 and c.row_pk_id_val = " . $row_id_val . ") tbl1 WHERE 1=1" . $whrCls .
+               " ORDER BY tbl1.comb_info_id LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+
+            $result = executeSQLNoParams($strSql);
+            $brghtsqlStr = $strSql;
+            return $result;
+        }
 ?>
