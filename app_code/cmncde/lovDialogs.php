@@ -1,124 +1,174 @@
 <?php
-
-$qryStr = isset($_POST['q']) ? cleanInputData($_POST['q']) : '';
 $usrID = $_SESSION['USRID'];
 $srchFor = isset($_POST['searchfor']) ? cleanInputData($_POST['searchfor']) : '';
 $srchIn = isset($_POST['searchin']) ? cleanInputData($_POST['searchin']) : 'Both';
-$lmtSze = isset($_POST['limit']) ? cleanInputData($_POST['limit']) : 30;
-$navPos = isset($_POST['nv']) ? cleanInputData($_POST['nv']) : '';
-$curIdx = isset($_POST['idx']) ? cleanInputData($_POST['idx']) : 0;
+$pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
+$lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
 $chkOrRadio = isset($_POST['chkOrRadio']) ? cleanInputData($_POST['chkOrRadio']) : '';
 $mustSelSth = isset($_POST['mustSelSth']) ? cleanInputData($_POST['mustSelSth']) : '';
-$lov_res_action_nm = isset($_POST['lov_res_action_nm']) ? cleanInputData($_POST['lov_res_action_nm']) : '';
 $selvals = isset($_POST['selvals']) ? cleanInputData($_POST['selvals']) : '-1';
-$srcTyp = isset($_POST['srcTyp']) ? cleanInputData($_POST['srcTyp']) : '';
-$showValOrDesc = isset($_POST['showValOrDesc']) ? cleanInputData($_POST['showValOrDesc']) : '';
 $lovNm = isset($_POST['lovNm']) ? cleanInputData($_POST['lovNm']) : '';
 $criteriaID = isset($_POST['criteriaID']) ? cleanInputData($_POST['criteriaID']) : '';
 $criteriaID2 = isset($_POST['criteriaID2']) ? cleanInputData($_POST['criteriaID2']) : '';
 $criteriaID3 = isset($_POST['criteriaID3']) ? cleanInputData($_POST['criteriaID3']) : '';
+
+$criteriaIDVal = isset($_POST['criteriaIDVal']) ? cleanInputData($_POST['criteriaIDVal']) : -1;
+$criteriaID2Val = isset($_POST['criteriaID2Val']) ? cleanInputData($_POST['criteriaID2Val']) : '';
+$criteriaID3Val = isset($_POST['criteriaID3Val']) ? cleanInputData($_POST['criteriaID3Val']) : '';
+
 $valueElmntID = isset($_POST['valElmntID']) ? cleanInputData($_POST['valElmntID']) : '';
 $descElemntID = isset($_POST['descElmntID']) ? cleanInputData($_POST['descElmntID']) : '';
+$modalElementID = isset($_POST['modalElementID']) ? cleanInputData($_POST['modalElementID']) : '';
+$lovModalTitle = isset($_POST['lovModalTitle']) ? cleanInputData($_POST['lovModalTitle']) : '';
+$lovModalBody = isset($_POST['lovModalBody']) ? cleanInputData($_POST['lovModalBody']) : '';
 $addtnlWhere = isset($_POST['addtnlWhere']) ? cleanInputData($_POST['addtnlWhere']) : '';
+$colNoForChkBoxCmprsn = isset($_POST['colNoForChkBxCmprsn']) ? cleanInputData($_POST['colNoForChkBxCmprsn']) : 2;
 $lovID = getLovID($lovNm);
 $sqlMsg = "";
 $isDynmc = "";
-$selvals = "|" . $selvals;
+$orgnlSelvals = $selvals;
+$selvals = "|" . $selvals . "|";
 //var_dump($_POST);
+//echo $srchFor;
 if (strpos($srchFor, "%") === FALSE) {
     $srchFor = "%" . str_replace(" ", "%", $srchFor) . "%";
+    $srchFor = str_replace("%%", "%", $srchFor);
 }
-
-function lovsForm($error) {
-    global $srchFor;
-    global $srchIn;
-    global $lmtSze;
-    global $navPos;
-    global $curIdx;
-    global $chkOrRadio;
-    global $mustSelSth;
-    global $lov_res_action_nm;
-    global $selvals;
-    global $srcTyp;
-    global $showValOrDesc;
-    global $lovNm;
-    global $criteriaID;
-    global $criteriaID2;
-    global $criteriaID3;
-    global $valueElmntID;
-    global $descElemntID;
-    global $lovID;
-    global $sqlMsg;
-    global $isDynmc;
-    global $selvals;
-
-    $result = getLovValues($srchFor, $srchIn, $curIdx, $lmtSze, $sqlMsg, $lovID, $isDynmc, $criteriaID, $criteriaID2, $criteriaID3);
-    $recCnt = loc_db_num_rows($result);
-    $startIdx = 0;
-    $endIdx = 0;
-    if ($recCnt > 0) {
-        $startIdx = ($curIdx * $lmtSze) + 1;
-        $endIdx = $startIdx + $recCnt - 1;
-    }
-    $output = "<!-- Form Code Start -->
-<div id='rho_form'>
-<form id='lovForm' action='' method='post' accept-charset='UTF-8'>
-<fieldset >
-<legend>$lovNm</legend>
-<input type='hidden' name='submitted' id='submitted' value='1'/>";
-    $srchInArry = array("Value", "Description");
-    $output.=getLovNavBar($srchInArry, $srchIn, $recCnt, $navPos, $lmtSze, $startIdx, $endIdx, $srchFor, "getLovsPage", "nav_lovs", $lovNm, "mydialog", $criteriaID, $criteriaID2, $criteriaID3, $chkOrRadio, $mustSelSth, $lov_res_action_nm, $selvals, $valueElmntID, $descElemntID, $srcTyp);
-//onclick=\"getLovsPage('nav_lovs', 'first', 'Organisations', 'mydialog','-1','','');\"
-    $output .= createLovRecsTbl($result, $startIdx, $chkOrRadio, 0, $selvals);
-    $output.="<div class=\"divButtons1\" style=\"margin-top:5px;\">
-    <a name='lov_submit' id='lov_submit' onclick=\"loopChecksRadios('lovForm', '$valueElmntID', '$descElemntID', '$srcTyp', '$showValOrDesc');\">
-    <img class=\"divButtons1imgdsply\" src=\"cmn_images/FloppyDisk.png\" alt=\"SAVE\" title=\"SAVE\"><span>Submit&nbsp;&nbsp;</span></a>   
-</div>
-</fieldset>
-</form>";
-    echo $output;
-}
-
+//echo $srchFor;
 $error = "";
 
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0) {
-        if ($qryStr === "load_selection") {
-            
-        } else {
-            //lovsForm($error);
-            $total = getTtlLovValues($srchFor, $srchIn, $sqlMsg, $lovID, $isDynmc, $criteriaID, $criteriaID2, $criteriaID3, $addtnlWhere);
-            //echo $total;
-            $pageNo = isset($_POST['page']) ? cleanInputData($_POST['page']) : 1;
-            $lmtSze = isset($_POST['limit']) ? cleanInputData($_POST['limit']) : 1;
-            $start = isset($_POST['start']) ? cleanInputData($_POST['start']) : 0;
-            if ($pageNo > ceil($total / $lmtSze)) {
-                $pageNo = 1;
-            }
-
-            $curIdx = $pageNo - 1;
-            $sqlMsg = "";
-            $result = getLovValues($srchFor, $srchIn, $curIdx, $lmtSze
-                    , $sqlMsg, $lovID, $isDynmc, $criteriaID, $criteriaID2, $criteriaID3, $addtnlWhere);
-            //echo "Start:".$total ."/". $sqlMsg;
-            $pssblValues = array();
-            while ($row = loc_db_fetch_array($result)) {
-                $chckd = FALSE;
-                $pssblVal = array(
-                    'checked' => var_export($chckd, TRUE),
-                    'pssblValID' => $row[2],
-                    'pssblValue' => $row[0],
-                    'pssblValueDesc' => $row[1],
-                    'lovID' => $lovID);
-                $pssblValues[] = $pssblVal;
-            }
-
-            echo json_encode(array('success' => true, 'total' => $total,
-                'rows' => $pssblValues));
+        $total = getTtlLovValues($srchFor, $srchIn, $sqlMsg, $lovID, $isDynmc, $criteriaIDVal, $criteriaID2Val, $criteriaID3Val, $addtnlWhere);
+        //echo ceil($total / $lmtSze);
+        if ($pageNo > ceil($total / $lmtSze)) {
+            $pageNo = 1;
+        } else if ($pageNo < 1) {
+            $pageNo = ceil($total / $lmtSze);
         }
-    } else {
-        //echo "Please Login First!"; 
-        //restricted();
+
+        $curIdx = $pageNo - 1;
+        $sqlMsg = "";
+        $result = getLovValues($srchFor, $srchIn, $curIdx, $lmtSze, $sqlMsg, $lovID, $isDynmc, $criteriaIDVal, $criteriaID2Val, $criteriaID3Val, $addtnlWhere);
+        ?>
+        <form id='lovForm' action='' method='post' accept-charset='UTF-8'>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input class="form-control" id="lovSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncLov(event, '<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', '',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo $addtnlWhere; ?>');">
+                        <input id="lovPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', 'clear',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo $addtnlWhere; ?>');">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </label>
+                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', '',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo $addtnlWhere; ?>');">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </label> 
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                        <select data-placeholder="Select..." class="form-control chosen-select" id="lovSrchIn">
+                            <?php
+                            $valslctd1 = "";
+                            $valslctd2 = "";
+                            $valslctd3 = "";
+
+                            if ($srchIn == "Value") {
+                                $valslctd1 = "selected";
+                            } elseif ($srchIn == "Value") {
+                                $valslctd2 = "selected";
+                            } else {
+                                $valslctd3 = "selected";
+                            }
+                            ?>
+                            <option value="Value" <?php echo $valslctd1; ?>>Value</option>
+                            <option value="Description" <?php echo $valslctd2; ?>>Description</option>
+                            <option value="Both" <?php echo $valslctd3; ?>>Both</option>
+                        </select>
+                        <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                        <select data-placeholder="Select..." class="form-control chosen-select" id="lovDsplySze">                            
+                            <?php
+                            $valslctdArry = array("", "", "", "", "", "", "", "");
+                            $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500);
+                            for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                if ($lmtSze == $dsplySzeArry[$y]) {
+                                    $valslctdArry[$y] = "selected";
+                                } else {
+                                    $valslctdArry[$y] = "";
+                                }
+                                ?>
+                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination" style="margin: 0px !important;">
+                            <li>
+                                <a href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','previous',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo $addtnlWhere; ?>');" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','next',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo $addtnlWhere; ?>');" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-bordered table-responsive" id="lovTblRO" cellspacing="0" width="100%" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th align="center" style="max-width: 50px;text-align: center !important;">...</th>
+                                <th align="center" style="max-width: 50px;text-align: center !important;">No.</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $cntr = ((integer) $curIdx * (integer) $lmtSze);
+                            while ($row = loc_db_fetch_array($result)) {
+                                $cntr = (integer) $cntr + 1;
+                                $chckd = "";
+                                $chckID = ($row[2] == "") ? -1 : $row[2];
+                                //echo $selvals;
+                                if ($selvals !== "|" && strpos($selvals, "|" . $row[$colNoForChkBoxCmprsn] . "|") === false) {
+                                    $chckd = "";
+                                } else {
+                                    $chckd = "checked";
+                                }
+                                if ($chkOrRadio == "check") {
+                                    $chkBx = "<input type=\"checkbox\" name=\"chkbx$i\" value=\"$chckID;$row[0];$row[1]\" $chckd>";
+                                } else {
+                                    $chkBx = "<input type=\"radio\" name=\"radiobx\" value=\"$chckID;$row[0];$row[1]\" $chckd>";
+                                }
+                                ?>
+                                <tr>
+                                    <td class="lovtd" align="center" style="max-width: 50px;"><?php echo $chkBx; ?></td>
+                                    <td class="lovtd" align="center" style="max-width: 50px;"><?php echo $cntr; ?></td>
+                                    <td class="lovtd"><?php echo $row[1] == "" ? $row[0] : $row[1]; ?></td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 15px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="applySlctdLov('<?php echo $modalElementID; ?>', 'lovForm', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>');">Apply Selection</button>
+            </div>
+        </form>
+        <?php
     }
 }
 ?>

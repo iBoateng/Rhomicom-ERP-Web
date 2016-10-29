@@ -303,10 +303,12 @@ body {
     height:auto !important;
 }
 .rho-hideable-tabs{margin-top:-10px;}
+.noshowOnPhones{display:block;}
 /* Extra small devices (phones, up to 480px) */
 @media screen and (max-width: 767px) {
     .rho-hideable-tabs{display:none;}
     .phone-only-btn{display:block;}
+    .noshowOnPhones{display:none;}
     .custDiv {border-top: 1px solid #eee !important;}
     #gnrlDshBrd{display:block;}
     #otherMdls{display:block;}
@@ -338,6 +340,7 @@ body {
 @media (min-width: 768px) and (max-width: 991px) {
     .rho-hideable-tabs{display:block;}
     .phone-only-btn{display:none;}
+    .noshowOnPhones{display:block;}
     .custDiv {border-top: none !important;}
     #gnrlDshBrd{display:block;}
     #otherMdls{display:block;}
@@ -353,6 +356,7 @@ body {
 @media (min-width: 992px) and (max-width: 1199px) {
     .rho-hideable-tabs{display:block;}
     .phone-only-btn{display:none;}
+    .noshowOnPhones{display:block;}
     .custDiv {border-top: none !important;}
     #gnrlDshBrd{display:none;}
     #otherMdls{display:none;}
@@ -375,6 +379,7 @@ body {
 @media screen and (min-width: 1200px) {
     .rho-hideable-tabs{display:block;}
     .phone-only-btn{display:none;}
+    .noshowOnPhones{display:block;}
     .custDiv {border-top: none !important;}
     #gnrlDshBrd{display:block;}
     #otherMdls{display:block;}
@@ -493,6 +498,12 @@ li { cursor: pointer; cursor: hand; }
     color:#ccc !important;
     text-decoration: underline !important;
 }
+.breadcrumb .fa {
+    font-size: 15px !important;
+    margin: 0 2px 0 4px !important;
+    position: relative !important;
+    top: 0px !important; 
+}
 /* Start by setting display:none to make this hidden.
    Then we position it in relation to the viewport window
    with position:fixed. Width, height, top and left speak
@@ -525,7 +536,12 @@ li { cursor: pointer; cursor: hand; }
 body.mdlloading {
     overflow: auto;   
 }
-
+body.mdlloadingDiag {
+    overflow: hidden;   
+}
+body.mdlloadingDiag .modalLdng {
+    display: block;
+}
 /* Anytime the body has the loading class, our
    modal element will be visible */
 body.mdlloading .modalLdng {
@@ -599,4 +615,14 @@ body.mdlloading .modalLdng {
 }
 .phone-only-btn{
     min-width: 100% !important;
+}
+.lovtd{
+    padding: 4px !important;
+}
+#lovTblRO > tbody > tr{    
+    cursor: pointer; cursor: hand;
+}
+.dataTables_scroll
+{
+    overflow:auto;
 }

@@ -222,7 +222,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div class="form-group">
                                     <div class="input-group">
                                         <span class="input-group-addon" id="basic-addon1"><i class="fa fa-key fa-fw fa-border"></i></span>
-                                        <input class="form-control" placeholder="New Password" id="newpwd" name="newpwd" type="password" value=""  onkeyup="enterKeyFunc(event);">
+                                        <input class="form-control" placeholder="New Password" id="newpwd" name="newpwd" type="password" value="" onkeyup="enterKeyFunc(event);">
                                     </div>
                                 </div>
                                 <div class="form-group">

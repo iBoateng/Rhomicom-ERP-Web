@@ -24,7 +24,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <link href="cmn_scrpts/carousel.css" rel="stylesheet">
         <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
         <link href="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />  
-        <link href="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/css/bootstrap-datetimepicker.min.css"  rel="stylesheet" type="text/css" />     
+        <link href="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/css/bootstrap-datetimepicker.min.css"  rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="cmn_scrpts/jquery-ui-1121/jquery-ui.min.css">
         <style>
             .icon-bar{<?php echo $bckcolorshv; ?>}
             .nav.navbar-top-links > li > a:hover,
@@ -134,7 +135,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </a>
                                 </li>
                                 <li class="dropdown">
-                                    <a href="javascript:doAjax('q=changepassword','allmodules','OverwritePage');" class="dropdown-toggle" data-toggle="tooltip" data-placement="bottom" title="Change Password!">
+                                    <a href="javascript:doAjax('q=changepassword','allmodules','OverwritePage','','','');" class="dropdown-toggle" data-toggle="tooltip" data-placement="bottom" title="Change Password!">
                                         <i class="fa fa-gear fa-fw" style="<?php echo $forecolors; ?>font-size: 19px;"></i> 
                                     </a>
                                 </li>
@@ -478,6 +479,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                 <!-- jQuery -->
                 <script src="cmn_scrpts/jquery-1.12.3.min.js"></script>
+                <script type="text/javascript" src="cmn_scrpts/jquery-ui-1121/jquery-ui.min.js"></script>
                 <!-- Bootstrap Core JavaScript -->
                 <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
                 <script src="cmn_scrpts/bootstrap337/bootstrap3-dialog/js/bootstrap-dialog.min.js"></script>

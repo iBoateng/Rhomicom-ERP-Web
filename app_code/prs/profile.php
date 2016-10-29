@@ -1,12 +1,12 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($vwtyp == "0") {
-       echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Personal Profile</span>
+        echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Personal Profile</span>
 					</li>
                                        </ul>
                                      </div>";
-        
+
         $prsnid = $_SESSION['PRSN_ID'];
         $orgID = $_SESSION['ORG_ID'];
         $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
@@ -846,7 +846,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $ext_inf_seq_name = "prs.prsn_all_other_info_table_dflt_row_id_seq";
         $row_pk_id = $pkID;
         ?>
-
         <div  class="col-md-12">
             <table class="table table-striped table-bordered table-responsive otherInfoTblsRO" cellspacing="0" width="100%" style="width:100%;">
                 <thead>

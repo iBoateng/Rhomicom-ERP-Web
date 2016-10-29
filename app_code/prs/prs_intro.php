@@ -78,10 +78,12 @@ if (strpos($srchFor, "%") === FALSE) {
 $cntent = "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
 					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
-						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> | </span>
+                                                <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
+						<span style=\"text-decoration:none;\">Home</span>
+                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"> | </span>
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>";
 if ($lgn_num > 0 && $canview === true) {
     //echo $pgNo;
@@ -253,19 +255,19 @@ if ($lgn_num > 0 && $canview === true) {
             require "edit_profile.php";
         } else if ($pgNo == 3) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Grade Progression Requests</span>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Grade Progression Requests</span>
 					</li>
                                        </ul>
                                      </div>" . "Grade Progression Requests";
         } else if ($pgNo == 4) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Leave of Absence Requests</span>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Leave of Absence Requests</span>
 					</li>
                                        </ul>
                                      </div>" . "Leave of Absence Requests";
         } else if ($pgNo == 5) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Data Administrator</span>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Data Administrator</span>
 					</li>
                                        </ul>
                                      </div>" . "Data Administrator";
@@ -426,13 +428,13 @@ if ($lgn_num > 0 && $canview === true) {
             }
         } else if ($pgNo == 6) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Self-Service Managers</span>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Self-Service Managers</span>
 					</li>
                                        </ul>
                                      </div>" . "Self-Service Managers";
         } else if ($pgNo == 7) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Send Bulk Messages</span>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Send Bulk Messages</span>
 					</li>
                                        </ul>
                                      </div>" . "Send Bulk Messages";
@@ -981,11 +983,12 @@ function get_SelfPrsnDet($pkID) {
               ELSE 
               new_company_loc
               END) \"Branch \", 
-          b.prsn_type \"Relation Type\", 
-          b.prn_typ_asgnmnt_rsn \"Cause of Relation\", 
+            b.prsn_type \"Relation Type\", 
+            b.prn_typ_asgnmnt_rsn \"Cause of Relation\", 
             b.further_details \"Further Details\", 
             to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Start Date \", 
-            to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \" 
+            to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \",
+            lnkd_firm_org_id 
             FROM self.self_prsn_names_nos a 
             LEFT OUTER JOIN pasn.prsn_prsntyps b 
             ON (a.person_id = b.person_id and 
@@ -1018,7 +1021,8 @@ function get_PrsnDet($pkID) {
           b.prn_typ_asgnmnt_rsn \"Cause of Relation\", 
             b.further_details \"Further Details\", 
             to_char(to_timestamp(b.valid_start_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"Start Date \", 
-            to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \" 
+            to_char(to_timestamp(b.valid_end_date,'YYYY-MM-DD'),'DD-Mon-YYYY') \"End Date \",
+            lnkd_firm_org_id
             FROM prs.prsn_names_nos a  
             LEFT OUTER JOIN pasn.prsn_prsntyps b 
             ON (a.person_id = b.person_id and 

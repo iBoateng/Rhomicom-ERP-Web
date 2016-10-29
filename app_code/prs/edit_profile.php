@@ -2,7 +2,8 @@
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($vwtyp == "0") {
         echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"> | </span><span style=\"text-decoration:none;\">Data Change Requests</span>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Data Change Requests</span>
 					</li>
                                        </ul>
                                      </div>";
@@ -82,17 +83,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="col-md-8">
                                                                 <span><?php echo $row[1]; ?></span>
                                                             </div>
-                                                            <!--<div  class="col-md-3">
-                                                                <select class="form-control" id="idNo">
-                                                                    <option value=""></option>                                            
-                                                                    <option value="C">C</option>
-                                                                    <option value="E">E</option>
-                                                                    <option value="M">M</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-md-5">
-                                                                <input class="form-control" id="idNo" placeholder="ID No." value="<?php echo $row[1]; ?>">
-                                                            </div>-->
                                                         </div> 
                                                         <div class="form-group form-group-sm">
                                                             <label for="title" class="control-label col-md-4">Title:</label>
@@ -245,8 +235,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="linkedFirm" class="control-label col-md-4">Linked Firm/ Workplace</label>
                                                             <div  class="col-md-8">
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" aria-label="..." id="lnkdFirmName" value="<?php echo $row[21]; ?>">  
-                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span>
+                                                                    <input type="text" class="form-control" aria-label="..." id="lnkdFirmName" value="<?php echo $row[21]; ?>">
+                                                                    <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
+                                                                    <input type="hidden" id="lnkdFirmID" value="<?php echo $row[28]; ?>">
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row[21]; ?>', 'lnkdFirmID', 'lnkdFirmName', 'clear', 1, '');">
+                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -255,29 +249,31 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div  class="col-md-8">
                                                                 <div class="input-group">
                                                                     <input type="text" class="form-control" aria-label="..." id="lnkdFirmLoc" value="<?php echo $row[22]; ?>">  
-                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span>
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Customer/Supplier Sites', 'lnkdFirmID', '', '', 'radio', true, '<?php echo $row[21]; ?>', 'valueElmntID', 'lnkdFirmLoc', 'clear', 1, '');">
+                                                                        <span class="glyphicon glyphicon-th-list"></span>                                                                            
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>  
                                                         <div class="form-group form-group-sm">
                                                             <label for="email" class="control-label col-md-4">Email:</label>
                                                             <div  class="col-md-8">
-                                                                <input class="form-control" id="firstName" type = "email" placeholder="rho@email.com" value="<?php echo $row[15]; ?>"/>
+                                                                <input class="form-control" id="prsEmail" type = "email" placeholder="<?php echo $admin_email; ?>" value="<?php echo $row[15]; ?>"/>
                                                             </div>
                                                         </div> 
                                                         <div class="form-group form-group-sm">
                                                             <label for="telephone" class="control-label col-md-4">Contact Nos:</label>
                                                             <div  class="col-md-4">
-                                                                <input class="form-control" id="surName" type = "text" placeholder="Telephone" value="<?php echo $row[16]; ?>"/>
+                                                                <input class="form-control" id="telNo" type = "text" placeholder="Telephone" value="<?php echo $row[16]; ?>"/>
                                                             </div>
                                                             <div  class="col-md-4">
-                                                                <input class="form-control" id="surName" type = "text" placeholder="Mobile" value="<?php echo $row[17]; ?>"/>
+                                                                <input class="form-control" id="mobileNo" type = "text" placeholder="Mobile" value="<?php echo $row[17]; ?>"/>
                                                             </div>                                        
                                                         </div>     
                                                         <div class="form-group form-group-sm">
                                                             <label for="fax" class="control-label col-md-4">Fax:</label>
                                                             <div  class="col-md-8">
-                                                                <input class="form-control" id="surName" type = "text" placeholder="Fax" value="<?php echo $row[18]; ?>"/>
+                                                                <input class="form-control" id="faxNo" type = "text" placeholder="Fax" value="<?php echo $row[18]; ?>"/>
                                                             </div>
                                                         </div> 
                                                     </fieldset>                                                
@@ -308,7 +304,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm">
                                                             <label for="causeOfRelation" class="control-label col-md-4">Cause of Relation:</label>
                                                             <div  class="col-md-8">
-                                                                <select class="form-control" id="relation" >
+                                                                <select class="form-control" id="relationCause" >
                                                                     <?php
                                                                     $brghtStr = "";
                                                                     $isDynmyc = FALSE;
@@ -330,25 +326,31 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="furtherDetails" class="control-label col-md-4">Further Details:</label>
                                                             <div  class="col-md-8">
                                                                 <div class="input-group">
-                                                                    <textarea class="form-control" aria-label="..." id="lnkdFirmLoc"><?php echo $row[25]; ?></textarea>
-                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span>
+                                                                    <textarea class="form-control" aria-label="..." id="relationDetails"><?php echo $row[25]; ?></textarea>
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Person Types-Further Details', '', '', '', 'radio', true, '<?php echo $row[25]; ?>', '', 'relationDetails', 'clear', 1, '');">
+                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>  
                                                         <div class="form-group form-group-sm">
                                                             <label for="startDate" class="control-label col-md-4">Start Date:</label>
-                                                            <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input3" data-link-format="yyyy-mm-dd">
-                                                                <input class="form-control" size="16" type="text" id="startDate" value="<?php echo $row[26]; ?>" readonly="">
-                                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                            <div  class="col-md-8">
+                                                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input3" data-link-format="yyyy-mm-dd">
+                                                                    <input class="form-control" size="16" type="text" id="startDate" value="<?php echo $row[26]; ?>" readonly="">
+                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                                </div>
                                                             </div>
                                                         </div>      
                                                         <div class="form-group form-group-sm">
                                                             <label for="endDate" class="control-label col-md-4">End Date:</label>
-                                                            <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
-                                                                <input class="form-control" size="16" type="text" id="endDate" value="<?php echo $row[27]; ?>" readonly="">
-                                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                            <div  class="col-md-8">
+                                                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
+                                                                    <input class="form-control" size="16" type="text" id="endDate" value="<?php echo $row[27]; ?>" readonly="">
+                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                                </div>
                                                             </div>
                                                         </div>  
                                                     </fieldset>                                                
@@ -372,12 +374,81 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </fieldset>                                        
                                                 </div>
                                                 <div class="col-lg-8"> 
-                                                    <fieldset class="basic_person_fs3"><legend class="basic_person_lg">National ID Cards</legend>                                     
-                                                        <div class="form-group form-group-sm">
-                                                            <label for="natIDCards" class="control-label col-md-2 col-sm-2">National ID Cards:</label>
-                                                            <div  class="col-md-8">National ID Cards
-                                                                <!--<textarea class="form-control" id="natIDCards" cols="3" placeholder="National ID Cards" rows="9"></textarea>-->
-                                                            </div>
+                                                    <fieldset class="basic_person_fs3 noshowOnPhones"><legend class="basic_person_lg">National ID Cards</legend> 
+                                                        <div  class="col-md-12">
+                                                            <table id="nationalIDTblRO" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%" style="width:100%;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Country</th>
+                                                                        <th>ID Type</th>
+                                                                        <th>ID No.</th>
+                                                                        <th>Date Issued</th>
+                                                                        <th>Expiry Date</th>
+                                                                        <th>Other Information</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                    $rcrdExst = prsn_Record_Exist($pkID);
+                                                                    if ($rcrdExst == true) {
+                                                                        $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                                                                        if ($chngRqstExst > 0) {
+                                                                            $result1 = get_AllNtnlty_Self($pkID);
+                                                                        } else {
+                                                                            $result1 = get_AllNtnlty($pkID);
+                                                                        }
+                                                                    } else {
+                                                                        $result1 = get_AllNtnlty($pkID);
+                                                                    }
+                                                                    $cntr = 0;
+                                                                    while ($row1 = loc_db_fetch_array($result1)) {
+                                                                        $cntr++;
+                                                                        ?>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <select class="form-control" id="ntnlIDCardsCountry<?php echo $cntr; ?>" >
+                                                                                    <?php
+                                                                                    $brghtStr = "";
+                                                                                    $isDynmyc = FALSE;
+                                                                                    $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Countries"), $isDynmyc, -1, "", "");
+                                                                                    while ($titleRow = loc_db_fetch_array($titleRslt)) {
+                                                                                        $selectedTxt = "";
+                                                                                        if ($titleRow[0] == $row1[1]) {
+                                                                                            $selectedTxt = "selected";
+                                                                                        }
+                                                                                        ?>
+                                                                                        <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
+                                                                                        <?php
+                                                                                    }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select class="form-control" id="ntnlIDCardsIDTyp<?php echo $cntr; ?>" >
+                                                                                    <?php
+                                                                                    $brghtStr = "";
+                                                                                    $isDynmyc = FALSE;
+                                                                                    $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("National ID Types"), $isDynmyc, -1, "", "");
+                                                                                    while ($titleRow = loc_db_fetch_array($titleRslt)) {
+                                                                                        $selectedTxt = "";
+                                                                                        if ($titleRow[0] == $row1[2]) {
+                                                                                            $selectedTxt = "selected";
+                                                                                        }
+                                                                                        ?>
+                                                                                        <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
+                                                                                        <?php
+                                                                                    }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td><input class="form-control" id="ntnlIDCardsIDNo<?php echo $cntr; ?>" type = "text" placeholder="ID No." value="<?php echo $row1[3]; ?>"/></td>
+                                                                            <td><input class="form-control" id="ntnlIDCardsDateIssd<?php echo $cntr; ?>" type = "text" placeholder="Date Issued" value="<?php echo $row1[4]; ?>"/></td>
+                                                                            <td><input class="form-control" id="ntnlIDCardsExpDate<?php echo $cntr; ?>" type = "text" placeholder="Expiry Date" value="<?php echo $row1[5]; ?>"/></td>
+                                                                            <td><textarea class="form-control" id="ntnlIDCardsCountry<?php echo $cntr; ?>" cols="2" placeholder="Other Information" rows="2"><?php echo $row1[6]; ?></textarea></td>
+                                                                        </tr>
+                                                                    <?php } ?>
+                                                                </tbody>
+                                                            </table>
                                                         </div> 
                                                     </fieldset>
                                                 </div>
@@ -393,9 +464,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>                
                     </div>          
                 </div>
+                <!--  style="min-width: 1000px;left:-35%;"-->
+                <div class="modal fade" id="myLovModal" tabindex="-1" role="dialog" aria-labelledby="myLovModalTitle">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myLovModalTitle"></h4>
+                            </div>
+                            <div class="modal-body" id="myLovModalBody" style="min-height: 300px;border-bottom: none !important;"></div>
+                            <div class="modal-footer" style="border-top: none !important;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <?php
             }
         }
+    } else if ($vwtyp == 1) {
+        
     }
 }
 ?>

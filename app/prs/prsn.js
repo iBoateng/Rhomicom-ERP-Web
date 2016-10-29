@@ -117,8 +117,9 @@ function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
                         "ordering": false,
                         "info": false,
                         "bFilter": false,
-                        "scrollX": true
+                        "scrollX": false
                     });
+                    $('#nationalIDTblEDT').wrap('<div class="dataTables_scroll" />');
                     $(function () {
                         $('[data-toggle="tooltip"]').tooltip();
                         $('.form_date').datetimepicker({

@@ -1121,10 +1121,7 @@ function getLovValues($searchWord, $searchIn, $offset, $limit_size, &$brghtsqlSt
                     " OFFSET " . abs($offset * $limit_size);
         }
     }
-
     $brghtsqlStr = $strSql;
-//echo $strSql;
-//echo $strSql;
     $result = executeSQLNoParams($strSql);
     return $result;
 }

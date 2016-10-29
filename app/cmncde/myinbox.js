@@ -25,9 +25,6 @@ function prepareInbox(lnkArgs, htBody, targ, rspns)
                                 table.$('tr.highlight').removeClass('highlight');
                                 $(this).addClass('highlight');
                             }
-                            /*var colIdx = table.cell(this).index().row;
-                             $(table.cells().nodes()).removeClass('highlight');
-                             $(table.row(colIdx).nodes()).addClass('highlight');*/
                         });
                 $("#example td").eq(2).html(
                         "<button type=\"button\" class=\"btn btn-primary btn-sm\">" +
