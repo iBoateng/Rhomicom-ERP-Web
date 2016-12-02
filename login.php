@@ -189,7 +189,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="modalLdng"></div>
             <div class="modalLdng1"></div>
             <div class="container-fluid" style="">
-                <div class="row" style="min-height:65px;height: 100%;border-bottom:0px solid #bbb;padding:0px;background-color: rgba(0,0,0,0.32);">
+                <div class="row" style="min-height:65px;height: 100%;border-bottom:0px solid #bbb;padding:0px;background-color: rgba(0,0,0,0.52);">
                     <div class="col-md-6">
                         <div style="max-width:25%;float:left;"><img src="cmn_images/<?php echo $app_image1; ?>" style="left: 0.5%; margin:2px; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;"></div>
                         <div class="hdrDiv" style="max-width:90%;color:#FFF;text-align:center;float:none;">
@@ -207,7 +207,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </ul>
                     </div>
                 </div>
-                <div class="row" style="min-height:415px;height: 100%;background-color: rgba(0,0,0,0.22);">
+                <div class="row" style="min-height:415px;height: 100%;background-color: rgba(0,0,0,0.12);">
                     <div class="col-md-4">&nbsp;</div>
                     <div class="col-md-4" style="">
                         <div class="center-block" id="loginDiv">
@@ -247,14 +247,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <br/>
+                        </div>            
                         <hr>
                     </div>
                     <div class="col-md-4">&nbsp;</div>
                 </div>
             </div>
-            <section id="contact" class="gray-section contact" style="background-color: rgba(0, 0,0,0.22);border-top:0px solid #999;color:#FFF;font-size: 16px; padding:20px;">
+            <section id="contact" class="gray-section contact" style="background-color: rgba(0, 0,0,0.12);border-top:0px solid #ddd;color:#FFF;font-size: 16px; padding:20px;">
                 <div class="container">
                     <div class="row">                        
                         <div class="col-md-4 text-center" style="">

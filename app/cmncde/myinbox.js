@@ -1,9 +1,6 @@
 function prepareInbox(lnkArgs, htBody, targ, rspns)
 {    
-    loadCss("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css", function () {
-    });
-    loadScript("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js", function () {
-        loadScript("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js", function () {
+    
             $(targ).html(rspns);
             $(document).ready(function () {
                 var table = $('#example').DataTable({
@@ -33,7 +30,11 @@ function prepareInbox(lnkArgs, htBody, targ, rspns)
 
                 
                 htBody.removeClass("mdlloading");
+    /*loadCss("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css", function () {
+    });
+    loadScript("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js", function () {
+        loadScript("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js", function () {
         });
 
-    });
+    });*/
 }

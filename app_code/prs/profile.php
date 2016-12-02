@@ -1,7 +1,8 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($vwtyp == "0") {
-        echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
+        /* onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\"*/
+        echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Personal Profile</span>
 					</li>
                                        </ul>

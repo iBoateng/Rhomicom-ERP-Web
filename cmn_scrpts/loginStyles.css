@@ -7,7 +7,9 @@ blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
 table{border-collapse:collapse;border-spacing:0;}
 body{font:13px/20px Helvetica,Arial,sans-serif;;}
 .container{margin:0 auto;width:100%;float:none;}
-.login{position:relative;margin:10% auto;padding:0px;background:#f3f3f3;
+hr{margin-top: 1px !important;
+margin-bottom: 1px !important;}
+.login{position:relative;margin:6% auto;padding:0px;background:#f3f3f3;
        border-radius:1px;
        -moz-box-shadow: 1px 11px 20px -3px /*{global-box-shadow-size}*/ rgba(0,0,0,.15) /*{global-box-shadow-color}*/;
        -webkit-box-shadow: 1px 11px 20px -3px /*{global-box-shadow-size}*/ rgba(0,0,0,.15) /*{global-box-shadow-color}*/;

@@ -162,7 +162,7 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                     "bFilter": false,
                     "scrollX": false
                 });
-                $('#lovTblRO').wrap('<div class="dataTables_scroll" />');
+                $('#lovTblRO').wrap('<div class="dataTables_scroll"/>');
                 /*var intrvlID = setInterval(function () {
                  cntr = cntr + 1;
                  table = $('#lovTblRO').DataTable({
@@ -218,7 +218,6 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                             radio.checked = true;
                         });
                     }
-
                 });
                 $('#lovTblRO tbody')
                         .on('mouseenter', 'tr', function () {

@@ -21,7 +21,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             //echo $ftp_src;
         }
         ?> 
-        <link href="cmn_scrpts/carousel.css" rel="stylesheet">
+        <link href="cmn_scrpts/carousel.css?v=5" rel="stylesheet">
         <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
         <link href="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />  
         <link href="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/css/bootstrap-datetimepicker.min.css"  rel="stylesheet" type="text/css" />

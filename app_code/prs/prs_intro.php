@@ -180,6 +180,8 @@ if ($lgn_num > 0 && $canview === true) {
                 ));
                 exit();
             }
+        } else if ($actyp == 2) {
+            var_dump($_POST);
         }
     } else if ($pgNo == 0) {
         $cntent .= "
@@ -223,24 +225,24 @@ if ($lgn_num > 0 && $canview === true) {
                 //continue;
             }
             if ($grpcntr == 0) {
-                $cntent.= "<div class=\"row\">";
+                $cntent .= "<div class=\"row\">";
             }
             //showPageDetails('$pageHtmlID', $No);
-            $cntent.= "<div class=\"col-md-3 colmd3special2\">
+            $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$No&vtyp=0');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
     </div>";
             if ($grpcntr == 3) {
-                $cntent.= "</div>";
+                $cntent .= "</div>";
                 $grpcntr = 0;
             } else {
                 $grpcntr = $grpcntr + 1;
             }
         }
 
-        $cntent.= "
+        $cntent .= "
       </p>
     </div>";
         echo $cntent;
@@ -374,8 +376,8 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>PERSON DETAILS</caption>";
                 $cntent .= "<thead><tr>";
-                $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-                $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
+                $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
+                $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
                 $cntent .= "</tr></thead>";
                 $cntent .= "<tbody>";
                 $i = 0;
@@ -395,8 +397,8 @@ if ($lgn_num > 0 && $canview === true) {
                             $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
                         }
 
-                        $cntent.="<tr $style>";
-                        $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
+                        $cntent .= "<tr $style>";
+                        $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
 
                         if (trim(loc_db_field_name($result, $d)) == "Person's Picture") {
                             $temp = explode(".", $row[$d]);
@@ -415,15 +417,15 @@ if ($lgn_num > 0 && $canview === true) {
                                 $img_src = "cmn_images/image_up.png";
                             }
                             $radomNo = rand(0, 500);
-                            $cntent.= "<td  width=\"60%\" $style2><img style=\"border:1px solid #eee;height:180px;padding:5px;\" src=\"$img_src?v=" . $radomNo . "\" /></td>";
+                            $cntent .= "<td  width=\"60%\" $style2><img style=\"border:1px solid #eee;height:180px;padding:5px;\" src=\"$img_src?v=" . $radomNo . "\" /></td>";
                         } else {
-                            $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
+                            $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
                         }
-                        $cntent.="</tr>";
+                        $cntent .= "</tr>";
                     }
                     $i++;
                 }
-                $cntent.="</tbody></table></div>";
+                $cntent .= "</tbody></table></div>";
                 echo $cntent;
             }
         } else if ($pgNo == 6) {
@@ -890,16 +892,16 @@ function uploadDaImage($prsnid, &$nwImgLoc) {
         $allowedExts = array("gif", "jpeg", "jpg", "png");
 //$files = multiple($_FILES);
         $flnm = $_FILES["daPrsnPicture"]["name"];
-        $msg.= $flnm;
+        $msg .= $flnm;
         $temp = explode(".", $flnm);
         $extension = end($temp);
         if ($_FILES["daPrsnPicture"]["error"] > 0) {
-            $msg.= "Return Code: " . $_FILES["daPrsnPicture"]["error"] . "<br>";
+            $msg .= "Return Code: " . $_FILES["daPrsnPicture"]["error"] . "<br>";
         } else {
-            $msg.= "Upload: " . $_FILES["daPrsnPicture"]["name"] . "<br>";
-            $msg.= "Type: " . $_FILES["daPrsnPicture"]["type"] . "<br>";
-            $msg.= "Size: " . ($_FILES["daPrsnPicture"]["size"]) . " bytes<br>";
-            $msg.= "Temp file: " . $_FILES["daPrsnPicture"]["tmp_name"] . "<br>";
+            $msg .= "Upload: " . $_FILES["daPrsnPicture"]["name"] . "<br>";
+            $msg .= "Type: " . $_FILES["daPrsnPicture"]["type"] . "<br>";
+            $msg .= "Size: " . ($_FILES["daPrsnPicture"]["size"]) . " bytes<br>";
+            $msg .= "Temp file: " . $_FILES["daPrsnPicture"]["tmp_name"] . "<br>";
             if ((($_FILES["daPrsnPicture"]["type"] == "image/gif") ||
                     ($_FILES["daPrsnPicture"]["type"] == "image/jpeg") ||
                     ($_FILES["daPrsnPicture"]["type"] == "image/jpg") ||
@@ -922,11 +924,11 @@ function uploadDaImage($prsnid, &$nwImgLoc) {
                             "', img_location = '" . $prsnid . "." . $extension . "' WHERE person_id=" . $prsnid;
                     execUpdtInsSQL($updtSQL);
                 }
-                $msg.= "Stored in: " . "uploaded/" . $_FILES["daPrsnPicture"]["name"][0];
+                $msg .= "Stored in: " . "uploaded/" . $_FILES["daPrsnPicture"]["name"][0];
                 $nwImgLoc = "$prsnid" . "." . $extension;
                 return TRUE;
             } else {
-                $msg.= "<br/>Invalid file";
+                $msg .= "<br/>Invalid file";
                 $nwImgLoc = $msg;
             }
         }
@@ -1031,7 +1033,6 @@ function get_PrsnDet($pkID) {
     $result = executeSQLNoParams($strSql);
     return $result;
 }
-
 
 function get_AllNtnlty($pkID) {
     $strSql = "SELECT ntnlty_id mt, nationality \"Country\", national_id_typ national_id_type, 
@@ -1235,46 +1236,41 @@ function get_Pos($pkID) {
     $result = executeSQLNoParams($strSql);
     return $result;
 }
-function getAllwdExtInfosNVals($searchWord, $searchIn,
-      $offset, $limit_size, &$brghtsqlStr, $tblID,
-          $row_id_val, $valTbl, $Org_id)
-        {
-           $strSql = "";
-            $whrCls = "";
 
-            if ($searchIn == "Value")
-            {
-                $whrCls = " AND (tbl1.othr_inf ilike '" .
-                     loc_db_escape_string($searchWord) . "' or tbl1.othr_inf IS NULL) ";
-            }
-            else if ($searchIn == "Extra Info Label")
-            {
-                $whrCls = " AND (tbl1.other_info_label ilike '" .
-                     loc_db_escape_string($searchWord) . "' or tbl1.other_info_category ilike '" .
-                     loc_db_escape_string($searchWord) . "') ";
+function getAllwdExtInfosNVals($searchWord, $searchIn, $offset, $limit_size, &$brghtsqlStr, $tblID, $row_id_val, $valTbl, $Org_id) {
+    $strSql = "";
+    $whrCls = "";
 
-            }
-            $strSql = "SELECT tbl1.* FROM (SELECT b.pssbl_value other_info_category, 
+    if ($searchIn == "Value") {
+        $whrCls = " AND (tbl1.othr_inf ilike '" .
+                loc_db_escape_string($searchWord) . "' or tbl1.othr_inf IS NULL) ";
+    } else if ($searchIn == "Extra Info Label") {
+        $whrCls = " AND (tbl1.other_info_label ilike '" .
+                loc_db_escape_string($searchWord) . "' or tbl1.other_info_category ilike '" .
+                loc_db_escape_string($searchWord) . "') ";
+    }
+    $strSql = "SELECT tbl1.* FROM (SELECT b.pssbl_value other_info_category, 
           COALESCE((select c.other_info_label from " . $valTbl . " c " .
-               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))), b.pssbl_value) other_info_label, 
+            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))), b.pssbl_value) other_info_label, 
          COALESCE((select c.other_info_value from " . $valTbl . " c " .
-               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),'') othr_inf, " .
-               "a.comb_info_id, a.table_id, COALESCE((select c.dflt_row_id from " . $valTbl . " c " .
-               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),-1) othr_inf_row_id " .
-               "FROM sec.sec_allwd_other_infos a " .
-               "LEFT OUTER JOIN gst.gen_stp_lov_values b ON (a.other_info_id = b.pssbl_value_id) " .
-               "WHERE((a.is_enabled = '1')  AND (a.table_id = " . $tblID . ") AND (b.allowed_org_ids like '%," . $Org_id .
-               ",%') AND (((select c.other_info_value from " . $valTbl . " c " .
-               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) ilike '" .
-               loc_db_escape_string($searchWord) . "') OR ((select c.other_info_value from " . $valTbl . " c " .
-               "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) is null))) " .
-               " UNION 
+            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),'') othr_inf, " .
+            "a.comb_info_id, a.table_id, COALESCE((select c.dflt_row_id from " . $valTbl . " c " .
+            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))),-1) othr_inf_row_id " .
+            "FROM sec.sec_allwd_other_infos a " .
+            "LEFT OUTER JOIN gst.gen_stp_lov_values b ON (a.other_info_id = b.pssbl_value_id) " .
+            "WHERE((a.is_enabled = '1')  AND (a.table_id = " . $tblID . ") AND (b.allowed_org_ids like '%," . $Org_id .
+            ",%') AND (((select c.other_info_value from " . $valTbl . " c " .
+            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) ilike '" .
+            loc_db_escape_string($searchWord) . "') OR ((select c.other_info_value from " . $valTbl . " c " .
+            "where ((c.tbl_othr_inf_combntn_id = a.comb_info_id) AND (c.row_pk_id_val = " . $row_id_val . "))) is null))) " .
+            " UNION 
                   SELECT c.other_info_category, c.other_info_label, c.other_info_value othr_inf, 99999999 comb_info_id, -1 table_id, c.dflt_row_id from " . $valTbl .
-               " c  WHERE c.tbl_othr_inf_combntn_id<=0 and c.row_pk_id_val = " . $row_id_val . ") tbl1 WHERE 1=1" . $whrCls .
-               " ORDER BY tbl1.comb_info_id LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+            " c  WHERE c.tbl_othr_inf_combntn_id<=0 and c.row_pk_id_val = " . $row_id_val . ") tbl1 WHERE 1=1" . $whrCls .
+            " ORDER BY tbl1.comb_info_id LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
 
-            $result = executeSQLNoParams($strSql);
-            $brghtsqlStr = $strSql;
-            return $result;
-        }
+    $result = executeSQLNoParams($strSql);
+    $brghtsqlStr = $strSql;
+    return $result;
+}
+
 ?>
