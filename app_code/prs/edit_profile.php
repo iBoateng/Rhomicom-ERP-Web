@@ -63,7 +63,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="col-lg-4">
                                                     <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Person's Picture</legend>
                                                         <div style="margin-bottom: 10px;">
-                                                            <img src="<?php echo $pemDest . $myImgFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 250px !important; width: auto !important;">                                            
+                                                            <img src="<?php echo $pemDest . $myImgFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">                                            
                                                         </div>
                                                         <div class="form-group form-group-sm">
                                                             <div class="col-md-12">
@@ -210,7 +210,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm">
                                                             <label for="homeTown" class="control-label col-md-4">Home Town:</label>
                                                             <div  class="col-md-8">
-                                                                <textarea class="form-control" id="pob" cols="2" placeholder="Home Town" rows="2"><?php echo $row[19]; ?></textarea>
+                                                                <textarea class="form-control" id="pob" cols="2" placeholder="Home Town" rows="1"><?php echo $row[19]; ?></textarea>
                                                             </div>
                                                         </div> 
                                                         <div class="form-group form-group-sm">
@@ -226,7 +226,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="col-lg-4">
                                                     <fieldset class="basic_person_fs2"><legend class="basic_person_lg">QR Code</legend>
                                                         <div>
-                                                            <img src="cmn_images/no_image.png" alt="..." id="imgQrCode" class="img-thumbnail center-block img-responsive" style="height: 250px !important; width: auto !important;">                                            
+                                                            <img src="cmn_images/no_image.png" alt="..." id="imgQrCode" class="img-thumbnail center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
                                                         </div>                                       
                                                     </fieldset>
                                                 </div>                                

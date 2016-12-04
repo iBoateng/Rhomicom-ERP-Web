@@ -62,7 +62,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="col-lg-4">
                                                     <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Person's Picture</legend>
                                                         <div style="margin-bottom: 10px;">
-                                                            <img src="<?php echo $pemDest . $myImgFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 280px !important; width: auto !important;">                                            
+                                                            <img src="<?php echo $pemDest . $myImgFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
                                                         </div>                                       
                                                     </fieldset>
                                                 </div>                                
@@ -151,7 +151,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="col-lg-4">
                                                     <fieldset class="basic_person_fs2"><legend class="basic_person_lg">QR Code</legend>
                                                         <div>
-                                                            <img src="cmn_images/no_image.png" alt="..." id="imgQrCode" class="img-thumbnail center-block img-responsive" style="height: 250px !important; width: auto !important;">                                            
+                                                            <img src="cmn_images/no_image.png" alt="..." id="imgQrCode" class="img-thumbnail center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
                                                         </div>                                       
                                                     </fieldset>
                                                 </div>                                
