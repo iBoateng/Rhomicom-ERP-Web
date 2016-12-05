@@ -28,8 +28,6 @@ function prepareProfile(lnkArgs, htBody, targ, rspns)
 }
 function prepareProfileRO(lnkArgs, htBody, targ, rspns)
 {
-
-    //alert(targ+"<br/>"+rspns);
     $(targ).html(rspns);
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -92,19 +90,11 @@ function prepareProfileRO(lnkArgs, htBody, targ, rspns)
         }
         htBody.removeClass("mdlloading");
     });
-    /*loadCss("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css", function () {
-     });
-     loadScript("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js", function () {
-     loadScript("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js", function () {
-     });
-     });*/
 }
 
 
 function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
 {
-
-
     $(targ).html(rspns);
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -198,12 +188,6 @@ function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
         }
         htBody.removeClass("mdlloading");
     });
-
-    /*loadCss("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css", function () {
-     });
-     loadScript("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js", function () {
-     loadScript("cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js", function () {});
-     });*/
 }
 
 function getNtnlIDForm(elementID, modalBodyID, titleElementID, formElementID, tRowElementID, formTitle, vtyp, addOrEdit, pKeyID)
