@@ -453,7 +453,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myLovModalTitle"></h4>
                             </div>
-                            <div class="modal-body" id="myLovModalBody" style="min-height: 300px;border-bottom: none !important;"></div>
+                            <div class="modal-body" id="myLovModalBody" style="min-height: 100px;border-bottom: none !important;"></div>
                             <div class="modal-footer" style="border-top: none !important;">
                             </div>
                         </div>
@@ -466,7 +466,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myFormsModalTitle"></h4>
                             </div>
-                            <div class="modal-body" id="myFormsModalBody" style="min-height: 300px;border-bottom: none !important;"></div>
+                            <div class="modal-body" id="myFormsModalBody" style="min-height: 100px;border-bottom: none !important;"></div>
                             <div class="modal-footer" style="border-top: none !important;">
                             </div>
                         </div>
@@ -479,7 +479,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myFormsModalTitleLg"></h4>
                             </div>
-                            <div class="modal-body" id="myFormsModalBodyLg" style="min-height: 300px;border-bottom: none !important;"></div>
+                            <div class="modal-body" id="myFormsModalBodyLg" style="min-height: 100px;border-bottom: none !important;"></div>
                             <div class="modal-footer" style="border-top: none !important;">
                             </div>
                         </div>
@@ -521,10 +521,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                      * textbox with number validation
                                      */
                                     if ($row1[7] == "Tabular") {
+                                        $vrsFieldIDs = "";
+                                        for ($i = 0; $i < $row1[9]; $i++) {
+                                            if ($i == $row1[9] - 1) {
+                                                $vrsFieldIDs .= "prsExtrTblrDtCol_" . $i;
+                                            } else {
+                                                $vrsFieldIDs .= "prsExtrTblrDtCol_" . $i . "|";
+                                            }
+                                        }
                                         ?>
                                         <div class="row">
                                             <div  class="col-md-12">
-                                                <table id="extDataTblCol<?php echo $row1[1]; ?>" class="table table-striped table-bordered table-responsive extPrsnDataTblEDT"  cellspacing="0" width="100%" style="width:100%;"><thead><th>No.</th>
+                                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getAddtnlDataForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'addtnlPrsnTblrDataForm', '', 'Add/Edit Data', 12, 'ADD', -1, '<?php echo $vrsFieldIDs; ?>', <?php echo $row1[1]; ?>, 'extDataTblCol_<?php echo $row1[1]; ?>');">
+                                                    <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                    Add Data
+                                                </button>
+                                                <table id="extDataTblCol_<?php echo $row1[1]; ?>" class="table table-striped table-bordered table-responsive extPrsnDataTblEDT"  cellspacing="0" width="100%" style="width:100%;"><thead><th>&nbsp;&nbsp;...</th>
                                                     <?php
                                                     $fieldHdngs = $row1[11];
                                                     $arry1 = explode(",", $fieldHdngs);
@@ -563,8 +575,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             $maxsze = 100;
                                                         }
                                                         for ($j = 0; $j < $cntr3; $j++) {
+                                                            if (trim(str_replace("~", "", $arry3[$j])) == "") {
+                                                                continue;
+                                                            }
                                                             ?>
-                                                            <tr><td><?php echo ($j + 1); ?></td>
+                                                            <tr id="prsExtrTblrDtCol_<?php echo $row1[1]; ?>_Row<?php echo $j; ?>">
+                                                                <td>
+                                                                    <button type="button" class="btn btn-default btn-sm" onclick="getAddtnlDataForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'addtnlPrsnTblrDataForm', 'prsExtrTblrDtCol_<?php echo $row1[1]; ?>_Row<?php echo $j; ?>', 'Add/Edit Data', 12, 'EDIT', <?php echo $pkID; ?>, '<?php echo $vrsFieldIDs; ?>', <?php echo $row1[1]; ?>, 'extDataTblCol_<?php echo $row1[1]; ?>');">
+                                                                        <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                                        <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                    </button>
+                                                                </td>
                                                                 <?php
                                                                 $arry2 = explode("~", $arry3[$j]);
                                                                 $cntr2 = count($arry2);
@@ -1180,7 +1201,54 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             </div>
             <div class="row" style="float:right;padding-right: 1px;">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveNtnlIDForm('myFormsModal', '<?php ?>');">Save Changes</button>
+                <button type="button" class="btn btn-primary" onclick="saveNtnlIDForm('myFormsModal', '<?php echo $ntnlIDpKey; ?>');">Save Changes</button>
+            </div>
+        </form>
+        <?php
+    } else if ($vwtyp == "12") {
+        /* Add Extra Data Form */
+        $addtnlPrsPkey = isset($_POST['addtnlPrsPkey']) ? cleanInputData($_POST['addtnlPrsPkey']) : -1;
+        $extDtColNum = isset($_POST['extDtColNum']) ? cleanInputData($_POST['extDtColNum']) : -1;
+        $pipeSprtdFieldIDs = isset($_POST['pipeSprtdFieldIDs']) ? cleanInputData($_POST['pipeSprtdFieldIDs']) : "";
+        $tableElmntID = isset($_POST['tableElmntID']) ? cleanInputData($_POST['tableElmntID']) : "";
+        $tRowElementID = isset($_POST['tRowElementID']) ? cleanInputData($_POST['tRowElementID']) : "";
+        $addOrEdit = isset($_POST['addOrEdit']) ? cleanInputData($_POST['addOrEdit']) : "";
+        $result1 = get_PrsExtrDataGrpCols1($extDtColNum, $orgID);
+        ?>
+        <form class="form-horizontal" id="addtnlPrsnTblrDataForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">  
+                <?php
+                while ($row1 = loc_db_fetch_array($result1)) {
+                    $fieldHdngs = $row1[11];
+                    $arry1 = explode(",", $fieldHdngs);
+                    $cntr = count($arry1);
+                    for ($i = 0; $i < $row1[9]; $i++) {
+                        if ($i <= $cntr - 1) {
+                            ?>
+                            <div class="form-group form-group-sm">
+                                <label for="prsExtrTblrDtCol_<?php echo $i; ?>" class="control-label col-md-4"><?php echo $arry1[$i]; ?>:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="prsExtrTblrDtCol_<?php echo $i; ?>" type = "text" placeholder="" value=""/>
+                                </div>
+                            </div>
+                            <?php
+                        } else {
+                            ?>
+                            <div class="form-group form-group-sm">
+                                <label for="prsExtrTblrDtCol_<?php echo $i; ?>" class="control-label col-md-4">&nbsp;:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="prsExtrTblrDtCol_<?php echo $i; ?>" type = "text" placeholder="" value=""/>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    }
+                }
+                ?>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveAddtnlDataForm('myFormsModalBody', '<?php echo $addtnlPrsPkey; ?>', '<?php echo $pipeSprtdFieldIDs; ?>',<?php echo $extDtColNum; ?>, '<?php echo $tableElmntID; ?>', '<?php echo $tRowElementID; ?>', '<?php echo $addOrEdit; ?>');">Save Changes</button>
             </div>
         </form>
         <?php

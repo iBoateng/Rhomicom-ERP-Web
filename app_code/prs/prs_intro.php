@@ -181,7 +181,14 @@ if ($lgn_num > 0 && $canview === true) {
                 exit();
             }
         } else if ($actyp == 2) {
+            $ntnlIDpKey = isset($_POST['ntnlIDpKey']) ? cleanInputData($_POST['ntnlIDpKey']) : -1;
             var_dump($_POST);
+        } else if ($actyp == 3) {
+            $addtnlPrsPkey = isset($_POST['addtnlPrsPkey']) ? cleanInputData($_POST['addtnlPrsPkey']) : -1;
+            $extDtColNum = isset($_POST['extDtColNum']) ? cleanInputData($_POST['extDtColNum']) : -1;
+            $pipeSprtdFieldIDs = isset($_POST['pipeSprtdFieldIDs']) ? cleanInputData($_POST['pipeSprtdFieldIDs']) : -1;
+            var_dump($_POST);
+            echo "<button onclick=\"$('#myFormsModal').modal('hide');\">Close</button>";
         }
     } else if ($pgNo == 0) {
         $cntent .= "
@@ -1118,6 +1125,18 @@ function get_PrsExtrDataGrpCols($grpnm, $org_ID) {
         FROM prs.prsn_extra_data_cols 
         WHERE column_data_category= '" . loc_db_escape_string($grpnm) .
             "' and org_id = " . $org_ID . " and column_label !='' ORDER BY col_order, column_no, extra_data_cols_id";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_PrsExtrDataGrpCols1($colNum, $org_ID) {
+    $strSql = "SELECT extra_data_cols_id, column_no, column_label, attchd_lov_name, 
+       column_data_type, column_data_category, data_length, 
+       CASE WHEN data_dsply_type='T' THEN 'Tabular' ELSE 'Detail' END, 
+       org_id, no_cols_tblr_dsply, col_order, csv_tblr_col_nms 
+        FROM prs.prsn_extra_data_cols 
+        WHERE column_no= '" . $colNum .
+            "' and org_id = " . $org_ID . " ORDER BY col_order, column_no, extra_data_cols_id";
     $result = executeSQLNoParams($strSql);
     return $result;
 }
