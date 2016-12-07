@@ -408,8 +408,8 @@ body {
 }
 .modal {
     position: fixed;
-    top: 85px;
-    z-index: 1055 !important;
+    top: 15px;
+    z-index: 9996 !important;/*1055*/
 }
 .page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle {
     padding: 8px !important;

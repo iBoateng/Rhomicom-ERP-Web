@@ -487,6 +487,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js"></script>
                 <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js"></script>        
                 <script type="text/javascript" src="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/js/bootstrap-datetimepicker.min.js"></script>
+                <script type="text/javascript" src="cmn_scrpts/summernote081/summernote.min.js"></script>
+                <link href="cmn_scrpts/summernote081/summernote.css" rel="stylesheet" type="text/css"/>
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('[data-toggle="tooltip"]').tooltip();

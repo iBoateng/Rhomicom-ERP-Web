@@ -373,7 +373,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </fieldset>                                        
                                                 </div>
                                                 <div class="col-lg-8"> 
-                                                    <!--noshowOnPhones-->
                                                     <fieldset class="basic_person_fs3" style="padding: 1px !important;"><legend class="basic_person_lg">National ID Cards</legend> 
                                                         <div  class="col-md-12">
                                                             <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getNtnlIDForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'ntnlIDCardsForm', '', 'Add/Edit National ID', 11, 'ADD', -1);">
@@ -411,7 +410,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         ?>
                                                                         <tr id="ntnlIDCardsRow<?php echo $cntr; ?>">
                                                                             <td>
-                                                                                <button type="button" class="btn btn-default btn-sm" onclick="getNtnlIDForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'ntnlIDCardsForm', 'ntnlIDCardsRow<?php echo $cntr; ?>', 'Add/Edit National ID', 11, 'EDIT', <?php echo $row1[0]; ?>);">
+                                                                                <button type="button" class="btn btn-default btn-sm" onclick="getNtnlIDForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'ntnlIDCardsForm', 'ntnlIDCardsRow<?php echo $cntr; ?>', 'Add/Edit National ID', 11, 'EDIT', <?php echo $row1[0]; ?>);" style="padding:2px !important;">
                                                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                                 </button>
@@ -498,7 +497,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $rcrdExst = prsn_Record_Exist($pkID);
             $result = get_PrsExtrDataGrps($orgID);
             ?>
-            <form class="form-horizontal">
+            <form class="form-horizontal" id="adtnlPrsnDataForm">
                 <?php
                 while ($row = loc_db_fetch_array($result)) {
                     ?>
@@ -581,7 +580,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             ?>
                                                             <tr id="prsExtrTblrDtCol_<?php echo $row1[1]; ?>_Row<?php echo $j; ?>">
                                                                 <td>
-                                                                    <button type="button" class="btn btn-default btn-sm" onclick="getAddtnlDataForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'addtnlPrsnTblrDataForm', 'prsExtrTblrDtCol_<?php echo $row1[1]; ?>_Row<?php echo $j; ?>', 'Add/Edit Data', 12, 'EDIT', <?php echo $pkID; ?>, '<?php echo $vrsFieldIDs; ?>', <?php echo $row1[1]; ?>, 'extDataTblCol_<?php echo $row1[1]; ?>');">
+                                                                    <button type="button" class="btn btn-default btn-sm" onclick="getAddtnlDataForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'addtnlPrsnTblrDataForm', 'prsExtrTblrDtCol_<?php echo $row1[1]; ?>_Row<?php echo $j; ?>', 'Add/Edit Data', 12, 'EDIT', <?php echo $pkID; ?>, '<?php echo $vrsFieldIDs; ?>', <?php echo $row1[1]; ?>, 'extDataTblCol_<?php echo $row1[1]; ?>');" style="padding:2px !important;">
                                                                         <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                                         <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                                     </button>
@@ -949,10 +948,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="col-md-12"> 
                 <fieldset class="basic_person_fs4"><legend class="basic_person_lg">EDUCATIONAL BACKGROUND</legend> 
                     <div  class="col-md-12">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', '', 'Add/Edit Educational Background', 14, 'ADD', -1, <?php echo $prsnid; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Educational Background
+                        </button>
                         <table class="table table-striped table-bordered table-responsive cvTblsEDT" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>		
+                                    <th>...</th>		
                                     <th>Course Name</th>
                                     <th>School/Institution</th>
                                     <th>School Location</th>
@@ -971,7 +974,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $cntr += 1;
                                         ?>
                                         <tr>
-                                            <td><?php echo $cntr; ?></td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', 'educBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Educational Background', 14, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                             <td><?php echo $row1[1]; ?></td>
                                             <td><?php echo $row1[2]; ?></td>
                                             <td><?php echo $row1[3]; ?></td>
@@ -1089,35 +1097,37 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         ?>
         <div class="row">
             <div  class="col-md-12">
-                <table class="table table-striped table-bordered table-responsive otherInfoTblsEDT" cellspacing="0" width="100%" style="width:100%;">
-                    <thead>
-                        <tr>
-                            <!--<th>No.</th>-->
-                            <th>Category</th>
-                            <th>Label</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if ($pkID > 0) {
-                            $brghtsqlStr = "";
-                            $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr, $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
-                            while ($row1 = loc_db_fetch_array($result1)) {
-                                $cntr += 1;
-                                ?>
-                                <tr>
-                                    <!--<td><?php echo $cntr; ?></td>-->
-                                    <td><?php echo $row1[0]; ?></td>
-                                    <td><?php echo $row1[1]; ?></td>
-                                    <td><?php echo $row1[2]; ?></td>
-                                </tr>
-                                <?php
+                <form class="form-horizontal" id="OtherInfoTblForm">
+                    <table class="table table-striped table-bordered table-responsive otherInfoTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <!--<th>No.</th>-->
+                                <th>Category</th>
+                                <th>Label</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($pkID > 0) {
+                                $brghtsqlStr = "";
+                                $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr, $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
+                                while ($row1 = loc_db_fetch_array($result1)) {
+                                    $cntr += 1;
+                                    ?>
+                                    <tr>
+                                        <!--<td><?php echo $cntr; ?></td>-->
+                                        <td><?php echo $row1[0]; ?></td>
+                                        <td><?php echo $row1[1]; ?></td>
+                                        <td><input class="form-control" id="otherInfoTblRow_<?php echo $cntr; ?>" type = "text" placeholder="" value="<?php echo $row1[2]; ?>"/></td>
+                                    </tr>
+                                    <?php
+                                }
                             }
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                            ?>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
         <?php

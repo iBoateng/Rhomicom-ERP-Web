@@ -190,7 +190,7 @@ if ($lgn_num > 0 && $canview === true) {
             var_dump($_POST);
             echo "<button onclick=\"$('#myFormsModal').modal('hide');\">Close</button>";
         }
-    } else if ($pgNo == 0) {
+    } else if ($pgNo == 0 || $pgNo == 7) {
         $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=8&typ=1');\">
 						<span style=\"text-decoration:none;\">Person Records Menu</span>
@@ -198,11 +198,11 @@ if ($lgn_num > 0 && $canview === true) {
                                        </ul>
                                      </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
                     padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
-      <h3>FUNCTIONS UNDER THE PERSONAL RECORDS MANAGER</h3>
+      <!--<h4>FUNCTIONS UNDER THE PERSONAL RECORDS MANAGER</h4>
       <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
                     font-weight:normal;\">This is where Basic Data about Persons in the Organisation are Captured and Managed. The module has the ff areas:</span>
-                    </div> 
+                    </div>-->
       <p>";
         $grpcntr = 0;
         $prsnType = get_LtstPrsnType($prsnid);
@@ -253,6 +253,9 @@ if ($lgn_num > 0 && $canview === true) {
       </p>
     </div>";
         echo $cntent;
+        if ($pgNo == 7) {
+            require "bulk_msg_system.php";
+        }
     } else {
         $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=8&typ=1');\">

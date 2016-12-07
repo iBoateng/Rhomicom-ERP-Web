@@ -305,7 +305,6 @@ function saveNtnlIDForm(elementID, ntnlIDPersonID)
             "&ntnlIDPersonID=" + ntnlIDPersonID);
 }
 
-
 function getAddtnlDataForm(elementID, modalBodyID, titleElementID, formElementID,
         tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, pipeSprtdFieldIDs, extDtColNum, tableElmntID)
 {
@@ -451,4 +450,133 @@ function saveAddtnlDataForm(modalBodyID, addtnlPrsPkey, pipeSprtdFieldIDs, extDt
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=3&addtnlPrsPkey=" + addtnlPrsPkey
             + "&extDtColNum=" + extDtColNum + "&tableElmntID=" + tableElmntID + "&allTblValues=" + allTblValues);
+}
+
+function getEducBkgrdForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + titleElementID).html(formTitle);
+            $('#' + modalBodyID).html(xmlhttp.responseText);
+            $('.modal-dialog').draggable();
+            $(function () {
+                $('.form_date').datetimepicker({
+                    format: "d-M-yyyy",
+                    language: 'en',
+                    weekStart: 0,
+                    todayBtn: true,
+                    autoclose: true,
+                    todayHighlight: true,
+                    keyboardNavigation: true,
+                    startView: 2,
+                    minView: 2,
+                    maxView: 4,
+                    forceParse: true
+                });
+            });
+
+            if (addOrEdit === 'EDIT')
+            {
+                /*Get various field element IDs and populate values*/
+                var $tds = $('#' + tRowElementID).find('td');
+                $('#educBkgrdCourseName').val($.trim($tds.eq(1).text()));
+                $('#educBkgrdSchool').val($.trim($tds.eq(2).text()));
+                $('#educBkgrdLoc').val($.trim($tds.eq(3).text()));
+                $('#educBkgrdStartDate').val($.trim($tds.eq(4).text()));
+                $('#educBkgrdEndDate').val($.trim($tds.eq(5).text()));
+                $('#educBkgrdCertObtnd').val($.trim($tds.eq(6).text()));
+                $('#educBkgrdCertTyp').val($.trim($tds.eq(7).text()));
+                $('#educBkgrdDateAwrded').val($.trim($tds.eq(8).text()));
+            }
+            $('#' + elementID).on('show.bs.modal', function (e) {
+                $(this).find('.modal-body').css({
+                    'max-height': '100%'
+                });
+            });
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('show');
+            $(document).ready(function () {
+                $('#' + formElementID).submit(function (e) {
+                    e.preventDefault();
+                    return false;
+                });
+
+            });
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&educBkgrdPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+}
+
+function saveEducBkgrdForm(elementID, pKeyID, personID, tableElementID)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var educBkgrdCourseName = typeof $("#educBkgrdCourseName").val() === 'undefined' ? '%' : $("#educBkgrdCourseName").val();
+    var educBkgrdSchool = typeof $("#educBkgrdSchool").val() === 'undefined' ? 'Both' : $("#educBkgrdSchool").val();
+    var educBkgrdLoc = typeof $("#educBkgrdLoc").val() === 'undefined' ? 1 : $("#educBkgrdLoc").val();
+    var educBkgrdStartDate = typeof $("#educBkgrdStartDate").val() === 'undefined' ? 10 : $("#educBkgrdStartDate").val();
+
+    var educBkgrdEndDate = typeof $("#educBkgrdEndDate").val() === 'undefined' ? '%' : $("#educBkgrdEndDate").val();
+    var educBkgrdCertObtnd = typeof $("#educBkgrdCertObtnd").val() === 'undefined' ? 'Both' : $("#educBkgrdCertObtnd").val();
+    var educBkgrdCertTyp = typeof $("#educBkgrdCertTyp").val() === 'undefined' ? 1 : $("#educBkgrdCertTyp").val();
+    var educBkgrdDateAwrded = typeof $("#educBkgrdDateAwrded").val() === 'undefined' ? 10 : $("#educBkgrdDateAwrded").val();
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('hide');
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    $('#educBkgrdCourseName').val($.trim($tds.eq(1).text()));
+    $('#educBkgrdSchool').val($.trim($tds.eq(2).text()));
+    $('#educBkgrdLoc').val($.trim($tds.eq(3).text()));
+    $('#educBkgrdStartDate').val($.trim($tds.eq(4).text()));
+    $('#educBkgrdEndDate').val($.trim($tds.eq(5).text()));
+    $('#educBkgrdCertObtnd').val($.trim($tds.eq(6).text()));
+    $('#educBkgrdCertTyp').val($.trim($tds.eq(7).text()));
+    $('#educBkgrdDateAwrded').val($.trim($tds.eq(8).text()));
+
+    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=4" +
+            "&educBkgrdCourseName=" + educBkgrdCourseName +
+            "&educBkgrdSchool=" + educBkgrdSchool +
+            "&educBkgrdLoc=" + educBkgrdLoc +
+            "&educBkgrdStartDate=" + educBkgrdStartDate +
+            "&educBkgrdEndDate=" + educBkgrdEndDate +
+            "&educBkgrdCertObtnd=" + educBkgrdCertObtnd +
+            "&educBkgrdCertTyp=" + educBkgrdCertTyp +
+            "&educBkgrdDateAwrded=" + educBkgrdDateAwrded +
+            "&educBkgrdPkeyID=" + pKeyID +
+            "&sbmtdPersonID=" + personID);
 }
