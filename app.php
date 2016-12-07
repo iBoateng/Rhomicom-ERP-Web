@@ -21,11 +21,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             //echo $ftp_src;
         }
         ?> 
-        <link href="cmn_scrpts/carousel.css?v=5" rel="stylesheet">
+        <link href="cmn_scrpts/carousel.css?v=5012" rel="stylesheet">
         <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
         <link href="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />  
         <link href="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/css/bootstrap-datetimepicker.min.css"  rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="cmn_scrpts/jquery-ui-1121/jquery-ui.min.css">
+        <link href="cmn_scrpts/summernote081/summernote.css" rel="stylesheet" type="text/css"/>
         <style>
             .icon-bar{<?php echo $bckcolorshv; ?>}
             .nav.navbar-top-links > li > a:hover,
@@ -488,7 +489,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js"></script>        
                 <script type="text/javascript" src="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/js/bootstrap-datetimepicker.min.js"></script>
                 <script type="text/javascript" src="cmn_scrpts/summernote081/summernote.min.js"></script>
-                <link href="cmn_scrpts/summernote081/summernote.css" rel="stylesheet" type="text/css"/>
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('[data-toggle="tooltip"]').tooltip();

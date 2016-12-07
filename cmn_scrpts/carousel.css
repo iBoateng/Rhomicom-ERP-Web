@@ -411,6 +411,10 @@ body {
     top: 15px;
     z-index: 9996 !important;/*1055*/
 }
+.modal-body {
+    position: relative;
+    padding:5px 25px 2px 25px !important;
+}
 .page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle {
     padding: 8px !important;
     padding-top: 26px !important;
