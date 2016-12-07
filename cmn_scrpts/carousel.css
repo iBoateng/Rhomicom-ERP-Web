@@ -413,7 +413,7 @@ body {
 }
 .modal-body {
     position: relative;
-    padding:5px 25px 2px 25px !important;
+    padding:10px 25px 2px 25px !important;
 }
 .page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle {
     padding: 8px !important;

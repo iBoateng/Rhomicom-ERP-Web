@@ -177,7 +177,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     <script type="text/javascript">
         $(document).ready(function () {
             $('#summernote').summernote({
-                minHeight: 370,
+                minHeight: 385,
                 focus:true
                 /*height: 100%//, // set editor height
                  // set minimum height of editor

@@ -198,11 +198,11 @@ if ($lgn_num > 0 && $canview === true) {
                                        </ul>
                                      </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
                     padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
-      <!--<h4>FUNCTIONS UNDER THE PERSONAL RECORDS MANAGER</h4>
+      <!--<h4>FUNCTIONS UNDER THE PERSONAL RECORDS MANAGER</h4>-->
       <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
                     font-weight:normal;\">This is where Basic Data about Persons in the Organisation are Captured and Managed. The module has the ff areas:</span>
-                    </div>-->
+                    </div>
       <p>";
         $grpcntr = 0;
         $prsnType = get_LtstPrsnType($prsnid);
