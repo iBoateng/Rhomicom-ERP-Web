@@ -156,7 +156,7 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                 var table = $('#lovTblRO').DataTable({
                     retrieve: true,
                     "paging": false,
-                    "ordering": true,
+                    "ordering": false,
                     "info": false,
                     "bFilter": false,
                     "scrollX": false
@@ -388,7 +388,7 @@ function openATab(slctr, linkArgs)
                         });
                     } else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
                     {
-                        loadScript("app/prs/prsn.js?v=29", function () {
+                        loadScript("app/prs/prsn.js?v=29012", function () {
                             $this.tab('show');
                             prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
                         });

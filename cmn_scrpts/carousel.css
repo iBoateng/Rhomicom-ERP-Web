@@ -411,6 +411,9 @@ body {
     top: 15px;
     z-index: 9996 !important;/*1055*/
 }
+#myLovModal{    
+    z-index: 9997 !important;/*1055*/
+}
 .modal-body {
     position: relative;
     padding:10px 25px 2px 25px !important;
@@ -622,7 +625,7 @@ body.mdlloading .modalLdng {
     min-width: 100% !important;
 }
 .lovtd{
-    padding: 1px !important;
+    padding: 0px 0px 0px 5px !important;
 }
 #lovTblRO > tbody > tr{    
     cursor: pointer; cursor: hand;

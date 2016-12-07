@@ -152,10 +152,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="col-md-8">
                                             <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Message Body</legend>
                                                 <div id="summernote"></div> 
-                                                <div style="margin-top: 10px;">
-                                                    <div class="btn-group">
-                                                        <button type="button" class="btn btn-default btn-sm"><img src="cmn_images/reload.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> RESET</button>
-                                                        <button type="button" class="btn btn-default btn-sm"><img src="cmn_images/Emailcon.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> SEND MESSAGE</button>
+                                                <div class="row" style="margin: 10px 0px 0px 0px !important;"> 
+                                                    <div class="col-md-6" style="padding:0px 0px 0px 1px !important;">&nbsp;</div>
+                                                    <div class="col-md-6" style="padding:0px 0px 0px 0px">
+                                                        <div class="col-md-5" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/reload.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">RESET</button></div>
+                                                        <div class="col-md-7" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SEND MESSAGE</button></div>
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -177,23 +178,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     <script type="text/javascript">
         $(document).ready(function () {
             $('#summernote').summernote({
-                minHeight: 385,
-                focus:true
-                /*height: 100%//, // set editor height
-                 // set minimum height of editor
-                        //maxHeight: null, // set maximum height of editor
-                        //focus: true*/
+                minHeight: 383,
+                focus: true
+                        /*height: 100%//, // set editor height
+                         // set minimum height of editor
+                         //maxHeight: null, // set maximum height of editor
+                         //focus: true*/
             });
             $('.note-editable').trigger('focus');
             /*$('.note-editable').focus();
-            $('#summernote').find('.note-editable').focus();
-            $('.summernote').summernote('focus');
-            $('.modal-content').resizable({
-                //alsoResize: ".modal-dialog",
-                minHeight: 660,
-                minWidth: 500
-            });
-            $('.modal-dialog').draggable();*/
+             $('#summernote').find('.note-editable').focus();
+             $('.summernote').summernote('focus');
+             $('.modal-content').resizable({
+             //alsoResize: ".modal-dialog",
+             minHeight: 660,
+             minWidth: 500
+             });
+             $('.modal-dialog').draggable();*/
             $('#sndBlkMsgForm').on('show.bs.modal', function (e) {
                 $(this).find('.modal-body').css({
                     'max-height': '100%'

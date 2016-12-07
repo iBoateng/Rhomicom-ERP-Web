@@ -189,6 +189,33 @@ if ($lgn_num > 0 && $canview === true) {
             $pipeSprtdFieldIDs = isset($_POST['pipeSprtdFieldIDs']) ? cleanInputData($_POST['pipeSprtdFieldIDs']) : -1;
             var_dump($_POST);
             echo "<button onclick=\"$('#myFormsModal').modal('hide');\">Close</button>";
+        } else if ($actyp == 4) {
+            /* Divisions/Groups */
+            var_dump($_POST);
+        } else if ($actyp == 5) {
+            /* Sites/Locations */
+            var_dump($_POST);
+        } else if ($actyp == 6) {
+            /* Grades */
+            var_dump($_POST);
+        } else if ($actyp == 7) {
+            /* Supervisors */
+            var_dump($_POST);
+        } else if ($actyp == 8) {
+            /* Jobs */
+            var_dump($_POST);
+        } else if ($actyp == 9) {
+            /* Positions */
+            var_dump($_POST);
+        } else if ($actyp == 12) {
+            /* Educational Background */
+            var_dump($_POST);
+        }else if ($actyp == 13) {
+            /* Work Background */
+            var_dump($_POST);
+        }else if ($actyp == 14) {
+            /* Skills/Nature */
+            var_dump($_POST);
         }
     } else if ($pgNo == 0 || $pgNo == 7) {
         $cntent .= "

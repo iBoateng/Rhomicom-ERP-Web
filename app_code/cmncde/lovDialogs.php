@@ -53,7 +53,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         ?>
         <form id='lovForm' action='' method='post' accept-charset='UTF-8'>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col-md-5">
+                <div class="col-md-5" style="padding:0px 1px 0px 15px !important;">
                     <div class="input-group">
                         <input class="form-control" id="lovSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncLov(event, '<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', '',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo $addtnlWhere; ?>');">
                         <input id="lovPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
@@ -65,7 +65,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </label> 
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-5" style="padding:0px 1px 0px 5px !important;">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
                         <select data-placeholder="Select..." class="form-control chosen-select" id="lovSrchIn">
@@ -105,7 +105,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </select>
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2" style="padding:0px 1px 0px 5px !important;">
                     <nav aria-label="Page navigation">
                         <ul class="pagination" style="margin: 0px !important;">
                             <li>
@@ -127,9 +127,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <table class="table table-striped table-bordered table-responsive" id="lovTblRO" cellspacing="0" width="100%" style="width:100%;">
                         <thead>
                             <tr>
-                                <th align="center" style="max-width: 50px;text-align: center !important;">...</th>
                                 <th align="center" style="max-width: 50px;text-align: center !important;">No.</th>
-                                <th>Description</th>
+                                <!--<th align="center" style="max-width: 50px;text-align: center !important;">No.</th>-->
+                                <th>Code &AMP; Description</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -152,9 +152,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 }
                                 ?>
                                 <tr>
-                                    <td class="lovtd" align="center" style="max-width: 50px;"><?php echo $chkBx; ?></td>
-                                    <td class="lovtd" align="center" style="max-width: 50px;"><?php echo $cntr; ?></td>
-                                    <td class="lovtd"><?php echo $row[1] == "" ? $row[0] : $row[1]; ?></td>
+                                    <td class="lovtd" align="center" style="max-width: 50px;"><?php echo $chkBx . " (" . $cntr . ")"; ?></td>
+                                    <!--<td class="lovtd" align="center" style="max-width: 50px;"><?php echo $cntr; ?></td>-->
+                                    <td class="lovtd"><?php echo str_replace(" (" . $row[0].")", "", " ".$row[0] . " (" . $row[1].")"); ?></td>
                                 </tr>
                                 <?php
                             }

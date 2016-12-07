@@ -326,11 +326,6 @@ function getAddtnlDataForm(elementID, modalBodyID, titleElementID, formElementID
         {
             $('#' + titleElementID).html(formTitle);
             $('#' + modalBodyID).html(xmlhttp.responseText);
-            /*$('.modal-content').resizable({
-             //alsoResize: ".modal-dialog",
-             minHeight: 600,
-             minWidth: 300
-             });*/
             $('.modal-dialog').draggable();
             $(function () {
                 $('.form_date').datetimepicker({
@@ -559,16 +554,7 @@ function saveEducBkgrdForm(elementID, pKeyID, personID, tableElementID)
     xmlhttp.open("POST", "index.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-    $('#educBkgrdCourseName').val($.trim($tds.eq(1).text()));
-    $('#educBkgrdSchool').val($.trim($tds.eq(2).text()));
-    $('#educBkgrdLoc').val($.trim($tds.eq(3).text()));
-    $('#educBkgrdStartDate').val($.trim($tds.eq(4).text()));
-    $('#educBkgrdEndDate').val($.trim($tds.eq(5).text()));
-    $('#educBkgrdCertObtnd').val($.trim($tds.eq(6).text()));
-    $('#educBkgrdCertTyp').val($.trim($tds.eq(7).text()));
-    $('#educBkgrdDateAwrded').val($.trim($tds.eq(8).text()));
-
-    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=4" +
+    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=13" +
             "&educBkgrdCourseName=" + educBkgrdCourseName +
             "&educBkgrdSchool=" + educBkgrdSchool +
             "&educBkgrdLoc=" + educBkgrdLoc +

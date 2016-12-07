@@ -29,15 +29,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
             while ($row = loc_db_fetch_array($result)) {
                 ?>
-                <div style="margin-bottom: 10px;">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-sm"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">SAVE</button>
-                        <button type="button" class="btn btn-default btn-sm"><img src="cmn_images/Emailcon.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">SUBMIT</button>
-                        <button type="button" class="btn btn-default btn-sm"><img src="cmn_images/info.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;"><span style="font-weight: bold;">STATUS: </span><span style="color:red;font-weight: bold;">Approved</span></button>
+
+                <div class="row" style="margin: 0px 0px 10px 0px !important;">
+                    <div class="col-md-7" style="padding:0px 0px 0px 15px !important;">&nbsp;</div>
+                    <div class="col-md-5" style="padding:0px 0px 0px 0px">
+                        <div class="col-md-5" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><span style="font-weight:bold;">Status: </span><span style="color:red;font-weight: bold;">Approved</span></button></div>
+                        <div class="col-md-3" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE</button></div>
+                        <div class="col-md-4" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/Emailcon.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SUBMIT</button></div>
                     </div>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <div class="btn-group">
+
+                <div class="row" style="margin: 0px 0px 10px 0px !important;">
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');">Basic Data</button>
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflAddPrsnDataEDT', 'grp=8&typ=1&pg=2&vtyp=1');">Additional Data</button>
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOrgAsgnEDT', 'grp=8&typ=1&pg=2&vtyp=2');">Organisational Assignments</button>
@@ -46,7 +49,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                 </div>
                 <div class="">
-                    <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-30px !important;">
+                    <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-10px !important;">
                         <li class="active"><a data-toggle="tab" data-rhodata="&pg=2&vtyp=0" href="#prflHomeEDT" id="prflHomeEDTtab">Basic Data</a></li>
                         <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=1" href="#prflAddPrsnDataEDT" id="prflAddPrsnDataEDTtab">Additional Data</a></li>
                         <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=2" href="#prflOrgAsgnEDT" id="prflOrgAsgnEDTtab">Organisational Assignments</a></li>
@@ -952,7 +955,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                             Add Educational Background
                         </button>
-                        <table class="table table-striped table-bordered table-responsive cvTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                        <table class="table table-striped table-bordered table-responsive cvTblsEDT" id="educBkgrdTable" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
                                     <th>...</th>		
@@ -973,9 +976,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
                                         ?>
-                                        <tr>
+                                        <tr id="educBkgrdRow<?php echo $cntr; ?>">
                                             <td>
-                                                <button type="button" class="btn btn-default btn-sm" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', 'educBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Educational Background', 14, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', 'educBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Educational Background', 20, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
@@ -1259,6 +1262,133 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="row" style="float:right;padding-right: 1px;">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveAddtnlDataForm('myFormsModalBody', '<?php echo $addtnlPrsPkey; ?>', '<?php echo $pipeSprtdFieldIDs; ?>',<?php echo $extDtColNum; ?>, '<?php echo $tableElmntID; ?>', '<?php echo $tRowElementID; ?>', '<?php echo $addOrEdit; ?>');">Save Changes</button>
+            </div>
+        </form>
+        <?php
+    } else if ($vwtyp == "13") {
+        /* Add Divisions/Groups Form */
+    } else if ($vwtyp == "14") {
+        /* Add Sites/Locations Form */
+    } else if ($vwtyp == "15") {
+        /* Add Grades Form */
+    } else if ($vwtyp == "16") {
+        /* Add Supervisors Form */
+    } else if ($vwtyp == "17") {
+        /* Add Jobs Form */
+    } else if ($vwtyp == "18") {
+        /* Add Positions Form */
+    } else if ($vwtyp == "20") {
+        /* Add Educational Background Form */
+        $educBkgrdPkeyID = isset($_POST['educBkgrdPkeyID']) ? cleanInputData($_POST['educBkgrdPkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        ?>
+        <form class="form-horizontal" id="educBkgrdForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="educBkgrdCourseName" class="control-label col-md-4">Course Name:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="educBkgrdCourseName" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'CV Courses', '', '', '', 'radio', true, '', 'educBkgrdCourseName', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="educBkgrdSchool" class="control-label col-md-4">School/Institution:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="educBkgrdSchool" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Schools/Organisations/Institutions', '', '', '', 'radio', true, '', 'educBkgrdSchool', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="educBkgrdLoc" class="control-label col-md-4">Location:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="educBkgrdLoc" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Other Locations', '', '', '', 'radio', true, '', 'educBkgrdLoc', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>                
+                <div class="form-group form-group-sm">
+                    <label for="educBkgrdStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="educBkgrdStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="educBkgrdEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="educBkgrdEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>                
+                <div class="form-group form-group-sm">
+                    <label for="educBkgrdCertObtnd" class="control-label col-md-4">Certificate Obtained:</label>
+                    <div class="col-md-8">
+                        <select class="form-control selectpicker" id="educBkgrdCertObtnd">  
+                            <option value="" selected disabled>Please Select...</option>
+                            <?php
+                            $brghtStr = "";
+                            $isDynmyc = FALSE;
+                            $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Certificate Names"), $isDynmyc, -1, "", "");
+                            while ($titleRow = loc_db_fetch_array($titleRslt)) {
+                                $selectedTxt = "";
+                                ?>
+                                <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>                
+                <div class="form-group form-group-sm">
+                    <label for="educBkgrdCertTyp" class="control-label col-md-4">Certificate Type:</label>
+                    <div class="col-md-8">
+                        <select class="form-control selectpicker" id="educBkgrdCertTyp">  
+                            <option value="" selected disabled>Please Select...</option>
+                            <?php
+                            $brghtStr = "";
+                            $isDynmyc = FALSE;
+                            $titleRslt = getLovValues("%", "Both", 0, 100, $brghtStr, getLovID("Qualification Types"), $isDynmyc, -1, "", "");
+                            while ($titleRow = loc_db_fetch_array($titleRslt)) {
+                                $selectedTxt = "";
+                                ?>
+                                <option value="<?php echo $titleRow[0]; ?>" <?php echo $selectedTxt; ?>><?php echo $titleRow[0]; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="educBkgrdDateAwrded" class="control-label col-md-4">Date Awarded:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="educBkgrdDateAwrded" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveEducBkgrdForm('myFormsModal', '<?php echo $educBkgrdPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, 'educBkgrdTable');">Save Changes</button>
             </div>
         </form>
         <?php

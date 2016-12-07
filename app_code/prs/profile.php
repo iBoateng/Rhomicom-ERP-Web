@@ -1,7 +1,7 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($vwtyp == "0") {
-        /* onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\"*/
+        /* onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\" */
         echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Personal Profile</span>
 					</li>
@@ -29,14 +29,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
             while ($row = loc_db_fetch_array($result)) {
                 ?>
-                <div style="margin-bottom: 10px;">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-sm" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
-                        <button type="button" class="btn btn-default btn-sm"><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button>
+                <div class="row" style="margin: 0px 0px 10px 0px !important;"> 
+                    <div class="col-md-8" style="padding:0px 0px 0px 15px !important;">&nbsp;</div>
+                    <div class="col-md-4" style="padding:0px 0px 0px 0px">
+                        <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm"  style="width:100% !important;" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button></div>
+                        <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button></div>
                     </div>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <div class="btn-group">
+                <div class="row" style="margin: 0px 0px 10px 0px !important;">
+                    <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=1&vtyp=0');">Basic Data</button>
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflAddPrsnDataRO', 'grp=8&typ=1&pg=1&vtyp=1');">Additional Data</button>
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOrgAsgnRO', 'grp=8&typ=1&pg=1&vtyp=2');">Organisational Assignments</button>
@@ -45,7 +46,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                 </div>
                 <div class="">
-                    <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-30px !important;">
+                    <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-10px !important;">
                         <li class="active"><a data-toggle="tab" data-rhodata="&pg=1&vtyp=0" href="#prflHomeRO" id="prflHomeROtab">Basic Data</a></li>
                         <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=1" href="#prflAddPrsnDataRO" id="prflAddPrsnDataROtab">Additional Data</a></li>
                         <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=2" href="#prflOrgAsgnRO" id="prflOrgAsgnROtab">Organisational Assignments</a></li>
@@ -412,7 +413,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <?php
                                     } else {
                                         if ($gcntr1 == 0) {
-                                            $gcntr1+=1;
+                                            $gcntr1 += 1;
                                         }
                                         if (($cntr1 % 2) == 0) {
                                             ?> 
@@ -443,7 +444,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>
                                             </div>
                                             <?php
-                                            $cntr1 +=1;
+                                            $cntr1 += 1;
                                             if (($cntr1 % 2) == 0 || $cntr1 == ($cntr1Ttl)) {
                                                 $cntr1 = 0;
                                                 ?>
@@ -493,7 +494,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 if ($pkID > 0) {
                                     $result1 = get_DivsGrps($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -531,7 +532,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                                     $result1 = get_Spvsrs($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -570,7 +571,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                                     $result1 = get_SitesLocs($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -606,7 +607,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                                     $result1 = get_Jobs($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -644,7 +645,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                                     $result1 = get_Grades($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -679,7 +680,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $cntr = 0;
                                     $result1 = get_Pos($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -728,7 +729,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 if ($pkID > 0) {
                                     $result1 = get_EducBkgrd($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -771,7 +772,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 if ($pkID > 0) {
                                     $result1 = get_WrkBkgrd($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -813,7 +814,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 if ($pkID > 0) {
                                     $result1 = get_SkillNature($pkID);
                                     while ($row1 = loc_db_fetch_array($result1)) {
-                                        $cntr+=1;
+                                        $cntr += 1;
                                         ?>
                                         <tr>
                                             <td><?php echo $cntr; ?></td>
@@ -863,7 +864,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $brghtsqlStr = "";
                         $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr, $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
                         while ($row1 = loc_db_fetch_array($result1)) {
-                            $cntr+=1;
+                            $cntr += 1;
                             ?>
                             <tr>
                                 <!--<td><?php echo $cntr; ?></td>-->
