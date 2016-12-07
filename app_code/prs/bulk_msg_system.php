@@ -185,12 +185,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         //focus: true*/
             });
             $('.note-editable').trigger('focus');
-            /*$('.modal-content').resizable({
+            /*$('.note-editable').focus();
+            $('#summernote').find('.note-editable').focus();
+            $('.summernote').summernote('focus');
+            $('.modal-content').resizable({
                 //alsoResize: ".modal-dialog",
                 minHeight: 660,
                 minWidth: 500
-            });*/
-            $('.modal-dialog').draggable();
+            });
+            $('.modal-dialog').draggable();*/
             $('#sndBlkMsgForm').on('show.bs.modal', function (e) {
                 $(this).find('.modal-body').css({
                     'max-height': '100%'
