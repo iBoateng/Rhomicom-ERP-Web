@@ -177,12 +177,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     <script type="text/javascript">
         $(document).ready(function () {
             $('#summernote').summernote({
-                minHeight: 400
+                minHeight: 400,
+                focus:true
                 /*height: 100%//, // set editor height
                  // set minimum height of editor
                         //maxHeight: null, // set maximum height of editor
                         //focus: true*/
             });
+            $('.note-editable').trigger('focus');
             /*$('.modal-content').resizable({
                 //alsoResize: ".modal-dialog",
                 minHeight: 660,
