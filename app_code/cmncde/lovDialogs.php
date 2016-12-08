@@ -146,7 +146,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $chckd = "checked";
                                 }
                                 if ($chkOrRadio == "check") {
-                                    $chkBx = "<input type=\"checkbox\" name=\"chkbx$i\" value=\"$chckID;$row[0];$row[1]\" $chckd>";
+                                    $chkBx = "<input type=\"checkbox\" name=\"chkbx$cntr\" value=\"$chckID;$row[0];$row[1]\" $chckd>";
                                 } else {
                                     $chkBx = "<input type=\"radio\" name=\"radiobx\" value=\"$chckID;$row[0];$row[1]\" $chckd>";
                                 }

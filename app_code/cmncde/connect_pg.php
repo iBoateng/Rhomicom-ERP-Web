@@ -9,6 +9,7 @@ $fulldte = date('d-M-Y H:i:s');
 $app_url = "http://192.168.56.250/";
 $admin_email = "info@rhomicom.com";
 $smplPwd = "AoP12@34";
+$jsCssFileVrsn="101";
 //More than 62 Characters Recommended
 $smplTokenWord = "eRRTRhbnsdGeneral Key for Rhomi|com Systems "
         . "Tech. !Ltd Enterpise/Organization @763542orbjkasdbhi68103weuikfjnsdf";

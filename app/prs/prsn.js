@@ -566,3 +566,235 @@ function saveEducBkgrdForm(elementID, pKeyID, personID, tableElementID)
             "&educBkgrdPkeyID=" + pKeyID +
             "&sbmtdPersonID=" + personID);
 }
+
+function getWorkBkgrdForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + titleElementID).html(formTitle);
+            $('#' + modalBodyID).html(xmlhttp.responseText);
+            $('.modal-dialog').draggable();
+            $(function () {
+                $('.form_date').datetimepicker({
+                    format: "d-M-yyyy",
+                    language: 'en',
+                    weekStart: 0,
+                    todayBtn: true,
+                    autoclose: true,
+                    todayHighlight: true,
+                    keyboardNavigation: true,
+                    startView: 2,
+                    minView: 2,
+                    maxView: 4,
+                    forceParse: true
+                });
+            });
+
+            if (addOrEdit === 'EDIT')
+            {
+                /*Get various field element IDs and populate values*/
+                var $tds = $('#' + tRowElementID).find('td');
+                $('#workBkgrdJobName').val($.trim($tds.eq(1).text()));
+                $('#workBkgrdInstitution').val($.trim($tds.eq(2).text()));
+                $('#workBkgrdLoc').val($.trim($tds.eq(3).text()));
+                $('#workBkgrdStartDate').val($.trim($tds.eq(4).text()));
+                $('#workBkgrdEndDate').val($.trim($tds.eq(5).text()));
+                $('#workBkgrdJobDesc').val($.trim($tds.eq(6).text()));
+                $('#workBkgrdAchvmnts').val($.trim($tds.eq(7).text()));
+            }
+            $('#' + elementID).on('show.bs.modal', function (e) {
+                $(this).find('.modal-body').css({
+                    'max-height': '100%'
+                });
+            });
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('show');
+            $(document).ready(function () {
+                $('#' + formElementID).submit(function (e) {
+                    e.preventDefault();
+                    return false;
+                });
+            });
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&workBkgrdPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+}
+
+function saveWorkBkgrdForm(elementID, pKeyID, personID, tableElementID)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var workBkgrdJobName = typeof $("#workBkgrdJobName").val() === 'undefined' ? '%' : $("#workBkgrdJobName").val();
+    var workBkgrdInstitution = typeof $("#workBkgrdInstitution").val() === 'undefined' ? 'Both' : $("#workBkgrdInstitution").val();
+    var workBkgrdLoc = typeof $("#workBkgrdLoc").val() === 'undefined' ? 1 : $("#workBkgrdLoc").val();
+    var workBkgrdStartDate = typeof $("#workBkgrdStartDate").val() === 'undefined' ? 10 : $("#workBkgrdStartDate").val();
+
+    var workBkgrdEndDate = typeof $("#workBkgrdEndDate").val() === 'undefined' ? '%' : $("#workBkgrdEndDate").val();
+    var workBkgrdJobDesc = typeof $("#workBkgrdJobDesc").val() === 'undefined' ? 'Both' : $("#workBkgrdJobDesc").val();
+    var workBkgrdAchvmnts = typeof $("#workBkgrdAchvmnts").val() === 'undefined' ? 1 : $("#workBkgrdAchvmnts").val();
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('hide');
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=13" +
+            "&workBkgrdJobName=" + workBkgrdJobName +
+            "&workBkgrdInstitution=" + workBkgrdInstitution +
+            "&workBkgrdLoc=" + workBkgrdLoc +
+            "&workBkgrdStartDate=" + workBkgrdStartDate +
+            "&workBkgrdEndDate=" + workBkgrdEndDate +
+            "&workBkgrdJobDesc=" + workBkgrdJobDesc +
+            "&workBkgrdAchvmnts=" + workBkgrdAchvmnts +
+            "&workBkgrdPkeyID=" + pKeyID +
+            "&sbmtdPersonID=" + personID);
+}
+
+function getSkillsForm(elementID, modalBodyID, titleElementID, formElementID,
+        tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + titleElementID).html(formTitle);
+            $('#' + modalBodyID).html(xmlhttp.responseText);
+            $('.modal-dialog').draggable();
+            $(function () {
+                $('.form_date').datetimepicker({
+                    format: "d-M-yyyy",
+                    language: 'en',
+                    weekStart: 0,
+                    todayBtn: true,
+                    autoclose: true,
+                    todayHighlight: true,
+                    keyboardNavigation: true,
+                    startView: 2,
+                    minView: 2,
+                    maxView: 4,
+                    forceParse: true
+                });
+            });
+
+            if (addOrEdit === 'EDIT')
+            {
+                /*Get various field element IDs and populate values*/
+                var $tds = $('#' + tRowElementID).find('td');
+                $('#skillsLanguages').val($.trim($tds.eq(1).text()));
+                $('#skillsHobbies').val($.trim($tds.eq(2).text()));
+                $('#skillsInterests').val($.trim($tds.eq(3).text()));
+                $('#skillsConduct').val($.trim($tds.eq(4).text()));
+                $('#skillsAttitudes').val($.trim($tds.eq(5).text()));
+                $('#skillsStartDate').val($.trim($tds.eq(6).text()));
+                $('#skillsEndDate').val($.trim($tds.eq(7).text()));
+            }
+            $('#' + elementID).on('show.bs.modal', function (e) {
+                $(this).find('.modal-body').css({
+                    'max-height': '100%'
+                });
+            });
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('show');
+            $(document).ready(function () {
+                $('#' + formElementID).submit(function (e) {
+                    e.preventDefault();
+                    return false;
+                });
+            });
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&skillsPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+}
+
+function saveSkillsForm(elementID, pKeyID, personID, tableElementID)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var skillsLanguages = typeof $("#skillsLanguages").val() === 'undefined' ? '%' : $("#skillsLanguages").val();
+    var skillsHobbies = typeof $("#skillsHobbies").val() === 'undefined' ? 'Both' : $("#skillsHobbies").val();
+    var skillsInterests = typeof $("#skillsInterests").val() === 'undefined' ? 1 : $("#skillsInterests").val();
+    var skillsConduct = typeof $("#skillsConduct").val() === 'undefined' ? 10 : $("#skillsConduct").val();
+
+    var skillsAttitudes = typeof $("#skillsAttitudes").val() === 'undefined' ? '%' : $("#skillsAttitudes").val();
+    var skillsStartDate = typeof $("#skillsStartDate").val() === 'undefined' ? 'Both' : $("#skillsStartDate").val();
+    var skillsEndDate = typeof $("#skillsEndDate").val() === 'undefined' ? 1 : $("#skillsEndDate").val();
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('hide');
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=14" +
+            "&skillsLanguages=" + skillsLanguages +
+            "&skillsHobbies=" + skillsHobbies +
+            "&skillsInterests=" + skillsInterests +
+            "&skillsConduct=" + skillsConduct +
+            "&skillsAttitudes=" + skillsAttitudes +
+            "&skillsStartDate=" + skillsStartDate +
+            "&skillsEndDate=" + skillsEndDate +
+            "&skillsPkeyID=" + pKeyID +
+            "&sbmtdPersonID=" + personID);
+}

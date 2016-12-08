@@ -20,13 +20,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             copy("$ftp_src", "$fullPemDest");
             //echo $ftp_src;
         }
-        ?> 
-        <link href="cmn_scrpts/carousel.css?v=501234" rel="stylesheet">
+        ?>
         <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
         <link href="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />  
         <link href="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/css/bootstrap-datetimepicker.min.css"  rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="cmn_scrpts/jquery-ui-1121/jquery-ui.min.css">
-        <link href="cmn_scrpts/summernote081/summernote.css" rel="stylesheet" type="text/css"/>
+        <link href="cmn_scrpts/summernote081/summernote.css" rel="stylesheet" type="text/css"/> 
+        <link href="cmn_scrpts/carousel.css?v=<?php echo $jsCssFileVrsn; ?>" rel="stylesheet">
         <style>
             .icon-bar{<?php echo $bckcolorshv; ?>}
             .nav.navbar-top-links > li > a:hover,
@@ -484,7 +484,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <!-- Bootstrap Core JavaScript -->
                 <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
                 <script src="cmn_scrpts/bootstrap337/bootstrap3-dialog/js/bootstrap-dialog.min.js"></script>
-                <script type="application/javascript" src="cmn_scrpts/global_scripts.js?v=50123456"></script> 
+                <script type="application/javascript" src="cmn_scrpts/global_scripts.js?v=<?php echo $jsCssFileVrsn; ?>"></script> 
                 <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/jquery.dataTables.min.js"></script>
                 <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js"></script>        
                 <script type="text/javascript" src="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/js/bootstrap-datetimepicker.min.js"></script>

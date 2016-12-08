@@ -951,7 +951,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="col-md-12"> 
                 <fieldset class="basic_person_fs4"><legend class="basic_person_lg">EDUCATIONAL BACKGROUND</legend> 
                     <div  class="col-md-12">
-                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', '', 'Add/Edit Educational Background', 14, 'ADD', -1, <?php echo $prsnid; ?>);">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', '', 'Add/Edit Educational Background', 20, 'ADD', -1, <?php echo $prsnid; ?>);">
                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                             Add Educational Background
                         </button>
@@ -1003,11 +1003,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             </div>
             <div class="col-md-12"> 
                 <fieldset class="basic_person_fs4"><legend class="basic_person_lg">WORKING EXPERIENCE</legend> 
-                    <div  class="col-md-12">
-                        <table class="table table-striped table-bordered table-responsive cvTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                    <div  class="col-md-12">                        
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', '', 'Add/Edit Work Experience', 21, 'ADD', -1, <?php echo $prsnid; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Work Experience
+                        </button>
+                        <table class="table table-striped table-bordered table-responsive cvTblsEDT"  id="workBkgrdTable" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>		
+                                    <th>...</th>		
                                     <th>Job Name/Title</th>
                                     <th>Institution Name</th>
                                     <th>Job Location</th>
@@ -1024,8 +1028,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
                                         ?>
-                                        <tr>
-                                            <td><?php echo $cntr; ?></td>
+                                        <tr id="workBkgrdRow<?php echo $cntr; ?>">
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', 'workBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Work Experience', 21, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                             <td><?php echo $row1[1]; ?></td>
                                             <td><?php echo $row1[2]; ?></td>
                                             <td><?php echo $row1[3]; ?></td>
@@ -1045,11 +1054,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             </div>
             <div class="col-md-12"> 
                 <fieldset class="basic_person_fs4"><legend class="basic_person_lg">SKILLS/NATURE</legend> 
-                    <div  class="col-md-12">
-                        <table class="table table-striped table-bordered table-responsive cvTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                    <div  class="col-md-12">                                                
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', '', 'Add/Edit Skills/Nature', 22, 'ADD', -1, <?php echo $prsnid; ?>);">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            Add Skills/Nature
+                        </button>
+                        <table class="table table-striped table-bordered table-responsive cvTblsEDT" id="skillsTable" cellspacing="0" width="100%" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>No.</th>		
+                                    <th>...</th>		
                                     <th>Languages</th>
                                     <th>Hobbies</th>
                                     <th>Interests</th>
@@ -1066,8 +1079,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
                                         ?>
-                                        <tr>
-                                            <td><?php echo $cntr; ?></td>
+                                        <tr id="skillsTblRow<?php echo $cntr; ?>">
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', 'skillsTblRow<?php echo $cntr; ?>', 'Add/Edit Skills/Nature', 22, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
                                             <td><?php echo $row1[1]; ?></td>
                                             <td><?php echo $row1[2]; ?></td>
                                             <td><?php echo $row1[3]; ?></td>
@@ -1296,7 +1314,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="educBkgrdSchool" class="control-label col-md-4">School/Institution:</label>
+                    <label for="educBkgrdSchool" class="control-label col-md-4">School / Institution:</label>
                     <div  class="col-md-8">
                         <div class="input-group">
                             <input type="text" class="form-control" aria-label="..." id="educBkgrdSchool" value="">
@@ -1389,6 +1407,174 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="row" style="float:right;padding-right: 1px;">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveEducBkgrdForm('myFormsModal', '<?php echo $educBkgrdPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, 'educBkgrdTable');">Save Changes</button>
+            </div>
+        </form>
+        <?php
+    } else if ($vwtyp == "21") {
+        /* Add Work Experience Form */
+        $workBkgrdPkeyID = isset($_POST['workBkgrdPkeyID']) ? cleanInputData($_POST['workBkgrdPkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        ?>
+        <form class="form-horizontal" id="workBkgrdForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="workBkgrdJobName" class="control-label col-md-4">Job Name / Title:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="workBkgrdJobName" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Jobs/Professions/Occupations', '', '', '', 'radio', true, '', 'workBkgrdJobName', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="workBkgrdInstitution" class="control-label col-md-4">Institution:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="workBkgrdInstitution" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Schools/Organisations/Institutions', '', '', '', 'radio', true, '', 'workBkgrdInstitution', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="workBkgrdLoc" class="control-label col-md-4">Location:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="workBkgrdLoc" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Other Locations', '', '', '', 'radio', true, '', 'workBkgrdLoc', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>                
+                <div class="form-group form-group-sm">
+                    <label for="workBkgrdStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="workBkgrdStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="workBkgrdEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="workBkgrdEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>                
+                <div class="form-group form-group-sm">
+                    <label for="workBkgrdJobDesc" class="control-label col-md-4">Job Description:</label>
+                    <div class="col-md-8">
+                        <textarea class="form-control" id="workBkgrdJobDesc" cols="2" rows="2" placeholder="Other Information" rows="2"></textarea>
+                    </div>
+                </div>                
+                <div class="form-group form-group-sm">
+                    <label for="workBkgrdAchvmnts" class="control-label col-md-4">Feats / Achievements:</label>
+                    <div class="col-md-8">
+                        <textarea class="form-control" id="workBkgrdAchvmnts" cols="2" rows="4" placeholder="Other Information" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveWorkBkgrdForm('myFormsModal', '<?php echo $workBkgrdPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, 'workBkgrdTable');">Save Changes</button>
+            </div>
+        </form>
+        <?php
+    } else if ($vwtyp == "22") {
+        /* Add Work Experience Form */
+        $skillsPkeyID = isset($_POST['skillsPkeyID']) ? cleanInputData($_POST['skillsPkeyID']) : -1;
+        $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+        ?>
+        <form class="form-horizontal" id="skillsForm" style="padding:5px 20px 5px 20px;">
+            <div class="row">
+                <div class="form-group form-group-sm">
+                    <label for="skillsLanguages" class="control-label col-md-4">Languages:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="skillsLanguages" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Languages', '', '', '', 'check', true, '', 'skillsLanguages', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="skillsHobbies" class="control-label col-md-4">Hobbies:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="skillsHobbies" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Hobbies', '', '', '', 'check', true, '', 'skillsHobbies', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="skillsInterests" class="control-label col-md-4">Interests:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="skillsInterests" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Interests', '', '', '', 'check', true, '', 'skillsInterests', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="skillsConduct" class="control-label col-md-4">Conduct:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="skillsConduct" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Conduct', '', '', '', 'check', true, '', 'skillsConduct', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="skillsAttitudes" class="control-label col-md-4">Attitudes:</label>
+                    <div  class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="..." id="skillsAttitudes" value="">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Attitudes', '', '', '', 'check', true, '', 'skillsAttitudes', '', 'clear', 1, '');">
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>                
+                <div class="form-group form-group-sm">
+                    <label for="skillsStartDate" class="control-label col-md-4">Start Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="skillsStartDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="skillsEndDate" class="control-label col-md-4">End Date:</label>
+                    <div class="col-md-8">
+                        <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" type="text" id="skillsEndDate" value="" readonly="">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="float:right;padding-right: 1px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveSkillsForm('myFormsModal', '<?php echo $skillsPkeyID; ?>',<?php echo $sbmtdPersonID; ?>, 'skillsTable');">Save Changes</button>
             </div>
         </form>
         <?php

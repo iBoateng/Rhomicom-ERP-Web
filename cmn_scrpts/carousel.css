@@ -411,6 +411,10 @@ body {
     top: 15px;
     z-index: 9996 !important;/*1055*/
 }
+/*.close {
+    color: #FFF !important;
+}*/
+
 #myLovModal{    
     z-index: 9997 !important;/*1055*/
 }

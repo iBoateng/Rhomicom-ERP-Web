@@ -293,178 +293,20 @@ if ($lgn_num > 0 && $canview === true) {
         } else if ($pgNo == 2) {
             require "edit_profile.php";
         } else if ($pgNo == 3) {
-            echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
+            echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Grade Progression Requests</span>
 					</li>
                                        </ul>
                                      </div>" . "Grade Progression Requests";
         } else if ($pgNo == 4) {
-            echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
+            echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Leave of Absence Requests</span>
 					</li>
                                        </ul>
                                      </div>" . "Leave of Absence Requests";
-        } else if ($pgNo == 5) {
-            echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Data Administrator</span>
-					</li>
-                                       </ul>
-                                     </div>" . "Data Administrator";
+        } else if ($pgNo == 5) {           
             //Get Basic Person
-            $orgID = $_SESSION['ORG_ID'];
-            $searchAll = true;
-            if ($vwtyp == 0) {
-                $total = get_BscPrsnTtl($srchFor, $srchIn, $orgID, $searchAll, $fltrTypValue, $fltrTyp);
-                $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                $start = isset($_POST['start']) ? $_POST['start'] : 0;
-
-                if ($pageNo > ceil($total / $lmtSze)) {
-                    $pageNo = 1;
-                }
-                $curIdx = $pageNo - 1;
-                $result = get_BscPrsn($srchFor, $srchIn, $curIdx, $lmtSze, $orgID, $searchAll, $sortBy, $fltrTypValue, $fltrTyp);
-                $prntArray = array();
-                $cntr = 0;
-                while ($row = loc_db_fetch_array($result)) {
-                    $temp = explode(".", $row[3]);
-                    $extension = end($temp);
-                    $nwFileName = encrypt1($row[3], $smplTokenWord1) . "." . $extension;
-                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[3];
-                    $fullPemDest = $fldrPrfx . $pemDest . $nwFileName;
-                    if (file_exists($ftp_src)) {
-                        copy("$ftp_src", "$fullPemDest");
-                        //echo $fullPemDest;
-                    } else if (!file_exists($fullPemDest)) {
-                        $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
-                        copy("$ftp_src", "$fullPemDest");
-                        //echo $ftp_src;
-                    }
-
-                    $chckd = ($cntr == 0) ? TRUE : FALSE;
-                    $childArray = array(
-                        'checked' => var_export($chckd, TRUE),
-                        'PersonID' => $row[0],
-                        'RowNum' => ($curIdx * $lmtSze) + ($cntr + 1),
-                        'LocIDNo' => $row[1],
-                        'FullName' => $row[2],
-                        'DateOfBirth' => $row[9],
-                        'WorkPlace' => str_replace("()", "", $row[22] . " (" . $row[24] . ")"),
-                        'Email' => $row[14],
-                        'TelNos' => trim($row[15] . "," . $row[16], ","),
-                        'PostalResAddress' => trim($row[13] . " " . $row[12], " "),
-                        'Title' => $row[25],
-                        'FirstName' => $row[4],
-                        'Surname' => $row[5],
-                        'OtherNames' => $row[6],
-                        'ImageLoc' => $nwFileName,
-                        'Gender' => $row[7],
-                        'MaritalStatus' => $row[8],
-                        'PlaceOfBirth' => $row[10],
-                        'Religion' => $row[11],
-                        'ResidentialAddress' => $row[12],
-                        'PostalAddress' => $row[13],
-                        'TelNo' => $row[15],
-                        'MobileNo' => $row[16],
-                        'FaxNo' => $row[17],
-                        'HomeTown' => $row[19],
-                        'Nationality' => $row[20],
-                        'LinkedFirmOrgID' => $row[21],
-                        'LinkedFirmSiteID' => $row[23],
-                        'LinkedFirmName' => $row[22],
-                        'LinkedSiteName' => $row[24],
-                        'PrsnType' => $row[26],
-                        'PrnTypRsn' => $row[27],
-                        'FurtherDetails' => $row[28],
-                        'StartDate' => $row[29],
-                        'EndDate' => $row[30]);
-
-                    $prntArray[] = $childArray;
-                    $cntr++;
-                }
-
-                echo json_encode(array('success' => true,
-                    'total' => $total,
-                    'rows' => $prntArray));
-            } else if ($vwtyp == 1) {
-                $result = get_FilterValues($fltrTyp, $orgID);
-                $total = loc_db_num_rows($result);
-                $childArray = array(
-                    'pssblValue' => 'All',
-                    'pssblValueDesc' => 'All');
-                $prntArray[] = $childArray;
-                while ($row = loc_db_fetch_array($result)) {
-                    //$chckd = FALSE;
-                    $childArray = array(
-                        'pssblValue' => $row[0],
-                        'pssblValueDesc' => $row[0]);
-                    $prntArray[] = $childArray;
-                    //$cntr++;
-                }
-                echo json_encode(array('success' => true,
-                    'total' => $total,
-                    'rows' => $prntArray));
-            } else if ($vwtyp == 2) {
-                //Prsn Detail
-                $pkID = isset($_POST['personID']) ? $_POST['personID'] : -1;
-                $result = get_BscPrsnDetail($pkID);
-                $colsCnt = loc_db_num_fields($result);
-                $cntent = "<div style=\"padding:2px;width:100%;\">
-        <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
-            <caption>PERSON DETAILS</caption>";
-                $cntent .= "<thead><tr>";
-                $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-                $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
-                $cntent .= "</tr></thead>";
-                $cntent .= "<tbody>";
-                $i = 0;
-
-                $labl = "";
-                $labl1 = "";
-                while ($row = loc_db_fetch_array($result)) {
-                    for ($d = 0; $d < $colsCnt; $d++) {
-                        $style = "";
-                        $style2 = "";
-                        if (trim(loc_db_field_name($result, $d)) == "mt") {
-                            $style = "style=\"display:none;\"";
-                        }
-                        if (strtoupper($row[$d]) == 'NO') {
-                            $style2 = "style=\"color:red;font-weight:bold;\"";
-                        } else if (strtoupper($row[$d]) == 'YES') {
-                            $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
-                        }
-
-                        $cntent .= "<tr $style>";
-                        $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-
-                        if (trim(loc_db_field_name($result, $d)) == "Person's Picture") {
-                            $temp = explode(".", $row[$d]);
-                            $extension = end($temp);
-                            $nwFileName = encrypt1($row[$d], $smplTokenWord1) . "." . $extension;
-                            $img_src = $pemDest . $nwFileName;
-                            $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[$d];
-                            if ($row[$d] != "") {
-                                if (file_exists($ftp_src)) {
-                                    copy("$ftp_src", $fldrPrfx . "$img_src");
-                                }
-                            }
-                            if (file_exists($fldrPrfx . $img_src)) {//image exists!
-                            } else {
-                                //image does not exist.
-                                $img_src = "cmn_images/image_up.png";
-                            }
-                            $radomNo = rand(0, 500);
-                            $cntent .= "<td  width=\"60%\" $style2><img style=\"border:1px solid #eee;height:180px;padding:5px;\" src=\"$img_src?v=" . $radomNo . "\" /></td>";
-                        } else {
-                            $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                        }
-                        $cntent .= "</tr>";
-                    }
-                    $i++;
-                }
-                $cntent .= "</tbody></table></div>";
-                echo $cntent;
-            }
+            require "data_admin.php";            
         } else if ($pgNo == 6) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Self-Service Managers</span>

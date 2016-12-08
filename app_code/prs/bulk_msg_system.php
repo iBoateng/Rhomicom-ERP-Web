@@ -29,7 +29,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="row">                                                        
                                                             <div class="col-md-6">
                                                                 <div class="form-group form-group-sm">
-                                                                    <label for="msgType" class="control-label col-md-6">Message Type:</label>
+                                                                    <label for="msgType" class="control-label col-md-6" style="padding:0px 0px 0px 15px !important;">Message Type:</label>
                                                                     <div  class="col-md-6">
                                                                         <select class="form-control" id="msgType" >
                                                                             <option value=""></option>                                            
@@ -52,7 +52,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <div class="form-group form-group-sm">
-                                                                    <label for="grpType" class="control-label col-md-3">Group Type:</label>
+                                                                    <label for="grpType" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Group Type:</label>
                                                                     <div  class="col-md-9">
                                                                         <select class="form-control" id="grpType" >
                                                                             <option value=""></option>                                            
@@ -67,7 +67,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <div class="form-group form-group-sm">
-                                                                    <label for="grpName" class="control-label col-md-3">Group Name:</label>
+                                                                    <label for="grpName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Group Name:</label>
                                                                     <div  class="col-md-9">
                                                                         <select class="form-control" id="grpName" >
                                                                             <option value=""></option>                                            
@@ -80,9 +80,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </div>
                                                         </div>
                                                         <div class="row">                                                              
-                                                            <div class="col-md-8">
+                                                            <div class="col-md-9">
                                                                 <div class="form-group form-group-sm">
-                                                                    <label for="wkplcName" class="control-label col-md-4">Workplace:</label>
+                                                                    <label for="wkplcName" class="control-label col-md-4" style="padding:0px 0px 0px 15px !important;">Workplace:</label>
                                                                     <div  class="col-md-8">
                                                                         <select class="form-control" id="wkplcName" >
                                                                             <option value=""></option>                                            
@@ -93,7 +93,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     </div>
                                                                 </div> 
                                                             </div>
-                                                            <div class="col-md-4">
+                                                            <div class="col-md-3">
                                                                 <div class="form-group form-group-sm">
                                                                     <!--<label for="wkplcSite" class="control-label col-md-1">&nbsp;</label>-->
                                                                     <div  class="col-md-12">
@@ -152,7 +152,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="col-md-8">
                                             <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Message Body</legend>
                                                 <div id="summernote"></div> 
-                                                <div class="row" style="margin: 10px 0px 0px 0px !important;"> 
+                                                <div class="row" style="margin: -5px 0px 0px 0px !important;"> 
                                                     <div class="col-md-6" style="padding:0px 0px 0px 1px !important;">&nbsp;</div>
                                                     <div class="col-md-6" style="padding:0px 0px 0px 0px">
                                                         <div class="col-md-5" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/reload.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">RESET</button></div>
@@ -178,7 +178,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     <script type="text/javascript">
         $(document).ready(function () {
             $('#summernote').summernote({
-                minHeight: 383,
+                minHeight: 375,
                 focus: true
                         /*height: 100%//, // set editor height
                          // set minimum height of editor

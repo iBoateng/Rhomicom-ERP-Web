@@ -285,19 +285,36 @@ function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID) 
     var tempArry = [];
     bigArry = fnl_res.split("|");
     var i = 0;
+    var descValue = "";
+    var valValue = "";
+
     for (i = 0; i < bigArry.length; i++) {
         tempArry = bigArry[i].split(";");
         if (tempArry.length > 1)
         {
-            if (typeof ($('#' + descElemntID).val()) !== 'undefined')
+            if (cbResults.length > 1)
             {
-                document.getElementById(descElemntID).value = tempArry[2];
-            }
-            if (typeof ($('#' + valueElmntID).val()) !== 'undefined')
+                descValue = descValue + tempArry[2] + ",";
+                valValue = valValue + tempArry[1] + ",";
+            } else
             {
-                document.getElementById(valueElmntID).value = tempArry[1];
+                descValue = tempArry[2];
+                valValue = tempArry[1];
             }
         }
+    }
+    if (cbResults.length > 1)
+    {
+        descValue = descValue.slice(0, -1);
+        valValue = valValue.slice(0, -1);
+    }
+    if (typeof ($('#' + descElemntID).val()) !== 'undefined')
+    {
+        document.getElementById(descElemntID).value = descValue;
+    }
+    if (typeof ($('#' + valueElmntID).val()) !== 'undefined')
+    {
+        document.getElementById(valueElmntID).value = valValue;
     }
     $('#' + modalElementID).modal('hide');
 }
@@ -388,7 +405,7 @@ function openATab(slctr, linkArgs)
                         });
                     } else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
                     {
-                        loadScript("app/prs/prsn.js?v=29012", function () {
+                        loadScript("app/prs/prsn.js?v=10", function () {
                             $this.tab('show');
                             prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
                         });
