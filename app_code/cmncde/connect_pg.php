@@ -9,7 +9,7 @@ $fulldte = date('d-M-Y H:i:s');
 $app_url = "http://192.168.56.250/";
 $admin_email = "info@rhomicom.com";
 $smplPwd = "AoP12@34";
-$jsCssFileVrsn="101";
+$jsCssFileVrsn = "102";
 //More than 62 Characters Recommended
 $smplTokenWord = "eRRTRhbnsdGeneral Key for Rhomi|com Systems "
         . "Tech. !Ltd Enterpise/Organization @763542orbjkasdbhi68103weuikfjnsdf";
@@ -33,8 +33,8 @@ $pemDest = 'app_data/' . $database . '/Person/'; ///var/www/html/portal/
 //$dest = "app_data/$database/Person/";
 //$base_dir = "C:/xampp/htdocs/rems_pg/app_code/cmncde/";
 //$ftp_base_db_fldr = "/home/oracle/Databases/test_database";
-$ftp_base_db_fldr = "/home/portaladmin/" . $database;//"/home/rhoportal/ghie_ftp/" . $database;
-$db_pwd = 'Password1'; 
+$ftp_base_db_fldr = "/home/portaladmin/" . $database; //"/home/rhoportal/ghie_ftp/" . $database;
+$db_pwd = 'Password1';
 $db_usr = "postgres";
 $port = "5432";
 $host = "localhost";
@@ -43,28 +43,28 @@ $database_Version = "9.3";
 $app_name = "Rhomicom Systems Tech. Ltd.";
 $app_version = "V1 P24";
 $app_org = "Rhomicom Systems Tech. Ltd";
-$app_cstmr = "Rhomicom Systems Tech. Ltd.";//Clients Name
+$app_cstmr = "Rhomicom Systems Tech. Ltd."; //Clients Name
 $app_cstmr_url = "http://www.rhomicom.com";
 $app_slogan = "Building Dreams";
 $app_image = "3.png";
 $app_image1 = "3.png";
-$lgn_image = "background_lgn11.jpg";
+$lgn_image = "data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="; /*cmn_images/bkg4.jpeg*/
 $app_favicon = "Icon.ico";
 $about_app = "About Rhomicom";
 $about_url = "http://www.rhomicom.com";
-$bckcolors = "background-repeat: repeat;background-color: #336578 !important;background-image:url('cmn_images/background_lgn20.jpg'); background-size:100% 100%;";
-$bckcolorsChngPwd = "background-color: #336578 !important;background: url('cmn_images/background_lgn20.jpg') no-repeat center center fixed; 
+$bckcolors = "background-repeat: repeat;background-color: #336578 !important;background-image:url('cmn_images/bkg5.jpeg'); background-size:100% 100%;";
+$bckcolorsChngPwd = "background-color: #336578 !important;background: url('cmn_images/bkg5.jpeg') no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;";
 $bckcolors_home = "background-repeat: repeat;background-color: #003245 !important;background-size:100% 100%;";
-$bckcolorOnly="#00779D";
-$bckcolorshv = "background-color: #5a8f9d !important;";//#00AACF
-$forecolors="color:#FFFFFF !important;";
+$bckcolorOnly = "#00779D";
+$bckcolorshv = "background-color: #5a8f9d !important;"; //#00AACF
+$forecolors = "color:#FFFFFF !important;";
 $bckcolors1 = "#FFF";
 $bckcolors2 = "background-color: #00779D !important;";
-$breadCrmbBckclr="
+$breadCrmbBckclr = "
     border: 1px solid #336578;
     background-color: #003245;
     background-image: -moz-linear-gradient(top, #336578, #003245);
@@ -76,8 +76,8 @@ $breadCrmbBckclr="
 
 $loginPgNotice = "<p>Rhomicom Head Quarters, Achimota-ABC, Accra-Ghana</p>";
 $goBackButtonMsg = "Go Back to Rhomicom Website";
-$placeHolder1="Username or ID No.";
-$loginTitle="LOGIN TO THE PARTNERSHIP PORTAL";
+$placeHolder1 = "Username or ID No.";
+$loginTitle = "LOGIN TO THE PARTNERSHIP PORTAL";
 $showAboutRho = "0";
 $introWdth = 1050;
 $subArtWdth = 524;

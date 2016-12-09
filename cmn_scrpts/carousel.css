@@ -39,7 +39,7 @@ body {
 
 /* Carousel base class */
 .carousel {
-    margin: 1px;
+    margin: 0px;
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
@@ -99,8 +99,8 @@ body {
     }
 }
 @media (min-width: 768px) and (max-width: 991px) {
-    .carousel .item {height: 250px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 250px !important;}
+    .carousel .item {height: 200px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 200px !important;}
     .carousel-caption h1 {font-size:24px !important;}
     .wordwrap1 { 
         left:35%;
@@ -110,13 +110,13 @@ body {
     }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
-    .carousel .item {height: 300px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 300px !important;}
+    .carousel .item {height: 250px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 250px !important;}
     .carousel-caption h1 {font-size:30px !important;}
 }
 @media screen and (min-width: 1200px) {
-    .carousel .item {height: 300px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 300px !important;}
+    .carousel .item {height: 250px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 250px !important;}
     .carousel-caption h1 {font-size:36px !important;}
 }
 
@@ -214,7 +214,7 @@ body {
     background-repeat: repeat;
     background-size: auto 100%;
     border: 1px solid #aaa;
-    border-radius:5px;
+    border-radius:2px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -247,7 +247,7 @@ body {
     background:#f9f9f9;
     border:1px solid;
     border-color:#ddd;
-    border-radius:5px;
+    border-radius:2px;
     box-sizing:content-box;
     background-image:-webkit-linear-gradient(top,#fefefe,#f9f9f9);
     background-image:-moz-linear-gradient(top,#fefefe,#f9f9f9);
@@ -443,7 +443,7 @@ body {
              background:#f9f9f9;
              border:1px solid;
              border-color: #d0d0d0 !important;
-             border-radius:5px;
+             border-radius:2px;
              box-sizing:content-box;
              background-image:-webkit-linear-gradient(top,#fefefe,#f9f9f9);
              background-image:-moz-linear-gradient(top,#fefefe,#f9f9f9);
@@ -481,7 +481,7 @@ tr.selected{background-color: #00FFFF !important;}
                background:#f9f9f9;
                border:1px solid;
                border-color:#ddd;
-               border-radius:5px;
+               border-radius:2px;
                box-sizing:content-box;
                background-image:-webkit-linear-gradient(top,#fefefe,#f9f9f9);
                background-image:-moz-linear-gradient(top,#fefefe,#f9f9f9);
