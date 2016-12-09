@@ -129,6 +129,7 @@ require 'app_code/cmncde/admin_funcs.php';
 require 'loginController.php';
 
 $gDcrpt = isset($_GET['g']) ? cleanInputData($_GET['g']) : '';
+$mstChngPwd = isset($_GET['cp']) ? cleanInputData($_GET['cp']) : '';
 $screenwdth = isset($_POST['screenwdth']) ? cleanInputData($_POST['screenwdth']) : $_SESSION['SCREEN_WIDTH'];
 $_SESSION['SCREEN_WIDTH'] = $screenwdth;
 $gUNM = '';
@@ -146,7 +147,6 @@ $orgID = $_SESSION['ORG_ID'];
 $myImgFileName = $_SESSION['FILES_NAME_PRFX'] . '.png';
 
 $formArray = array();
-//var_dump($_POST);
 if ($gDcrpt != '') {
     $gDcrpt = decrypt($gDcrpt, $smplTokenWord1);
     $arrayParams = explode("|", $gDcrpt);
@@ -181,6 +181,9 @@ if ($gDcrpt != '') {
     $type = isset($_POST['typ']) ? cleanInputData($_POST['typ']) : 0;
     $qryStr = isset($_POST['q']) ? cleanInputData($_POST['q']) : '';
     $pgNo = isset($_POST['pg']) ? cleanInputData($_POST['pg']) : 0;
+    if ($mstChngPwd !== "") {
+        $qryStr = "changepassword";
+    }
 }
 //echo $type . "/" . $group . "/" . $qryStr;
 if ($group > 0 && $type > 0) {

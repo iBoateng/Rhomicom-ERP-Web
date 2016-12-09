@@ -336,14 +336,17 @@ function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, moda
     {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
-            /*$(elementID).html("<p><img style=\"width:80px;height:25px;display:inline;float:left;margin-right:5px;clear: left;\" src='cmn_images/animated_loading.gif'/>Loading...Please Wait...</p>");*/
-            if (actionAfter == 'OverwritePage')
+            /*if (actionAfter == 'OverwritePage')
             {
                 $body.removeClass("mdlloading");
+                $("head").remove();
+                $("body").remove();
+                $("body").replaceWith(xmlhttp.responseText);
                 var newDoc = document.open("text/html", "replace");
                 newDoc.write(xmlhttp.responseText);
                 newDoc.close();
-            } else if (actionAfter == 'Redirect')
+            } else*/ 
+            if (actionAfter == 'Redirect')
             {
                 $body.removeClass("mdlloading");
                 window.open(xmlhttp.responseText, '_blank');

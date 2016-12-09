@@ -77,7 +77,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         }
                     } else
                     {
-                        document.getElementById("msgArea").innerHTML = "<img style=\"width:160px;height:20px;display:inline;float:left;margin-left:15px;margin-right:5px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\">Loading...Please Wait...</span>";
+                        document.getElementById("msgArea").innerHTML = "<img style=\"width:145px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\">Loading...Please Wait...</span>";
                     }
                 };
 

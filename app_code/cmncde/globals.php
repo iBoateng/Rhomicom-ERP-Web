@@ -1477,7 +1477,7 @@ function sendEMail($to, $nameto, $subject, $message, &$errMsg, $ccMail = "", $bc
             $smtpClnt = $row[0];
             $fromEmlNm = $row[1];
             $fromPswd = decrypt($row[2], $smplTokenWord);
-            $portNo = 587; //$row[3];
+            $portNo = $row[3];
         }
 //error_reporting(E_USER_ERROR);"ssl://" . 
         $smtpServer = $smtpClnt;   //smtp.gmail.com ip address of the mail server.  This can also be the local domain name

@@ -136,7 +136,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </a>
                                 </li>
                                 <li class="dropdown">
-                                    <a href="javascript:doAjax('q=changepassword','allmodules','OverwritePage','','','');" class="dropdown-toggle" data-toggle="tooltip" data-placement="bottom" title="Change Password!">
+                                    <a href="javascript:window.location='index.php?cp=1';" class="dropdown-toggle" data-toggle="tooltip" data-placement="bottom" title="Change Password!">
                                         <i class="fa fa-gear fa-fw" style="<?php echo $forecolors; ?>font-size: 19px;"></i> 
                                     </a>
                                 </li>
@@ -507,7 +507,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $body.removeClass("mdlloading");
                 </script>
         </body>
-
         </html>
 
         <?php
