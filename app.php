@@ -14,11 +14,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . '.png';
         if (file_exists($ftp_src) && !file_exists($fullPemDest)) {
             copy("$ftp_src", "$fullPemDest");
-            //echo $fullPemDest;
         } else if (!file_exists($fullPemDest)) {
             $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
             copy("$ftp_src", "$fullPemDest");
-            //echo $ftp_src;
         }
         ?>
         <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />

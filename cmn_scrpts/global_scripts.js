@@ -408,7 +408,7 @@ function openATab(slctr, linkArgs)
                         });
                     } else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
                     {
-                        loadScript("app/prs/prsn.js?v=10", function () {
+                        loadScript("app/prs/prsn.js?v=110", function () {
                             $this.tab('show');
                             prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
                         });

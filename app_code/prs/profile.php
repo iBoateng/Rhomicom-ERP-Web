@@ -178,12 +178,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         </div> 
                                                         <div class="form-group form-group-sm">
                                                             <label for="telephone" class="control-label col-md-4">Contact Nos:</label>
-                                                            <div  class="col-md-4">
-                                                                <span><?php echo $row[16]; ?></span>
-                                                            </div>
-                                                            <div  class="col-md-4">
-                                                                <span><?php echo $row[17]; ?></span>
-                                                            </div>                                        
+                                                            <div  class="col-md-8">
+                                                                <span><?php echo trim($row[16] . ", " . $row[17], ", ") ?></span>
+                                                            </div>                                       
                                                         </div>     
                                                         <div class="form-group form-group-sm">
                                                             <label for="fax" class="control-label col-md-4">Fax:</label>

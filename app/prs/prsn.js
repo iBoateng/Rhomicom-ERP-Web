@@ -21,6 +21,11 @@ function prepareProfile(lnkArgs, htBody, targ, rspns)
     } else if (lnkArgs.indexOf("&pg=2") !== -1)
     {
         prepareProfileEDT(lnkArgs, htBody, targ, rspns);
+    } else if (lnkArgs.indexOf("&pg=5") !== -1)
+    {
+        loadScript("app/prs/prsn_admin.js?v=110", function () {
+            prepareDataAdmin(lnkArgs, htBody, targ, rspns);
+        });        
     } else {
         $(targ).html(rspns);
         htBody.removeClass("mdlloading");

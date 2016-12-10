@@ -210,10 +210,10 @@ if ($lgn_num > 0 && $canview === true) {
         } else if ($actyp == 12) {
             /* Educational Background */
             var_dump($_POST);
-        }else if ($actyp == 13) {
+        } else if ($actyp == 13) {
             /* Work Background */
             var_dump($_POST);
-        }else if ($actyp == 14) {
+        } else if ($actyp == 14) {
             /* Skills/Nature */
             var_dump($_POST);
         }
@@ -304,9 +304,9 @@ if ($lgn_num > 0 && $canview === true) {
 					</li>
                                        </ul>
                                      </div>" . "Leave of Absence Requests";
-        } else if ($pgNo == 5) {           
+        } else if ($pgNo == 5) {
             //Get Basic Person
-            require "data_admin.php";            
+            require "data_admin.php";
         } else if ($pgNo == 6) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Self-Service Managers</span>
@@ -529,6 +529,8 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
         $ordrBy = "a.local_id_no ASC";
     } else if ($sortBy == "ID DESC") {
         $ordrBy = "a.local_id_no DESC";
+    } else {
+        $ordrBy = "a.local_id_no ASC";
     }
 
     $strSql = "SELECT a.person_id, a.local_id_no, trim(a.title || ' ' || a.sur_name || " .
@@ -536,8 +538,7 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
             . "a.img_location, a.first_name, a.sur_name, a.other_names,
                 gender, marital_status,date_of_birth,
           place_of_birth, religion, res_address, pstl_addrs, email, cntct_no_tel, 
-          trim(cntct_no_tel) || trim(cntct_no_mobl), 
-          cntct_no_fax, img_location, hometown, nationality, 
+          cntct_no_mobl, cntct_no_fax, img_location, hometown, nationality, 
           lnkd_firm_org_id, 
           CASE WHEN lnkd_firm_org_id <=0 THEN new_company ELSE scm.get_cstmr_splr_name(lnkd_firm_org_id) END, 
           lnkd_firm_site_id, 

@@ -1,4 +1,54 @@
 
+function prepareDataAdmin(lnkArgs, htBody, targ, rspns)
+{
+    $(targ).html(rspns);
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        if (lnkArgs.indexOf("&vtyp=0") !== -1)
+        {
+            var table1 = $('#dataAdminTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": true
+            });
+        }
+        htBody.removeClass("mdlloading");
+    });
+}
+
+function getDataAdmin(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#dataAdminSrchFor").val() === 'undefined' ? '%' : $("#dataAdminSrchFor").val();
+    var srchIn = typeof $("#dataAdminSrchIn").val() === 'undefined' ? 'Both' : $("#dataAdminSrchIn").val();
+    var pageNo = typeof $("#dataAdminPageNo").val() === 'undefined' ? 1 : $("#dataAdminPageNo").val();
+    var limitSze = typeof $("#dataAdminDsplySze").val() === 'undefined' ? 10 : $("#dataAdminDsplySze").val();
+    var sortBy = typeof $("#dataAdminSortBy").val() === 'undefined' ? '' : $("#dataAdminSortBy").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze+"&sortBy="+sortBy;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncDtAdmn(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getDataAdmin(actionText, slctr, linkArgs);
+    }
+}
+
 function getDivsGroupsForm(elementID, modalBodyID, titleElementID, formElementID,
         tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
 {
@@ -89,7 +139,7 @@ function saveDivsGroupsForm(elementID, pKeyID, personID, tableElementID)
     {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
-            $('#'+tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
             $body.removeClass("mdlloadingDiag");
             $('#' + elementID).modal('hide');
         }
@@ -101,6 +151,6 @@ function saveDivsGroupsForm(elementID, pKeyID, personID, tableElementID)
             "&divGrpTyp=" + divGrpTyp +
             "&divGrpStartDate=" + divGrpStartDate +
             "&divGrpEndDate=" + divGrpEndDate +
-            "&divsGrpsPkeyID=" + pKeyID + 
+            "&divsGrpsPkeyID=" + pKeyID +
             "&sbmtdPersonID=" + personID);
 }
