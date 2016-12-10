@@ -13,6 +13,10 @@ function prepareDataAdmin(lnkArgs, htBody, targ, rspns)
                 "bFilter": false,
                 "scrollX": true
             });
+                $('#dataAdminForm').submit(function (e) {
+                    e.preventDefault();
+                    return false;
+                });
         }
         htBody.removeClass("mdlloading");
     });
