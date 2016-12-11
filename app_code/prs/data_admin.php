@@ -19,6 +19,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
     $pkID = $prsnid;
     if ($vwtyp == 0) {
+        $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
         echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
                                                 <span style=\"text-decoration:none;\">Data Administration</span>
@@ -131,16 +132,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <table class="table table-striped table-bordered table-responsive cvTblsEDT" id="dataAdminTable" cellspacing="0" width="100%" style="width:100%;">
                         <thead>
                             <tr>
-                                <th>...</th>
-                                <th>...</th>
-                                <th>...</th>
-                                <th>No.</th>		
+                                <th>No.</th>
+                                <?php if ($canAddPrsn === true) { ?>
+                                    <th>...</th>
+                                <?php } ?>
+                                <th>...</th>		
                                 <th>ID No.</th>
                                 <th>Full Name</th>
                                 <th>Linked Firm</th>
                                 <th>Email</th>
                                 <th>Contact Nos.</th>
                                 <th>Address</th>
+                                <th>...</th>
+                                <th>...</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -198,32 +202,40 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                   'StartDate' => $row[29],
                                   'EndDate' => $row[30]); */
                                 ?>
-                                <tr id="educBkgrdRow<?php echo $cntr; ?>">
-                                    <td>
-                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit" onclick="" style="padding:2px !important;" style="padding:2px !important;">
-                                            <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
-                                            <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="" style="padding:2px !important;" style="padding:2px !important;">
-                                            <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
-                                            <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
-                                        </button>
-                                    </td>
+                                <tr id="educBkgrdRow<?php echo $cntr; ?>">                                    
+                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                    <?php if ($canAddPrsn === true) { ?>                                    
+                                        <td>
+                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Basic Profile" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                            </button>
+                                        </td>
+                                    <?php } ?>
                                     <td>
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Print Profile" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                             <img src="cmn_images/pdf.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                         </button>
                                     </td>
-                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                     <td><?php echo $row[1]; ?></td>
                                     <td><?php echo $row[2]; ?></td>
                                     <td><?php echo str_replace("()", "", $row[22] . " (" . $row[24] . ")"); ?></td>
                                     <td><?php echo $row[14]; ?></td>
                                     <td><?php echo trim($row[15] . ", " . $row[16], ", "); ?></td>
                                     <td><?php echo trim($row[13] . " " . $row[12], " "); ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Basic Profile" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                            <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                            <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Other Details" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                            <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                            <img src="cmn_images/vwlog.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        </button>
+                                    </td>
                                 </tr>
                                 <?php
                             }
@@ -235,83 +247,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         </form>
         <?php
     } else if ($vwtyp == 1) {
-        $result = get_FilterValues($fltrTyp, $orgID);
-        $total = loc_db_num_rows($result);
-        $childArray = array(
-            'pssblValue' => 'All',
-            'pssblValueDesc' => 'All');
-        $prntArray[] = $childArray;
-        while ($row = loc_db_fetch_array($result)) {
-            //$chckd = FALSE;
-            $childArray = array(
-                'pssblValue' => $row[0],
-                'pssblValueDesc' => $row[0]);
-            $prntArray[] = $childArray;
-            //$cntr++;
-        }
-        echo json_encode(array('success' => true,
-            'total' => $total,
-            'rows' => $prntArray));
+        /* Get Basic Person Data + Additional Person Data + Extra Info Labels */
+        /* Show Edit mode where the user has the permission */
+        $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
+        $canEdtPrsn = test_prmssns($dfltPrvldgs[8], $mdlNm);
+        $canDelPrsn = test_prmssns($dfltPrvldgs[9], $mdlNm);
+        echo "Basic Person Data + Additional Person Data + Extra Info Labels";
     } else if ($vwtyp == 2) {
-        //Prsn Detail
-        $pkID = isset($_POST['personID']) ? $_POST['personID'] : -1;
-        $result = get_BscPrsnDetail($pkID);
-        $colsCnt = loc_db_num_fields($result);
-        $cntent = "<div style=\"padding:2px;width:100%;\">
-        <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
-            <caption>PERSON DETAILS</caption>";
-        $cntent .= "<thead><tr>";
-        $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-        $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
-        $cntent .= "</tr></thead>";
-        $cntent .= "<tbody>";
-        $i = 0;
-
-        $labl = "";
-        $labl1 = "";
-        while ($row = loc_db_fetch_array($result)) {
-            for ($d = 0; $d < $colsCnt; $d++) {
-                $style = "";
-                $style2 = "";
-                if (trim(loc_db_field_name($result, $d)) == "mt") {
-                    $style = "style=\"display:none;\"";
-                }
-                if (strtoupper($row[$d]) == 'NO') {
-                    $style2 = "style=\"color:red;font-weight:bold;\"";
-                } else if (strtoupper($row[$d]) == 'YES') {
-                    $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
-                }
-
-                $cntent .= "<tr $style>";
-                $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-
-                if (trim(loc_db_field_name($result, $d)) == "Person's Picture") {
-                    $temp = explode(".", $row[$d]);
-                    $extension = end($temp);
-                    $nwFileName = encrypt1($row[$d], $smplTokenWord1) . "." . $extension;
-                    $img_src = $pemDest . $nwFileName;
-                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[$d];
-                    if ($row[$d] != "") {
-                        if (file_exists($ftp_src)) {
-                            copy("$ftp_src", $fldrPrfx . "$img_src");
-                        }
-                    }
-                    if (file_exists($fldrPrfx . $img_src)) {//image exists!
-                    } else {
-                        //image does not exist.
-                        $img_src = "cmn_images/image_up.png";
-                    }
-                    $radomNo = rand(0, 500);
-                    $cntent .= "<td  width=\"60%\" $style2><img style=\"border:1px solid #eee;height:180px;padding:5px;\" src=\"$img_src?v=" . $radomNo . "\" /></td>";
-                } else {
-                    $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                }
-                $cntent .= "</tr>";
-            }
-            $i++;
-        }
-        $cntent .= "</tbody></table></div>";
-        echo $cntent;
+        /* Get CVs and Org Assignments */
+        $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
+        $canEdtPrsn = test_prmssns($dfltPrvldgs[8], $mdlNm);
+        $canDelPrsn = test_prmssns($dfltPrvldgs[9], $mdlNm);
+        echo "Get CVs and Org Assignments";
     }
 }
 ?>
