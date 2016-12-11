@@ -39,7 +39,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <form id='dataAdminForm' action='' method='post' accept-charset='UTF-8'>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col-lg-2" style="padding:0px 1px 0px 15px !important;">                    
-                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', '', 'Add/Edit Educational Background', 20, 'ADD', -1, <?php echo $prsnid; ?>);">
+                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="">
                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                         New Person
                     </button>
@@ -131,7 +131,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <table class="table table-striped table-bordered table-responsive cvTblsEDT" id="dataAdminTable" cellspacing="0" width="100%" style="width:100%;">
                         <thead>
                             <tr>
-                                <th>...</th>	
+                                <th>...</th>
+                                <th>...</th>
+                                <th>...</th>
                                 <th>No.</th>		
                                 <th>ID No.</th>
                                 <th>Full Name</th>
@@ -198,9 +200,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 ?>
                                 <tr id="educBkgrdRow<?php echo $cntr; ?>">
                                     <td>
-                                        <button type="button" class="btn btn-default btn-sm" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', 'educBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Educational Background', 20, 'EDIT', <?php echo $row[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                             <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                            <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                            <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Print Profile" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                            <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                            <img src="cmn_images/pdf.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                         </button>
                                     </td>
                                     <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>

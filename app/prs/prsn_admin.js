@@ -11,8 +11,9 @@ function prepareDataAdmin(lnkArgs, htBody, targ, rspns)
                 "ordering": false,
                 "info": false,
                 "bFilter": false,
-                "scrollX": true
+                "scrollX": false
             });
+            $('#dataAdminTable').wrap('<div class="dataTables_scroll"/>');
                 $('#dataAdminForm').submit(function (e) {
                     e.preventDefault();
                     return false;
