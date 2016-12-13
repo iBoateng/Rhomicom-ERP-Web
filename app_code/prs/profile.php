@@ -1,38 +1,81 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
+$canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
+    $canEdtPrsn = test_prmssns($dfltPrvldgs[8], $mdlNm);
+    $canDelPrsn = test_prmssns($dfltPrvldgs[9], $mdlNm);
+    $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
+    $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+    $addOrEdit = isset($_POST['addOrEdit']) ? cleanInputData($_POST['addOrEdit']) : 'VIEW';
+    $prsnid = $_SESSION['PRSN_ID'];
+    $orgID = $_SESSION['ORG_ID'];
+    if (($canAddPrsn === true && $addOrEdit == "ADD") 
+            || ($canEdtPrsn === true && $addOrEdit == "EDIT")
+            || ($canview === true && $addOrEdit == "VIEW")) {
+        $dsplyMode = $addOrEdit;
+    } else {
+        $sbmtdPersonID=-1;
+    }
     if ($vwtyp == "0") {
         /* onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\" */
-        echo $cntent . "<li>
+        if ($sbmtdPersonID <= 0) {
+            echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Personal Profile</span>
 					</li>
                                        </ul>
                                      </div>";
-
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
+        }
         $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         if ($pkID > 0) {
-            $rcrdExst = prsn_Record_Exist($pkID);
+            if ($sbmtdPersonID <= 0) {
+                $rcrdExst = prsn_Record_Exist($pkID);
 
-            if ($rcrdExst == true) {
-                $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                if ($rcrdExst == true) {
+                    $chngRqstExst = prsn_ChngRqst_Exist($pkID);
 
-                if ($chngRqstExst > 0) {
-                    $result = get_SelfPrsnDet($pkID);
+                    if ($chngRqstExst > 0) {
+                        $result = get_SelfPrsnDet($pkID);
+                    } else {
+                        $result = get_PrsnDet($pkID);
+                    }
                 } else {
                     $result = get_PrsnDet($pkID);
                 }
             } else {
                 $result = get_PrsnDet($pkID);
             }
-
             while ($row = loc_db_fetch_array($result)) {
+                $nwFileName="";
+                if ($sbmtdPersonID <= 0) {
+                    $nwFileName = $myImgFileName;
+                } else {
+                    $temp = explode(".", $row[2]);
+                    $extension = end($temp);
+                    $nwFileName = encrypt1($row[2], $smplTokenWord1) . "." . $extension;
+                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
+                    $fullPemDest = $fldrPrfx . $pemDest . $nwFileName;
+                    if (file_exists($ftp_src)) {
+                        copy("$ftp_src", "$fullPemDest");
+                        //echo $fullPemDest;
+                    } else if (!file_exists($fullPemDest)) {
+                        $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
+                        copy("$ftp_src", "$fullPemDest");
+                        //echo $ftp_src;
+                    }
+                }
                 ?>
                 <div class="row" style="margin: 0px 0px 10px 0px !important;"> 
                     <div class="col-md-8" style="padding:0px 0px 0px 15px !important;">&nbsp;</div>
                     <div class="col-md-4" style="padding:0px 0px 0px 0px">
-                        <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm"  style="width:100% !important;" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button></div>
+                        <?php if ($sbmtdPersonID <= 0) { ?>
+                            <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm"  style="width:100% !important;" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button></div>
+                        <?php } else { ?>
+                            <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm"  style="width:100% !important;" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View/Edit Person Basic Profile', <?php echo $sbmtdPersonID; ?>, 0, 2, 'EDIT');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button></div>
+                        <?php } ?>
                         <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button></div>
                     </div>
                 </div>
@@ -47,11 +90,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="">
                     <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-10px !important;">
-                        <li class="active"><a data-toggle="tab" data-rhodata="&pg=1&vtyp=0" href="#prflHomeRO" id="prflHomeROtab">Basic Data</a></li>
-                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=1" href="#prflAddPrsnDataRO" id="prflAddPrsnDataROtab">Additional Data</a></li>
-                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=2" href="#prflOrgAsgnRO" id="prflOrgAsgnROtab">Organisational Assignments</a></li>
-                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=3" href="#prflCVRO" id="prflCVROtab">CV</a></li>
-                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=4" href="#prflOthrInfoRO" id="prflOthrInfoROtab">Other Information</a></li>
+                        <li class="active"><a data-toggle="tab" data-rhodata="&pg=1&vtyp=0&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflHomeRO" id="prflHomeROtab">Basic Data</a></li>
+                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=1&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflAddPrsnDataRO" id="prflAddPrsnDataROtab">Additional Data</a></li>
+                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=2&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOrgAsgnRO" id="prflOrgAsgnROtab">Organisational Assignments</a></li>
+                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=3&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflCVRO" id="prflCVROtab">CV</a></li>
+                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=4&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOthrInfoRO" id="prflOthrInfoROtab">Other Information</a></li>
                     </ul>
                     <div class="row">                  
                         <div class="col-md-12">
@@ -63,7 +106,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="col-lg-4">
                                                     <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Person's Picture</legend>
                                                         <div style="margin-bottom: 10px;">
-                                                            <img src="<?php echo $pemDest . $myImgFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
+                                                            <img src="<?php echo $pemDest . $nwFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
                                                         </div>                                       
                                                     </fieldset>
                                                 </div>                                
@@ -268,11 +311,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </tfoot>-->
                                                                 <tbody>
                                                                     <?php
-                                                                    $rcrdExst = prsn_Record_Exist($pkID);
-                                                                    if ($rcrdExst == true) {
-                                                                        $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-                                                                        if ($chngRqstExst > 0) {
-                                                                            $result1 = get_AllNtnlty_Self($pkID);
+                                                                    if ($sbmtdPersonID <= 0) {
+                                                                        $rcrdExst = prsn_Record_Exist($pkID);
+                                                                        if ($rcrdExst == true) {
+                                                                            $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                                                                            if ($chngRqstExst > 0) {
+                                                                                $result1 = get_AllNtnlty_Self($pkID);
+                                                                            } else {
+                                                                                $result1 = get_AllNtnlty($pkID);
+                                                                            }
                                                                         } else {
                                                                             $result1 = get_AllNtnlty($pkID);
                                                                         }
@@ -312,10 +359,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         }
     } else if ($vwtyp == "1") {
         /* Additional Person Data */
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
         $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         if ($pkID > 0) {
             $rcrdExst = prsn_Record_Exist($pkID);
             $result = get_PrsExtrDataGrps($orgID);
@@ -365,18 +414,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        if ($rcrdExst === true) {
-                                                            $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                                                        if ($sbmtdPersonID <= 0) {
+                                                            if ($rcrdExst === true) {
+                                                                $chngRqstExst = prsn_ChngRqst_Exist($pkID);
 
-                                                            if ($chngRqstExst > 0) {
-                                                                $fldVal = get_PrsExtrData_Self($pkID, $row1[1]);
+                                                                if ($chngRqstExst > 0) {
+                                                                    $fldVal = get_PrsExtrData_Self($pkID, $row1[1]);
+                                                                } else {
+                                                                    $fldVal = get_PrsExtrData($pkID, $row1[1]);
+                                                                }
                                                             } else {
                                                                 $fldVal = get_PrsExtrData($pkID, $row1[1]);
                                                             }
                                                         } else {
                                                             $fldVal = get_PrsExtrData($pkID, $row1[1]);
                                                         }
-
                                                         $arry3 = explode("|", $fldVal);
                                                         $cntr3 = count($arry3);
                                                         $maxsze = (int) 320 / $row1[9];
@@ -424,11 +476,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div  class="col-md-8">
                                                         <span>
                                                             <?php
-                                                            if ($rcrdExst == true) {
-                                                                $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                                                            if ($sbmtdPersonID <= 0) {
+                                                                if ($rcrdExst == true) {
+                                                                    $chngRqstExst = prsn_ChngRqst_Exist($pkID);
 
-                                                                if ($chngRqstExst > 0) {
-                                                                    echo get_PrsExtrData_Self($pkID, $row1[1]);
+                                                                    if ($chngRqstExst > 0) {
+                                                                        echo get_PrsExtrData_Self($pkID, $row1[1]);
+                                                                    } else {
+                                                                        echo get_PrsExtrData($pkID, $row1[1]);
+                                                                    }
                                                                 } else {
                                                                     echo get_PrsExtrData($pkID, $row1[1]);
                                                                 }
@@ -467,9 +523,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <?php
     } else if ($vwtyp == "2") {
         /* Org Assignments */
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         $cntr = 0;
         ?> 
         <div class="row">
@@ -698,9 +756,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <?php
     } else if ($vwtyp == "3") {
         /* Curiculumn Vitae */
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         $cntr = 0;
         ?> 
         <div class="row">
@@ -836,9 +896,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <?php
     } else if ($vwtyp == "4") {
         /* Other Information */
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         $cntr = 0;
         $table_id = getMdlGrpID("Person Data", $mdlNm);
         $ext_inf_tbl_name = "prs.prsn_all_other_info_table";

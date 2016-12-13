@@ -235,39 +235,47 @@ if ($lgn_num > 0 && $canview === true) {
         $prsnType = get_LtstPrsnType($prsnid);
         for ($i = 0; $i < count($menuItems); $i++) {
             $No = $i + 1;
+
             if ($i == 0) {
                 
             } else if ($i == 1) {
                 //continue;
             } else if ($i == 2) {
+                if (strpos($prsnType, "Staff") === FALSE && strpos($prsnType, "Employee") === FALSE) {
+                    continue;
+                }
+            } else if ($i == 3) {
                 if (strpos($prsnType, "Registered Member") !== FALSE) {
                     //
                 } else {
-                    //continue;
-                }
-            } else if ($i == 3) {
-                if (strpos($prsnType, "Staff") !== FALSE) {
-                    //
-                } else {
-                    //continue;
+                    continue;
                 }
             } else if ($i == 4 && test_prmssns($dfltPrvldgs[7], $mdlNm) == FALSE) {
-                //continue;
+                continue;
             } else if ($i == 5 && test_prmssns($dfltPrvldgs[21], $mdlNm) == FALSE) {
-                //continue;
+                continue;
             } else if ($i == 6 && test_prmssns($dfltPrvldgs[7], $mdlNm) == FALSE) {
-                //continue;
+                continue;
             }
             if ($grpcntr == 0) {
                 $cntent .= "<div class=\"row\">";
             }
             //showPageDetails('$pageHtmlID', $No);
-            $cntent .= "<div class=\"col-md-3 colmd3special2\">
+            if ($i == 5) {
+                $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$No&vtyp=1');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
+            } else {
+                $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$No&vtyp=0');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
-    </div>";
+            </div>";
+            }
             if ($grpcntr == 3) {
                 $cntent .= "</div>";
                 $grpcntr = 0;
@@ -308,11 +316,8 @@ if ($lgn_num > 0 && $canview === true) {
             //Get Basic Person
             require "data_admin.php";
         } else if ($pgNo == 6) {
-            echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Self-Service Managers</span>
-					</li>
-                                       </ul>
-                                     </div>" . "Self-Service Managers";
+            //Get Basic Person for My Institution
+            require "data_admin.php";
         } else if ($pgNo == 7) {
             echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Send Bulk Messages</span>
@@ -338,7 +343,7 @@ function get_LtstPrsnType($pkID) {
     return '';
 }
 
-function get_BscPrsnTtl($searchFor, $searchIn, $orgID, $searchAll, $fltrTypValue, $fltrTyp) {
+function get_BscPrsnTtl($searchFor, $searchIn, $orgID, $searchAll, $fltrTypValue, $fltrTyp, $extra4 = "") {
     $extra1 = "";
     $extra2 = "";
     $extra3 = "";
@@ -425,7 +430,7 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
             . "LEFT OUTER JOIN pasn.prsn_prsntyps b " .
             "ON (a.person_id = b.person_id and "
             . "b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) " .
-            "WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 .
+            "WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 . $extra4 .
             ")";
     $result = executeSQLNoParams($strSql);
     while ($row = loc_db_fetch_array($result)) {
@@ -435,7 +440,7 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
 }
 
 function get_BscPrsn($searchFor, $searchIn, $offset, $limit_size, $orgID, $searchAll, $sortBy
-, $fltrTypValue, $fltrTyp) {
+, $fltrTypValue, $fltrTyp, $extra4 = "") {
     $extra1 = "";
     $extra2 = "";
     $extra3 = "";
@@ -550,7 +555,7 @@ to_timestamp(z.valid_end_date,'YYYY-MM-DD HH24:MI:SS'))))";
             . "LEFT OUTER JOIN pasn.prsn_prsntyps b " .
             "ON (a.person_id = b.person_id and "
             . "b.valid_start_date = (SELECT MAX(c.valid_start_date) from pasn.prsn_prsntyps c where c.person_id = a.person_id)) " .
-            "WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 .
+            "WHERE ((a.org_id = " . $orgID . " " . $extra1 . ")" . $whrcls . $extra2 . $extra3 . $extra4 .
             ") ORDER BY " . $ordrBy . " LIMIT " . $limit_size .
             " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);

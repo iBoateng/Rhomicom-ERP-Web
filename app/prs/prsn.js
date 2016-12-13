@@ -21,11 +21,12 @@ function prepareProfile(lnkArgs, htBody, targ, rspns)
     } else if (lnkArgs.indexOf("&pg=2") !== -1)
     {
         prepareProfileEDT(lnkArgs, htBody, targ, rspns);
-    } else if (lnkArgs.indexOf("&pg=5") !== -1)
+    } else if (lnkArgs.indexOf("&pg=5") !== -1
+            || lnkArgs.indexOf("&pg=6") !== -1)
     {
         loadScript("app/prs/prsn_admin.js?v=110", function () {
             prepareDataAdmin(lnkArgs, htBody, targ, rspns);
-        });        
+        });
     } else {
         $(targ).html(rspns);
         htBody.removeClass("mdlloading");
@@ -43,8 +44,9 @@ function prepareProfileRO(lnkArgs, htBody, targ, rspns)
                 "ordering": false,
                 "info": false,
                 "bFilter": false,
-                "scrollX": true
+                "scrollX": false
             });
+            $('#nationalIDTblRO').wrap('<div class="dataTables_scroll" />');
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 $('[data-toggle="tabajxprflro"]').click(function (e) {
@@ -52,7 +54,6 @@ function prepareProfileRO(lnkArgs, htBody, targ, rspns)
                     var targ = $this.attr('href');
                     var dttrgt = $this.attr('data-rhodata');
                     var linkArgs = 'grp=8&typ=1' + dttrgt;
-                    //alert(linkArgs);
                     return openATab(targ, linkArgs);
                 });
             });
@@ -110,9 +111,9 @@ function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
                 "ordering": false,
                 "info": false,
                 "bFilter": false,
-                "scrollX": true
+                "scrollX": false
             });
-            /*$('#nationalIDTblEDT').wrap('<div class="dataTables_scroll" />');*/
+            $('#nationalIDTblEDT').wrap('<div class="dataTables_scroll" />');
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 $('.form_date').datetimepicker({
@@ -220,7 +221,7 @@ function getNtnlIDForm(elementID, modalBodyID, titleElementID, formElementID, tR
              minHeight: 600,
              minWidth: 300
              });*/
-            $('.modal-dialog').draggable();
+            $('#myFormsModalDiag').draggable();
             $(function () {
                 $('.form_date').datetimepicker({
                     format: "d-M-yyyy",
@@ -331,7 +332,7 @@ function getAddtnlDataForm(elementID, modalBodyID, titleElementID, formElementID
         {
             $('#' + titleElementID).html(formTitle);
             $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('.modal-dialog').draggable();
+            $('#' + modalBodyID + 'Diag').draggable();
             $(function () {
                 $('.form_date').datetimepicker({
                     format: "d-M-yyyy",
@@ -473,7 +474,7 @@ function getEducBkgrdForm(elementID, modalBodyID, titleElementID, formElementID,
         {
             $('#' + titleElementID).html(formTitle);
             $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('.modal-dialog').draggable();
+            $('#' + modalBodyID + 'Diag').draggable();
             $(function () {
                 $('.form_date').datetimepicker({
                     format: "d-M-yyyy",
@@ -593,7 +594,7 @@ function getWorkBkgrdForm(elementID, modalBodyID, titleElementID, formElementID,
         {
             $('#' + titleElementID).html(formTitle);
             $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('.modal-dialog').draggable();
+            $('#' + modalBodyID + 'Diag').draggable();
             $(function () {
                 $('.form_date').datetimepicker({
                     format: "d-M-yyyy",
@@ -709,7 +710,7 @@ function getSkillsForm(elementID, modalBodyID, titleElementID, formElementID,
         {
             $('#' + titleElementID).html(formTitle);
             $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('.modal-dialog').draggable();
+            $('#' + modalBodyID + 'Diag').draggable();
             $(function () {
                 $('.form_date').datetimepicker({
                     format: "d-M-yyyy",

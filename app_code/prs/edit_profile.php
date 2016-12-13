@@ -1,25 +1,47 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
+    $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
+    $canEdtPrsn = test_prmssns($dfltPrvldgs[8], $mdlNm);
+    $canDelPrsn = test_prmssns($dfltPrvldgs[9], $mdlNm);
+    $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
+    $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+    $addOrEdit = isset($_POST['addOrEdit']) ? cleanInputData($_POST['addOrEdit']) : 'VIEW';
+    $prsnid = $_SESSION['PRSN_ID'];
+    $orgID = $_SESSION['ORG_ID'];
+    if (($canAddPrsn === true && $addOrEdit == "ADD") || ($canEdtPrsn === true && $addOrEdit == "EDIT") 
+            || ($canview === true && $addOrEdit == "VIEW")) {
+        $dsplyMode = $addOrEdit;
+    } else {
+        $sbmtdPersonID = -1;
+    }
     if ($vwtyp == "0") {
         /* onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\" */
-        echo $cntent . "<li>
+        if ($sbmtdPersonID <= 0 && $addOrEdit == "VIEW") {
+            echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
                                                 <span style=\"text-decoration:none;\">Data Change Requests</span>
 					</li>
                                        </ul>
                                      </div>";
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
+        }
+
         $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
+
         if ($pkID > 0) {
-            $rcrdExst = prsn_Record_Exist($pkID);
-
-            if ($rcrdExst == true) {
-                $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-
-                if ($chngRqstExst > 0) {
-                    $result = get_SelfPrsnDet($pkID);
+            if ($sbmtdPersonID <= 0) {
+                $rcrdExst = prsn_Record_Exist($pkID);
+                if ($rcrdExst == true) {
+                    $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                    if ($chngRqstExst > 0) {
+                        $result = get_SelfPrsnDet($pkID);
+                    } else {
+                        $result = get_PrsnDet($pkID);
+                    }
                 } else {
                     $result = get_PrsnDet($pkID);
                 }
@@ -28,6 +50,24 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
 
             while ($row = loc_db_fetch_array($result)) {
+                $nwFileName = "";
+                if ($sbmtdPersonID <= 0) {
+                    $nwFileName = $myImgFileName;
+                } else {
+                    $temp = explode(".", $row[2]);
+                    $extension = end($temp);
+                    $nwFileName = encrypt1($row[2], $smplTokenWord1) . "." . $extension;
+                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
+                    $fullPemDest = $fldrPrfx . $pemDest . $nwFileName;
+                    if (file_exists($ftp_src)) {
+                        copy("$ftp_src", "$fullPemDest");
+                        //echo $fullPemDest;
+                    } else if (!file_exists($fullPemDest)) {
+                        $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
+                        copy("$ftp_src", "$fullPemDest");
+                        //echo $ftp_src;
+                    }
+                }
                 ?>
 
                 <div class="row" style="margin: 0px 0px 10px 0px !important;">
@@ -39,23 +79,30 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                 </div>
 
-                <div class="row" style="margin: 0px 0px 10px 0px !important;">
-                    <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
-                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');">Basic Data</button>
-                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflAddPrsnDataEDT', 'grp=8&typ=1&pg=2&vtyp=1');">Additional Data</button>
-                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOrgAsgnEDT', 'grp=8&typ=1&pg=2&vtyp=2');">Organisational Assignments</button>
-                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflCVEDT', 'grp=8&typ=1&pg=2&vtyp=3');">Curriculum Vitae</button>
-                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOthrInfoEDT', 'grp=8&typ=1&pg=2&vtyp=4');">Other Information</button>
+                <?php if ($addOrEdit != "ADD") {
+                    ?>
+                    <div class="row" style="margin: 0px 0px 10px 0px !important;">
+                        <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
+                            <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');">Basic Data</button>
+                            <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflAddPrsnDataEDT', 'grp=8&typ=1&pg=2&vtyp=1');">Additional Data</button>
+                            <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOrgAsgnEDT', 'grp=8&typ=1&pg=2&vtyp=2');">Organisational Assignments</button>
+                            <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflCVEDT', 'grp=8&typ=1&pg=2&vtyp=3');">Curriculum Vitae</button>
+                            <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOthrInfoEDT', 'grp=8&typ=1&pg=2&vtyp=4');">Other Information</button>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
                 <div class="">
-                    <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-10px !important;">
-                        <li class="active"><a data-toggle="tab" data-rhodata="&pg=2&vtyp=0" href="#prflHomeEDT" id="prflHomeEDTtab">Basic Data</a></li>
-                        <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=1" href="#prflAddPrsnDataEDT" id="prflAddPrsnDataEDTtab">Additional Data</a></li>
-                        <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=2" href="#prflOrgAsgnEDT" id="prflOrgAsgnEDTtab">Organisational Assignments</a></li>
-                        <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=3" href="#prflCVEDT" id="prflCVEDTtab">CV</a></li>
-                        <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=4" href="#prflOthrInfoEDT" id="prflOthrInfoEDTtab">Other Information</a></li>
-                    </ul>
+                    <?php if ($addOrEdit != "ADD") {
+                        ?>
+                        <ul class="nav nav-tabs rho-hideable-tabs" style="margin-top:-10px !important;">
+                            <li class="active"><a data-toggle="tab" data-rhodata="&pg=2&vtyp=0&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflHomeEDT" id="prflHomeEDTtab">Basic Data</a></li>
+                            <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=1&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflAddPrsnDataEDT" id="prflAddPrsnDataEDTtab">Additional Data</a></li>
+                            <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=2&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOrgAsgnEDT" id="prflOrgAsgnEDTtab">Organisational Assignments</a></li>
+                            <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=3&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflCVEDT" id="prflCVEDTtab">CV</a></li>
+                            <li><a data-toggle="tabajxprfledt" data-rhodata="&pg=2&vtyp=4&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOthrInfoEDT" id="prflOthrInfoEDTtab">Other Information</a></li>
+                        </ul>
+                    <?php } ?>
+
                     <div class="row">                  
                         <div class="col-md-12">
                             <div class="custDiv"> 
@@ -66,7 +113,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="col-lg-4">
                                                     <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Person's Picture</legend>
                                                         <div style="margin-bottom: 10px;">
-                                                            <img src="<?php echo $pemDest . $myImgFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">                                            
+                                                            <img src="<?php echo $pemDest . $nwFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 195px !important; width: auto !important;">                                            
                                                         </div>
                                                         <div class="form-group form-group-sm">
                                                             <div class="col-md-12">
@@ -85,7 +132,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm">
                                                             <label for="idNo" class="control-label col-md-4">ID No:</label>
                                                             <div class="col-md-8">
-                                                                <span><?php echo $row[1]; ?></span>
+                                                                <?php if ($sbmtdPersonID <= 0) { ?>
+                                                                    <span><?php echo $row[1]; ?></span>
+                                                                <?php } else { ?>
+                                                                    <input class="form-control" id="idNumber" type = "text" placeholder="ID No" value="<?php echo $row[1]; ?>"/>
+                                                                <?php } ?>
                                                             </div>
                                                         </div> 
                                                         <div class="form-group form-group-sm">
@@ -396,11 +447,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </thead>
                                                                 <tbody>
                                                                     <?php
-                                                                    $rcrdExst = prsn_Record_Exist($pkID);
-                                                                    if ($rcrdExst == true) {
-                                                                        $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-                                                                        if ($chngRqstExst > 0) {
-                                                                            $result1 = get_AllNtnlty_Self($pkID);
+                                                                    if ($sbmtdPersonID <= 0) {
+                                                                        $rcrdExst = prsn_Record_Exist($pkID);
+                                                                        if ($rcrdExst == true) {
+                                                                            $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                                                                            if ($chngRqstExst > 0) {
+                                                                                $result1 = get_AllNtnlty_Self($pkID);
+                                                                            } else {
+                                                                                $result1 = get_AllNtnlty($pkID);
+                                                                            }
                                                                         } else {
                                                                             $result1 = get_AllNtnlty($pkID);
                                                                         }
@@ -447,55 +502,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>                
                     </div>          
                 </div>
-                <!--  style="min-width: 1000px;left:-35%;"-->
-                <div class="modal fade" id="myLovModal" tabindex="-1" role="dialog" aria-labelledby="myLovModalTitle">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myLovModalTitle"></h4>
-                            </div>
-                            <div class="modal-body" id="myLovModalBody" style="min-height: 100px;border-bottom: none !important;"></div>
-                            <div class="modal-footer" style="border-top: none !important;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="myFormsModal" tabindex="-1" role="dialog" aria-labelledby="myFormsModalTitle">
-                    <div class="modal-dialog" role="document" style="max-width:400px;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myFormsModalTitle"></h4>
-                            </div>
-                            <div class="modal-body" id="myFormsModalBody" style="min-height: 100px;border-bottom: none !important;"></div>
-                            <div class="modal-footer" style="border-top: none !important;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="myFormsModalLg" tabindex="-1" role="dialog" aria-labelledby="myFormsModalTitleLg">
-                    <div class="modal-dialog" role="document" style="max-width:800px;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myFormsModalTitleLg"></h4>
-                            </div>
-                            <div class="modal-body" id="myFormsModalBodyLg" style="min-height: 100px;border-bottom: none !important;"></div>
-                            <div class="modal-footer" style="border-top: none !important;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <?php
             }
         }
     } else if ($vwtyp == 1) {
         /* Additional Person Data */
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
-        $pkID = $prsnid;
+        $dsplyMode = "VIEW";
+        if (($canAddPrsn === true && $addOrEdit == "ADD") || ($canEdtPrsn === true && $addOrEdit == "EDIT")) {
+            $dsplyMode = $addOrEdit;
+        }
         if ($pkID > 0) {
             $rcrdExst = prsn_Record_Exist($pkID);
             $result = get_PrsExtrDataGrps($orgID);
@@ -558,11 +579,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        if ($rcrdExst === true) {
-                                                            $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                                                        if ($sbmtdPersonID <= 0) {
+                                                            if ($rcrdExst === true) {
+                                                                $chngRqstExst = prsn_ChngRqst_Exist($pkID);
 
-                                                            if ($chngRqstExst > 0) {
-                                                                $fldVal = get_PrsExtrData_Self($pkID, $row1[1]);
+                                                                if ($chngRqstExst > 0) {
+                                                                    $fldVal = get_PrsExtrData_Self($pkID, $row1[1]);
+                                                                } else {
+                                                                    $fldVal = get_PrsExtrData($pkID, $row1[1]);
+                                                                }
                                                             } else {
                                                                 $fldVal = get_PrsExtrData($pkID, $row1[1]);
                                                             }
@@ -626,10 +651,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <div  class="col-md-8">
                                                         <?php
                                                         $prsnDValPulld = "";
-                                                        if ($rcrdExst == true) {
-                                                            $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-                                                            if ($chngRqstExst > 0) {
-                                                                $prsnDValPulld = get_PrsExtrData_Self($pkID, $row1[1]);
+                                                        if ($sbmtdPersonID <= 0) {
+                                                            if ($rcrdExst == true) {
+                                                                $chngRqstExst = prsn_ChngRqst_Exist($pkID);
+                                                                if ($chngRqstExst > 0) {
+                                                                    $prsnDValPulld = get_PrsExtrData_Self($pkID, $row1[1]);
+                                                                } else {
+                                                                    $prsnDValPulld = get_PrsExtrData($pkID, $row1[1]);
+                                                                }
                                                             } else {
                                                                 $prsnDValPulld = get_PrsExtrData($pkID, $row1[1]);
                                                             }
@@ -711,9 +740,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <?php
     } else if ($vwtyp == "2") {
         /* Org Assignments */
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         $cntr = 0;
         ?> 
         <div class="row">
@@ -942,16 +973,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <?php
     } else if ($vwtyp == "3") {
         /* Curiculumn Vitae */
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         $cntr = 0;
         ?> 
         <div class="row">
             <div class="col-md-12"> 
                 <fieldset class="basic_person_fs4"><legend class="basic_person_lg">EDUCATIONAL BACKGROUND</legend> 
                     <div  class="col-md-12">
-                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', '', 'Add/Edit Educational Background', 20, 'ADD', -1, <?php echo $prsnid; ?>);">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', '', 'Add/Edit Educational Background', 20, 'ADD', -1, <?php echo $pkID; ?>);">
                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                             Add Educational Background
                         </button>
@@ -978,7 +1011,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         ?>
                                         <tr id="educBkgrdRow<?php echo $cntr; ?>">
                                             <td>
-                                                <button type="button" class="btn btn-default btn-sm" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', 'educBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Educational Background', 20, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getEducBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'educBkgrdForm', 'educBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Educational Background', 20, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $pkID; ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
@@ -1004,7 +1037,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="col-md-12"> 
                 <fieldset class="basic_person_fs4"><legend class="basic_person_lg">WORKING EXPERIENCE</legend> 
                     <div  class="col-md-12">                        
-                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', '', 'Add/Edit Work Experience', 21, 'ADD', -1, <?php echo $prsnid; ?>);">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', '', 'Add/Edit Work Experience', 21, 'ADD', -1, <?php echo $pkID; ?>);">
                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                             Add Work Experience
                         </button>
@@ -1030,7 +1063,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         ?>
                                         <tr id="workBkgrdRow<?php echo $cntr; ?>">
                                             <td>
-                                                <button type="button" class="btn btn-default btn-sm" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', 'workBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Work Experience', 21, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getWorkBkgrdForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'workBkgrdForm', 'workBkgrdRow<?php echo $cntr; ?>', 'Add/Edit Work Experience', 21, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $pkID; ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
@@ -1055,7 +1088,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="col-md-12"> 
                 <fieldset class="basic_person_fs4"><legend class="basic_person_lg">SKILLS/NATURE</legend> 
                     <div  class="col-md-12">                                                
-                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', '', 'Add/Edit Skills/Nature', 22, 'ADD', -1, <?php echo $prsnid; ?>);">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', '', 'Add/Edit Skills/Nature', 22, 'ADD', -1, <?php echo $pkID; ?>);">
                             <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                             Add Skills/Nature
                         </button>
@@ -1081,7 +1114,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         ?>
                                         <tr id="skillsTblRow<?php echo $cntr; ?>">
                                             <td>
-                                                <button type="button" class="btn btn-default btn-sm" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', 'skillsTblRow<?php echo $cntr; ?>', 'Add/Edit Skills/Nature', 22, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $prsnid; ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                <button type="button" class="btn btn-default btn-sm" onclick="getSkillsForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'skillsForm', 'skillsTblRow<?php echo $cntr; ?>', 'Add/Edit Skills/Nature', 22, 'EDIT', <?php echo $row1[0]; ?>, <?php echo $pkID; ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
@@ -1107,9 +1140,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <?php
     } else if ($vwtyp == "4") {
         /* Other Information */
-        $prsnid = $_SESSION['PRSN_ID'];
-        $orgID = $_SESSION['ORG_ID'];
-        $pkID = $prsnid;
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
         $cntr = 0;
         $table_id = getMdlGrpID("Person Data", $mdlNm);
         $ext_inf_tbl_name = "prs.prsn_all_other_info_table";

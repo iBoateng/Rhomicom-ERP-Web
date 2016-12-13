@@ -14,10 +14,10 @@ function prepareDataAdmin(lnkArgs, htBody, targ, rspns)
                 "scrollX": false
             });
             $('#dataAdminTable').wrap('<div class="dataTables_scroll"/>');
-                $('#dataAdminForm').submit(function (e) {
-                    e.preventDefault();
-                    return false;
-                });
+            $('#dataAdminForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
         }
         htBody.removeClass("mdlloading");
     });
@@ -42,7 +42,7 @@ function getDataAdmin(actionText, slctr, linkArgs)
         pageNo = parseInt(pageNo) - 1;
     }
     linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
-            "&pageNo=" + pageNo + "&limitSze=" + limitSze+"&sortBy="+sortBy;
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
     openATab(slctr, linkArgs);
 }
 
@@ -52,6 +52,273 @@ function enterKeyFuncDtAdmn(e, actionText, slctr, linkArgs)
     if (charCode == 13) {
         getDataAdmin(actionText, slctr, linkArgs);
     }
+}
+
+function getBscProfileForm(elementID, modalBodyID, titleElementID, formElementID,
+        formTitle, personID, vtyp, pgNo, addOrEdit)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + titleElementID).html(formTitle);
+            $('#' + modalBodyID).html(xmlhttp.responseText);
+            /*$('.modal-dialog').draggable();*/
+            if (pgNo == 1)
+            {
+                var table1 = $('#nationalIDTblRO').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "bFilter": false,
+                    "scrollX": false
+                });
+                $('#nationalIDTblRO').wrap('<div class="dataTables_scroll" />');
+
+                $('[data-toggle="tabajxprflro"]').click(function (e) {
+                    var $this = $(this);
+                    var targ = $this.attr('href');
+                    var dttrgt = $this.attr('data-rhodata');
+                    var linkArgs = 'grp=8&typ=1' + dttrgt;
+                    return openATab(targ, linkArgs);
+                });
+            } else if (pgNo == 2)
+            {
+                var table1 = $('#nationalIDTblEDT').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "bFilter": false,
+                    "scrollX": false
+                });
+                $('#nationalIDTblEDT').wrap('<div class="dataTables_scroll" />');
+                $('[data-toggle="tabajxprfledt"]').click(function (e) {
+                    var $this = $(this);
+                    var targ = $this.attr('href');
+                    var dttrgt = $this.attr('data-rhodata');
+                    var linkArgs = 'grp=8&typ=1' + dttrgt;
+                    return openATab(targ, linkArgs);
+                });
+            }
+            $(function () {
+                $('.form_date').datetimepicker({
+                    format: "d-M-yyyy",
+                    language: 'en',
+                    weekStart: 0,
+                    todayBtn: true,
+                    autoclose: true,
+                    todayHighlight: true,
+                    keyboardNavigation: true,
+                    startView: 2,
+                    minView: 2,
+                    maxView: 4,
+                    forceParse: true
+                });
+            });
+
+            $('#' + elementID).on('show.bs.modal', function (e) {
+                $(this).find('.modal-body').css({
+                    'max-height': '100%'
+                });
+            });
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('show');
+            $(document).ready(function () {
+                $('#' + formElementID).submit(function (e) {
+                    e.preventDefault();
+                    return false;
+                });
+
+            });
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("grp=8&typ=1&pg=" + pgNo + "&vtyp=" + vtyp + "&sbmtdPersonID=" + personID + "&addOrEdit=" + addOrEdit);
+}
+
+function saveBscProfileForm(elementID, pKeyID, personID, tableElementID)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var divGrpName = typeof $("#divGrpName").val() === 'undefined' ? '%' : $("#divGrpName").val();
+    var divGrpTyp = typeof $("#divGrpTyp").val() === 'undefined' ? 'Both' : $("#divGrpTyp").val();
+    var divGrpStartDate = typeof $("#divGrpStartDate").val() === 'undefined' ? 1 : $("#divGrpStartDate").val();
+    var divGrpEndDate = typeof $("#divGrpEndDate").val() === 'undefined' ? 10 : $("#divGrpEndDate").val();
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('hide');
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=4" +
+            "&divGrpName=" + divGrpName +
+            "&divGrpTyp=" + divGrpTyp +
+            "&divGrpStartDate=" + divGrpStartDate +
+            "&divGrpEndDate=" + divGrpEndDate +
+            "&divsGrpsPkeyID=" + pKeyID +
+            "&sbmtdPersonID=" + personID);
+}
+
+
+function getBscProfile1Form(elementID, modalBodyID, titleElementID, formElementID,
+        formTitle, personID, vtyp, pgNo, addOrEdit)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + titleElementID).html(formTitle);
+            $('#' + modalBodyID).html(xmlhttp.responseText);
+            /*$('.modal-dialog').draggable();*/
+            if (pgNo == 1)
+            {
+                var table1 = $('#nationalIDTblRO').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "bFilter": false,
+                    "scrollX": false
+                });
+                $('#nationalIDTblRO').wrap('<div class="dataTables_scroll" />');
+
+                $('[data-toggle="tabajxprflro"]').click(function (e) {
+                    var $this = $(this);
+                    var targ = $this.attr('href');
+                    var dttrgt = $this.attr('data-rhodata');
+                    var linkArgs = 'grp=8&typ=1' + dttrgt;
+                    return openATab(targ, linkArgs);
+                });
+            } else if (pgNo == 2)
+            {
+                var table1 = $('#nationalIDTblEDT').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "bFilter": false,
+                    "scrollX": false
+                });
+                $('#nationalIDTblEDT').wrap('<div class="dataTables_scroll" />');
+                $('[data-toggle="tabajxprfledt"]').click(function (e) {
+                    var $this = $(this);
+                    var targ = $this.attr('href');
+                    var dttrgt = $this.attr('data-rhodata');
+                    var linkArgs = 'grp=8&typ=1' + dttrgt;
+                    return openATab(targ, linkArgs);
+                });
+            }
+            $(function () {
+                $('.form_date').datetimepicker({
+                    format: "d-M-yyyy",
+                    language: 'en',
+                    weekStart: 0,
+                    todayBtn: true,
+                    autoclose: true,
+                    todayHighlight: true,
+                    keyboardNavigation: true,
+                    startView: 2,
+                    minView: 2,
+                    maxView: 4,
+                    forceParse: true
+                });
+            });
+
+            $('#' + elementID).on('show.bs.modal', function (e) {
+                $(this).find('.modal-body').css({
+                    'max-height': '100%'
+                });
+            });
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('show');
+            $(document).ready(function () {
+                $('#' + formElementID).submit(function (e) {
+                    e.preventDefault();
+                    return false;
+                });
+
+            });
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("grp=8&typ=1&pg=" + pgNo + "&vtyp=" + vtyp + "&sbmtdPersonID=" + personID + "&addOrEdit=" + addOrEdit);
+}
+
+function saveBscProfile1Form(elementID, pKeyID, personID, tableElementID)
+{
+    $body = $("body");
+    $body.addClass("mdlloadingDiag");
+    var divGrpName = typeof $("#divGrpName").val() === 'undefined' ? '%' : $("#divGrpName").val();
+    var divGrpTyp = typeof $("#divGrpTyp").val() === 'undefined' ? 'Both' : $("#divGrpTyp").val();
+    var divGrpStartDate = typeof $("#divGrpStartDate").val() === 'undefined' ? 1 : $("#divGrpStartDate").val();
+    var divGrpEndDate = typeof $("#divGrpEndDate").val() === 'undefined' ? 10 : $("#divGrpEndDate").val();
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        /*code for IE6, IE5*/
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+            $body.removeClass("mdlloadingDiag");
+            $('#' + elementID).modal('hide');
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=4" +
+            "&divGrpName=" + divGrpName +
+            "&divGrpTyp=" + divGrpTyp +
+            "&divGrpStartDate=" + divGrpStartDate +
+            "&divGrpEndDate=" + divGrpEndDate +
+            "&divsGrpsPkeyID=" + pKeyID +
+            "&sbmtdPersonID=" + personID);
 }
 
 function getDivsGroupsForm(elementID, modalBodyID, titleElementID, formElementID,
@@ -75,7 +342,7 @@ function getDivsGroupsForm(elementID, modalBodyID, titleElementID, formElementID
         {
             $('#' + titleElementID).html(formTitle);
             $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('.modal-dialog').draggable();
+            $('#' + modalBodyID + 'Diag').draggable();
             $(function () {
                 $('.form_date').datetimepicker({
                     format: "d-M-yyyy",

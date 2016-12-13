@@ -138,7 +138,7 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
              minHeight: 600,
              minWidth: 300
              });*/
-            $('.modal-dialog').draggable();
+            $('#myLovModalDiag').draggable();
 
             $('#' + elementID).on('show.bs.modal', function (e) {
                 $(this).find('.modal-body').css({
@@ -429,15 +429,14 @@ function openATab(slctr, linkArgs)
 
 function logOutFunc()
 {
-//glyphicon glyphicon-menu-left  modal-sm  modal-dialog
     BootstrapDialog.show({
         size: BootstrapDialog.SIZE_SMALL,
         type: BootstrapDialog.TYPE_DEFAULT,
         title: 'System Alert!',
         message: 'Are you sure you want to Logout?',
         animate: true,
-        //draggable: true,
-        //cssClass:"modal-dialog modal-sm",
+        /*draggable: true,
+        cssClass:"modal-dialog modal-sm",*/
         onshow: function (dialog) {
             /*var id = setInterval(function () {
              $("div.modal-dialog").addClass("modal-sm");

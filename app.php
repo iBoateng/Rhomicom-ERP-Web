@@ -248,7 +248,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                        <a href="javascript:openATab('#allmodules', 'grp=8&typ=1]');" class="nav-link " style="<?php echo $forecolors; ?>">
                                             <span class="title">Personal Records</span>
                                         </a>
                                     </li>
@@ -344,7 +344,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </a>
                                             </li>
                                             <li class="nav-item  ">
-                                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                <a href="javascript:openATab('#allmodules', 'grp=8&typ=1]');" class="nav-link " style="<?php echo $forecolors; ?>"> 
                                                     <span class="title">Basic Person Data</span>
                                                 </a>
                                             </li>
@@ -473,6 +473,45 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                 </div>
                 <div class="modalLdng"></div>
+                <div class="modal fade" id="myLovModal" tabindex="-1" role="dialog" aria-labelledby="myLovModalTitle">
+                    <div class="modal-dialog" role="document" id="myLovModalDiag" >
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myLovModalTitle"></h4>
+                            </div>
+                            <div class="modal-body" id="myLovModalBody" style="min-height: 100px;border-bottom: none !important;"></div>
+                            <div class="modal-footer" style="border-top: none !important;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="myFormsModal" tabindex="-1" role="dialog" aria-labelledby="myFormsModalTitle" style="z-index: 9997 !important;">
+                    <div class="modal-dialog" role="document" style="max-width:400px;" id="myFormsModalDiag" >
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myFormsModalTitle"></h4>
+                            </div>
+                            <div class="modal-body" id="myFormsModalBody" style="min-height: 100px;border-bottom: none !important;"></div>
+                            <div class="modal-footer" style="border-top: none !important;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="myFormsModalLg" tabindex="-1" role="dialog" aria-labelledby="myFormsModalTitleLg">
+                    <div class="modal-dialog" role="document" style="min-width:300px;max-width:90%;width:90%;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myFormsModalTitleLg"></h4>
+                            </div>
+                            <div class="modal-body" id="myFormsModalBodyLg" style="min-height: 100px;border-bottom: none !important;"></div>
+                            <div class="modal-footer" style="border-top: none !important;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- END FOOTER -->
                 <!--[if lt IE 9]>
 
