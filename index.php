@@ -349,7 +349,7 @@ if ($group > 0 && $type > 0) {
         } else if ($type == 2) {
             require 'app_code/cmncde/inbox_html.php';
         } else if ($type == 3) {
-            require 'app_code/cmncde/inbox_html.php';
+            require 'app_code/cmncde/all_articles.php';
         } else if ($type == 4) {
             require 'app_code/cmncde/inbox_html.php';
         } else if ($type == 5) {

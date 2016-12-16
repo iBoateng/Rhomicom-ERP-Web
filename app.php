@@ -305,7 +305,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="nav-item  ">
-                                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">  
+                                                <a href="javascript:openATab('#allmodules', 'grp=3&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">  
                                                     <i class="fa fa-user fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                                     <span class="title">System Administration</span>
                                                 </a>

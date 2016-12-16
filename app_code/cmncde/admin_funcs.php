@@ -727,16 +727,16 @@ function doesPswdCmplxtyMeetPlcy($pswd
     } else {
         $msgStr = "Password must contain " . $cmbntnSet . " of the ff:";
         if ($isCapsReq) {
-            $msgStr.="<br/>Block Letters!";
+            $msgStr .= "<br/>Block Letters!";
         }
         if ($isSmallReq) {
-            $msgStr.="<br/>Small Letters!";
+            $msgStr .= "<br/>Small Letters!";
         }
         if ($isDigitReq) {
-            $msgStr.="<br/>Numbers/Digits!";
+            $msgStr .= "<br/>Numbers/Digits!";
         }
         if ($isWildReq) {
-            $msgStr.="<br/>Wild Characters (e.g. @, #)!";
+            $msgStr .= "<br/>Wild Characters (e.g. @, #)!";
         }
         return false;
     }
@@ -1062,13 +1062,11 @@ function checkNCreateSubGroups($ModuleName, $brgtGrps, $brgtTbls, $brgtKeyCols) 
 }
 
 function loadMdlsNthrRolesNLovs() {
-    global
-
-    $sysLovs;
+    global $sysLovs;
     global $sysLovsDesc;
     global $sysLovsDynQrys;
     global $pssblVals;
-
+    set_time_limit(300);
     loadSysAdminMdl();
     loadGenStpMdl();
     loadOrgStpMdl();
@@ -1088,8 +1086,7 @@ function loadMdlsNthrRolesNLovs() {
     loadPSBMdl();
     loadEvoteMdl();
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
-    createSysLovsPssblVals($pssblVals, $sysLovs
-    );
+    createSysLovsPssblVals($pssblVals, $sysLovs);
 
     $updtSQL = "UPDATE prs.prsn_names_nos 
         SET first_name='SYSTEM'
@@ -1332,7 +1329,8 @@ function loadSysAdminMdl() {
         /* 12 */ "Add New Security Policies", "Edit Security Policies", "Add New Server Settings",
         /* 15 */ "Edit Server Settings", "Set manual password for users",
         /* 17 */ "Send System Generated Passwords to User Mails",
-        /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels");
+        /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
+        /* 22 */ "Add Articles", "Edit Articles", "Delete Articles");
 
     $subGrpNames = ""; //, "Accounting Transactions"
     $mainTableNames = ""; //, "accb.accb_trnsctn_details"

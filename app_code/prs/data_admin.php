@@ -36,16 +36,27 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $curIdx = $pageNo - 1;
         $result = get_BscPrsn($srchFor, $srchIn, $curIdx, $lmtSze, $orgID, $searchAll, $sortBy, $fltrTypValue, $fltrTyp);
         $cntr = 0;
+        $colClassType1 = "col-lg-2";
+        $colClassType2 = "col-lg-3";
         ?> 
         <form id='dataAdminForm' action='' method='post' accept-charset='UTF-8'>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col-lg-2" style="padding:0px 1px 0px 15px !important;">                    
-                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'Add Person Basic Profile', -1, 0, 2, 'ADD')">
-                        <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
-                        New Person
-                    </button>
-                </div>
-                <div class="col-lg-3" style="padding:0px 15px 0px 15px !important;">
+                <?php
+                if ($canAddPrsn === true) {
+                    ?>   
+                    <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">                    
+                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'Add Person Basic Profile', -1, 23, 2, 'ADD')">
+                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                            New Person
+                        </button>
+                    </div>
+                <?php
+                } else {
+                    $colClassType1 = "col-lg-2";
+                    $colClassType2 = "col-lg-4";
+                }
+                ?>
+                <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                     <div class="input-group">
                         <input class="form-control" id="dataAdminSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncDtAdmn(event, '', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0')">
                         <input id="dataAdminPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
@@ -57,7 +68,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </label> 
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="<?php echo $colClassType2; ?>">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
                         <select data-placeholder="Select..." class="form-control chosen-select" id="dataAdminSrchIn">
@@ -93,7 +104,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-2">
+                <div class="<?php echo $colClassType1; ?>">
                     <div class="input-group">                        
                         <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
                         <select data-placeholder="Select..." class="form-control chosen-select" id="dataAdminSortBy">
@@ -110,7 +121,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-2">
+                <div class="<?php echo $colClassType1; ?>">
                     <nav aria-label="Page navigation">
                         <ul class="pagination" style="margin: 0px !important;">
                             <li>
@@ -252,7 +263,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <form id='dataAdminForm' action='' method='post' accept-charset='UTF-8'>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col-lg-2" style="padding:0px 1px 0px 15px !important;">                    
-                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getBscProfile1Form('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'Add Person Basic Profile', -1, 0, 2, 'ADD')">
+                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getBscProfile1Form('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'Add Person Basic Profile', -1, 24, 2, 'ADD')">
                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                         New Person
                     </button>

@@ -337,15 +337,15 @@ function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, moda
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
             /*if (actionAfter == 'OverwritePage')
-            {
-                $body.removeClass("mdlloading");
-                $("head").remove();
-                $("body").remove();
-                $("body").replaceWith(xmlhttp.responseText);
-                var newDoc = document.open("text/html", "replace");
-                newDoc.write(xmlhttp.responseText);
-                newDoc.close();
-            } else*/ 
+             {
+             $body.removeClass("mdlloading");
+             $("head").remove();
+             $("body").remove();
+             $("body").replaceWith(xmlhttp.responseText);
+             var newDoc = document.open("text/html", "replace");
+             newDoc.write(xmlhttp.responseText);
+             newDoc.close();
+             } else*/
             if (actionAfter == 'Redirect')
             {
                 $body.removeClass("mdlloading");
@@ -412,6 +412,10 @@ function openATab(slctr, linkArgs)
                             $this.tab('show');
                             prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
                         });
+                    } else if (linkArgs.indexOf("grp=40&typ=3") !== -1)
+                    {
+                        $this.tab('show');
+                        prepareArticles(linkArgs, $body, targ, xmlhttp.responseText);
                     } else
                     {
                         $(targ).html(xmlhttp.responseText);
@@ -427,6 +431,60 @@ function openATab(slctr, linkArgs)
     }
 }
 
+
+function prepareArticles(lnkArgs, htBody, targ, rspns)
+{
+    $(targ).html(rspns);
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        if (lnkArgs.indexOf("&vtyp=0") !== -1)
+        {
+            var table1 = $('#allArticlesTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#allArticlesTable').wrap('<div class="dataTables_scroll"/>');
+            $('#allArticlesForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+        }
+        htBody.removeClass("mdlloading");
+    });
+}
+
+function getAllArticles(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#allArticlesSrchFor").val() === 'undefined' ? '%' : $("#allArticlesSrchFor").val();
+    /*var srchIn = typeof $("#allArticlesSrchIn").val() === 'undefined' ? 'Both' : $("#allArticlesSrchIn").val();*/
+    var pageNo = typeof $("#allArticlesPageNo").val() === 'undefined' ? 1 : $("#allArticlesPageNo").val();
+    var limitSze = typeof $("#allArticlesDsplySze").val() === 'undefined' ? 10 : $("#allArticlesDsplySze").val();
+    var sortBy = typeof $("#allArticlesSortBy").val() === 'undefined' ? '' : $("#allArticlesSortBy").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=All&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncArticles(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAllArticles(actionText, slctr, linkArgs);
+    }
+}
 function logOutFunc()
 {
     BootstrapDialog.show({
@@ -436,7 +494,7 @@ function logOutFunc()
         message: 'Are you sure you want to Logout?',
         animate: true,
         /*draggable: true,
-        cssClass:"modal-dialog modal-sm",*/
+         cssClass:"modal-dialog modal-sm",*/
         onshow: function (dialog) {
             /*var id = setInterval(function () {
              $("div.modal-dialog").addClass("modal-sm");

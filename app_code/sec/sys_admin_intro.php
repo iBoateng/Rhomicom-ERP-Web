@@ -2,9 +2,9 @@
 
 $menuItems = array("Users & their Roles", "Roles & Priviledges",
     "Modules & Priviledges", "Extra Info Labels", "Security Policies", "Server Settings",
-    "Track User Logins", "Audit Trail Tables", "News Items/Articles", "Load all Modules Requirements");
+    "Track User Logins", "Audit Trail Tables", /*"News Items/Articles",*/ "Load all Modules Requirements");
 $menuImages = array("reassign_users.png", "groupings.png", "Folder.png", "info_ico2.gif",
-    "login.jpg", "antenna1.png", "user-mapping.ico", "safe-icon.png", "notes06.gif", "98.png");
+    "login.jpg", "antenna1.png", "user-mapping.ico", "safe-icon.png", /*"notes06.gif",*/ "98.png");
 
 $mdlNm = "System Administration";
 $ModuleName = $mdlNm;
@@ -17,8 +17,8 @@ $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 12 */ "Add New Security Policies", "Edit Security Policies", "Add New Server Settings",
     /* 15 */ "Edit Server Settings", "Set manual password for users",
     /* 17 */ "Send System Generated Passwords to User Mails",
-    /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels",
-    "Delete Extra Info Labels");
+    /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
+    /* 22 */ "Add Articles","Edit Articles","Delete Articles");
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || ($pgNo == 9 && test_prmssns("View Self-Service", "Self Service"));
 $vwtyp = "0";
 $qstr = "";
@@ -103,7 +103,16 @@ if (strpos($srchFor, "%") === FALSE) {
     $srchFor = " " . $srchFor . " ";
     $srchFor = str_replace(" ", "%", $srchFor);
 }
-
+$cntent = "<div>
+				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
+					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
+                                                <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
+						<span style=\"text-decoration:none;\">Home</span>
+                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>
+					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>";
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
         if ($qstr == "DELETE") {
@@ -113,53 +122,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                //Articles
-                //var_dump($_POST);
-                header("content-type:application/json");
-                //categoryCombo
-                $articleID = cleanInputData($_POST['articleID']);
-                $artclCatgry = cleanInputData($_POST['categoryCombo']);
-                $hdrURL = cleanInputData($_POST['titleURL']);
-                $artBody = cleanInputData($_POST['articleBody']);
-
-                $artTitle = cleanInputData($_POST['titleDetails']);
-                $isPblshed = (cleanInputData(isset($_POST['isPublished']) ? $_POST['isPublished'] : '') == "on") ? "1" : "0";
-                $datePublished = cleanInputData($_POST['publishingDate']);
-                $AuthorName = cleanInputData($_POST['AuthorName']);
-                $AuthorEmail = cleanInputData($_POST['AuthorEmail']);
-                $authorPrsnID = getPersonID(cleanInputData($_POST['authorPrsnID']));
-                if ($datePublished != "") {
-                    $datePublished = cnvrtDMYTmToYMDTm($datePublished);
-                }
-                //echo $datePublished;
-                $oldArticleID = getGnrlRecID2("self.self_articles", "article_header", "article_id", $artTitle);
-
-                if ($artclCatgry != "" && $artTitle != "" && ($oldArticleID <= 0 || $oldArticleID == $articleID)) {
-                    if ($articleID <= 0) {
-                        createArticle($artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $AuthorName, $AuthorEmail, $authorPrsnID);
-                    } else {
-                        updateArticle($articleID, $artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $AuthorName, $AuthorEmail, $authorPrsnID);
-                    }
-                    echo json_encode(array(
-                        'success' => true,
-                        'message' => 'Saved Successfully',
-                        'data' => array('src' => 'Article Successfully Saved!'),
-                        'total' => '1',
-                        'errors' => ''
-                    ));
-                    exit();
-                } else {
-                    echo json_encode(array(
-                        'success' => false,
-                        'message' => 'Error Occured',
-                        'data' => array('src' => 'Failed to Save Article!'),
-                        'total' => '0',
-                        'errors' => 'Incomplete Data'
-                    ));
-                    exit();
-                }
+                
             } else if ($actyp == 2) {
-                //Articles
+                //User Roles
                 //var_dump($_POST);
                 header("content-type:application/json");
                 $rowsToUpdte = json_decode($_POST['rows'], true);
@@ -279,18 +244,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else {
             if ($pgNo == 0) {
-                $cntent = "<div id='rho_form' style=\"min-height:150px;\">
-                <fieldset style=\"padding:5px 5px 5px 5px;margin:0px 0px 0px 0px !important;\">
-                    <!--<legend>   Intro Page   </legend>-->
-                    <div class='rho_form3' style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
-                    padding:5px 30px 5px 20px;\" class=\"rho-postcontent rho-postcontent-0 clearfix\">                    
-      <h3>WELCOME TO THE SYSTEM ADMINISTRATION</h3>
-      <div class='rho_form44' style=\"padding:5px 30px 5px 10px;margin:-10px 3px 1px 0px !important;\">
+                $cntent .= "
+					<li onclick=\"openATab('#allmodules', 'grp=8&typ=1');\">
+						<span style=\"text-decoration:none;\">SysAdmin Menu</span>
+					</li>
+                                       </ul>
+                                     </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
+                    padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
+      <!--<h4>WELCOME TO THE SYSTEM ADMINISTRATION</h4>-->
+      <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
                     font-weight:normal;\">This is where all user account settings and Site Information Setups are done. The module has the ff areas:</span>
-                    </div> 
-      <p>"; /* background-color:#e3e3e3;border: 1px solid #999;
-                 */
+                    </div>
+      <p>";
 
                 $grpcntr = 0;
                 for ($i = 0; $i < count($menuItems); $i++) {
@@ -313,23 +279,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         continue;
                     } else if ($i == 8 && test_prmssns($dfltPrvldgs[11], $mdlNm) == FALSE) {
                         continue;
-                    } else if ($i == 9 && test_prmssns($dfltPrvldgs[11], $mdlNm) == FALSE) {
-                        continue;
                     }
                     if ($grpcntr == 0) {
-                        $cntent.= "<div style=\"float:none;margin:1px;\">"
-                                . "<ul class=\"no_bullet\" style = \"float:none;margin:1px;\">";
+                        $cntent .= "<div class=\"row\">";
                     }
-                    $cntent.= "<li class=\"leaf\" style=\"margin:2px 2px 2px 2px;\">"
-                            . "<a href=\"javascript: showPageDetails('$pageHtmlID',  $No);\" class=\"x-btn x-unselectable x-btn-default-large\" "
-                            . "style=\"padding:0px;height:90px;width:140px;\" " . "hidefocus=\"on\" unselectable=\"on\" id=\"loadRolesButton\" tabindex=\"0\" componentid=\"loadRolesButton\">" . "<span id=\"loadRolesButton-btnWrap\" data-ref=\"btnWrap\" role=\"presentation\" unselectable=\"on\" " . " class=\"x-btn-wrap x-btn-wrap-default-large \"><span id=\"loadRolesButton-btnEl\" " . "data-ref=\"btnEl\" role=\"presentation\" unselectable=\"on\" style=\"\" " . "class=\"x-btn-button x-btn-button-default-large x-btn-text  x-btn-icon x-btn-icon-top x-btn-button-center \">" . "<span id=\"loadRolesButton-btnIconEl\" data-ref=\"btnIconEl\" role=\"presentation\" unselectable=\"on\" " . "class=\"x-btn-icon-el x-btn-icon-el-default-large iconButton \" " . "style=\"background-image:url(cmn_images/$menuImages[$i]);\">&nbsp;</span>" . "<span id=\"loadRolesButton-btnInnerEl\" style=\"white-space: normal;overflow:hidden;\" "
-                            . "data-ref=\"btnInnerEl\" unselectable=\"on\" class=\"x-btn-inner x-btn-inner-default-large\">"
-                            . strtoupper($menuItems [$i])
-                            . "</span></span></span></a>"
-                            . "</li>";
+                    $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=3&typ=1&pg=$No&vtyp=0');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
                     if ($grpcntr == 3) {
-                        $cntent.= "</ul>"
-                                . "</div>";
+                        $cntent .= "</div>";
                         $grpcntr = 0;
                     } else {
                         $grpcntr = $grpcntr + 1;
@@ -337,12 +298,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
                 $cntent .= "
       </p>
-    </div>
-    </fieldset>
-        </div>";
+    </div>";
                 echo $cntent;
             } else if ($pgNo == 1) {
-
                 //Get Users
                 if ($vwtyp == 0) {
 
@@ -472,44 +430,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             } else if ($pgNo == 8) {
                 //require "adt_trail.php";
             } else if ($pgNo == 9) {
-                //echo Articles
-//inbxFormTblr($dsply);
-                $total = get_ArticleTtls($srchFor, $srchIn);
-
-                $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                $start = isset($_POST['start']) ? $_POST['start'] : 0;
-                if ($pageNo > ceil($total / $lmtSze)) {
-                    $pageNo = 1;
-                }
-
-                $curIdx = $pageNo - 1;
-                $result = get_Articles($srchFor, $srchIn, $curIdx, $lmtSze);
-                $articles = array();
-                $cntr = 0;
-                while ($row = loc_db_fetch_array($result)) {
-                    $chckd = ($cntr == 0) ? TRUE : FALSE;
-                    $article = array(
-                        'checked' => var_export($chckd, TRUE),
-                        'ArticleID' => $row[0],
-                        'ArticleCategory' => $row[1],
-                        'ArticleTitle' => $row[2],
-                        'HeaderURL' => $row[3],
-                        'ArticleBody' => $row[4],
-                        'IsPublished' => ($row[5] == "1") ? TRUE : FALSE,
-                        'DatePublished' => $row[6],
-                        'AuthorName' => $row[7],
-                        'AuthorEmail' => $row[8],
-                        'AuthorID' => $row[9],
-                        'NoOfHits' => $row[10]);
-                    $articles[] = $article;
-                    $cntr++;
-                }
-
-                echo json_encode(array('success' => true,
-                    'total' => $total,
-                    'rows' => $articles));
-            } else if ($pgNo == 10) {
                 //require "adt_trail.php";
                 loadMdlsNthrRolesNLovs();
             } else {
@@ -759,52 +679,6 @@ function get_UserLgnsTtl($searchFor, $searchIn, $shw_faild, $shw_sccfl) {
     return 0;
 }
 
-function get_Articles($searchFor, $searchIn, $offset, $limit_size) {
-    global $qStrtDte;
-    global $qEndDte;
-    global $artCategory;
-    global $isMaster;
-
-    $wherecls = "";
-    $extrWhr = "";
-
-    if ($artCategory != "" && $artCategory != "All") {
-        $extrWhr = " AND (a.article_category ilike '" . loc_db_escape_string($artCategory) . "')";
-    }
-    if ($isMaster != "1") {
-        $extrWhr .= " AND (a.is_published = '1')";
-    }
-    if ($searchIn === "Title") {
-        $wherecls = " AND (a.article_header ilike '" . loc_db_escape_string($searchFor) . "' "
-                . "or a.header_url ilike '" . loc_db_escape_string($searchFor) . "')";
-    } else if ($searchIn === "Category") {
-        $wherecls = " AND (a.article_category ilike '" . loc_db_escape_string($searchFor) . "')";
-    } else {
-        $wherecls = " AND (a.article_body ilike '" . loc_db_escape_string($searchFor) . "')";
-    }
-
-    if ($qStrtDte != "") {
-        //$qStrtDte = cnvrtDMYTmToYMDTm($qStrtDte);
-        $wherecls .= " AND (a.publishing_date >= '" . loc_db_escape_string($qStrtDte) . "')";
-    }
-    if ($qEndDte != "") {
-        //$qEndDte = cnvrtDMYTmToYMDTm($qEndDte);
-        $wherecls .= " AND (a.publishing_date <= '" . loc_db_escape_string($qEndDte) . "')";
-    }
-
-    $sqlStr = "SELECT a.article_id, a.article_category, a.article_header, a.header_url, a.article_body,  
-       a.is_published, a.publishing_date, a.author_name, a.author_email, prs.get_prsn_loc_id(a.author_prsn_id), 
-       (select count(distinct b.created_by) from self.self_articles_hits b where a.article_id = b.article_id) hits  
-  FROM self.self_articles a 
-WHERE (1=1" . $extrWhr . "$wherecls) ORDER BY a.article_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
-//echo $sqlStr;
-    $result = executeSQLNoParams($sqlStr);
-    if (loc_db_num_rows($result) <= 0) {
-        //echo $sqlStr;'<a href=\"\">'|| ||'</a>'
-    }
-    return $result;
-}
-
 function createUser($username, $ownrID, $in_strDte, $in_endDte, $pwd, $cstmrID) {
     global $usrID;
     global $smplTokenWord;
@@ -827,61 +701,6 @@ function updateUser($user_id, $username, $ownrID, $in_strDte, $in_endDte, $cstmr
             $usrID . ", last_update_date = '" . $dateStr . "', user_name = '" . loc_db_escape_string($username) .
             "' WHERE(user_id = " . $user_id . ")";
     execUpdtInsSQL($insSQL);
-}
-
-function createArticle($artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $authorNm, $authorEmail, $authorID) {
-    global $usrID;
-    $dateStr = getDB_Date_time();
-    $insSQL = "INSERT INTO self.self_articles(
-            article_category, article_header, article_body, header_url, 
-            is_published, publishing_date, created_by, creation_date, last_update_by, 
-            last_update_date, author_name, author_email, author_prsn_id) VALUES ("
-            . "'" . loc_db_escape_string($artclCatgry)
-            . "', '" . loc_db_escape_string($artTitle)
-            . "', '" . loc_db_escape_string($artBody)
-            . "', '" . loc_db_escape_string($hdrURL)
-            . "', '" . loc_db_escape_string($isPblshed)
-            . "', '" . loc_db_escape_string($datePublished)
-            . "', " . $usrID . ", '" . $dateStr . "', " . $usrID . ", '" . $dateStr
-            . "', '" . loc_db_escape_string($authorNm)
-            . "', '" . loc_db_escape_string($authorEmail)
-            . "', " . loc_db_escape_string($authorID) . ")";
-    execUpdtInsSQL($insSQL);
-}
-
-function updateArticle($articleID, $artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $authorNm, $authorEmail, $authorID) {
-    global $usrID;
-    $dateStr = getDB_Date_time();
-    $insSQL = "UPDATE self.self_articles SET 
-            article_category='" . loc_db_escape_string($artclCatgry)
-            . "', article_header='" . loc_db_escape_string($artTitle) .
-            "', article_body='" . loc_db_escape_string($artBody) .
-            "', header_url='" . loc_db_escape_string($hdrURL) .
-            "', is_published='" . loc_db_escape_string($isPblshed) .
-            "' , publishing_date='" . loc_db_escape_string($datePublished)
-            . "', author_name = '" . loc_db_escape_string($authorNm)
-            . "', author_email = '" . loc_db_escape_string($authorEmail)
-            . "', author_prsn_id = " . loc_db_escape_string($authorID)
-            . ", last_update_by=" . $usrID .
-            " , last_update_date='" . loc_db_escape_string($dateStr) .
-            "'   WHERE article_id = " . $articleID;
-    execUpdtInsSQL($insSQL);
-}
-
-function deleteArticle($articleID) {
-    $affctd1 = 0;
-
-    $insSQL = "DELETE FROM self.self_articles WHERE article_id = " . $articleID;
-    $affctd1 +=execUpdtInsSQL($insSQL);
-
-    if ($affctd1 > 0) {
-        $dsply = "Successfully Deleted the ff Records-";
-        $dsply .= "<br/>$affctd1 Article(s)!";
-        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
-    } else {
-        $dsply = "No Record Deleted";
-        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
-    }
 }
 
 function chngUsrLockStatus($userID, $failedAttempts) {
@@ -926,9 +745,9 @@ function deleteUser($userID) {
     }
     if ($lgnsCnt <= 0) {
         $insSQL = "DELETE FROM sec.sec_users_n_roles WHERE user_id = " . $userID;
-        $affctd +=execUpdtInsSQL($insSQL);
+        $affctd += execUpdtInsSQL($insSQL);
         $insSQL1 = "DELETE FROM sec.sec_users WHERE user_id = " . $userID;
-        $affctd1 +=execUpdtInsSQL($insSQL1);
+        $affctd1 += execUpdtInsSQL($insSQL1);
     }
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
@@ -939,51 +758,6 @@ function deleteUser($userID) {
         $dsply = "No Record Deleted!<br/>$lgnsCnt Login(s) exist!";
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
-}
-
-function get_ArticleTtls($searchFor, $searchIn) {
-    //global $usrID;
-    global $qStrtDte;
-    global $qEndDte;
-    global $artCategory;
-    global $isMaster;
-
-    $wherecls = "";
-    $extrWhr = "";
-
-    if ($artCategory != "" && $artCategory != "All") {
-        $extrWhr = " AND (a.article_category ilike '" . loc_db_escape_string($artCategory) . "')";
-    }
-    if ($isMaster != "1") {
-        $extrWhr .= " AND (a.is_published = '1')";
-    }
-    if ($searchIn === "Title") {
-        $wherecls = " AND (article_header ilike '" . loc_db_escape_string($searchFor) . "' "
-                . " or header_url ilike '" . loc_db_escape_string($searchFor) . "')";
-    } else if ($searchIn === "Category") {
-        $wherecls = " AND (article_category ilike '" . loc_db_escape_string($searchFor) . "')";
-    } else {
-        $wherecls = " AND (article_body ilike '" . loc_db_escape_string($searchFor) . "')";
-    }
-
-    if ($qStrtDte != "") {
-        $qStrtDte = cnvrtDMYTmToYMDTm($qStrtDte);
-        $wherecls .= " AND (a.publishing_date >= '" . loc_db_escape_string($qStrtDte) . "')";
-    }
-    if ($qEndDte != "") {
-        $qEndDte = cnvrtDMYTmToYMDTm($qEndDte);
-        $wherecls .= " AND (a.publishing_date <= '" . loc_db_escape_string($qEndDte) . "')";
-    }
-
-    $sqlStr = "SELECT count(1) 
-  FROM self.self_articles a 
-WHERE (1=1" . $extrWhr . "$wherecls)";
-//echo $sqlStr;
-    $result = executeSQLNoParams($sqlStr);
-    while ($row = loc_db_fetch_array($result)) {
-        return $row[0];
-    }
-    return 0;
 }
 ?>
                              
