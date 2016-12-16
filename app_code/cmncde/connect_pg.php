@@ -9,19 +9,13 @@ $fulldte = date('d-M-Y H:i:s');
 $app_url = "http://192.168.56.250/rho_erp/";
 $admin_email = "info@rhomicom.com";
 $smplPwd = "AoP12@34";
-$jsCssFileVrsn = "1012";
+$jsCssFileVrsn = "1013";
 //More than 62 Characters Recommended
 $smplTokenWord = "eRRTRhbnsdGeneral Key for Rhomi|com Systems "
         . "Tech. !Ltd Enterpise/Organization @763542orbjkasdbhi68103weuikfjnsdf";
 $smplTokenWord1 = "xewe19fs58rte21This is a General Key for Rhomi|com Systems "
         . "Tech. !Ltd Web/Mobile Portal @7612364kjebdfjwegyr78236429orbjkasdbhi";
 $ModuleName = "";
-
-$web_host_loc_nm = "localhost";
-$web_host_ip1 = "192.169.172.33";
-$web_host_ip2 = "localhost";
-$web_host_domain_nm = "portal.rhomicom.com";
-$templateNm = "login";
 $database = "test_database";
 $script_folder = "scripts7";
 $base_folder = "";
