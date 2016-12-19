@@ -9,7 +9,7 @@ $fulldte = date('d-M-Y H:i:s');
 $app_url = "http://192.168.56.250/rho_erp/";
 $admin_email = "info@rhomicom.com";
 $smplPwd = "AoP12@34";
-$jsCssFileVrsn = "1013";
+$jsCssFileVrsn = "1015";
 //More than 62 Characters Recommended
 $smplTokenWord = "eRRTRhbnsdGeneral Key for Rhomi|com Systems "
         . "Tech. !Ltd Enterpise/Organization @763542orbjkasdbhi68103weuikfjnsdf";
@@ -182,6 +182,28 @@ function sessionInvalid() {
 Sorry, your session has become Invalid. <br/>
 Click <a class=\"rho-button\" style=\"text-decoraction:underline;color:blue;\" 
 href=\"javascript: window.location='index.php';\">here to login again!</a></span></p></div>";
+}
+
+function get_CurPlcy_SessnTmOut() {
+    $sqlStr = "SELECT session_timeout FROM 
+    sec.sec_security_policies WHERE is_default = 't'";
+    $result = executeSQLMain($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return 300;
+}
+
+function executeSQLMain($selSQL) {
+    $conn = getConn();
+    $result = loc_db_query($conn, $selSQL);
+//echo "<br/>SQL--".$selSQL;
+    if (!$result) {
+        echo "An error occurred. <br/> " . loc_db_result_error($result);
+    }
+    loc_db_close($conn);
+    return $result;
+//$conn
 }
 
 function getConn() {

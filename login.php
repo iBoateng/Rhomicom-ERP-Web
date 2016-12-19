@@ -61,12 +61,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
 
                 xmlhttp.onreadystatechange = function ()
-                {
-                    //var newDoc = document.open("text/html", "replace");
+                {                    
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-                    {
-                        //newDoc.close();
+                    {                        
                         var rspns = xmlhttp.responseText;
+                        /*alert(xmlhttp.responseText);*/
                         if (rspns.indexOf('change password') > -1
                                 || rspns.indexOf('select role') > -1)
                         {

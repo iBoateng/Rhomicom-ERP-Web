@@ -88,22 +88,19 @@ if (!isset($_SESSION['PRSN_FNAME_PM'])) {
 if (!isset($_SESSION['SCREEN_WIDTH'])) {
     $_SESSION['SCREEN_WIDTH'] = 0;
 }
+if (!isset($_SESSION['SESSION_TIMEOUT'])) {
+    $_SESSION['SESSION_TIMEOUT'] = get_CurPlcy_SessnTmOut();
+}
 /**
  * END OF PM
  */
 if (isset($_SESSION['LAST_ACTIVITY'])) {
-    if ((time() - $_SESSION['LAST_ACTIVITY'] > 1800) && $_SESSION['LGN_NUM'] > 0) {
-// last request was more than 50 minates ago
+    $sessnTimeOut = floatval($_SESSION['SESSION_TIMEOUT']);
+    if ((time() - $_SESSION['LAST_ACTIVITY'] > $sessnTimeOut) && $_SESSION['LGN_NUM'] > 0) {
         destroySession();
         if (count($_POST) <= 0) {
             header("Location: index.php");
         } else {
-            //$rlgn = isset($_POST['rlgn']) ? cleanInputData($_POST['rlgn']) : 0;
-            /* require 'app_code/cmncde/globals.php';
-              require 'app_code/cmncde/admin_funcs.php';
-              require 'loginController.php';
-              $error = "Your Session has timed-out. Please Login Again!";
-              require 'relogin.php'; */
             sessionInvalid();
             exit();
         }
@@ -144,6 +141,7 @@ $usrName = $_SESSION['UNAME'];
 $prsnid = $_SESSION['PRSN_ID'];
 $lgn_num = $_SESSION['LGN_NUM'];
 $orgID = $_SESSION['ORG_ID'];
+$orgName = $_SESSION['ORG_NAME'];
 $myImgFileName = $_SESSION['FILES_NAME_PRFX'] . '.png';
 
 $formArray = array();
@@ -350,8 +348,6 @@ if ($group > 0 && $type > 0) {
             require 'app_code/cmncde/inbox_html.php';
         } else if ($type == 3) {
             require 'app_code/cmncde/all_articles.php';
-        } else if ($type == 4) {
-            require 'app_code/cmncde/inbox_html.php';
         } else if ($type == 5) {
             require 'app_code/cmncde/all_modules_menu.php';
         } else {

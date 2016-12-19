@@ -450,7 +450,7 @@ body {
              background-image: -ms-linear-gradient(top, #fefefe, #f9f9f9);
              background-image:-o-linear-gradient(top,#fefefe,#f9f9f9);
              background-image:linear-gradient(bottom,#fefefe,#f9f9f9);
-         }
+}
 .otherButton:active,
 .otherButton:hover,
 .otherButton:focus{
@@ -580,6 +580,14 @@ body.mdlloading .modalLdng {
 #input1Test{
     max-width:100%;
 }
+.basic_person_fs{
+    border: 1px solid #eee !important;
+    padding: 0 5px 5px 5px !important;
+    margin: 0 0 0.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+    box-shadow:  0px 0px 0px 0px #000;
+    border-radius: 10px;
+}
 .basic_person_fs1{
     border: 1px solid #eee !important;
     padding: 0 20px 5px 10px !important;
@@ -639,18 +647,25 @@ body.mdlloading .modalLdng {
     overflow:auto;
 }
 select option {
-	color: black;
+    color: black;
 }
 select option:first-child {
-	color: black;
+    color: black;
 }
 select.empty {
-	color: #d0d0d0;
+    color: #d0d0d0;
 }
 /* Hidden placeholder */
 select option[disabled]:first-child {
-	display: none;
+    display: none;
 }
 .form-group {
-  margin-bottom: 5px !important;
+    margin-bottom: 5px !important;
+}
+body {
+    font-family: Helvetica,"Helvetica Neue","Open Sans",Calibri,Arial,sans-serif !important;
+    font-size: 12px;/*14px*/
+    line-height: 1.32857143;/*1.42857143*/
+    color: #333;
+    background-color: #fff;
 }

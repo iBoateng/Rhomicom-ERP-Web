@@ -2,9 +2,9 @@
 
 $menuItems = array("Users & their Roles", "Roles & Priviledges",
     "Modules & Priviledges", "Extra Info Labels", "Security Policies", "Server Settings",
-    "Track User Logins", "Audit Trail Tables", /*"News Items/Articles",*/ "Load all Modules Requirements");
+    "Track User Logins", "Audit Trail Tables", /* "News Items/Articles", */ "Load all Modules Requirements");
 $menuImages = array("reassign_users.png", "groupings.png", "Folder.png", "info_ico2.gif",
-    "login.jpg", "antenna1.png", "user-mapping.ico", "safe-icon.png", /*"notes06.gif",*/ "98.png");
+    "login.jpg", "antenna1.png", "user-mapping.ico", "safe-icon.png", /* "notes06.gif", */ "98.png");
 
 $mdlNm = "System Administration";
 $ModuleName = $mdlNm;
@@ -18,7 +18,7 @@ $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 15 */ "Edit Server Settings", "Set manual password for users",
     /* 17 */ "Send System Generated Passwords to User Mails",
     /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
-    /* 22 */ "Add Articles","Edit Articles","Delete Articles");
+    /* 22 */ "Add Articles", "Edit Articles", "Delete Articles");
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || ($pgNo == 9 && test_prmssns("View Self-Service", "Self Service"));
 $vwtyp = "0";
 $qstr = "";
@@ -42,22 +42,8 @@ if (isset($_POST['PKeyID'])) {
     $PKeyID = cleanInputData($_POST['PKeyID']);
 }
 
-if (isset($_POST['query'])) {
-    $srchFor = cleanInputData($_POST['query']);
-} else if (isset($_POST['searchfor'])) {
-    $srchFor = cleanInputData($_POST['searchfor']);
-}
-
-if (strpos($srchFor, "%") === FALSE) {
-    $srchFor = " " . $srchFor . " ";
-    $srchFor = str_replace(" ", "%", $srchFor);
-}
-
-if (isset($_POST['queryIn'])) {
-    $srchIn = cleanInputData($_POST['queryIn']);
-} else if (isset($_POST['searchin'])) {
-    $srchIn = cleanInputData($_POST['searchin']);
-}
+$srchFor = isset($_POST['searchfor']) ? cleanInputData($_POST['searchfor']) : '';
+$srchIn = isset($_POST['searchin']) ? cleanInputData($_POST['searchin']) : 'All';
 
 if (isset($_POST['q'])) {
     $qstr = cleanInputData($_POST['q']);
@@ -69,39 +55,15 @@ if (isset($_POST['vtyp'])) {
 if (isset($_POST['actyp'])) {
     $actyp = cleanInputData($_POST['actyp']);
 }
+
 $qStrtDte = "";
 $qEndDte = "";
 $artCategory = "";
 $isMaster = "0";
-if (isset($_POST['qStrtDte'])) {
-    $qStrtDte = cleanInputData($_POST['qStrtDte']);
-    if (strlen($qStrtDte) == 19) {
-        $qStrtDte = substr($qStrtDte, 0, 10) . " 00:00:00";
-    } else {
-        $qStrtDte = "";
-    }
-}
-
-if (isset($_POST['qEndDte'])) {
-    $qEndDte = cleanInputData($_POST['qEndDte']);
-    if (strlen($qEndDte) == 19) {
-        $qEndDte = substr($qEndDte, 0, 10) . " 23:59:59";
-    } else {
-        $qEndDte = "";
-    }
-}
-
-if (isset($_POST['artCategory'])) {
-    $artCategory = cleanInputData($_POST['artCategory']);
-}
-
-if (isset($_POST['isMaster'])) {
-    $isMaster = cleanInputData($_POST['isMaster']);
-}
 
 if (strpos($srchFor, "%") === FALSE) {
-    $srchFor = " " . $srchFor . " ";
-    $srchFor = str_replace(" ", "%", $srchFor);
+    $srchFor = "%" . str_replace(" ", "%", $srchFor) . "%";
+    $srchFor = str_replace("%%", "%", $srchFor);
 }
 $cntent = "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
@@ -111,7 +73,7 @@ $cntent = "<div>
                                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+						<span style=\"text-decoration:none;\">All Modules</span>
 					</li>";
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
@@ -243,13 +205,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
             }
         } else {
+            $cntent .= "
+					<li onclick=\"openATab('#allmodules', 'grp=3&typ=1');\">
+                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+						<span style=\"text-decoration:none;\">System Administration Menu</span>
+					</li>";
             if ($pgNo == 0) {
-                $cntent .= "
-					<li onclick=\"openATab('#allmodules', 'grp=8&typ=1');\">
-						<span style=\"text-decoration:none;\">SysAdmin Menu</span>
-					</li>
-                                       </ul>
-                                     </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
+                $cntent .= "</ul></div>
+              <div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
                     padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
       <!--<h4>WELCOME TO THE SYSTEM ADMINISTRATION</h4>-->
       <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
@@ -302,135 +265,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 echo $cntent;
             } else if ($pgNo == 1) {
                 //Get Users
-                if ($vwtyp == 0) {
-
-                    $total = get_UsersTtl($srchFor, $srchIn);
-
-                    $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                    $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                    $start = isset($_POST ['start']) ? $_POST['start'] : 0;
-
-                    if ($pageNo > ceil($total / $lmtSze)) {
-                        $pageNo = 1;
-                    }
-
-                    $curIdx = $pageNo - 1;
-                    $result = get_UsersTblr($srchFor, $srchIn, $curIdx, $lmtSze);
-                    $userss = array();
-                    $cntr = 0;
-                    $prm = get_CurPlcy_Mx_Fld_lgns();
-                    while ($row = loc_db_fetch_array($result)) {
-                        $chckd = ($cntr == 0) ? TRUE : FALSE;
-                        $users = array(
-                            'checked' => var_export($chckd, TRUE),
-                            'UserID' => $row[9],
-                            'RowNum' => ($curIdx * $lmtSze) + ($cntr + 1),
-                            'PersonLocID' => $row[10],
-                            'PersonName' => $row[1],
-                            'UserName' => $row[0],
-                            'StartDate' => $row[2],
-                            'EndDate' => $row[3],
-                            'LastPswdChange' => $row[8],
-                            'LastLgnAttmpt' => $row[7],
-                            'FailedLgnAttmpts' => $row[6],
-                            'ActiveRoles' => $row[11],
-                            'IsAccntSuspended' => var_export(($row[4] == '1' ? TRUE : FALSE), TRUE),
-                            'IsPasswordTemp' => var_export(($row[5] == '1' ? TRUE : FALSE), TRUE),
-                            'IsAccountLocked' => var_export(($row[6] >= $prm ? TRUE : FALSE), TRUE),
-                            'IsPswdExpired' => var_export(($row[12] == '1' ? TRUE : FALSE), TRUE));
-                        $userss[] = $users;
-                        $cntr++;
-                    } echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $userss));
-                } else if ($vwtyp == 1) {
-                    //Get LOV Possible Values 
-                    //$brghtsqlStr = "";
-                    //$is_dynamic = FALSE;
-                    $pkID = isset($_POST['pkUserID']) ? $_POST['pkUserID'] : -1;
-
-                    $total = get_TtlUsersRoles($srchFor, $srchIn, $pkID);
-                    //$total = getTtlLovValues($srchFor, $srchIn, $brghtsqlStr, $pkID, $is_dynamic, -1, "", "");
-                    $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                    $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                    $start = isset($_POST['start']) ? $_POST['start'] : 0;
-
-                    if ($pageNo > ceil($total / $lmtSze)) {
-                        $pageNo = 1;
-                    }
-                    $curIdx = $pageNo - 1;
-
-                    //
-                    $result = get_UsersRoles($srchFor, $srchIn, $curIdx, $lmtSze, $pkID);
-                    $lovsDts = array();
-                    $cntr = 0;
-                    while ($row = loc_db_fetch_array($result)) {
-                        //$chckd = FALSE;
-                        $lovsDt = array(
-                            'DefaultRowID' => $row[4],
-                            'RoleID' => $row[3],
-                            'UserID' => $pkID,
-                            'RowNum' => ($curIdx * $lmtSze) + ($cntr + 1),
-                            'RoleName' => $row[0],
-                            'StartDate' => $row[1],
-                            'EndDate' => $row[2]);
-                        $lovsDts[] = $lovsDt;
-                        $cntr++;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $lovsDts));
-                }
+                require 'users_n_roles.php';
             } else if ($pgNo == 2) {
-                //require "roles_n_prvdgs.php";
+                require "roles_n_prvdgs.php";
             } else if ($pgNo == 3) {
-                //require "mdls_n_prvldgs.php";
+                require "mdls_n_prvldgs.php";
             } else if ($pgNo == 4) {
-                //require "extr_inf_lbls.php";
+                require "extr_inf_lbls.php";
             } else if ($pgNo == 5) {
-                //require "sec_plycs.php";
+                require "sec_plycs.php";
             } else if ($pgNo == 6) {
-                //require "srvr_sttngs.php";
+                require "srvr_sttngs.php";
             } else if ($pgNo == 7) {
-                //Get Users
-                if ($vwtyp == 0) {
-                    $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                    $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                    $start = isset($_POST ['start']) ? $_POST['start'] : 0;
-                    $shwFld = isset($_POST ['qShwFailedOnly']) ? cleanInputData($_POST['qShwFailedOnly']) : true;
-                    $shw_sccfl = isset($_POST ['qShwSccflOnly']) ? cleanInputData($_POST['qShwSccflOnly']) : true;
-                    $total = get_UserLgnsTtl($srchFor, $srchIn, $shwFld, $shw_sccfl);
-                    if ($pageNo > ceil($total / $lmtSze)) {
-                        $pageNo = 1;
-                    }
-
-                    $curIdx = $pageNo - 1;
-                    $result = get_UserLgns($srchFor, $srchIn, $curIdx, $lmtSze, $shwFld, $shw_sccfl);
-                    $parentArry = array();
-                    $cntr = 0;
-                    while ($row = loc_db_fetch_array($result)) {
-                        $chckd = ($cntr == 0) ? TRUE : FALSE;
-                        $childArray = array(
-                            'checked' => var_export($chckd, TRUE),
-                            'UserID' => $row[5],
-                            'RowNum' => ($curIdx * $lmtSze) + ($cntr + 1),
-                            'UserName' => $row[0],
-                            'LoginTime' => $row[1],
-                            'LogoutTime' => $row[2],
-                            'MachineDetails' => $row[3],
-                            'LoginNumber' => $row[6],
-                            'WasLgnAttmpSuccfl' => ($row[4] == '1' ? "TRUE" : "FALSE"));
-                        $parentArry[] = $childArray;
-                        $cntr++;
-                    } echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $parentArry));
-                }
+                //Get User Logins
+                require 'user_lgns.php';
             } else if ($pgNo == 8) {
-                //require "adt_trail.php";
+                require "adt_trail.php";
             } else if ($pgNo == 9) {
-                //require "adt_trail.php";
                 loadMdlsNthrRolesNLovs();
             } else {
                 restricted();
@@ -472,9 +323,22 @@ function getUsrIDHvThsRoleID($user_ID, $role_ID) {
     return -1;
 }
 
-function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID) {
+function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy) {
     $wherecls = "";
     $strSql = "";
+    $ordrBy="";
+    if($sortBy == "Role Name")
+    {
+      $ordrBy="ORDER BY b.role_name";  
+    }
+    else if($sortBy == "Start Date")
+    {
+      $ordrBy="ORDER BY a.valid_start_date,a.role_id";  
+    }
+    else
+    {
+      $ordrBy="ORDER BY a.valid_end_date,a.role_id";  
+    }
     if ($searchIn == "Role Name") {
         $wherecls = " and (b.role_name ilike '" .
                 loc_db_escape_string($searchFor) . "')";
@@ -483,10 +347,13 @@ function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID) {
                 loc_db_escape_string($searchFor) . "')";
     }
     $strSql = "SELECT b.role_name, 
-    a.valid_start_date, a.valid_end_date, a.role_id, a.dflt_row_id " .
+    to_char(to_timestamp(a.valid_start_date, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') valid_start_date, 
+    to_char(to_timestamp(a.valid_end_date, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') valid_end_date, 
+    a.role_id, 
+    a.dflt_row_id " .
             "FROM sec.sec_users_n_roles a, sec.sec_roles b "
             . "WHERE ((a.role_id = b.role_id) AND (a.user_id = " . $pkID .
-            ")$wherecls) ORDER BY 1 LIMIT " . $limit_size .
+            ")$wherecls) ".$ordrBy." LIMIT " . $limit_size .
             " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     return $result;
@@ -539,7 +406,7 @@ function get_UsersTblr($searchFor, $searchIn, $offset, $limit_size) {
             . "a.user_id, b.local_id_no, (Select count(1) from sec.sec_users_n_roles z where a.user_id = z.user_id "
             . "and to_char(now(), 'YYYY-MM-DD HH24:MI:SS') between z.valid_start_date and z.valid_end_date) active_roles,"
             . "CASE WHEN age(now(), to_timestamp(last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS')) " .
-            ">= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days' THEN '1' ELSE '0' END is_pswd_exprd "
+            ">= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days' THEN '1' ELSE '0' END is_pswd_exprd , a.modules_needed "
             . "FROM ((sec.sec_users a " .
             "LEFT OUTER JOIN prs.prsn_names_nos b ON (a.person_id = b.person_id)) LEFT OUTER JOIN " .
             "sec.sec_users_n_roles c ON a.user_id = c.user_id) LEFT OUTER JOIN sec.sec_roles d " .
@@ -583,6 +450,33 @@ function get_UsersTtl($searchFor, $searchIn) {
         return $row[0];
     }
     return 0;
+}
+
+function get_OneUser($pkeyID) {
+
+    $strSql = "SELECT distinct a.user_name, "
+            . "trim(b.title || ' ' || b.sur_name || ', ' || b.first_name || ' ' || b.other_names) fullname, "
+            . " to_char(to_timestamp(a.valid_start_date, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') valid_start_date, "
+            . " to_char(to_timestamp(a.valid_end_date, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') valid_end_date, "
+            . "CASE WHEN a.is_suspended THEN '1' ELSE '0' END, "
+            . "CASE WHEN a.is_pswd_temp THEN '1' ELSE '0' END, "
+            . "a.failed_login_atmpts, "
+            . "to_char(to_timestamp(a.last_login_atmpt_time, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') last_login_atmpt_time, "
+            . "to_char(to_timestamp(a.last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') last_pswd_chng_time, "
+            . "age(now(), to_timestamp(last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS')) password_age, "
+            . "a.user_id, "
+            . "b.local_id_no, "
+            . "(Select count(1) from sec.sec_users_n_roles z where a.user_id = z.user_id and to_char(now(), 'YYYY-MM-DD HH24:MI:SS') between z.valid_start_date and z.valid_end_date) active_roles,"
+            . "CASE WHEN age(now(), to_timestamp(last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS')) >= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days' THEN '1' ELSE '0' END is_pswd_exprd , "
+            . "a.modules_needed "
+            . "FROM ((sec.sec_users a " .
+            "LEFT OUTER JOIN prs.prsn_names_nos b ON (a.person_id = b.person_id)) LEFT OUTER JOIN " .
+            "sec.sec_users_n_roles c ON a.user_id = c.user_id) LEFT OUTER JOIN sec.sec_roles d " .
+            "ON d.role_id = c.role_id " .
+            "WHERE a.user_id=" . $pkeyID;
+
+    $result = executeSQLNoParams($strSql);
+    return $result;
 }
 
 function get_UserLgns($searchFor, $searchIn, $offset, $limit_size, $shw_faild, $shw_sccfl) {

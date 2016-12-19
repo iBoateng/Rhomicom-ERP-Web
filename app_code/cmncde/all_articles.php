@@ -197,7 +197,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $valslctdArry[$z] = "selected";
                                         }
                                         ?>
-                                                    <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                                                                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                                     </select>-->
                                     <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
@@ -257,27 +257,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                         </div>
                         <div class="row" style="padding:0px 15px 0px 15px !important;">
-                            <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 2px;">
-                                <div class="container-fluid">
-                                    <!-- Example row of columns -->
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div style="">
-                                                <h2>Heading</h2>
-                                                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                                                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div style="">
-                                                <h2>Heading</h2>
-                                                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                                                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                            </div> 
                             <!-- Main jumbotron for a primary marketing message or call to action -->
                             <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 2px;">
                                 <div class="container-fluid" style="padding:0px 10px 0px 20px !important;">
@@ -344,7 +323,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $isMaster = "1";
                                 ?> 
                                 <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">                    
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'Add Person Basic Profile', -1, 0, 2, 'ADD')">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneArticleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allArticlesForm', 'Add New Article', -1, 2, 0)">
                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         New Article
                                     </button>
@@ -383,7 +362,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $valslctdArry[$z] = "selected";
                                         }
                                         ?>
-                                                    <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                                                                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                                     </select>-->
                                     <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
@@ -471,7 +450,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <?php if ($canEdtArticles === true) { ?>                                    
                                                     <td>
                                                         <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Article" 
-                                                                onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allArticlesForm', 'View/Edit Person Basic Profile', <?php echo $row[0]; ?>, 0, 2, 'EDIT')" style="padding:2px !important;" style="padding:2px !important;">
+                                                                onclick="getOneArticleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allArticlesForm', 'View/Edit Article', <?php echo $row[0]; ?>, 3, 0)" style="padding:2px !important;" style="padding:2px !important;">
                                                             <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
@@ -481,7 +460,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td><?php echo $row[8]; ?></td>
                                                 <td><?php echo $row[10]; ?></td>
                                                 <td>
-                                                    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Article" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View Person Basic Profile', <?php echo $row[0]; ?>, 0, 1, 'VIEW')" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Article" onclick="openATab('#allarticles', 'grp=40&typ=3&pg=0&vtyp=4&sbmtdArticleID=<?php echo $row[0]; ?>');" style="padding:2px !important;" style="padding:2px !important;">
                                                         <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                         <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                     </button>
@@ -491,7 +470,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     if ($row[5] == 1) {
                                                         ?>
                                                         <td>
-                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Unpublish" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View Person Basic Profile', <?php echo $row[0]; ?>, 0, 1, 'VIEW')" style="padding:2px !important;" style="padding:2px !important;">
+                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Unpublish" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                                                 <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                                 <img src="cmn_images/success.gif" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
@@ -499,7 +478,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <?php } else {
                                                         ?>
                                                         <td>
-                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Publish" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View Person Basic Profile', <?php echo $row[0]; ?>, 0, 1, 'VIEW')" style="padding:2px !important;" style="padding:2px !important;">
+                                                            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Publish" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                                                 <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                                 <img src="cmn_images/90.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
@@ -519,7 +498,377 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </form>
                     <?php
                 } else if ($vwtyp == 2) {
-                    
+                    /* New Article Form */
+                    ?>
+                    <div class="">
+                        <div class="row">                  
+                            <div class="col-md-12">
+                                <form class="form-horizontal">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <fieldset class="basic_person_fs1" style="min-height:240px !important;">
+                                                        <legend class="basic_person_lg">Topic/Article Attributes</legend>
+                                                        <div class="row" style="padding:0px 15px 0px 15px !important;">
+                                                            <div class="col-md-12" style="padding:0px 15px 0px 15px !important;">
+                                                                <div class="row"> 
+                                                                    <div class="form-group form-group-sm">
+                                                                        <label for="articleCategory" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Category:</label>
+                                                                        <div  class="col-md-9">
+                                                                            <select class="form-control" id="articleCategory" >
+                                                                                <?php
+                                                                                $valslctdArry = array("", "", "", "", "", "", "", "", "", "");
+                                                                                $valuesArry = array("Notices/Announcements", "Welcome Message", "Latest News", "Useful Links",
+                                                                                    "System Help", "Write-Ups/Research Papers", "Operational Manuals", "About Organisation",
+                                                                                    "Other Articles", "Forum Topic");
+                                                                                for ($y = 0; $y < count($valuesArry); $y++) {
+                                                                                    /* if ($lmtSze == $valuesArry[$y]) {
+                                                                                      $valslctdArry[$y] = "selected";
+                                                                                      } else {
+                                                                                      $valslctdArry[$y] = "";
+                                                                                      } */
+                                                                                    ?>
+                                                                                    <option value="<?php echo $valuesArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $valuesArry[$y]; ?></option>                            
+                                                                                    <?php
+                                                                                }
+                                                                                ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group form-group-sm">
+                                                                        <label for="grpType" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Allowed Group Type:</label>
+                                                                        <div  class="col-md-9">
+                                                                            <select class="form-control" id="grpType" >
+                                                                                <?php
+                                                                                $valslctdArry = array("", "", "", "", "", "", "");
+                                                                                $valuesArry = array("Everyone", "Divisions/Groups", "Grade", "Job",
+                                                                                    "Position", "Site/Location", "Person Type");
+                                                                                for ($y = 0; $y < count($valuesArry); $y++) {
+                                                                                    /* if ($lmtSze == $valuesArry[$y]) {
+                                                                                      $valslctdArry[$y] = "selected";
+                                                                                      } else {
+                                                                                      $valslctdArry[$y] = "";
+                                                                                      } */
+                                                                                    ?>
+                                                                                    <option value="<?php echo $valuesArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $valuesArry[$y]; ?></option>                            
+                                                                                    <?php
+                                                                                }
+                                                                                ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group form-group-sm">
+                                                                        <label for="groupName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Allowed Group Name:</label>
+                                                                        <div  class="col-md-9">
+                                                                            <div class="input-group">
+                                                                                <input type="text" class="form-control" aria-label="..." id="groupName" value="" readonly="">
+                                                                                <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
+                                                                                <input type="hidden" id="groupID" value="-1">
+                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row"> 
+                                                                    <div class="form-group form-group-sm">
+                                                                        <label for="datePublished" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Publishing Date:</label>
+                                                                        <div  class="col-md-9">
+                                                                            <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input3" data-link-format="yyyy-mm-dd hh:ii:ss">
+                                                                                <input class="form-control" size="16" type="text" id="datePublished" value="" readonly="">
+                                                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group form-group-sm">
+                                                                        <label for="authorName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Author Name:</label>
+                                                                        <div  class="col-md-9">
+                                                                            <div class="input-group">
+                                                                                <input type="text" class="form-control" aria-label="..." id="authorName" value="">
+                                                                                <input type="hidden" id="authorPrsnLocID" value="-1">
+                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'authorPrsnLocID', 'authorName', 'clear', 1, '');">
+                                                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row"> 
+                                                                    <div class="form-group form-group-sm">
+                                                                        <label for="authorEmail" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Author Email:</label>
+                                                                        <div  class="col-md-9">
+                                                                            <div class="input-group">
+                                                                                <input type="text" class="form-control" aria-label="..." id="authorEmail" value="">
+                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'authorEmail', 'authorEmail', 'clear', 1, '');">
+                                                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> 
+                                                                </div>    
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div> 
+                                        </div>                                         
+                                        <div class="col-md-8">
+                                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Article/Forum Intro Message</legend>
+                                                <div class="row" style="margin: -5px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
+                                                    <div class="form-group form-group-sm">
+                                                        <label for="articleTitle" class="control-label col-md-2">Topic/Title:</label>
+                                                        <div  class="col-md-10" style="padding:0px 1px 0px 15px !important;">
+                                                            <input class="form-control" id="articleTitle" type = "text" placeholder="Title"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="padding:0px 15px 0px 15px !important;">
+                                                    <div id="articleIntroMsg"></div> 
+                                                </div> 
+                                            </fieldset>
+
+                                        </div>
+                                    </div> 
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Article/Forum Full Message Text</legend>                                                
+                                                <div class="row" style="padding:0px 15px 0px 15px !important;">
+                                                    <div id="articleBodyText"></div> 
+                                                </div> 
+                                                <div class="row" style="margin: -5px 0px 0px 0px !important;"> 
+                                                    <div class="col-md-6" style="padding:0px 0px 0px 1px !important;">&nbsp;</div>
+                                                    <div class="col-md-6" style="padding:0px 0px 0px 0px">
+                                                        <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/reload.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">CLOSE</button></div>
+                                                        <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SAVE</button></div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+
+                                        </div>
+                                    </div>
+                                </form>                                   
+                            </div>                
+                        </div>          
+                    </div> 
+                    <?php
+                } else if ($vwtyp == 3) {
+                    /* Edit Article Form */
+                    $sbmtdArticleID = isset($_POST['sbmtdArticleID']) ? cleanInputData($_POST['sbmtdArticleID']) : -1;
+                    $result = get_OneArticle($sbmtdArticleID);
+                    while ($row = loc_db_fetch_array($result)) {
+                        ?>
+                        <div class="">
+                            <div class="row">                  
+                                <div class="col-md-12">
+                                    <form class="form-horizontal">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <fieldset class="basic_person_fs1" style="min-height:240px !important;">
+                                                            <legend class="basic_person_lg">Topic/Article Attributes</legend>
+                                                            <div class="row" style="padding:0px 15px 0px 15px !important;">
+                                                                <div class="col-md-12" style="padding:0px 15px 0px 15px !important;">
+                                                                    <div class="row"> 
+                                                                        <div class="form-group form-group-sm">
+                                                                            <label for="articleCategory" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Category:</label>
+                                                                            <div  class="col-md-9">
+                                                                                <select class="form-control" id="articleCategory" >
+                                                                                    <?php
+                                                                                    $valslctdArry = array("", "", "", "", "", "", "", "", "", "");
+                                                                                    $valuesArry = array("Notices/Announcements", "Welcome Message", "Latest News", "Useful Links",
+                                                                                        "System Help", "Write-Ups/Research Papers", "Operational Manuals", "About Organisation",
+                                                                                        "Other Articles", "Forum Topic");
+                                                                                    for ($y = 0; $y < count($valuesArry); $y++) {
+                                                                                        if ($row[1] == $valuesArry[$y]) {
+                                                                                            $valslctdArry[$y] = "selected";
+                                                                                        } else {
+                                                                                            $valslctdArry[$y] = "";
+                                                                                        }
+                                                                                        ?>
+                                                                                        <option value="<?php echo $valuesArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $valuesArry[$y]; ?></option>                            
+                                                                                        <?php
+                                                                                    }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group form-group-sm">
+                                                                            <label for="grpType" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Allowed Group Type:</label>
+                                                                            <div  class="col-md-9">
+                                                                                <select class="form-control" id="grpType" >
+                                                                                    <?php
+                                                                                    $valslctdArry = array("", "", "", "", "", "", "");
+                                                                                    $valuesArry = array("Everyone", "Divisions/Groups", "Grade", "Job",
+                                                                                        "Position", "Site/Location", "Person Type");
+                                                                                    for ($y = 0; $y < count($valuesArry); $y++) {
+                                                                                        if ($row[12] == $valuesArry[$y]) {
+                                                                                            $valslctdArry[$y] = "selected";
+                                                                                        } else {
+                                                                                            $valslctdArry[$y] = "";
+                                                                                        }
+                                                                                        ?>
+                                                                                        <option value="<?php echo $valuesArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $valuesArry[$y]; ?></option>                            
+                                                                                        <?php
+                                                                                    }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group form-group-sm">
+                                                                            <label for="groupName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Allowed Group Name:</label>
+                                                                            <div  class="col-md-9">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control" aria-label="..." id="groupName" value="<?php echo $row[14]; ?>" readonly="">
+                                                                                    <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
+                                                                                    <input type="hidden" id="groupID" value="<?php echo $row[13]; ?>">
+                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'groupID', 'groupName', 'clear', 1, '');">
+                                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row"> 
+                                                                        <div class="form-group form-group-sm">
+                                                                            <label for="datePublished" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Publishing Date:</label>
+                                                                            <div  class="col-md-9">
+                                                                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input3" data-link-format="yyyy-mm-dd hh:ii:ss">
+                                                                                    <input class="form-control" size="16" type="text" id="datePublished" value="<?php echo $row[6]; ?>" readonly="">
+                                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> 
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group form-group-sm">
+                                                                            <label for="authorName" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Author Name:</label>
+                                                                            <div  class="col-md-9">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control" aria-label="..." id="authorName" value="<?php echo $row[7]; ?>">
+                                                                                    <input type="hidden" id="authorPrsnLocID" value="<?php echo $row[9]; ?>">
+                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'authorPrsnLocID', 'authorName', 'clear', 1, '');">
+                                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row"> 
+                                                                        <div class="form-group form-group-sm">
+                                                                            <label for="authorEmail" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Author Email:</label>
+                                                                            <div  class="col-md-9">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control" aria-label="..." id="authorEmail" value="<?php echo $row[8]; ?>">
+                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '', 'authorEmail', 'authorEmail', 'clear', 1, '');">
+                                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> 
+                                                                    </div>    
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div> 
+                                            </div>                                         
+                                            <div class="col-md-8">
+                                                <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Article/Forum Intro Message</legend>
+                                                    <div class="row" style="margin: -5px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
+                                                        <div class="form-group form-group-sm">
+                                                            <label for="articleTitle" class="control-label col-md-2">Topic/Title:</label>
+                                                            <div  class="col-md-10" style="padding:0px 1px 0px 15px !important;">
+                                                                <input class="form-control" id="articleTitle" type = "text" placeholder="Title" value="<?php echo $row[2]; ?>"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="padding:0px 15px 0px 15px !important;">
+                                                        <div id="articleIntroMsg"></div> 
+                                                    </div> 
+                                                </fieldset>
+
+                                            </div>
+                                        </div> 
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Article/Forum Full Message Text</legend>                                                
+                                                    <div class="row" style="padding:0px 15px 0px 15px !important;">
+                                                        <div id="articleBodyText"></div> 
+                                                    </div> 
+                                                    <div class="row" style="margin: -5px 0px 0px 0px !important;"> 
+                                                        <div class="col-md-6" style="padding:0px 0px 0px 1px !important;">&nbsp;</div>
+                                                        <div class="col-md-6" style="padding:0px 0px 0px 0px">
+                                                            <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/reload.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">CLOSE</button></div>
+                                                            <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SAVE</button></div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+
+                                            </div>
+                                        </div>
+                                    </form>                                   
+                                </div>                
+                            </div>          
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+
+                                $('#articleIntroMsg').summernote({
+                                    minHeight: 100,
+                                    focus: true
+                                });
+                                $('#articleBodyText').summernote({
+                                    minHeight: 270,
+                                    focus: true
+                                });
+                                var markupStr1 = '<?php echo str_replace("'", "\'", str_replace("\n", " \ ", str_replace("&#13;", " \ ", str_replace("&#10;", " \ ", $row[11])))); ?>';
+                                var markupStr2 = '<?php echo str_replace("'", "\'", str_replace("\n", " \ ", str_replace("&#13;", " \ ", str_replace("&#10;", " \ ", $row[4])))); ?>';
+                                $('#articleIntroMsg').summernote('code', markupStr1);
+                                $('#articleBodyText').summernote('code', markupStr2);
+                            });
+                        </script> 
+                        <?php
+                    }
+                } else if ($vwtyp == 4) {
+                    /* Display one Full Article ReadOnly */
+                    $sbmtdArticleID = isset($_POST['sbmtdArticleID']) ? cleanInputData($_POST['sbmtdArticleID']) : -1;
+                    $result = get_OneArticle($sbmtdArticleID);
+                    while ($row = loc_db_fetch_array($result)) {
+                        echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Articles List</span>
+					</li>
+                                        <li>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">" . $row[2] . "</span>
+					</li>
+                                       </ul>
+                                     </div>";
+                        ?>
+                        <!-- Main jumbotron for a primary marketing message or call to action -->
+                        <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 2px;">
+                            <div class="container-fluid" style="padding:0px 10px 0px 20px !important;">
+                                <!--<h2><?php echo $row[2]; ?></h2>-->
+                                <p><?php echo $row[4]; ?></p>
+                            </div>
+                        </div>
+                        <?php
+                    }
                 }
             }
         }
@@ -569,6 +918,28 @@ WHERE (1=1" . $extrWhr . "$wherecls) ORDER BY a.article_id DESC LIMIT " . $limit
     if (loc_db_num_rows($result) <= 0) {
         //echo $sqlStr;'<a href=\"\">'|| ||'</a>'
     }
+    return $result;
+}
+
+function get_OneArticle($articleID) {
+    $sqlStr = "SELECT a.article_id, 
+        a.article_category, 
+        a.article_header, 
+        a.header_url, 
+        a.article_body,  
+       a.is_published, 
+       to_char(to_timestamp(a.publishing_date, 'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') publishing_date,
+       CASE WHEN a.author_prsn_id>0 THEN prs.get_prsn_name(a.author_prsn_id) ELSE a.author_name END author_name, 
+       a.author_email, 
+       prs.get_prsn_loc_id(a.author_prsn_id), 
+       (select count(distinct b.created_by) from self.self_articles_hits b where a.article_id = b.article_id) hits,
+       a.article_intro_msg,
+       a.allowed_group_type,
+       a.allowed_group_id,
+       org.get_criteria_name(a.allowed_group_id, a.allowed_group_type) group_name
+     FROM self.self_articles a 
+     WHERE article_id = " . $articleID;
+    $result = executeSQLNoParams($sqlStr);
     return $result;
 }
 
@@ -670,4 +1041,76 @@ WHERE (1=1" . $extrWhr . "$wherecls)";
         return $row[0];
     }
     return 0;
+}
+
+function getLtstArticleID($articleCtgry) {
+    $sqlStr = "select article_id from self.self_articles "
+            . "where is_published='1' and (now() >= to_timestamp(publishing_date,'YYYY-MM-DD HH24:MI:SS')) "
+            . "and article_category = '" . loc_db_escape_string($articleCtgry)
+            . "' ORDER BY publishing_date DESC LIMIT 1 OFFSET 0";
+//echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return -1;
+}
+
+function getArticleBody($articleID) {
+    $sqlStr = "select article_body from self.self_articles where article_id = " . $articleID;
+//echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        $artBody = str_replace("{:articleID}", $articleID, $row[0]);
+        return $artBody;
+    }
+    return "";
+}
+
+function getArticleHeaderUrl($articleID) {
+    $sqlStr = "select header_url from self.self_articles where article_id = " . $articleID;
+//echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return "$row[0]";
+    }
+    return "";
+}
+
+function getArticleHeader($articleID) {
+    $sqlStr = "select article_header from self.self_articles where article_id = " . $articleID;
+//echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        $hdrUrl = str_replace("{:articleID}", $articleID, getArticleHeaderUrl($articleID));
+        if ($hdrUrl == "") {
+            return "$row[0]";
+        } else {
+            return "<a href=\"" . $hdrUrl . "\">" . $row[0] . "</a>";
+        }
+    }
+    return "";
+}
+
+function getArticleHitID($artclID) {
+    global $usrID;
+    $sqlStr = "select article_hit_id from self.self_articles_hits "
+            . "where created_by = " . $usrID . " and article_id = " . $artclID;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return -1;
+}
+
+function createArticleHit($artclID) {
+    global $usrID;
+    global $lgn_num;
+
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO self.self_articles_hits(
+            article_id, created_by, creation_date, login_number) VALUES ("
+            . loc_db_escape_string($artclID) . ", "
+            . $usrID . ", '" . $dateStr . "', " . $lgn_num . ")";
+    execUpdtInsSQL($insSQL);
 }

@@ -117,7 +117,7 @@ function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 $('.form_date').datetimepicker({
-                    format: "d-M-yyyy",
+                    format: "dd-M-yyyy",
                     language: 'en',
                     weekStart: 0,
                     todayBtn: true,
@@ -127,7 +127,7 @@ function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
                     startView: 2,
                     minView: 2,
                     maxView: 4,
-                    forceParse: true
+                    forceParse: false
                 });
                 $('[data-toggle="tabajxprfledt"]').click(function (e) {
                     var $this = $(this);
@@ -149,7 +149,7 @@ function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
             });
             $('.extPrsnDataTblEDT').wrap('<div class="dataTables_scroll"/>');
             $('.form_date').datetimepicker({
-                format: "d-M-yyyy",
+                format: "dd-M-yyyy",
                 language: 'en',
                 weekStart: 0,
                 todayBtn: true,
@@ -198,609 +198,639 @@ function prepareProfileEDT(lnkArgs, htBody, targ, rspns)
 
 function getNtnlIDForm(elementID, modalBodyID, titleElementID, formElementID, tRowElementID, formTitle, vtyp, addOrEdit, pKeyID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#' + titleElementID).html(formTitle);
-            $('#' + modalBodyID).html(xmlhttp.responseText);
-            /*$('.modal-content').resizable({
-             //alsoResize: ".modal-dialog",
-             minHeight: 600,
-             minWidth: 300
-             });*/
-            $('#myFormsModalDiag').draggable();
-            $(function () {
-                $('.form_date').datetimepicker({
-                    format: "d-M-yyyy",
-                    language: 'en',
-                    weekStart: 0,
-                    todayBtn: true,
-                    autoclose: true,
-                    todayHighlight: true,
-                    keyboardNavigation: true,
-                    startView: 2,
-                    minView: 2,
-                    maxView: 4,
-                    forceParse: true
-                });
-            });
-
-            if (addOrEdit === 'EDIT')
-            {
-                /*Get various field element IDs and populate values*/
-                var $tds = $('#' + tRowElementID).find('td');
-                $('#ntnlIDCardsCountry').val($.trim($tds.eq(1).text()));
-                $('#ntnlIDCardsIDTyp').val($.trim($tds.eq(2).text()));
-                $('#ntnlIDCardsIDNo').val($.trim($tds.eq(3).text()));
-                $('#ntnlIDCardsDateIssd').val($.trim($tds.eq(4).text()));
-                $('#ntnlIDCardsExpDate').val($.trim($tds.eq(5).text()));
-                $('#ntnlIDCardsOtherInfo').val($.trim($tds.eq(6).text()));
-            }
-            $('#' + elementID).on('show.bs.modal', function (e) {
-                $(this).find('.modal-body').css({
-                    'max-height': '100%'
-                });
-            });
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('show');
-            $(document).ready(function () {
-                $('#' + formElementID).submit(function (e) {
-                    e.preventDefault();
-                    return false;
-                });
-
-            });
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&ntnlIDpKey=" + pKeyID);
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                /*$('.modal-content').resizable({
+                 //alsoResize: ".modal-dialog",
+                 minHeight: 600,
+                 minWidth: 300
+                 });*/
+                $('#myFormsModalDiag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#ntnlIDCardsCountry').val($.trim($tds.eq(1).text()));
+                    $('#ntnlIDCardsIDTyp').val($.trim($tds.eq(2).text()));
+                    $('#ntnlIDCardsIDNo').val($.trim($tds.eq(3).text()));
+                    $('#ntnlIDCardsDateIssd').val($.trim($tds.eq(4).text()));
+                    $('#ntnlIDCardsExpDate').val($.trim($tds.eq(5).text()));
+                    $('#ntnlIDCardsOtherInfo').val($.trim($tds.eq(6).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal('show');
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&ntnlIDpKey=" + pKeyID);
+    });
 }
 
 function saveNtnlIDForm(elementID, ntnlIDPersonID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var nicCountry = typeof $("#ntnlIDCardsCountry").val() === 'undefined' ? '%' : $("#ntnlIDCardsCountry").val();
-    var nicIDType = typeof $("#ntnlIDCardsIDTyp").val() === 'undefined' ? 'Both' : $("#ntnlIDCardsIDTyp").val();
-    var nicIDNo = typeof $("#ntnlIDCardsIDNo").val() === 'undefined' ? 1 : $("#ntnlIDCardsIDNo").val();
-    var nicDateIssd = typeof $("#ntnlIDCardsDateIssd").val() === 'undefined' ? 10 : $("#ntnlIDCardsDateIssd").val();
-    var nicExpDate = typeof $("#ntnlIDCardsExpDate").val() === 'undefined' ? 1 : $("#ntnlIDCardsExpDate").val();
-    var nicOtherInfo = typeof $("#ntnlIDCardsOtherInfo").val() === 'undefined' ? 10 : $("#ntnlIDCardsOtherInfo").val();
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var nicCountry = typeof $("#ntnlIDCardsCountry").val() === 'undefined' ? '%' : $("#ntnlIDCardsCountry").val();
+        var nicIDType = typeof $("#ntnlIDCardsIDTyp").val() === 'undefined' ? 'Both' : $("#ntnlIDCardsIDTyp").val();
+        var nicIDNo = typeof $("#ntnlIDCardsIDNo").val() === 'undefined' ? '' : $("#ntnlIDCardsIDNo").val();
+        var nicDateIssd = typeof $("#ntnlIDCardsDateIssd").val() === 'undefined' ? '' : $("#ntnlIDCardsDateIssd").val();
+        var nicExpDate = typeof $("#ntnlIDCardsExpDate").val() === 'undefined' ? '' : $("#ntnlIDCardsExpDate").val();
+        var nicOtherInfo = typeof $("#ntnlIDCardsOtherInfo").val() === 'undefined' ? '' : $("#ntnlIDCardsOtherInfo").val();
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#nationalIDTblEDT').append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('hide');
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=2" +
-            "&ntnlIDCardsCountry=" + nicCountry +
-            "&ntnlIDCardsIDTyp=" + nicIDType +
-            "&ntnlIDCardsIDNo=" + nicIDNo +
-            "&ntnlIDCardsDateIssd=" + nicDateIssd +
-            "&ntnlIDCardsExpDate=" + nicExpDate +
-            "&ntnlIDCardsOtherInfo=" + nicOtherInfo +
-            "&ntnlIDPersonID=" + ntnlIDPersonID);
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#nationalIDTblEDT').append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                $('#' + elementID).modal('hide');
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=2" +
+                "&ntnlIDCardsCountry=" + nicCountry +
+                "&ntnlIDCardsIDTyp=" + nicIDType +
+                "&ntnlIDCardsIDNo=" + nicIDNo +
+                "&ntnlIDCardsDateIssd=" + nicDateIssd +
+                "&ntnlIDCardsExpDate=" + nicExpDate +
+                "&ntnlIDCardsOtherInfo=" + nicOtherInfo +
+                "&ntnlIDPersonID=" + ntnlIDPersonID);
+    });
 }
 
 function getAddtnlDataForm(elementID, modalBodyID, titleElementID, formElementID,
         tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, pipeSprtdFieldIDs, extDtColNum, tableElmntID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#' + titleElementID).html(formTitle);
-            $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('#' + modalBodyID + 'Diag').draggable();
-            $(function () {
-                $('.form_date').datetimepicker({
-                    format: "d-M-yyyy",
-                    language: 'en',
-                    weekStart: 0,
-                    todayBtn: true,
-                    autoclose: true,
-                    todayHighlight: true,
-                    keyboardNavigation: true,
-                    startView: 2,
-                    minView: 2,
-                    maxView: 4,
-                    forceParse: true
-                });
-            });
-
-            if (addOrEdit === 'EDIT')
-            {
-                var str_flds_array = pipeSprtdFieldIDs.split('|');
-                var $tds = $('#' + tRowElementID).find('td');
-                for (var i = 0; i < str_flds_array.length; i++) {
-                    // Trim the excess whitespace.
-                    var fldID = str_flds_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
-                    $('#' + fldID).val($.trim($tds.eq(i + 1).text()));
-                }
-            }
-            $('#' + elementID).on('show.bs.modal', function (e) {
-                $(this).find('.modal-body').css({
-                    'max-height': '100%'
-                });
-            });
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('show');
-            $(document).ready(function () {
-                $('#' + formElementID).submit(function (e) {
-                    e.preventDefault();
-                    return false;
-                });
-
-            });
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&addtnlPrsPkey=" + pKeyID +
-            "&extDtColNum=" + extDtColNum
-            + "&pipeSprtdFieldIDs=" + pipeSprtdFieldIDs +
-            "&tableElmntID=" + tableElmntID + "&tRowElementID=" + tRowElementID
-            + "&addOrEdit=" + addOrEdit);
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    var str_flds_array = pipeSprtdFieldIDs.split('|');
+                    var $tds = $('#' + tRowElementID).find('td');
+                    for (var i = 0; i < str_flds_array.length; i++) {
+                        // Trim the excess whitespace.
+                        var fldID = str_flds_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
+                        $('#' + fldID).val($.trim($tds.eq(i + 1).text()));
+                    }
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal('show');
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&addtnlPrsPkey=" + pKeyID +
+                "&extDtColNum=" + extDtColNum
+                + "&pipeSprtdFieldIDs=" + pipeSprtdFieldIDs +
+                "&tableElmntID=" + tableElmntID + "&tRowElementID=" + tRowElementID
+                + "&addOrEdit=" + addOrEdit);
+    });
 }
 
 function saveAddtnlDataForm(modalBodyID, addtnlPrsPkey, pipeSprtdFieldIDs, extDtColNum, tableElmntID, tRowElementID, addOrEdit)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var str_flds_array = pipeSprtdFieldIDs.split('|');
-    var str_flds_array_val = pipeSprtdFieldIDs.split('|');
-    var lnkArgs = "";
-    var tdsAppend = "";
-    var $tds = $('#' + tRowElementID).find('td');
-    var rndmNum = Math.floor((Math.random() * 99999) + parseInt(extDtColNum));
-    for (var i = 0; i < str_flds_array.length; i++) {
-        // Trim the excess whitespace.
-        var fldID = str_flds_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
-        str_flds_array[i] = fldID;
-        str_flds_array_val[i] = typeof $('#' + fldID).val() === 'undefined' ? '%' : $('#' + fldID).val();
-        lnkArgs = lnkArgs + "&" + fldID + "=" + str_flds_array_val[i];
-        if (addOrEdit === 'EDIT')
-        {
-            $tds.eq(i + 1).html(str_flds_array_val[i]);
-        } else
-        {
-            tdsAppend = tdsAppend + "<td>" + str_flds_array_val[i] + "</td>";
-        }
-    }
-    if (addOrEdit === 'ADD')
-    {
-        var btnHtml = '<td><button type="button" class="btn btn-default btn-sm" onclick="getAddtnlDataForm(\'myFormsModal\', \'myFormsModalBody\', \'myFormsModalTitle\', \'addtnlPrsnTblrDataForm\',' +
-                '\'prsExtrTblrDtCol_' + extDtColNum + '_Row' + rndmNum + '\', \'Add/Edit Data\', 12, \'EDIT\', ' + addtnlPrsPkey + ', \'' + pipeSprtdFieldIDs + '\', ' + extDtColNum + ', \'extDataTblCol_' + extDtColNum + '\');">' +
-                '<img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"></button></td>';
-        $('#' + tableElmntID).append('<tr id="prsExtrTblrDtCol_' + extDtColNum + '_Row' + rndmNum + '">' + btnHtml + tdsAppend + '</tr>');
-    }
-    var allTblValues = "";
-    $('#' + tableElmntID).find('tr').each(function (i, el) {
-        var $tds1 = $(this).find('td');
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var str_flds_array = pipeSprtdFieldIDs.split('|');
+        var str_flds_array_val = pipeSprtdFieldIDs.split('|');
+        var lnkArgs = "";
+        var tdsAppend = "";
+        var $tds = $('#' + tRowElementID).find('td');
+        var rndmNum = Math.floor((Math.random() * 99999) + parseInt(extDtColNum));
         for (var i = 0; i < str_flds_array.length; i++) {
-            if (i == str_flds_array.length - 1)
+            // Trim the excess whitespace.
+            var fldID = str_flds_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
+            str_flds_array[i] = fldID;
+            str_flds_array_val[i] = typeof $('#' + fldID).val() === 'undefined' ? '%' : $('#' + fldID).val();
+            lnkArgs = lnkArgs + "&" + fldID + "=" + str_flds_array_val[i];
+            if (addOrEdit === 'EDIT')
             {
-                allTblValues = allTblValues + $tds1.eq(i + 1).text();
-            } else {
-                allTblValues = allTblValues + $tds1.eq(i + 1).text() + "~";
+                $tds.eq(i + 1).html(str_flds_array_val[i]);
+            } else
+            {
+                tdsAppend = tdsAppend + "<td>" + str_flds_array_val[i] + "</td>";
             }
         }
-        allTblValues = allTblValues + "|";
-    });
-
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        if (addOrEdit === 'ADD')
         {
-            $body.removeClass("mdlloadingDiag");
-            $('#' + modalBodyID).html(xmlhttp.responseText);
+            var btnHtml = '<td><button type="button" class="btn btn-default btn-sm" onclick="getAddtnlDataForm(\'myFormsModal\', \'myFormsModalBody\', \'myFormsModalTitle\', \'addtnlPrsnTblrDataForm\',' +
+                    '\'prsExtrTblrDtCol_' + extDtColNum + '_Row' + rndmNum + '\', \'Add/Edit Data\', 12, \'EDIT\', ' + addtnlPrsPkey + ', \'' + pipeSprtdFieldIDs + '\', ' + extDtColNum + ', \'extDataTblCol_' + extDtColNum + '\');">' +
+                    '<img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"></button></td>';
+            $('#' + tableElmntID).append('<tr id="prsExtrTblrDtCol_' + extDtColNum + '_Row' + rndmNum + '">' + btnHtml + tdsAppend + '</tr>');
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=3&addtnlPrsPkey=" + addtnlPrsPkey
-            + "&extDtColNum=" + extDtColNum + "&tableElmntID=" + tableElmntID + "&allTblValues=" + allTblValues);
+        var allTblValues = "";
+        $('#' + tableElmntID).find('tr').each(function (i, el) {
+            var $tds1 = $(this).find('td');
+            for (var i = 0; i < str_flds_array.length; i++) {
+                if (i == str_flds_array.length - 1)
+                {
+                    allTblValues = allTblValues + $tds1.eq(i + 1).text();
+                } else {
+                    allTblValues = allTblValues + $tds1.eq(i + 1).text() + "~";
+                }
+            }
+            allTblValues = allTblValues + "|";
+        });
+
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=3&addtnlPrsPkey=" + addtnlPrsPkey
+                + "&extDtColNum=" + extDtColNum + "&tableElmntID=" + tableElmntID + "&allTblValues=" + allTblValues);
+    });
 }
 
 function getEducBkgrdForm(elementID, modalBodyID, titleElementID, formElementID,
         tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#' + titleElementID).html(formTitle);
-            $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('#' + modalBodyID + 'Diag').draggable();
-            $(function () {
-                $('.form_date').datetimepicker({
-                    format: "d-M-yyyy",
-                    language: 'en',
-                    weekStart: 0,
-                    todayBtn: true,
-                    autoclose: true,
-                    todayHighlight: true,
-                    keyboardNavigation: true,
-                    startView: 2,
-                    minView: 2,
-                    maxView: 4,
-                    forceParse: true
-                });
-            });
-
-            if (addOrEdit === 'EDIT')
-            {
-                /*Get various field element IDs and populate values*/
-                var $tds = $('#' + tRowElementID).find('td');
-                $('#educBkgrdCourseName').val($.trim($tds.eq(1).text()));
-                $('#educBkgrdSchool').val($.trim($tds.eq(2).text()));
-                $('#educBkgrdLoc').val($.trim($tds.eq(3).text()));
-                $('#educBkgrdStartDate').val($.trim($tds.eq(4).text()));
-                $('#educBkgrdEndDate').val($.trim($tds.eq(5).text()));
-                $('#educBkgrdCertObtnd').val($.trim($tds.eq(6).text()));
-                $('#educBkgrdCertTyp').val($.trim($tds.eq(7).text()));
-                $('#educBkgrdDateAwrded').val($.trim($tds.eq(8).text()));
-            }
-            $('#' + elementID).on('show.bs.modal', function (e) {
-                $(this).find('.modal-body').css({
-                    'max-height': '100%'
-                });
-            });
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('show');
-            $(document).ready(function () {
-                $('#' + formElementID).submit(function (e) {
-                    e.preventDefault();
-                    return false;
-                });
-
-            });
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&educBkgrdPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#educBkgrdCourseName').val($.trim($tds.eq(1).text()));
+                    $('#educBkgrdSchool').val($.trim($tds.eq(2).text()));
+                    $('#educBkgrdLoc').val($.trim($tds.eq(3).text()));
+                    $('#educBkgrdStartDate').val($.trim($tds.eq(4).text()));
+                    $('#educBkgrdEndDate').val($.trim($tds.eq(5).text()));
+                    $('#educBkgrdCertObtnd').val($.trim($tds.eq(6).text()));
+                    $('#educBkgrdCertTyp').val($.trim($tds.eq(7).text()));
+                    $('#educBkgrdDateAwrded').val($.trim($tds.eq(8).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal('show');
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&educBkgrdPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+    });
 }
 
 function saveEducBkgrdForm(elementID, pKeyID, personID, tableElementID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var educBkgrdCourseName = typeof $("#educBkgrdCourseName").val() === 'undefined' ? '%' : $("#educBkgrdCourseName").val();
-    var educBkgrdSchool = typeof $("#educBkgrdSchool").val() === 'undefined' ? 'Both' : $("#educBkgrdSchool").val();
-    var educBkgrdLoc = typeof $("#educBkgrdLoc").val() === 'undefined' ? 1 : $("#educBkgrdLoc").val();
-    var educBkgrdStartDate = typeof $("#educBkgrdStartDate").val() === 'undefined' ? 10 : $("#educBkgrdStartDate").val();
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var educBkgrdCourseName = typeof $("#educBkgrdCourseName").val() === 'undefined' ? '%' : $("#educBkgrdCourseName").val();
+        var educBkgrdSchool = typeof $("#educBkgrdSchool").val() === 'undefined' ? 'Both' : $("#educBkgrdSchool").val();
+        var educBkgrdLoc = typeof $("#educBkgrdLoc").val() === 'undefined' ? 1 : $("#educBkgrdLoc").val();
+        var educBkgrdStartDate = typeof $("#educBkgrdStartDate").val() === 'undefined' ? 10 : $("#educBkgrdStartDate").val();
 
-    var educBkgrdEndDate = typeof $("#educBkgrdEndDate").val() === 'undefined' ? '%' : $("#educBkgrdEndDate").val();
-    var educBkgrdCertObtnd = typeof $("#educBkgrdCertObtnd").val() === 'undefined' ? 'Both' : $("#educBkgrdCertObtnd").val();
-    var educBkgrdCertTyp = typeof $("#educBkgrdCertTyp").val() === 'undefined' ? 1 : $("#educBkgrdCertTyp").val();
-    var educBkgrdDateAwrded = typeof $("#educBkgrdDateAwrded").val() === 'undefined' ? 10 : $("#educBkgrdDateAwrded").val();
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        var educBkgrdEndDate = typeof $("#educBkgrdEndDate").val() === 'undefined' ? '%' : $("#educBkgrdEndDate").val();
+        var educBkgrdCertObtnd = typeof $("#educBkgrdCertObtnd").val() === 'undefined' ? 'Both' : $("#educBkgrdCertObtnd").val();
+        var educBkgrdCertTyp = typeof $("#educBkgrdCertTyp").val() === 'undefined' ? 1 : $("#educBkgrdCertTyp").val();
+        var educBkgrdDateAwrded = typeof $("#educBkgrdDateAwrded").val() === 'undefined' ? 10 : $("#educBkgrdDateAwrded").val();
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('hide');
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                $('#' + elementID).modal('hide');
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=13" +
-            "&educBkgrdCourseName=" + educBkgrdCourseName +
-            "&educBkgrdSchool=" + educBkgrdSchool +
-            "&educBkgrdLoc=" + educBkgrdLoc +
-            "&educBkgrdStartDate=" + educBkgrdStartDate +
-            "&educBkgrdEndDate=" + educBkgrdEndDate +
-            "&educBkgrdCertObtnd=" + educBkgrdCertObtnd +
-            "&educBkgrdCertTyp=" + educBkgrdCertTyp +
-            "&educBkgrdDateAwrded=" + educBkgrdDateAwrded +
-            "&educBkgrdPkeyID=" + pKeyID +
-            "&sbmtdPersonID=" + personID);
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=13" +
+                "&educBkgrdCourseName=" + educBkgrdCourseName +
+                "&educBkgrdSchool=" + educBkgrdSchool +
+                "&educBkgrdLoc=" + educBkgrdLoc +
+                "&educBkgrdStartDate=" + educBkgrdStartDate +
+                "&educBkgrdEndDate=" + educBkgrdEndDate +
+                "&educBkgrdCertObtnd=" + educBkgrdCertObtnd +
+                "&educBkgrdCertTyp=" + educBkgrdCertTyp +
+                "&educBkgrdDateAwrded=" + educBkgrdDateAwrded +
+                "&educBkgrdPkeyID=" + pKeyID +
+                "&sbmtdPersonID=" + personID);
+    });
 }
 
 function getWorkBkgrdForm(elementID, modalBodyID, titleElementID, formElementID,
         tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#' + titleElementID).html(formTitle);
-            $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('#' + modalBodyID + 'Diag').draggable();
-            $(function () {
-                $('.form_date').datetimepicker({
-                    format: "d-M-yyyy",
-                    language: 'en',
-                    weekStart: 0,
-                    todayBtn: true,
-                    autoclose: true,
-                    todayHighlight: true,
-                    keyboardNavigation: true,
-                    startView: 2,
-                    minView: 2,
-                    maxView: 4,
-                    forceParse: true
-                });
-            });
-
-            if (addOrEdit === 'EDIT')
-            {
-                /*Get various field element IDs and populate values*/
-                var $tds = $('#' + tRowElementID).find('td');
-                $('#workBkgrdJobName').val($.trim($tds.eq(1).text()));
-                $('#workBkgrdInstitution').val($.trim($tds.eq(2).text()));
-                $('#workBkgrdLoc').val($.trim($tds.eq(3).text()));
-                $('#workBkgrdStartDate').val($.trim($tds.eq(4).text()));
-                $('#workBkgrdEndDate').val($.trim($tds.eq(5).text()));
-                $('#workBkgrdJobDesc').val($.trim($tds.eq(6).text()));
-                $('#workBkgrdAchvmnts').val($.trim($tds.eq(7).text()));
-            }
-            $('#' + elementID).on('show.bs.modal', function (e) {
-                $(this).find('.modal-body').css({
-                    'max-height': '100%'
-                });
-            });
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('show');
-            $(document).ready(function () {
-                $('#' + formElementID).submit(function (e) {
-                    e.preventDefault();
-                    return false;
-                });
-            });
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&workBkgrdPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#workBkgrdJobName').val($.trim($tds.eq(1).text()));
+                    $('#workBkgrdInstitution').val($.trim($tds.eq(2).text()));
+                    $('#workBkgrdLoc').val($.trim($tds.eq(3).text()));
+                    $('#workBkgrdStartDate').val($.trim($tds.eq(4).text()));
+                    $('#workBkgrdEndDate').val($.trim($tds.eq(5).text()));
+                    $('#workBkgrdJobDesc').val($.trim($tds.eq(6).text()));
+                    $('#workBkgrdAchvmnts').val($.trim($tds.eq(7).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal('show');
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&workBkgrdPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+    });
 }
 
 function saveWorkBkgrdForm(elementID, pKeyID, personID, tableElementID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var workBkgrdJobName = typeof $("#workBkgrdJobName").val() === 'undefined' ? '%' : $("#workBkgrdJobName").val();
-    var workBkgrdInstitution = typeof $("#workBkgrdInstitution").val() === 'undefined' ? 'Both' : $("#workBkgrdInstitution").val();
-    var workBkgrdLoc = typeof $("#workBkgrdLoc").val() === 'undefined' ? 1 : $("#workBkgrdLoc").val();
-    var workBkgrdStartDate = typeof $("#workBkgrdStartDate").val() === 'undefined' ? 10 : $("#workBkgrdStartDate").val();
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var workBkgrdJobName = typeof $("#workBkgrdJobName").val() === 'undefined' ? '%' : $("#workBkgrdJobName").val();
+        var workBkgrdInstitution = typeof $("#workBkgrdInstitution").val() === 'undefined' ? 'Both' : $("#workBkgrdInstitution").val();
+        var workBkgrdLoc = typeof $("#workBkgrdLoc").val() === 'undefined' ? 1 : $("#workBkgrdLoc").val();
+        var workBkgrdStartDate = typeof $("#workBkgrdStartDate").val() === 'undefined' ? 10 : $("#workBkgrdStartDate").val();
 
-    var workBkgrdEndDate = typeof $("#workBkgrdEndDate").val() === 'undefined' ? '%' : $("#workBkgrdEndDate").val();
-    var workBkgrdJobDesc = typeof $("#workBkgrdJobDesc").val() === 'undefined' ? 'Both' : $("#workBkgrdJobDesc").val();
-    var workBkgrdAchvmnts = typeof $("#workBkgrdAchvmnts").val() === 'undefined' ? 1 : $("#workBkgrdAchvmnts").val();
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        var workBkgrdEndDate = typeof $("#workBkgrdEndDate").val() === 'undefined' ? '%' : $("#workBkgrdEndDate").val();
+        var workBkgrdJobDesc = typeof $("#workBkgrdJobDesc").val() === 'undefined' ? 'Both' : $("#workBkgrdJobDesc").val();
+        var workBkgrdAchvmnts = typeof $("#workBkgrdAchvmnts").val() === 'undefined' ? 1 : $("#workBkgrdAchvmnts").val();
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('hide');
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                $('#' + elementID).modal('hide');
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=13" +
-            "&workBkgrdJobName=" + workBkgrdJobName +
-            "&workBkgrdInstitution=" + workBkgrdInstitution +
-            "&workBkgrdLoc=" + workBkgrdLoc +
-            "&workBkgrdStartDate=" + workBkgrdStartDate +
-            "&workBkgrdEndDate=" + workBkgrdEndDate +
-            "&workBkgrdJobDesc=" + workBkgrdJobDesc +
-            "&workBkgrdAchvmnts=" + workBkgrdAchvmnts +
-            "&workBkgrdPkeyID=" + pKeyID +
-            "&sbmtdPersonID=" + personID);
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=13" +
+                "&workBkgrdJobName=" + workBkgrdJobName +
+                "&workBkgrdInstitution=" + workBkgrdInstitution +
+                "&workBkgrdLoc=" + workBkgrdLoc +
+                "&workBkgrdStartDate=" + workBkgrdStartDate +
+                "&workBkgrdEndDate=" + workBkgrdEndDate +
+                "&workBkgrdJobDesc=" + workBkgrdJobDesc +
+                "&workBkgrdAchvmnts=" + workBkgrdAchvmnts +
+                "&workBkgrdPkeyID=" + pKeyID +
+                "&sbmtdPersonID=" + personID);
+    });
 }
 
 function getSkillsForm(elementID, modalBodyID, titleElementID, formElementID,
         tRowElementID, formTitle, vtyp, addOrEdit, pKeyID, personID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#' + titleElementID).html(formTitle);
-            $('#' + modalBodyID).html(xmlhttp.responseText);
-            $('#' + modalBodyID + 'Diag').draggable();
-            $(function () {
-                $('.form_date').datetimepicker({
-                    format: "d-M-yyyy",
-                    language: 'en',
-                    weekStart: 0,
-                    todayBtn: true,
-                    autoclose: true,
-                    todayHighlight: true,
-                    keyboardNavigation: true,
-                    startView: 2,
-                    minView: 2,
-                    maxView: 4,
-                    forceParse: true
-                });
-            });
-
-            if (addOrEdit === 'EDIT')
-            {
-                /*Get various field element IDs and populate values*/
-                var $tds = $('#' + tRowElementID).find('td');
-                $('#skillsLanguages').val($.trim($tds.eq(1).text()));
-                $('#skillsHobbies').val($.trim($tds.eq(2).text()));
-                $('#skillsInterests').val($.trim($tds.eq(3).text()));
-                $('#skillsConduct').val($.trim($tds.eq(4).text()));
-                $('#skillsAttitudes').val($.trim($tds.eq(5).text()));
-                $('#skillsStartDate').val($.trim($tds.eq(6).text()));
-                $('#skillsEndDate').val($.trim($tds.eq(7).text()));
-            }
-            $('#' + elementID).on('show.bs.modal', function (e) {
-                $(this).find('.modal-body').css({
-                    'max-height': '100%'
-                });
-            });
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('show');
-            $(document).ready(function () {
-                $('#' + formElementID).submit(function (e) {
-                    e.preventDefault();
-                    return false;
-                });
-            });
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&skillsPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + titleElementID).html(formTitle);
+                $('#' + modalBodyID).html(xmlhttp.responseText);
+                $('#' + modalBodyID + 'Diag').draggable();
+                $(function () {
+                    $('.form_date').datetimepicker({
+                        format: "d-M-yyyy",
+                        language: 'en',
+                        weekStart: 0,
+                        todayBtn: true,
+                        autoclose: true,
+                        todayHighlight: true,
+                        keyboardNavigation: true,
+                        startView: 2,
+                        minView: 2,
+                        maxView: 4,
+                        forceParse: true
+                    });
+                });
+
+                if (addOrEdit === 'EDIT')
+                {
+                    /*Get various field element IDs and populate values*/
+                    var $tds = $('#' + tRowElementID).find('td');
+                    $('#skillsLanguages').val($.trim($tds.eq(1).text()));
+                    $('#skillsHobbies').val($.trim($tds.eq(2).text()));
+                    $('#skillsInterests').val($.trim($tds.eq(3).text()));
+                    $('#skillsConduct').val($.trim($tds.eq(4).text()));
+                    $('#skillsAttitudes').val($.trim($tds.eq(5).text()));
+                    $('#skillsStartDate').val($.trim($tds.eq(6).text()));
+                    $('#skillsEndDate').val($.trim($tds.eq(7).text()));
+                }
+                $('#' + elementID).on('show.bs.modal', function (e) {
+                    $(this).find('.modal-body').css({
+                        'max-height': '100%'
+                    });
+                });
+                $body.removeClass("mdlloadingDiag");
+                $('#' + elementID).modal('show');
+                $body.removeClass("mdlloading");
+                $(document).ready(function () {
+                    $('#' + formElementID).submit(function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                });
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("grp=8&typ=1&pg=2&vtyp=" + vtyp + "&skillsPkeyID=" + pKeyID + "&sbmtdPersonID=" + personID);
+    });
 }
 
 function saveSkillsForm(elementID, pKeyID, personID, tableElementID)
 {
-    $body = $("body");
-    $body.addClass("mdlloadingDiag");
-    var skillsLanguages = typeof $("#skillsLanguages").val() === 'undefined' ? '%' : $("#skillsLanguages").val();
-    var skillsHobbies = typeof $("#skillsHobbies").val() === 'undefined' ? 'Both' : $("#skillsHobbies").val();
-    var skillsInterests = typeof $("#skillsInterests").val() === 'undefined' ? 1 : $("#skillsInterests").val();
-    var skillsConduct = typeof $("#skillsConduct").val() === 'undefined' ? 10 : $("#skillsConduct").val();
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.addClass("mdlloadingDiag");
+        var skillsLanguages = typeof $("#skillsLanguages").val() === 'undefined' ? '%' : $("#skillsLanguages").val();
+        var skillsHobbies = typeof $("#skillsHobbies").val() === 'undefined' ? 'Both' : $("#skillsHobbies").val();
+        var skillsInterests = typeof $("#skillsInterests").val() === 'undefined' ? 1 : $("#skillsInterests").val();
+        var skillsConduct = typeof $("#skillsConduct").val() === 'undefined' ? 10 : $("#skillsConduct").val();
 
-    var skillsAttitudes = typeof $("#skillsAttitudes").val() === 'undefined' ? '%' : $("#skillsAttitudes").val();
-    var skillsStartDate = typeof $("#skillsStartDate").val() === 'undefined' ? 'Both' : $("#skillsStartDate").val();
-    var skillsEndDate = typeof $("#skillsEndDate").val() === 'undefined' ? 1 : $("#skillsEndDate").val();
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {
-        /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-        xmlhttp = new XMLHttpRequest();
-    } else
-    {
-        /*code for IE6, IE5*/
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function ()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        var skillsAttitudes = typeof $("#skillsAttitudes").val() === 'undefined' ? '%' : $("#skillsAttitudes").val();
+        var skillsStartDate = typeof $("#skillsStartDate").val() === 'undefined' ? 'Both' : $("#skillsStartDate").val();
+        var skillsEndDate = typeof $("#skillsEndDate").val() === 'undefined' ? 1 : $("#skillsEndDate").val();
+        var xmlhttp;
+        if (window.XMLHttpRequest)
         {
-            $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
-            $body.removeClass("mdlloadingDiag");
-            $('#' + elementID).modal('hide');
+            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            /*code for IE6, IE5*/
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    };
-    xmlhttp.open("POST", "index.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
+                $body.removeClass("mdlloadingDiag");
+                $body.removeClass("mdlloading");
+                $('#' + elementID).modal('hide');
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-    xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=14" +
-            "&skillsLanguages=" + skillsLanguages +
-            "&skillsHobbies=" + skillsHobbies +
-            "&skillsInterests=" + skillsInterests +
-            "&skillsConduct=" + skillsConduct +
-            "&skillsAttitudes=" + skillsAttitudes +
-            "&skillsStartDate=" + skillsStartDate +
-            "&skillsEndDate=" + skillsEndDate +
-            "&skillsPkeyID=" + pKeyID +
-            "&sbmtdPersonID=" + personID);
+        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=14" +
+                "&skillsLanguages=" + skillsLanguages +
+                "&skillsHobbies=" + skillsHobbies +
+                "&skillsInterests=" + skillsInterests +
+                "&skillsConduct=" + skillsConduct +
+                "&skillsAttitudes=" + skillsAttitudes +
+                "&skillsStartDate=" + skillsStartDate +
+                "&skillsEndDate=" + skillsEndDate +
+                "&skillsPkeyID=" + pKeyID +
+                "&sbmtdPersonID=" + personID);
+    });
 }

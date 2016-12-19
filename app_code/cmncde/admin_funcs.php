@@ -564,8 +564,6 @@ function changeUserPswd($usr_id, $pswd, $isTmp, $isAuto = 0) {
 }
 
 function get_CurPlcy_SessnTime() {
-
-
     $sqlStr = "SELECT session_timeout FROM 
     sec.sec_security_policies WHERE is_default = 't'";
     $result = executeSQLNoParams($sqlStr);

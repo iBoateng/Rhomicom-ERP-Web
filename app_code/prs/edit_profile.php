@@ -1195,7 +1195,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <div class="form-group form-group-sm">
                     <label for="ntnlIDCardsCountry" class="control-label col-md-4">Country:</label>
                     <div class="col-md-8">
-                        <input class="form-control" size="16" type="hidden" id="ntnlIDCardsDateIssd" value="<?php echo $ntnlIDpKey; ?>" readonly="">
+                        <input class="form-control" size="16" type="hidden" id="ntnlIDpKey" value="<?php echo $ntnlIDpKey; ?>" readonly="">
                         <select class="form-control" id="ntnlIDCardsCountry">
                             <option value="" selected disabled>Please Select...</option>
                             <?php
@@ -1241,7 +1241,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <label for="ntnlIDCardsDateIssd" class="control-label col-md-4">Date Issued:</label>
                     <div class="col-md-8">
                         <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="16" type="text" id="ntnlIDCardsDateIssd" value="" readonly="">
+                            <input class="form-control" size="16" type="text" id="ntnlIDCardsDateIssd" value="">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
@@ -1251,7 +1251,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <label for="ntnlIDCardsExpDate" class="control-label col-md-4">Expiry Date:</label>
                     <div class="col-md-8">
                         <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="16" type="text" id="ntnlIDCardsExpDate" value="" readonly="">
+                            <input class="form-control" size="16" type="text" id="ntnlIDCardsExpDate" value="">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>

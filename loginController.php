@@ -130,7 +130,7 @@ function chcAftrScsflLgnRqnt($usrNm, $pswd, &$msg) {
         $result1 = get_Users_Roles($uID, "%", "Role Name", 0, 10000000);
         $selectedRoles = "";
         while ($row = loc_db_fetch_array($result1)) {
-            $selectedRoles.= $row[0] . ";";
+            $selectedRoles .= $row[0] . ";";
         }
 
         $in_org_nm = getOrgName($in_org_id);
@@ -264,7 +264,12 @@ function get_login_number($username, $login_time, $mach_details) {
 function recordSuccflLogin($username, $machdet) {
     global $app_version;
     global $smplTokenWord1;
-
+    global $myImgFileName;
+    global $fullTmpDest;
+    global $fldrPrfx;
+    global $tmpDest;
+    global $pemDest;
+    global $ftp_base_db_fldr;
     $dateStr = getDB_Date_time();
     $mach_details = $machdet;
     $sqlStr = "INSERT INTO sec.sec_track_user_logins(user_id, 
@@ -282,7 +287,19 @@ function recordSuccflLogin($username, $machdet) {
     $lgn_num = $_SESSION['LGN_NUM'];
     $_SESSION['PRSN_ID'] = $prsnid;
     $_SESSION['PRSN_FNAME'] = getPrsnFullNm($prsnid) . " (" . getPersonLocID($prsnid) . ")";
-    $_SESSION['FILES_NAME_PRFX'] = encrypt1($prsnid . session_id() . $lgn_num, $smplTokenWord1);
+    $myImgFileName = encrypt1($prsnid . session_id() . $lgn_num, $smplTokenWord1);
+    $_SESSION['FILES_NAME_PRFX'] = $myImgFileName;
+    $nwFileName = $myImgFileName . '.png';
+    $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
+    $fullPemDest = $fldrPrfx . $pemDest . $nwFileName;
+    $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . '.png';
+    if (file_exists($ftp_src) && !file_exists($fullPemDest)) {
+        copy("$ftp_src", "$fullPemDest");
+    } else if (!file_exists($fullPemDest)) {
+        $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
+        copy("$ftp_src", "$fullPemDest");
+    }
+    $myImgFileName=$nwFileName;
     createWelcomeMsg($username);
 }
 
