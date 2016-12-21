@@ -1,6 +1,4 @@
 <?php
-
-//require $base_dir.'/app_code/globals.php';
 $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 2 */ "View Roles & their Priviledges", "View Registered Modules & their Priviledges",
     /* 4 */ "View Security Policies", "View Server Settings", "View User Logins",
@@ -19,7 +17,7 @@ $sysLovs = array("Benefits Types", "Relationship Types"
     "Benefits & Dues/Contributions Value Types", "Extra Information Labels",
     "Divisions Images Directory", "Organization Images Directory", "Person Images Directory"
     , "Organisations", "Divisions/Groups", "Jobs", "Chart of Accounts",
-    "Transaction Accounts", "Parent Accounts", "Active Users", "Person Titles",
+    /* 21 */ "Transaction Accounts", "Parent Accounts", "Active Users", "Person Titles",
     "Gender", "Marital Status", "Nationalities", "Active Persons", "Sites/Locations",
     "Grades", "Positions", "Asset Accounts", "Expense Accounts", "Revenue Accounts",
     "Liability Accounts", "Equity Accounts", "Pay Items", "Pay Item Values",
@@ -28,7 +26,17 @@ $sysLovs = array("Benefits Types", "Relationship Types"
     "Budget Accounts", "Banks", "Bank Branches", "Bank Account Types", "Balance Items",
     "Non-Balance Items", "Person Sets for Payments", "Item Sets for Payments",
     "Audit Logs Directory", /* 53 */ "Reports Directory", "System Modules",
-    "LOV Names", "User Roles", "Pay Item Classifications", "System Priviledges");
+    "LOV Names", "User Roles", "Pay Item Classifications", "System Priviledges",
+    /* 59 */ "Payment Means", "Allowed IP Address for Request Listener",
+    /* 61 */ "CV Courses", "Schools/Academic Institutions", "Other Locations",
+    /* 64 */ "Jobs/Professions/Occupations", "Certificate Names", "Languages",
+    /* 67 */ "Hobbies", "Interests", "Conduct", "Attitudes",
+    /* 71 */ "Companies/Work Places", "Customized Module Names", "Allowed Person Types for Roles",
+    /* 74 */ "Document Signatory Columns", "Attachment Document Categories",
+    /* 76 */ "Types of Incorporation", "List of Professional Services", "Grade Names", "Schools/Organisations/Institutions",
+    /* 80 */ "Account Classifications", "Employer's File No.", "Person's Email Addresses",
+    /* 83 */ "SMS API Parameters", "Universal Resource Locators (URLs)", "Asset Register",
+    /* 86 */ "Audit Trail Trackable Actions");
 $sysLovsDesc = array("Benefits Types", "Relationship Types"
     , "Further Details about the available person types", "Countries", "Currencies", "Organisation Types"
     , "Divisions or Group Types", "Person Type Change Reasons", "Person Types"
@@ -56,15 +64,24 @@ $sysLovsDesc = array("Benefits Types", "Relationship Types"
     "Non-Balance Items", "Person Sets for Payments",
     "Item Sets for Payments",
     "Audit Logs Directory", "Reports Directory", "System Modules", "LOV Names", "User Roles",
-    "Pay Item Classifications", "System Priviledges");
+    "Pay Item Classifications", "System Priviledges", "Various Payment Means", "Allowed IP Address for Request Listener",
+    /* 61 */ "CV Courses", "Schools/Academic Institutions", "Other Locations",
+    /* 64 */ "Jobs/Professions/Occupations", "Certificate Names", "Languages",
+    /* 67 */ "Hobbies", "Interests", "Conduct", "Attitudes",
+    /* 71 */ "Companies/Work Places", "Customized Module Names", "Allowed Person Types for Roles",
+    /* 74 */ "Document Signatory Columns", "Attachment Document Categories",
+    /* 76 */ "Types of Incorporation", "List of Professional Services", "Grade Names", "Schools/Organisations/Institutions",
+    /* 80 */ "Account Classifications", "Employer's File No.", "Person's Email Addresses",
+    /* 83 */ "SMS API Parameters", "Universal Resource Locators (URLs)", "Asset Register",
+    /* 86 */ "Audit Trail Trackable Actions");
 $sysLovsDynQrys = array("", ""
     , "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
     "select distinct trim(to_char(org_id,'999999999999999999999999999999')) a, org_name b, '' c from org.org_details order by 2",
     "select distinct trim(to_char(div_id,'999999999999999999999999999999')) a, div_code_name b, '' c, org_id d from org.org_divs_groups order by 2",
     "select distinct trim(to_char(job_id,'999999999999999999999999999999')) a, job_code_name b, '' c, org_id d from org.org_jobs order by 2",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts order by accnt_num",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0') order by accnt_num",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_type e, accnt_num f from accb.accb_chart_of_accnts where (is_prnt_accnt = '1') order by accnt_num",
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts order by accnt_num",
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, (CASE WHEN prnt_accnt_id>0 THEN accnt_num || '.' || accnt_name || ' ('|| accb.get_accnt_num(prnt_accnt_id)||'.'||accb.get_accnt_name(prnt_accnt_id)|| ')' WHEN control_account_id>0 THEN accnt_num || '.' || accnt_name || ' ('|| accb.get_accnt_num(control_account_id)||'.'||accb.get_accnt_name(control_account_id)|| ')' ELSE accnt_num || '.' || accnt_name END) b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (is_prnt_accnt = '0' and is_enabled = '1' and is_net_income = '0' and has_sub_ledgers = '0') order by accnt_num",  
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_type e, accnt_num f from accb.accb_chart_of_accnts where (is_prnt_accnt = '1') order by accnt_num",
     "select distinct trim(to_char(user_id,'999999999999999999999999999999')) a, user_name b, '' c FROM sec.sec_users WHERE (now() between to_timestamp(valid_start_date,'YYYY-MM-DD HH24:MI:SS') AND " +
     "to_timestamp(valid_end_date,'YYYY-MM-DD HH24:MI:SS')) order by 1", "", "", "", "",
     "SELECT distinct local_id_no a, trim(title || ' ' || sur_name || " +
@@ -73,17 +90,17 @@ $sysLovsDynQrys = array("", ""
     "select distinct trim(to_char(location_id,'999999999999999999999999999999')) a, location_code_name b, '' c, org_id d from org.org_sites_locations order by 2",
     "select distinct trim(to_char(grade_id,'999999999999999999999999999999')) a, grade_code_name b, '' c, org_id d from org.org_grades order by 2",
     "select distinct trim(to_char(position_id,'999999999999999999999999999999')) a, position_code_name b, '' c, org_id d from org.org_positions order by 2",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'A' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0') order by accnt_num",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'EX' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0') order by accnt_num",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'R' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0') order by accnt_num",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'L' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0') order by accnt_num",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'EQ' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0') order by accnt_num",
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'A' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0' and has_sub_ledgers = '0') order by accnt_num",
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'EX' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0' and has_sub_ledgers = '0') order by accnt_num",
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'R' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0' and has_sub_ledgers = '0') order by accnt_num",
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'L' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0' and has_sub_ledgers = '0') order by accnt_num",
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (accnt_type = 'EQ' and is_prnt_accnt = '0' and is_enabled = '1' and  is_retained_earnings= '0' and is_net_income = '0' and has_sub_ledgers = '0') order by accnt_num",
     "select distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_code_name b, '' c, org_id d from org.org_pay_items order by 2",
     "select distinct trim(to_char(pssbl_value_id,'999999999999999999999999999999')) a, pssbl_value_code_name b, '' c, item_id d from org.org_pay_items_values order by 2",
     "select distinct trim(to_char(work_hours_id,'999999999999999999999999999999')) a, work_hours_name b, '' c, org_id d from org.org_wrkn_hrs order by 2",
     "select distinct trim(to_char(gthrng_typ_id,'999999999999999999999999999999')) a, gthrng_typ_name b, '' c, org_id d from org.org_gthrng_types order by 2",
     "", "", "",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where ((accnt_type = 'R' or accnt_type = 'EX') and is_prnt_accnt = '0' and is_enabled = '1') order by accnt_num", "", "", "",
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where ((accnt_type = 'R' or accnt_type = 'EX') and is_prnt_accnt = '0' and is_enabled = '1' and has_sub_ledgers = '0') order by accnt_num", "", "", "",
     "select distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_code_name b, '' c, org_id d from org.org_pay_items where item_maj_type = 'Balance Item' order by item_code_name",
     "select distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_code_name b, '' c, org_id d, pay_run_priority e from org.org_pay_items where item_maj_type = 'Pay Value Item' order by pay_run_priority",
     "select distinct trim(to_char(prsn_set_hdr_id,'999999999999999999999999999999')) a, prsn_set_hdr_name b, '' c, org_id d from pay.pay_prsn_sets_hdr order by prsn_set_hdr_name",
@@ -91,10 +108,22 @@ $sysLovsDynQrys = array("", ""
     , "", "", "select distinct trim(to_char(module_id,'999999999999999999999999999999')) a, module_name b, '' c from sec.sec_modules order by module_name"
     , "select distinct trim(to_char(value_list_id,'999999999999999999999999999999')) a, value_list_name b, '' c from gst.gen_stp_lov_names order by value_list_name"
     , "select distinct trim(to_char(role_id,'999999999999999999999999999999')) a, role_name b, '' c from sec.sec_roles order by role_name", "",
-    "select distinct trim(to_char(prvldg_id,'999999999999999999999999999999')) a, prvldg_name || ' (' || sec.get_module_nm(module_id) || ')' b, '' c, prvldg_id d from sec.sec_prvldgs order by prvldg_id");
+    "select distinct trim(to_char(prvldg_id,'999999999999999999999999999999')) a, prvldg_name || ' (' || sec.get_module_nm(module_id) || ')' b, '' c, prvldg_id d from sec.sec_prvldgs order by prvldg_id", "", "",
+    /* 61 */ "", "", "",
+    /* 64 */ "", "", "",
+    /* 67 */ "", "", "", "",
+    /* 71 */ "", "", "", "", "", "", "",
+    /* 78 */ "select distinct grade_code_name a, grade_code_name b, '' c, org_id d from org.org_grades order by 1",
+    /* 79 */ "",
+    /* 80 */ "", "",
+    "SELECT distinct REPLACE(email,',',';') a, trim(title || ' ' || sur_name || " +
+    "', ' || first_name || ' ' || other_names || ' ('||local_id_no||')') b, '' c, org_id d, local_id_no e " +
+    "FROM prs.prsn_names_nos a order by local_id_no",
+    /* 83 */ "", "",
+    "Select '' || asset_id a, asset_code_name || ':' || asset_desc || ':' || asset_classification || ':' ||asset_category || ':' || tag_number b, '' c, org_id d from accb.accb_fa_assets_rgstr order by 2",
+    /* 86 */ "");
 
-$pssblVals = array(
-    "0", "Loans",
+$pssblVals = array("0", "Loans",
     "Money amounts granted to staff to be paid later"
     , "0", "Allowances", "Money amounts granted to staff"
     , "0", "Leave", "Vacation Days allowed for employees"
@@ -135,6 +164,10 @@ $pssblVals = array(
     , "5", "Church", "Place of Worship"
     , "5", "NGO", "Non-Governmental Organization"
     , "5", "Company", "Company"
+    , "5", "Super Market", "Super Market"
+    , "5", "Mini Mart", "Mini Mart"
+    , "5", "Shop/Store", "Shop/Store"
+    , "5", "Boutique", "Boutique"
     , "6", "Office", "Major Division under Department"
     , "6", "Unit", "Division under Office"
     , "6", "Department", "Major Division in an Organization"
@@ -179,14 +212,16 @@ $pssblVals = array(
     , "8", "Ex-Member", "A Former Member of the group"
     , "9", "1st Degree", "First Degree University"
     , "9", "2nd Degree", "Second Degree University"
-    , "9", "WASSCE", "Senior High School Cert."
-    , "9", "BECE", "Junior High School Cert"
+    , "9", "Form 5", "Senior Secondary School Cert.(O-Level)"
+    , "9", "Sixth Form", "Senior Secondary School Cert.(A-Level)"
+    , "9", "Senior High", "Senior High School Cert.(WASSCE)"
+    , "9", "Junior High", "Junior High School Cert.(BECE)"
     , "9", "Phd", "Doctor of Philosophy"
     , "10", "NHIS ID", "Health Insurance"
     , "10", "Voter's ID", "Voter's ID Card"
     , "10", "Driving License", "Driver's License"
     , "10", "Passport", "Passport"
-    , "10", "SSNIT", "SSNIT"//, , , , , , , , 
+    , "10", "SSNIT", "SSNIT"
     , "11", "fixed", "for payments at end of contracts"
     , "11", "hourly", "hourly"
     , "11", "daily", "daily"
@@ -203,9 +238,6 @@ $pssblVals = array(
     , "13", "Motto", "Motto of a Group/Division"
     , "13", "Mission", "Mission of a Group/Division"
     , "13", "Vision", "Vision of a Group/Division"
-    //,"14", Application.StartupPath + @"\Images\Divs", "Divisions Logos Directory"
-    //,"15", Application.StartupPath + @"\Images\Org", "Organizations Logos Directory"
-    //,"16", Application.StartupPath + @"\Images\Person", "Persons Images Directory"
     , "24", "Mr.", "Mr."
     , "24", "Mrs.", "Mrs."
     , "24", "Master", "Master"
@@ -215,6 +247,7 @@ $pssblVals = array(
     , "24", "Prof.", "Prof."
     , "25", "Male", "Male"
     , "25", "Female", "Female"
+    , "25", "Not Applicable", "Not Applicable"
     , "26", "Single", "Single"
     , "26", "Married", "Married"
     , "26", "Divorced", "Divorced"
@@ -241,11 +274,136 @@ $pssblVals = array(
     , "46", "KNUST Branch", "KNUST Branch"
     , "47", "Current Account", "Kaneshie Branch"
     , "47", "Savings Account", "KNUST Branch"
-    //,"52", Application.StartupPath + @"\Images\Logs", "Audit Logs Directory"
-    //,"53", Application.StartupPath + @"\Images\Rpts", "Reports Directory"
     , "57", "Payslip Item", "Payslip Items-Items that appear on Payslip after during payroll run"
     , "57", "Payroll Item", "Payroll Items-Items Run during payroll run but don't appear on Payslip"
     , "57", "Bill Item", "Bill Items Eg. School Fees Bill Items"
+    , "57", "Balance Item", "Balance Items Eg. TAKE HOME PAY"
+    , "59", "Cash Cheque", "Cash Cheque"
+    , "59", "Clearing Cheque", "Clearing Cheque"
+    , "59", "Payment Order", "Payment Order"
+    , "59", "Visa Card", "Visa Card"
+    , "59", "Mastercard", "Mastercard"
+    , "59", "Ezwich", "Ezwich"
+    , "59", "Visa Ghana", "Visa Ghana"
+    , "59", "Paypal", "Paypal"
+    , "59", "Mobile Money", "Mobile Money",
+    "59", "Supplier Cheque", "Supplier Cheque",
+    "59", "Supplier Cash", "Supplier Cash",
+    "59", "Customer Cheque", "Customer Cheque",
+    "59", "Customer Cash", "Customer Cash",
+    "59", "Supplier Prepayment Application", "Supplier Prepayment Application",
+    "59", "Customer Prepayment Application", "Customer Prepayment Application",
+    "60", "192.168.0.100", "192.168.0.100",
+    "60", "localhost", "localhost",
+    "61", "Bsc. Computer Science", "Computer Science Degree",
+    "61", "Bsc. Computer Engineering", "Computer Engineering Degree",
+    "61", "B.E.C.E", "B.E.C.E",
+    "61", "W.A.S.S.C.E", "W.A.S.S.C.E",
+    "61", "S.S.C.E", "S.S.C.E",
+    "61", "A-Level", "A-Level",
+    "61", "O-Level", "O-Level",
+    "62", "Kwame Nkrumah University of Science and Technology", "Tertiary",
+    "62", "University of Ghana-Legon", "Tertiary",
+    "62", "Prempeh College", "Secondary",
+    "63", "Accra-Ghana", "Accra-Ghana",
+    "63", "Kumasi-Ghana", "Kumasi-Ghana",
+    "64", "Engineer", "Engineer",
+    "64", "IT Technician", "IT Technician",
+    "65", "B.E.C.E", "B.E.C.E",
+    "65", "W.A.S.S.C.E", "W.A.S.S.C.E",
+    "65", "S.S.C.E", "S.S.C.E",
+    "65", "A-Level", "A-Level",
+    "65", "O-Level", "O-Level",
+    "65", "Bsc.", "Bachelor of Science",
+    "65", "Msc.", "Master of Science",
+    "65", "PhD", "Doctor of Philosophy",
+    "66", "Twi", "Twi",
+    "66", "English", "English",
+    "67", "Playing Soccer", "Playing Soccer",
+    "67", "Playing Lead Guitar", "Playing Lead Guitar",
+    "68", "Singing", "Singing",
+    "68", "Reading", "Reading",
+    "69", "Calm", "Calm",
+    "69", "Respectful", "Respectful",
+    "70", "Hardworking", "Hardworking",
+    "70", "Serious", "Serious",
+    "71", "Rhomicom Systems Tech. Ltd.", "Rhomicom Systems Tech. Ltd.",
+    "72", "Basic Person Data", "Personnel/ Membership Data",
+    "72", "Internal Payments", "Personnel/ Membership Payments",
+    "72", "Learning/Performance Management", "Performance Management System",
+    "72", "Hospitality Management", "Hospitality Management",
+    "72", "Events and Attendance", "Events and Attendance",
+    "72", "Sales and Inventory", "Sales and Inventory",
+    "72", "Project Management", "Projects Management",
+    "73", "Basic Person Data Administrator", "'All'",
+    "73", "Personnel Data Administrator", "'Employee','Staff'",
+    "74", "Invoices Signatories", "                    Prepared By                    Authorized By                    Approved By",
+    "74", "PO Signatories", "                    Prepared By                    Authorized By                    Approved By",
+    "74", "Receipt Signatories", "                    Received By                    Inspected By                    Approved By",
+    "74", "Receipt Return Signatories", "                    Returned By                    Authorized By                    Approved By",
+    "74", "Payroll Signatories", "                    Prepared By                    Authorized By                    Approved By",
+    "75", "Curriculum Vitae", "Curriculum Vitae",
+    "75", "Membership Forms", "Membership Forms",
+    "75", "Career Report", "Career Report",
+    "75", "Other Information", "Other Information",
+    "76", "Public Company Ltd", "Public Company Ltd",
+    "76", "Private Company Ltd", "Private Company Ltd",
+    "76", "Closed Corporation", "Closed Corporation",
+    "76", "Joint Venture", "Joint Venture",
+    "76", "Consortium", "Consortium",
+    "76", "Partnership", "Partnership",
+    "76", "Sole Proprietor", "Sole Proprietor",
+    "76", "Foreign Company", "Foreign Company",
+    "76", "Government/Parastatals", "Government/Parastatals",
+    "76", "Trust", "Trust",
+    "77", "Architecture", "Architecture",
+    "77", "Surveying", "Surveying",
+    "77", "Project Management", "Project Management",
+    "77", "Planning", "Planning",
+    "77", "Engineering", "Engineering",
+    "79", "Kwame Nkrumah University of Science and Technology", "School",
+    "79", "University of Ghana-Legon", "School",
+    "79", "Prempeh College", "School",
+    "79", "Rhomicom Systems Tech. Ltd.", "Company",
+    "80", "Cash and Cash Equivalents", "Cash and Cash Equivalents",
+    "80", "Operating Activities.Sale of Goods", "Operating Activities.Sale of Goods",
+    "80", "Operating Activities.Sale of Services", "Operating Activities.Sale of Services",
+    "80", "Operating Activities.Other Income Sources", "Operating Activities.Other Income Sources",
+    "80", "Operating Activities.Cost of Sales", "Operating Activities.Cost of Sales",
+    "80", "Operating Activities.Net Income", "Operating Activities.Net Income",
+    "80", "Operating Activities.Depreciation Expense", "Operating Activities.Depreciation Expense",
+    "80", "Operating Activities.Amortization Expense", "Operating Activities.Amortization Expense",
+    "80", "Operating Activities.Gain on Sale of Equipment", "Operating Activities.Gain on Sale of Equipment"/* NEGATE */,
+    "80", "Operating Activities.Loss on Sale of Equipment", "Operating Activities.Loss on Sale of Equipment",
+    "80", "Operating Activities.Other Non-Cash Expense", "Operating Activities.Other Non-Cash Expense",
+    "80", "Operating Activities.Accounts Receivable", "Operating Activities.Accounts Receivable"/* NEGATE */,
+    "80", "Operating Activities.Bad Debt Expense", "Operating Activities.Bad Debt Expense"/* NEGATE */,
+    "80", "Operating Activities.Prepaid Expenses", "Operating Activities.Prepaid Expenses"/* NEGATE */,
+    "80", "Operating Activities.Inventory", "Operating Activities.Inventory"/* NEGATE */,
+    "80", "Operating Activities.Accounts Payable", "Operating Activities.Accounts Payable",
+    "80", "Operating Activities.Accrued Expenses", "Operating Activities.Accrued Expenses",
+    "80", "Operating Activities.Taxes Payable", "Operating Activities.Taxes Payable",
+    "80", "Operating Activities.Operating Expense", "Operating Activities.Operating Expense",
+    "80", "Operating Activities.General and Administrative Expense", "Operating Activities.General and Administrative Expense",
+    "80", "Investing Activities.Asset Sales/Purchases", "Investing Activities.Asset Sales/Purchases"/* NEGATE */,
+    "80", "Investing Activities.Equipment Sales/Purchases", "Investing Activities.Equipment Sales/Purchases"/* NEGATE */,
+    "80", "Financing Activities.Capital/Stock", "Financing Activities.Capital/Stock",
+    "80", "Financing Activities.Long Term Debts", "Financing Activities.Long Term Debts",
+    "80", "Financing Activities.Short Term Debts", "Financing Activities.Short Term Debts",
+    "80", "Financing Activities.Equity Securities", "Financing Activities.Equity Securities",
+    "80", "Financing Activities.Dividends Declared", "Financing Activities.Dividends Declared"/* NEGATE */,
+    "80", "", "",
+    "81", "TIN", "LEE 12345",
+    "83", "url", "http://txtconnect.co/api/send/",
+    "83", "token", "123456789",
+    "83", "msg", "{:msg}",
+    "83", "from", "Rhomicom",
+    "83", "to", "{:to}",
+    "84", "QR Code Validation URL", "https://www.rhomicomgh.com/index.php?id=",
+    "86", "INSERT STATEMENTS", "INSERT STATEMENTS",
+    "86", "UPDATE STATEMENTS", "UPDATE STATEMENTS",
+    "86", "DELETE STATEMENTS", "DELETE STATEMENTS",
+    "86", "INFO ON DATA VIEWED", "INFO ON DATA VIEWED"
 );
 
 $lvid = getLovID("Security Keys");

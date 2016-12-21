@@ -24,8 +24,6 @@ $vwtyp = "0";
 $qstr = "";
 $dsply = "";
 $actyp = "";
-$srchFor = "";
-$srchIn = "Name";
 $PKeyID = -1;
 if (isset($formArray)) {
     if (count($formArray) > 0) {
@@ -81,13 +79,49 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             if ($actyp == 1) {
                 $inptUsrID = cleanInputData($_POST['pKeyID']);
                 echo deleteUser($inptUsrID);
+            } else if ($actyp == 2) {
+                //Delete Extra Info Labels
+                var_dump($_POST);
+                exit();
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //New User 
+                var_dump($_POST);
+                exit();
             } else if ($actyp == 2) {
-                //User Roles
-                //var_dump($_POST);
+                //User and Roles
+                var_dump($_POST);
+                exit();
+                header("content-type:application/json");
+                //categoryCombo
+                $inptUserID = cleanInputData($_POST['userID']);
+                $prsnLocID = cleanInputData($_POST['prsnLocID']);
+                $userAccntName = cleanInputData($_POST['userAccntName']);
+                $vldtyStrtDte = cleanInputData($_POST['vldtyStrtDte']);
+                $vldtyEndDte = cleanInputData($_POST['vldtyEndDte']);
+
+                if ($vldtyStrtDte != "") {
+                    $vldtyStrtDte = cnvrtDMYTmToYMDTm($vldtyStrtDte);
+                }
+                if ($vldtyEndDte != "") {
+                    $vldtyEndDte = cnvrtDMYTmToYMDTm($vldtyEndDte);
+                }
+                $oldUserID = getGnrlRecID2("sec.sec_users", "user_name", "user_id", $userAccntName);
+                $ownrID = getPersonID($prsnLocID);
+                $cstmrID = -1;
+                if ($userAccntName != "" && $prsnLocID != "" && ($oldUserID <= 0 || $oldUserID == $inptUserID)) {
+                    if ($inptUserID <= 0) {
+                        $pwd = getRandomPswd();
+                        createUser($userAccntName, $ownrID, $vldtyStrtDte, $vldtyEndDte, $pwd, $cstmrID);
+                    } else {
+                        updateUser($inptUserID, $userAccntName, $ownrID, $vldtyStrtDte, $vldtyEndDte, $cstmrID);
+                    }
+                    exit();
+                } else {
+                    exit();
+                }
+
                 header("content-type:application/json");
                 $rowsToUpdte = json_decode($_POST['rows'], true);
                 if (is_multi($rowsToUpdte) === FALSE) {
@@ -136,53 +170,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     'errors' => ''
                 ));
             } else if ($actyp == 3) {
-                //Articles
-                //var_dump($_POST);
-                header("content-type:application/json");
-                //categoryCombo
-                $inptUserID = cleanInputData($_POST['userID']);
-                $prsnLocID = cleanInputData($_POST['prsnLocID']);
-                $userAccntName = cleanInputData($_POST['userAccntName']);
-                $vldtyStrtDte = cleanInputData($_POST['vldtyStrtDte']);
-                $vldtyEndDte = cleanInputData($_POST['vldtyEndDte']);
-
-                if ($vldtyStrtDte != "") {
-                    $vldtyStrtDte = cnvrtDMYTmToYMDTm($vldtyStrtDte);
-                }
-                if ($vldtyEndDte != "") {
-                    $vldtyEndDte = cnvrtDMYTmToYMDTm($vldtyEndDte);
-                }
-                $oldUserID = getGnrlRecID2("sec.sec_users", "user_name", "user_id", $userAccntName);
-                $ownrID = getPersonID($prsnLocID);
-                $cstmrID = -1;
-                //var_dump($vldtyEndDte."<br/>");
-                //var_dump($vldtyStrtDte);
-                //exit();
-                if ($userAccntName != "" && $prsnLocID != "" && ($oldUserID <= 0 || $oldUserID == $inptUserID)) {
-                    if ($inptUserID <= 0) {
-                        $pwd = getRandomPswd();
-                        createUser($userAccntName, $ownrID, $vldtyStrtDte, $vldtyEndDte, $pwd, $cstmrID);
-                    } else {
-                        updateUser($inptUserID, $userAccntName, $ownrID, $vldtyStrtDte, $vldtyEndDte, $cstmrID);
-                    }
-                    echo json_encode(array(
-                        'success' => true,
-                        'message' => 'Saved Successfully',
-                        'data' => array('src' => 'User Successfully Saved!'),
-                        'total' => '1',
-                        'errors' => ''
-                    ));
-                    exit();
-                } else {
-                    echo json_encode(array(
-                        'success' => false,
-                        'message' => 'Save Failed!',
-                        'data' => array('src' => 'Failed to Save User!'),
-                        'total' => '1',
-                        'errors' => '1'
-                    ));
-                    exit();
-                }
+                //Update User Selected Roles in Session
             } else if ($actyp == 4) {
                 //Lock/Unlock User
                 $inptUsrID = cleanInputData($_POST['pKeyID']);
@@ -203,6 +191,30 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 } else {
                     echo chngUsrSuspensionStatus($inptUsrID, "FALSE");
                 }
+            } else if ($actyp == 6) {
+                //All Roles
+                var_dump($_POST);
+                exit();
+            } else if ($actyp == 7) {
+                //All Role Priviledges
+                var_dump($_POST);
+                exit();
+            } else if ($actyp == 8) {
+                //Add Extra Info Labels
+                var_dump($_POST);
+                exit();
+            } else if ($actyp == 9) {
+                //Enable/Disable Extra Info Labels
+                var_dump($_POST);
+                exit();
+            } else if ($actyp == 10) {
+                //Insert/Update Security Policies
+                var_dump($_POST);
+                exit();
+            } else if ($actyp == 11) {
+                //Insert/Update Server Settings
+                var_dump($_POST);
+                exit();
             }
         } else {
             $cntent .= "
@@ -326,18 +338,13 @@ function getUsrIDHvThsRoleID($user_ID, $role_ID) {
 function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy) {
     $wherecls = "";
     $strSql = "";
-    $ordrBy="";
-    if($sortBy == "Role Name")
-    {
-      $ordrBy="ORDER BY b.role_name";  
-    }
-    else if($sortBy == "Start Date")
-    {
-      $ordrBy="ORDER BY a.valid_start_date,a.role_id";  
-    }
-    else
-    {
-      $ordrBy="ORDER BY a.valid_end_date,a.role_id";  
+    $ordrBy = "";
+    if ($sortBy == "Role Name") {
+        $ordrBy = "ORDER BY b.role_name";
+    } else if ($sortBy == "Start Date") {
+        $ordrBy = "ORDER BY a.valid_start_date,a.role_id";
+    } else {
+        $ordrBy = "ORDER BY a.valid_end_date,a.role_id";
     }
     if ($searchIn == "Role Name") {
         $wherecls = " and (b.role_name ilike '" .
@@ -353,7 +360,7 @@ function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sor
     a.dflt_row_id " .
             "FROM sec.sec_users_n_roles a, sec.sec_roles b "
             . "WHERE ((a.role_id = b.role_id) AND (a.user_id = " . $pkID .
-            ")$wherecls) ".$ordrBy." LIMIT " . $limit_size .
+            ")$wherecls) " . $ordrBy . " LIMIT " . $limit_size .
             " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     return $result;
@@ -652,6 +659,316 @@ function deleteUser($userID) {
         $dsply = "No Record Deleted!<br/>$lgnsCnt Login(s) exist!";
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
+}
+
+function get_Mdl_Roles($searchFor, $searchIn, $offset, $limit_size, $sortBy) {
+    $wherecls = "";
+    $ordrBy = "";
+    if ($sortBy == "Role Name") {
+        $ordrBy = "ORDER BY a.role_name";
+    } else if ($sortBy == "Start Date") {
+        $ordrBy = "ORDER BY a.valid_start_date,a.role_id";
+    } else {
+        $ordrBy = "ORDER BY a.valid_end_date,a.role_id";
+    }
+    if ($searchIn === "Role Name") {
+        $wherecls = "a.role_name ilike '" . loc_db_escape_string($searchFor) . "'";
+    } else {
+        $wherecls = "a.role_name ilike '" . loc_db_escape_string($searchFor) . "'";
+    }
+
+    $sqlStr = "SELECT a.role_id mt, a.role_name,  
+to_char(to_timestamp(a.valid_start_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') start_date
+, to_char(to_timestamp(a.valid_end_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') end_date,
+a.can_mini_admins_assign 
+FROM sec.sec_roles a  " .
+            "WHERE ($wherecls) $ordrBy LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_Mdl_RolesTtl($searchFor, $searchIn) {
+    $wherecls = "";
+    if ($searchIn === "Role Name") {
+        $wherecls = "a.role_name ilike '" . loc_db_escape_string($searchFor) . "'";
+    } else {
+        $wherecls = "a.role_name ilike '" . loc_db_escape_string($searchFor) . "'";
+    }
+    $sqlStr = "SELECT count(1) 
+FROM sec.sec_roles a " .
+            "WHERE ($wherecls)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_Role_Prvldgs($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy) {
+    $ordrBy = "";
+    if ($sortBy == "Role Name") {
+        $ordrBy = "ORDER BY a.role_name";
+    } else if ($sortBy == "Start Date") {
+        $ordrBy = "ORDER BY a.valid_start_date,a.role_id";
+    } else {
+        $ordrBy = "ORDER BY a.valid_end_date,a.role_id";
+    }
+    $wherecls = "(b.prvldg_name ilike '" . loc_db_escape_string($searchFor) . "' or c.module_name ilike '" . loc_db_escape_string($searchFor) . "') and ";
+    $sqlStr = "SELECT a.dflt_row_id mt, b.prvldg_id mt, b.prvldg_name priviledge_name, c.module_name source_module, 
+      to_char(to_timestamp(a.valid_start_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') start_date
+, to_char(to_timestamp(a.valid_end_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') end_date
+, c.module_id mt, a.role_id mt  " .
+            "FROM sec.sec_roles_n_prvldgs a, sec.sec_prvldgs b, sec.sec_modules c WHERE " .
+            "($wherecls(a.prvldg_id = b.prvldg_id) AND (b.module_id = c.module_id) AND (a.role_id = " . $pkID . ")) "
+            . $ordrBy . " LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_Role_PrvldgsTtl($searchFor, $searchIn, $pkID) {
+    $wherecls = "(b.prvldg_name ilike '" . loc_db_escape_string($searchFor) . "' or c.module_name ilike '" . loc_db_escape_string($searchFor) . "') and ";
+    $sqlStr = "SELECT count(1)  " .
+            "FROM sec.sec_roles_n_prvldgs a, sec.sec_prvldgs b, sec.sec_modules c WHERE " .
+            "($wherecls(a.prvldg_id = b.prvldg_id) AND (b.module_id = c.module_id) AND (a.role_id = " . $pkID . "))";
+
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_AllMdls($searchFor, $searchIn, $offset, $limit_size, $sortBy) {
+    $wherecls = "a.module_name ilike '" . loc_db_escape_string($searchFor) . "' or b.prvldg_name ilike '" . loc_db_escape_string($searchFor) . "'";
+    $ordrBy = "";
+    if ($sortBy == "Module Name") {
+        $ordrBy = "ORDER BY a.module_name";
+    } else {
+        $ordrBy = "ORDER BY a.module_id";
+    }
+    $sqlStr = "SELECT distinct a.module_id mt, a.module_name, a.module_desc description, 
+        to_char(to_timestamp(a.date_added,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') date_added
+, a.audit_trail_tbl_name audit_trail_table
+FROM sec.sec_modules a LEFT OUTER JOIN sec.sec_prvldgs b 
+ON a.module_id = b.module_id
+ WHERE (($wherecls)) $ordrBy LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_AllMdlsTtl($searchFor, $searchIn) {
+    $wherecls = "a.module_name ilike '" . loc_db_escape_string($searchFor) . "' or b.prvldg_name ilike '" . loc_db_escape_string($searchFor) . "'";
+
+    $sqlStr = "SELECT count(distinct a.module_id) 
+FROM sec.sec_modules a LEFT OUTER JOIN sec.sec_prvldgs b 
+ON a.module_id = b.module_id
+ WHERE (($wherecls))";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_AllMdls_Prvldgs($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy) {
+    $wherecls = "b.prvldg_name ilike '" . loc_db_escape_string($searchFor) . "' and ";
+    $ordrBy = "ORDER BY b.prvldg_name";
+    $sqlStr = "SELECT b.prvldg_name priviledge_name, b.prvldg_id mt, c.module_id mt
+        FROM sec.sec_prvldgs b, sec.sec_modules c 
+        WHERE ($wherecls(b.module_id = c.module_id) AND (c.module_id = " . $pkID . ")) $ordrBy LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_AllMdls_PrvldgsTtl($searchFor, $searchIn, $pkID) {
+    $wherecls = "b.prvldg_name ilike '" . loc_db_escape_string($searchFor) . "' and ";
+    $sqlStr = "SELECT count(1) 
+        FROM sec.sec_prvldgs b, sec.sec_modules c 
+        WHERE ($wherecls(b.module_id = c.module_id) AND (c.module_id = " . $pkID . "))";
+
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_AllSbgrps($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy) {
+    $wherecls = "(b.sub_group_name ilike '" . loc_db_escape_string($searchFor) .
+            "' or b.main_table_name ilike '" . loc_db_escape_string($searchFor) .
+            "' or b.row_pk_col_name ilike '" . loc_db_escape_string($searchFor) .
+            "') and ";
+    $ordrBy = "ORDER BY b.table_id";
+    $sqlStr = "SELECT b.sub_group_name, b.main_table_name , b.row_pk_col_name, 
+      to_char(to_timestamp(b.date_added,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') mt, 
+b.table_id mt, c.module_id mt FROM sec.sec_module_sub_groups b, sec.sec_modules c 
+WHERE ($wherecls(b.module_id = c.module_id) AND (c.module_id = " . $pkID . ")) $ordrBy LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_AllSbgrpsTtl($searchFor, $searchIn, $pkID) {
+    $wherecls = "(b.sub_group_name ilike '" . loc_db_escape_string($searchFor) .
+            "' or b.main_table_name ilike '" . loc_db_escape_string($searchFor) .
+            "' or b.row_pk_col_name ilike '" . loc_db_escape_string($searchFor) .
+            "') and ";
+
+    $sqlStr = "SELECT count(1) FROM sec.sec_module_sub_groups b, sec.sec_modules c 
+WHERE ($wherecls(b.module_id = c.module_id) AND (c.module_id = " . $pkID . "))";
+
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_AllSbgrpsLbls($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy) {
+    $wherecls = "(b.pssbl_value ilike '" . loc_db_escape_string($searchFor) .
+            "') and ";
+    $ordrBy = "ORDER BY b.pssbl_value";
+    $sqlStr = "SELECT b.pssbl_value possible_value, 
+        a.is_enabled, 
+        b.pssbl_value_id mt, c.value_list_id mt, a.comb_info_id mt 
+        FROM sec.sec_allwd_other_infos a, gst.gen_stp_lov_values b, gst.gen_stp_lov_names c 
+        WHERE ($wherecls(b.value_list_id = c.value_list_id) AND (b.pssbl_value_id = a.other_info_id) 
+        AND (a.table_id = " . $pkID . ")) $ordrBy LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_AllSbgrpsLblsTtl($searchFor, $searchIn, $pkID) {
+    $wherecls = "(b.pssbl_value ilike '" . loc_db_escape_string($searchFor) .
+            "') and ";
+    $sqlStr = "SELECT count(1) 
+        FROM sec.sec_allwd_other_infos a, gst.gen_stp_lov_values b, gst.gen_stp_lov_names c 
+        WHERE ($wherecls(b.value_list_id = c.value_list_id) AND (b.pssbl_value_id = a.other_info_id) 
+        AND (a.table_id = " . $pkID . "))";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_Plcy_Mdls($pkID) {
+    $sqlStr = "SELECT a.module_id mt, a.module_name, 
+        a.audit_trail_tbl_name audit_trail_table_name, 
+        CASE WHEN b.enable_tracking='t' THEN 'TRUE' ELSE 'FALSE' END \"enable_tracking?\", 
+        b.action_typs_to_track action_types_to_track, COALESCE(b.dflt_row_id,-1) mt
+        FROM sec.sec_modules a LEFT OUTER JOIN 
+        sec.sec_audit_trail_tbls_to_enbl b ON ((a.module_id = b.module_id) AND (b.policy_id = " .
+            $pkID . ")) ORDER BY a.module_name";
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_SecPlcysTblr($searchFor, $searchIn, $offset, $limit_size) {
+
+    $wherecls = "policy_name ilike '" .
+            loc_db_escape_string($searchFor) . "'";
+
+    $sqlStr = "SELECT policy_id mt, policy_name " .
+            "FROM sec.sec_security_policies " .
+            "WHERE ($wherecls) ORDER BY policy_name 
+ LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_SecPlcysTblrTtl($searchFor, $searchIn) {
+    $wherecls = "policy_name ilike '" .
+            loc_db_escape_string($searchFor) . "'";
+    $sqlStr = "SELECT count(1) " .
+            "FROM sec.sec_security_policies " .
+            "WHERE ($wherecls)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_SecPlcysDet($pkID) {
+    $sqlStr = "SELECT policy_id mt, policy_name, 
+        max_failed_lgn_attmpts max_failed_login_attempts, 
+        pswd_expiry_days password_expiry_days, " .
+            "auto_unlocking_time_mins \"auto_unlocking_time(mins)\", 
+        CASE WHEN pswd_require_caps='t' THEN 'TRUE' ELSE 'FALSE' END password_requires_caps, 
+        CASE WHEN pswd_require_small='t' THEN 'TRUE' ELSE 'FALSE' END password_requires_small_letters,
+        CASE WHEN pswd_require_dgt='t' THEN 'TRUE' ELSE 'FALSE' END password_requires_digits, 
+        CASE WHEN pswd_require_wild='t' THEN 'TRUE' ELSE 'FALSE' END password_requires_wild_characters, 
+        pswd_reqrmnt_combntns password_requirement_combinations, 
+        CASE WHEN is_default='t' THEN 'TRUE' ELSE 'FALSE' END \"is_default?\", 
+        old_pswd_cnt_to_disallow old_password_count_to_disallow, 
+        pswd_min_length password_minimum_length, 
+        pswd_max_length password_maximum_length, 
+        max_no_recs_to_dsply max_no_of_records_to_display, 
+        CASE WHEN allow_repeating_chars='t' THEN 'TRUE' ELSE 'FALSE' END allow_repeating_characters, 
+        CASE WHEN allow_usrname_in_pswds='t' THEN 'TRUE' ELSE 'FALSE' END allow_username_in_passwords, 
+        session_timeout \"session_timeout(Seconds)\"
+        FROM sec.sec_security_policies 
+        WHERE (policy_id = $pkID)";
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_SrvrStngsTblr($searchFor, $searchIn, $offset, $limit_size) {
+
+    $wherecls = "1=1";
+    if ($searchIn === "SMTP CLIENT") {
+        $wherecls = "smtp_client ilike '" .
+                loc_db_escape_string($searchFor) . "'";
+    } else if ($searchIn === "SENDER's USER NAME") {
+        $wherecls = "mail_user_name ilike '" .
+                loc_db_escape_string($searchFor) . "'";
+    }
+
+    $sqlStr = "SELECT server_id mt, smtp_client " .
+            "FROM sec.sec_email_servers " .
+            "WHERE ($wherecls) ORDER BY smtp_client 
+ LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_SrvrStngsTblrTtl($searchFor, $searchIn) {
+
+    $wherecls = "1=1";
+    if ($searchIn === "SMTP CLIENT") {
+        $wherecls = "smtp_client ilike '" .
+                loc_db_escape_string($searchFor) . "'";
+    } else if ($searchIn === "SENDER's USER NAME") {
+        $wherecls = "mail_user_name ilike '" .
+                loc_db_escape_string($searchFor) . "'";
+    }
+
+    $sqlStr = "SELECT count(1) " .
+            "FROM sec.sec_email_servers " .
+            "WHERE ($wherecls)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_SrvrStngsDet($pkID) {
+    $sqlStr = "SELECT server_id, smtp_client, mail_user_name, mail_password, smtp_port, 
+       CASE WHEN is_default='t' THEN 'Yes' ELSE 'No' END \"Is Default?\", 
+       actv_drctry_domain_name, ftp_server_url, ftp_user_name, 
+       ftp_user_pswd, ftp_port, ftp_app_sub_directory, 
+       CASE WHEN enforce_ftp='1' THEN 'Yes' ELSE 'No' END \"Enforce FTP?\",
+       pg_dump_dir, backup_dir, com_port, baud_rate, timeout, sms_param1, 
+       sms_param2, sms_param3, sms_param4, sms_param5, sms_param6, sms_param7, 
+       sms_param8, sms_param9, sms_param10, ftp_user_start_directory 
+       FROM sec.sec_email_servers 
+        WHERE (server_id = $pkID)";
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
 }
 ?>
                              

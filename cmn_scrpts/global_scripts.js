@@ -591,7 +591,6 @@ function enterKeyFuncArticles(e, actionText, slctr, linkArgs)
     }
 }
 
-
 function getOneArticleForm(elementID, modalBodyID, titleElementID, formElementID,
         formTitle, articleID, vtyp, pgNo)
 {
@@ -706,6 +705,33 @@ function saveOneArticleForm(elementID, pKeyID, personID, tableElementID)
                 "&divsGrpsPkeyID=" + pKeyID +
                 "&sbmtdPersonID=" + personID);
     });
+}
+
+function insertNewRowBe4(tableElmntID, position, inptHtml)
+{
+    var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
+    var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
+    $('#' + tableElmntID + ' > tbody > tr').eq(position).before(nwInptHtml);
+
+    $(function () {
+        $('.form_date_tme').datetimepicker({
+            format: "dd-M-yyyy hh:ii:ss",
+            language: 'en',
+            weekStart: 0,
+            todayBtn: true,
+            autoclose: true,
+            todayHighlight: true,
+            keyboardNavigation: true,
+            startView: 2,
+            minView: 0,
+            maxView: 4,
+            forceParse: true
+        });
+    });
+}
+
+function urldecode(str) {
+    return unescape(decodeURIComponent(str.replace(/\+/g, ' ')));
 }
 
 function logOutFunc()
@@ -911,7 +937,7 @@ function homePageLgn(dialogItself, callback)
         } else
         {
             isLgnSccfl = 0;
-            document.getElementById("msgArea").innerHTML = "<img style=\"width:145px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\">Loading...Please Wait...</span>";
+            document.getElementById("msgArea").innerHTML = "<img style=\"width:105px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><span style=\"color:blue;font-size:11px;text-align: center;margin-top:0px;\">Loading...Please Wait...</span>";
         }
     };
 
@@ -1016,6 +1042,26 @@ function myCountry() {
             {
                 return ipAddress[1];
             }
+        }
+    }
+}
+
+function checkAllBtns(elmntID) {
+    var form = document.getElementById(elmntID);
+
+    for (var i = 0; i < form.elements.length; i++) {
+        if (form.elements[i].type === 'checkbox') {
+            form.elements[i].checked = true;
+        }
+    }
+}
+
+function unCheckAllBtns(elmntID) {
+    var form = document.getElementById(elmntID);
+
+    for (var i = 0; i < form.elements.length; i++) {
+        if (form.elements[i].type === 'checkbox') {
+            form.elements[i].checked = false;
         }
     }
 }

@@ -3,9 +3,9 @@
 //session_start();
 $menuItems = array("Personal Profile", "Data Change Requests",
     "Grade Progression Requests", "Leave of Absence Requests",
-    "Data Administrator", "Manage My Institution", "Send Bulk Email/SMS");
+    "Data Administrator", "Manage My Institution", "Send Bulk Email/SMS", "Additional Data Setups");
 $menuImages = array("person.png", "edit32.png", "bb_flow.gif",
-    "change06.gif", "chng_prvdr.ico", "reassign_users.png", "Mail.png", "98.png");
+    "change06.gif", "chng_prvdr.ico", "reassign_users.png", "Mail.png", "settings.png");
 $vwtyp1 = 0;
 //echo $vwtyp1;
 $mdlNm = "Basic Person Data";
@@ -256,6 +256,8 @@ if ($lgn_num > 0 && $canview === true) {
                 continue;
             } else if ($i == 6 && test_prmssns($dfltPrvldgs[7], $mdlNm) == FALSE) {
                 continue;
+            } else if ($i == 7 && test_prmssns($dfltPrvldgs[17], $mdlNm) == FALSE) {
+                continue;
             }
             if ($grpcntr == 0) {
                 $cntent .= "<div class=\"row\">";
@@ -324,6 +326,13 @@ if ($lgn_num > 0 && $canview === true) {
 					</li>
                                        </ul>
                                      </div>" . "Send Bulk Messages";
+        } else if ($pgNo == 8) {
+            echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Additional Data Setup</span>
+					</li>
+                                       </ul>
+                                     </div>";
+            require 'addtnl_data_stps.php';
         } else {
             restricted();
         }

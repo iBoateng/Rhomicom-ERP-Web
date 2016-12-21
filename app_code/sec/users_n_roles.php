@@ -47,7 +47,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         if ($canAddUsers === true) {
                             ?> 
                             <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">                    
-                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneUserForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'newUserForm', 'Add New User', -1, 2, 1, '')">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneUserForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'newUserForm', 'Add New User', -1, 2, <?php echo $pgNo; ?>, '')">
                                     <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                     New User
                                 </button>
@@ -60,12 +60,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         ?>
                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allUsersSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncAllUsers(event, '', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0')">
+                                <input class="form-control" id="allUsersSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncAllUsers(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                 <input id="allUsersPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllUsers('clear', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0')">
+                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllUsers('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </label>
-                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllUsers('', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0')">
+                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllUsers('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-search"></span>
                                 </label> 
                             </div>
@@ -109,12 +109,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getAllUsers('previous', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0');" aria-label="Previous">
+                                        <a href="javascript:getAllUsers('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:getAllUsers('next', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0');" aria-label="Next">
+                                        <a href="javascript:getAllUsers('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -208,7 +208,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td><?php echo ($row[12] == '1' ? "YES" : "NO"); ?></td>
                                             <td><?php echo $row[11]; ?></td>
                                             <td>
-                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'newUserForm', 'View/Edit User', <?php echo $row[9]; ?>, 1, 1, '');" style="padding:2px !important;" style="padding:2px !important;">
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'newUserForm', 'View/Edit User', <?php echo $row[9]; ?>, 1, <?php echo $pgNo ?>, 'clear');" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
@@ -224,6 +224,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </form>
                 <?php
             } else if ($vwtyp == 1) {
+                $sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "Role Name";
+                if ($sortBy == "") {
+                    $sortBy = "Role Name";
+                }
                 $pkID = isset($_POST['sbmtdUserID']) ? $_POST['sbmtdUserID'] : -1;
                 $result = get_OneUser($pkID);
                 ?>
@@ -241,6 +245,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             if ($canEdtUsers === true) {
                                                 ?>
                                                 <input type="text" class="form-control" aria-label="..." id="usrPrflAccountName" value="<?php echo $row[0]; ?>">
+                                                <input type="hidden" class="form-control" aria-label="..." id="usrPrflAccountID" value="<?php echo $row[10]; ?>">
                                             <?php } else { ?>
                                                 <span><?php echo $row[0]; ?></span>
                                             <?php } ?>
@@ -353,7 +358,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             if ($canEdtUsers === true) {
                                                 ?>
-                                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
+                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
                                                     <input class="form-control" size="16" type="text" id="usrPrflVldtyStartDate" value="<?php echo $row[2]; ?>" readonly="">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -369,7 +374,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             if ($canEdtUsers === true) {
                                                 ?>
-                                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
+                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
                                                     <input class="form-control" size="16" type="text" id="usrPrflVldtyEndDate" value="<?php echo $row[3]; ?>" readonly="">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -402,16 +407,44 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="row">
                                 <?php
                                 if ($canEdtUsers === true) {
+                                    $nwRowHtml = urlencode("<tr id=\"usrPrflEdtRow__WWW123WWW\">"
+                                            . "<td>New</td>"
+                                            . "<td><div class=\"form-group form-group-sm col-md-12\">"
+                                            . "<div class=\"input-group\"  style=\"width:100%\">"
+                                            . "<input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"usrPrflEdtRow_WWW123WWW_RoleNm\" value=\"\">"
+                                            . "<input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"usrPrflEdtRow_WWW123WWW_RoleID\" value=\"-1\">"
+                                            . "<input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"usrPrflEdtRow_WWW123WWW_DfltRowID\" value=\"-1\">"
+                                            . "<label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'User Roles', '', '', '', 'radio', true, '', 'usrPrflEdtRow_WWW123WWW_RoleID', 'usrPrflEdtRow_WWW123WWW_RoleNm', 'clear', 1, '');\">"
+                                            . "<span class=\"glyphicon glyphicon-th-list\"></span>"
+                                            . "</label>"
+                                            . "</div>"
+                                            . "</div>"
+                                            . "</td>"
+                                            . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                                                <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
+                                                                    <input class=\"form-control\" size=\"16\" type=\"text\" id=\"usrPrflEdtRow_WWW123WWW_StrtDte\" value=\"\" readonly=\"\">
+                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
+                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
+                                                                </div>                                                                
+                                                            </div></td>"
+                                            . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                                                <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
+                                                                    <input class=\"form-control\" size=\"16\" type=\"text\" id=\"usrPrflEdtRow_WWW123WWW_EndDte\" value=\"\" readonly=\"\">
+                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
+                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
+                                                                </div>                                                                
+                                                            </div></td>"
+                                            . "</tr>");
                                     ?> 
                                     <div class="<?php echo $colClassType2; ?>" style="padding:0px 1px 0px 15px !important;">     
                                         <div class="col-md-6">
-                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneUserForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'userRolesForm', 'Add New User', -1, 2, 1, '')">
+                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('userRolesTable', 0, '<?php echo $nwRowHtml; ?>');">
                                                 <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 New Role
                                             </button>
                                         </div>
                                         <div class="col-md-6">
-                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneUserForm('myFormsModal', 'myFormsModalBody', 'myFormsModalTitle', 'userRolesForm', 'Add New User', -1, 2, 1, '')">
+                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveUserNRoleForm();">
                                                 <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 Save Roles
                                             </button>
@@ -457,7 +490,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="<?php echo $colClassType1; ?>">
                                     <div class="input-group">                        
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
@@ -509,7 +541,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             while ($row1 = loc_db_fetch_array($result1)) {
                                                 $cntr += 1;
                                                 ?>
-                                                <tr id="usrPrflEdtRow<?php echo $cntr; ?>">                                    
+                                                <tr id="usrPrflEdtRow_<?php echo $cntr; ?>">                                    
                                                     <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                     <td>
                                                         <?php if ($canEdtUsers === true) { ?>
@@ -517,6 +549,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <div class="input-group"  style="width:100%">
                                                                     <input type="text" class="form-control" aria-label="..." id="usrPrflEdtRow<?php echo $cntr; ?>_RoleNm" value="<?php echo $row1[0]; ?>">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="usrPrflEdtRow<?php echo $cntr; ?>_RoleID" value="<?php echo $row1[3]; ?>">
+                                                                    <input type="hidden" class="form-control" aria-label="..." id="usrPrflEdtRow<?php echo $cntr; ?>_DfltRowID" value="<?php echo $row1[4]; ?>">
                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'User Roles', '', '', '', 'radio', true, '<?php echo $row1[3]; ?>', 'usrPrflEdtRow<?php echo $cntr; ?>_RoleID', 'usrPrflEdtRow<?php echo $cntr; ?>_RoleNm', 'clear', 1, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                     </label>
@@ -529,7 +562,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td>
                                                         <?php if ($canEdtUsers === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
-                                                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
+                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
                                                                     <input class="form-control" size="16" type="text" id="usrPrflEdtRow<?php echo $cntr; ?>_StrtDte" value="<?php echo $row1[1]; ?>" readonly="">
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -539,11 +572,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <span><?php echo $row1[1]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
-                                                    
+
                                                     <td>
                                                         <?php if ($canEdtUsers === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
-                                                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
+                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
                                                                     <input class="form-control" size="16" type="text" id="usrPrflEdtRow<?php echo $cntr; ?>_EndDte" value="<?php echo $row1[2]; ?>" readonly="">
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -590,7 +623,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="form-group form-group-sm">
                             <label for="usrVldtyStartDate" class="control-label col-md-4">Start Date:</label>
                             <div class="col-md-8">
-                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
+                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
                                     <input class="form-control" size="16" type="text" id="usrVldtyStartDate" value="" readonly="">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -600,7 +633,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="form-group form-group-sm">
                             <label for="usrVldtyEndDate" class="control-label col-md-4">End Date:</label>
                             <div class="col-md-8">
-                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
+                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
                                     <input class="form-control" size="16" type="text" id="usrVldtyEndDate" value="" readonly="">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -667,6 +700,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 echo "Edit User Form";
             } else if ($vwtyp == 4) {
                 /* User Profile */
+                $sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "Role Name";
+                $lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 1000;
                 echo "<div>
 				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
 					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
@@ -687,6 +722,75 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 ?>
                 <div class="container-fluid">
                     <form id='usrPrflForm' action='' method='post' accept-charset='UTF-8'>
+                        <div class="row" style="margin-bottom:10px;">
+                            <div class="col-lg-5" style="padding:0px 15px 0px 15px !important;">
+                                <div class="input-group">
+                                    <input class="form-control" id="usrPrflSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncUsrPrfl(event, '', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
+                                    <input id="usrPrflPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getUsrPrfl('clear', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </label>
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getUsrPrfl('', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </label> 
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                    <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>                                        
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="usrPrflDsplySze" style="min-width:65px !important;">                            
+                                        <?php
+                                        $valslctdArry = array("", "", "", "", "", "", "", "");
+                                        $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                        for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                            if ($lmtSze == $dsplySzeArry[$y]) {
+                                                $valslctdArry[$y] = "selected";
+                                            } else {
+                                                $valslctdArry[$y] = "";
+                                            }
+                                            ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="input-group">                        
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="usrPrflSortBy">
+                                        <?php
+                                        $valslctdArry = array("", "", "");
+                                        $srchInsArrys = array("Role Name", "Start Date", "End Date");
+                                        for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                            if ($sortBy == $srchInsArrys[$z]) {
+                                                $valslctdArry[$z] = "selected";
+                                            }
+                                            ?>
+                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                        <?php } ?>
+                                    </select> 
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" style="margin: 0px !important;">
+                                        <li>
+                                            <a href="javascript:getUsrPrfl('previous', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:getUsrPrfl('next', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
                         <div class="row" style="margin-bottom:10px;">
                             <?php
                             while ($row = loc_db_fetch_array($result)) {
@@ -772,93 +876,35 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         ?>
                         <div class="row">
                             <fieldset class=""><legend class="basic_person_lg">Assigned User Roles</legend>
-                                <div class="row">                                    
-                                    <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 15px !important;">                    
+                                <div class="row">
+                                    <div class="col-lg-5" style="padding:0px 0px 0px 1px !important;">                    
                                         <div class="form-group form-group-sm">
-                                            <label for="crntOrgName" class="control-label col-md-4">Organisation:</label>
-                                            <div  class="col-md-8">
-                                                <span><?php echo $orgName; ?></span>
-                                                <!--<div class="input-group">
+                                            <label for="crntOrgName" class="control-label col-md-3">Current Organisation:</label>
+                                            <div  class="col-md-9">
+                                                <!--<span><?php echo $orgName; ?></span>-->
+                                                <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="crntOrgName" value="<?php echo $orgName; ?>">
                                                     <input type="hidden" id="crntOrgID" value="<?php echo $orgID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Organisations', '', '', '', 'radio', true, '<?php echo $orgID; ?>', 'crntOrgID', 'crntOrgName', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
-                                                </div>-->
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
-                                        <div class="input-group">
-                                            <input class="form-control" id="usrPrflSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncUsrPrfl(event, '', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
-                                            <input id="usrPrflPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getUsrPrfl('clear', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
-                                                <span class="glyphicon glyphicon-remove"></span>
-                                            </label>
-                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getUsrPrfl('', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
-                                                <span class="glyphicon glyphicon-search"></span>
-                                            </label> 
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-1">
-                                        <div class="input-group">
-                                            <select data-placeholder="Select..." class="form-control chosen-select" id="usrPrflDsplySze" style="min-width:65px !important;">                            
-                                                <?php
-                                                $valslctdArry = array("", "", "", "", "", "", "", "");
-                                                $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
-                                                for ($y = 0; $y < count($dsplySzeArry); $y++) {
-                                                    if ($lmtSze == $dsplySzeArry[$y]) {
-                                                        $valslctdArry[$y] = "selected";
-                                                    } else {
-                                                        $valslctdArry[$y] = "";
-                                                    }
-                                                    ?>
-                                                    <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
-                                                    <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="<?php echo $colClassType1; ?>">
-                                        <div class="input-group">                        
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
-                                            <select data-placeholder="Select..." class="form-control chosen-select" id="usrPrflSortBy">
-                                                <?php
-                                                $valslctdArry = array("", "", "");
-                                                $srchInsArrys = array("Role Name", "Start Date", "End Date");
-                                                for ($z = 0; $z < count($srchInsArrys); $z++) {
-                                                    if ($sortBy == $srchInsArrys[$z]) {
-                                                        $valslctdArry[$z] = "selected";
-                                                    }
-                                                    ?>
-                                                    <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
-                                                <?php } ?>
-                                            </select> 
-                                        </div>
-                                    </div>
-                                    <div class="<?php echo $colClassType1; ?>">
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination" style="margin: 0px !important;">
-                                                <li>
-                                                    <a href="javascript:getUsrPrfl('previous', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');" aria-label="Previous">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:getUsrPrfl('next', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');" aria-label="Next">
-                                                        <span aria-hidden="true">&raquo;</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </nav>
-                                    </div>
+                                    <div class="col-lg-2"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="checkAllBtns('usrPrflForm');">Check All</button></div>
+                                    <div class="col-lg-2"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="unCheckAllBtns('usrPrflForm');">UnCheck All</button></div>
+                                    <div class="col-lg-3"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE</button></div>
+
+                                    <!--<div class="col-lg-3">&nbsp;</div>
+                                    <div class="col-lg-4"></div>-->
                                 </div>
                                 <div class="row"> 
                                     <div  class="col-md-12">
                                         <table class="table table-striped table-bordered table-responsive" id="usrPrflTable" cellspacing="0" width="100%" style="width:100%;">
                                             <thead>
                                                 <tr>
+                                                    <th>...</th>
                                                     <th>No.</th>
                                                     <th>Role Name</th>
                                                     <th>Start Date</th>
@@ -868,10 +914,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <tbody>
                                                 <?php
                                                 $cntr = 0;
+                                                $slctd = ";" . $_SESSION['ROLE_SET_IDS'] . ";";
                                                 while ($row1 = loc_db_fetch_array($result1)) {
                                                     $cntr += 1;
+                                                    $chckd = "";
+                                                    if ($slctd !== ";;" && strpos($slctd, ";" . $row[3] . ";") === false) {
+                                                        $chckd = "";
+                                                    } else if ($slctd !== ";;") {
+                                                        $chckd = "checked=\"checked\"";
+                                                    }
                                                     ?>
-                                                    <tr id="allUsersRow<?php echo $cntr; ?>">                                    
+                                                    <tr id="usrPrflRow<?php echo $cntr; ?>"> 
+                                                        <td><input type="checkbox" name="usrPrflChkbx<?php echo $cntr; ?>" value="<?php echo $row[3] . ";" . $row[1]; ?>" <?php echo $chckd ?>></td>
                                                         <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                         <?php if ($canEdtUsers === true) { ?>
                                                         <?php } ?>

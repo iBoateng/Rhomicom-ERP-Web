@@ -1,39 +1,46 @@
 <?php
-//session_start();
 $menuItems = array("Personal Records", "Bills/Payments", "Events & Attendance",
     "Elections Centre", "e-Library & e-Learning", "Accounting",
     "Sales & Inventory", "Hospitality Management", "Visits & Appointments",
     "Performance Management", "Projects Management", "Clinic & Hospital",
-    "Banking & Micro-finance"/*, "Summary Dashboard", "System Administration", "Organisation Setup",
-    "Value Lists Setup", "Workflow Administration", "Articles & Content Management", "Reports / Processes"*/);
+    "Banking & Micro-finance", "Summary Dashboard");
 $menuImages = array("person.png", "invcBill.png", "calendar2.png",
     "election.png", "addresses_wbg_64x64.png", "GL-256.png",
     "Inventory.png", "rent1.png", "Calander.png",
     "education.png", "engineer.png", "medical.png",
-    "bank_256.png", "dashboard220.png", "ma-logo.png", "Home.png",
-    "viewIcon.png", "bb_flow.gif",
-    "Notebook.png", "settings.png");
+    "bank_256.png", "dashboard220.png");
 $menuLinks = array("grp=8&typ=1", "grp=40&typ=5", "grp=40&typ=5",
     "grp=40&typ=5", "grp=40&typ=5", "grp=40&typ=5",
     "grp=40&typ=5", "grp=40&typ=5", "grp=40&typ=5",
     "grp=40&typ=5", "grp=40&typ=5", "grp=40&typ=5",
-    "grp=17&typ=1", "grp=40&typ=5", "grp=3&typ=1", "grp=40&typ=5",
-    "grp=40&typ=5", "grp=40&typ=5", "grp=40&typ=3&vtyp=1",
-    "grp=40&typ=5");
+    "grp=17&typ=1", "grp=40&typ=5");
 $mdlNms = array("Basic Person Data", "Basic Person Data", "Basic Person Data",
     "Basic Person Data", "Basic Person Data", "Basic Person Data",
     "Basic Person Data", "Basic Person Data", "Basic Person Data",
     "Basic Person Data", "Basic Person Data", "Basic Person Data",
-    "Basic Person Data", "Basic Person Data", "System Administration", "Basic Person Data",
-    "Basic Person Data", "Basic Person Data", "Basic Person Data",
-    "Basic Person Data");
+    "Basic Person Data", "Basic Person Data");
 
 $dfltPrvldgs = array(
     "View Person", "View Person", "View Person",
     "View Person", "View Person", "View Person",
     "View Person", "View Person", "View Person",
     "View Person", "View Person", "View Person",
-    "View Person", "View Person", "View System Administration",
+    "View Person", "View Person");
+
+
+$menuItemsAdmn = array("System Administration", "Organisation Setup",
+    "Value Lists Setup", "Workflow Administration", "Articles & Content Management", "Reports / Processes");
+$menuImagesAdmn = array("ma-logo.png", "Home.png",
+    "viewIcon.png", "bb_flow.gif",
+    "Notebook.png", "settings.png");
+$menuLinksAdmn = array("grp=3&typ=1", "grp=40&typ=5",
+    "grp=40&typ=5", "grp=40&typ=5", "grp=40&typ=3&vtyp=1",
+    "grp=40&typ=5");
+$mdlNmsAdmn = array("System Administration", "Basic Person Data",
+    "Basic Person Data", "Basic Person Data", "Basic Person Data",
+    "Basic Person Data");
+
+$dfltPrvldgsAdmn = array("View System Administration",
     "View Person", "View Person", "View Person", "View Person",
     "View Person");
 
@@ -63,21 +70,13 @@ if ($lgn_num > 0 && $canview === true) {
         if ($grpcntr == 0) {
             $cntent .= "<div class=\"row\">";
         }
-        if ($i == 18) {
-            $cntent .= "<div class=\"col-md-3 colmd3special2\">
-        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allarticles', '$menuLinks[$i]]');\">
-            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
-            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
-        </button>
-    </div>";
-        } else {
-            $cntent .= "<div class=\"col-md-3 colmd3special2\">
+
+        $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', '$menuLinks[$i]]');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
     </div>";
-        }
         $appCntr += 1;
         if ($grpcntr == 3 || $i == count($menuItems) - 1) {
             $cntent .= "</div>";
@@ -87,6 +86,42 @@ if ($lgn_num > 0 && $canview === true) {
         }
     }
     echo "</div>" . $cntent;
+    $canview = test_prmssns($dfltPrvldgsAdmn[0], $mdlNmsAdmn[0]);
+
+    $grpcntrAdmn = 0;
+    $appCntrAdmn = 0;
+    $cntentAdmn = "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 14px; padding:5px 10px 5px 10px;border:1px solid #ccc;margin-top:10px;\">";
+    for ($i = 0; $i < count($menuItemsAdmn); $i++) {
+        if (test_prmssns($dfltPrvldgsAdmn[$i], $mdlNmsAdmn[$i]) == FALSE) {
+            continue;
+        }
+        if ($grpcntrAdmn == 0) {
+            $cntentAdmn .= "<div class=\"row\">";
+        }
+        if ($i == 4) {
+            $cntentAdmn .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allarticles', '$menuLinksAdmn[$i]]');\">
+            <img src=\"cmn_images/$menuImagesAdmn[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItemsAdmn[$i]) . "</span>
+        </button>
+    </div>";
+        } else {
+            $cntentAdmn .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', '$menuLinksAdmn[$i]]');\">
+            <img src=\"cmn_images/$menuImagesAdmn[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItemsAdmn[$i]) . "</span>
+        </button>
+    </div>";
+        }
+        $appCntrAdmn += 1;
+        if ($grpcntrAdmn == 3 || $i == count($menuItemsAdmn) - 1) {
+            $cntentAdmn .= "</div>";
+            $grpcntrAdmn = 0;
+        } else {
+            $grpcntrAdmn = $grpcntrAdmn + 1;
+        }
+    }
+    echo "</div>" . $cntentAdmn;
     ?>
     <script type="text/javascript">
         $(document).ready(function () {
