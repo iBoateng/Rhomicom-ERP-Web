@@ -10,20 +10,20 @@ $menuImages = array("person.png", "invcBill.png", "calendar2.png",
     "education.png", "engineer.png", "medical.png",
     "bank_256.png", "dashboard220.png");
 $menuLinks = array("grp=8&typ=1", "grp=7&typ=1", "grp=16&typ=1",
-    "grp=19&typ=10", "grp=19&typ=12", "grp=40&typ=5",
-    "grp=40&typ=5", "grp=40&typ=5", "grp=40&typ=5",
+    "grp=19&typ=10", "grp=19&typ=12", "grp=6&typ=1",
+    "grp=12&typ=1", "grp=18&typ=1", "grp=40&typ=5",
     "grp=40&typ=5", "grp=40&typ=5", "grp=40&typ=5",
     "grp=17&typ=1", "grp=40&typ=5");
 $mdlNms = array("Basic Person Data", "Internal Payments", "Events And Attendance",
-    "e-Voting", "e-Learning", "Basic Person Data",
-    "Basic Person Data", "Basic Person Data", "Basic Person Data",
+    "e-Voting", "e-Learning", "Accounting",
+    "Stores And Inventory Manager", "Hospitality Management", "Basic Person Data",
     "Basic Person Data", "Basic Person Data", "Basic Person Data",
     "Basic Person Data", "Basic Person Data");
 
 $dfltPrvldgs = array(
     "View Person", "View Internal Payments", "View Events And Attendance",
-    "View e-Voting", "View e-Learning", "View Person",
-    "View Person", "View Person", "View Person",
+    "View e-Voting", "View e-Learning", "View Accounting",
+    "View Inventory Manager", "View Hospitality Manager", "View Person",
     "View Person", "View Person", "View Person",
     "View Person", "View Person");
 

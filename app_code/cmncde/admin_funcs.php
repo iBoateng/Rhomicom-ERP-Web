@@ -1254,32 +1254,50 @@ function loadMdlsNthrRolesNLovs() {
 }
 
 function loadInvMdl() {
-    //For Hospital Mgr
-    $DefaultPrvldgs = array("View Sales/Item Issues", "View Purchasing", "View Item/Services List",
-        /* 3 */ "View Categories", "View Stores", "View Receipts & Receipt Returns",
-        /* 6 */ "View Item/Service Definition Templates", "View Customers & Suppliers", "View Tax Codes",
-        /* 9 */ "View Default Accounts", "View GL Interface Table", "View Item Balances",
-        /* 12 */ "Add Sales/Item Issues", "Add Purchasing", "Add Item/Services List",
-        /* 15 */ "Add Categories", "Add Stores", "Add Receipts & Receipt Returns",
-        /* 18 */ "Add Item/Service Definition Templates", "Add Customers & Suppliers", "Add Tax Codes",
-        /* 21 */ "Add Default Accounts", "Add GL Interface Table", "Add Item Balances",
-        /* 24 */ "Edit Sales/Item Issues", "Edit Purchasing", "Edit Item/Services List",
-        /* 27 */ "Edit Categories", "Edit Stores", "Edit Receipts & Receipt Returns",
-        /* 30 */ "Edit Item/Service Definition Templates", "Edit Customers & Suppliers", "Edit Tax Codes",
-        /* 33 */ "Edit Default Accounts", "Edit GL Interface Table", "Edit Item Balances",
-        /* 36 */ "Delete Sales/Item Issues", "Delete Purchasing", "Delete Item/Services List",
-        /* 39 */ "Delete Categories", "Delete Stores", "Delete Receipts & Receipt Returns",
-        /* 42 */ "Delete Item/Service Definition Templates", "Delete Customers & Suppliers", "Delete Tax Codes",
-        /* 45 */ "Delete Default Accounts", "Delete GL Interface Table", "Delete Item Balances",
-        /* 48 */ "View Record History", "View SQL");
+    $DefaultPrvldgs = array("View Inventory Manager",
+    /* 1 */ "View Item List", "View Product Categories", "View Stores/Warehouses"
+    /* 4 */, "View Receipts", "View Receipt Returns", "View Item Type Templates",
+    /* 7 */ "View Item Balances",
+    /* 8 */ "Add Items", "Update Items",
+    /* 10 */ "Add Item Stores", "Update Item Stores", "Delete Item Stores",
+    /* 13 */ "Add Product Category", "Update Product Category",
+    /* 15 */ "Add Stores", "Update Stores",
+    /* 17 */ "Add Store Users", "Update Store Users", "Delete Store Users",
+    /* 20 */ "Add Store Shelves", "Delete Store Shelves",
+    /* 22 */ "Add Receipt", "Delete Receipt",
+    /* 24 */ "Add Receipt Return", "Delete Receipt Return",
+    /* 26 */ "Add Item Template", "Update Item Template",
+    /* 28 */ "Add Template Stores", "Update Template Stores",
+    /* 30 */ "View GL Interface",
+    /* 31 */ "View SQL", "View Record History", "Send To GL Interface Table",
+    /* 34 */ "View Purchases", "View Sales/Item Issues", "View Sales Returns",
+    /* 37 */ "View Payments Received",
+    /* 38 */ "View Purchase Requisitions", "Add Purchase Requisitions", "Edit Purchase Requisitions", "Delete Purchase Requisitions",
+    /* 42 */ "View Purchase Orders", "Add Purchase Orders", "Edit Purchase Orders", "Delete Purchase Orders",
+    /* 46 */ "View Pro-Forma Invoices", "Add Pro-Forma Invoices", "Edit Pro-Forma Invoices", "Delete Pro-Forma Invoices",
+    /* 50 */ "View Sales Orders", "Add Sales Orders", "Edit Sales Orders", "Delete Sales Orders",
+    /* 54 */ "View Sales Invoices", "Add Sales Invoices", "Edit Sales Invoices", "Delete Sales Invoices",
+    /* 58 */ "View Internal Item Requests", "Add Internal Item Requests", "Edit Internal Item Requests", "Delete Internal Item Requests",
+    /* 62 */ "View Item Issues-Unbilled", "Add Item Issues-Unbilled", "Edit Item Issues-Unbilled", "Delete Item Issues-Unbilled",
+    /* 66 */ "View Sales Returns", "Add Sales Return", "Edit Sales Return", "Delete Sales Return",
+    /* 70 */ "Send GL Interface Records to GL", "Cancel Documents", "View only Self-Created Documents",
+    /* 73 */ "View UOM", "Add UOM", "Edit UOM", "Delete UOM", "Make Payments", "Delete Product Category",
+    /* 79 */ "View UOM Conversion", "Add UOM Conversion", "Edit UOM Conversion", "Delete UOM Conversion",
+    /* 83 */ "View Drug Interactions", "Add Drug Interactions", "Edit Drug Interactions", "Delete Drug Interactions",
+    /* 87 */ "Edit Receipt", "Edit Returns", "Edit Store Transfers", "Edit Adjustments",
+    /* 91 */ "Clear Stock Balance", "Do Quick Receipt",
+    /* 93 */ "View Item Production", "Add Item Production", "Edit Item Production", "Delete Item Production",
+    /* 97 */ "Setup Production Processes", "Apply Adhoc Discounts",
+    /* 99 */ "View Production Runs", "Add Production Runs", "Edit Production Runs", "Delete Production Runs",
+    /* 103 */ "Can Edit Unit Price");
 
     $subGrpNames = "";
     $mainTableNames = "";
     $keyColumnNames = "";
-    $myName = "Pharmacy/Stores";
-    $myDesc = "This module automates the management of the Pharmacy and Clinic stores!";
-    $audit_tbl_name = "accb.accb_audit_trail_tbl";
-    $smplRoleName = "Inventory Administrator";
+    $myName = "Stores And Inventory Manager";
+    $myDesc = "This module helps you to manage your organization's Inventory System!";
+    $audit_tbl_name = "inv.inv_audit_trail_tbl";
+    $smplRoleName = "Stores And Inventory Manager Administrator";
 
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
@@ -1503,17 +1521,44 @@ function loadSysAdminMdl() {
 
 function loadAccntngMdl() {
     //For Accounting
-    $DefaultPrvldgs = array("View Accounting/Finance", "View Chart of Accounts",
-        "View Account Transactions", "View Transactions Search", /* 4 */ "View/Generate Trial Balance",
-        "View/Generate Profit & Loss Statement", "View/Generate Balance Sheet", "View Budgets",
-        "View Transaction Templates", "View Record History", "View SQL", /* 11 */ "Add Chart of Accounts",
-        "Edit Chart of Accounts", "Delete Chart of Accounts", /* 14 */ "Add Batch for Transactions",
-        "Edit Batch for Transactions", "Void/Delete Batch for Transactions", /* 17 */ "Add Transactions Directly",
-        "Edit Transactions", "Delete Transactions", /* 20 */ "Add Transactions Using Template", "Post Transactions",
-        /* 22 */ "Add Budgets", "Edit Budgets", "Delete Budgets",
-        /* 25 */ "Add Transaction Templates", "Edit Transaction Templates",
-        "Delete Transaction Templates", "View Only Self-Created Transaction Batches",
-        "View Payables and Receivables", "View Accounting Periods", "View Financial Statements");
+    $DefaultPrvldgs = array("View Accounting","View Chart of Accounts", 
+    /*2*/"View Account Transactions", "View Transactions Search",
+    /*4*/"View/Generate Trial Balance", "View/Generate Profit & Loss Statement", 
+    /*6*/"View/Generate Balance Sheet","View Budgets",
+		/*8*/"View Transaction Templates", "View Record History", "View SQL",
+    /*11*/"Add Chart of Accounts", "Edit Chart of Accounts", "Delete Chart of Accounts",
+    /*14*/"Add Batch for Transactions","Edit Batch for Transactions","Void/Delete Batch for Transactions",
+    /*17*/"Add Transactions Directly", "Edit Transactions","Delete Transactions",
+    /*20*/"Add Transactions Using Template","Post Transactions",
+    /*22*/"Add Budgets","Edit Budgets","Delete Budgets",
+    /*25*/"Add Transaction Templates","Edit Transaction Templates","Delete Transaction Templates",
+    /*28*/"View Only Self-Created Transaction Batches",
+    /*29*/"View Financial Statements","View Accounting Periods","View Payables",
+    /*32*/"View Receivables","View Customers/Suppliers","View Tax Codes",
+    /*35*/"View Default Accounts","View Account Reconciliation",
+    /*37*/"Add Accounting Periods","Edit Accounting Periods", "Delete Accounting Periods",
+    /*40*/"View Fixed Assets","View Payments",
+    /*42*/"Add Payment Methods", "Edit Payment Methods","Delete Payment Methods",
+    /*45*/"Add Supplier Standard Payments", "Edit Supplier Standard Payments","Delete Supplier Standard Payments",
+    /*48*/"Add Supplier Advance Payments", "Edit Supplier Advance Payments","Delete Supplier Advance Payments", 
+    /*51*/"Setup Exchange Rates", "Setup Document Templates","Review/Approve Payables Documents","Review/Approve Receivables Documents",
+    /*55*/"Add Direct Refund from Supplier", "Edit Direct Refund from Supplier","Delete Direct Refund from Supplier",
+    /*58*/"Add Supplier Credit Memo (InDirect Refund)", "Edit Supplier Credit Memo (InDirect Refund)","Delete Supplier Credit Memo (InDirect Refund)",
+    /*61*/"Add Direct Topup for Supplier", "Edit Direct Topup for Supplier","Delete Direct Topup for Supplier",
+    /*64*/"Add Supplier Debit Memo (InDirect Topup)", "Edit Supplier Debit Memo (InDirect Topup)", "Delete Supplier Debit Memo (InDirect Topup)",
+    /*67*/"Cancel Payables Documents", "Cancel Receivables Documents",
+    /*69*/"Reject Payables Documents", "Reject Receivables Documents",
+    /*71*/"Pay Payables Documents", "Pay Receivables Documents",
+    /*73*/"Add Customer Standard Payments", "Edit Customer Standard Payments","Delete Customer Standard Payments",
+    /*76*/"Add Customer Advance Payments", "Edit Customer Advance Payments","Delete Customer Advance Payments", 
+    /*79*/"Add Direct Refund to Customer", "Edit Direct Refund to Customer","Delete Direct Refund to Customer",
+    /*82*/"Add Customer Credit Memo (InDirect Topup)", "Edit Customer Credit Memo (InDirect Topup)","Delete Customer Credit Memo (InDirect Topup)",
+    /*85*/"Add Direct Topup from Customer", "Edit Direct Topup from Customer","Delete Direct Topup from Customer",
+    /*88*/"Add Customer Debit Memo (InDirect Refund)", "Edit Customer Debit Memo (InDirect Refund)", "Delete Customer Debit Memo (InDirect Refund)",
+    /*91*/"Add Customers/Suppliers", "Edit Customers/Suppliers", "Delete Customers/Suppliers",
+    /*94*/"Add Fixed Assets","Edit Fixed Assets", "Delete Fixed Assets"
+                /*97*/,"View Petty Cash Vouchers", "View Petty Cash Payments","Add Petty Cash Payments","Edit Petty Cash Payments","Delete Petty Cash Payments"
+                /*102*/,"View Petty Cash Re-imbursements","Add Petty Cash Re-imbursements","Edit Petty Cash Re-imbursements","Delete Petty Cash Re-imbursements");
 
     $subGrpNames = array("Chart of Accounts"); //, "Accounting Transactions"
     $mainTableNames = array("accb.accb_chart_of_accnts"); //, "accb.accb_trnsctn_details"
@@ -1747,6 +1792,31 @@ function loadHospMdl() {
 }
 
 function loadHotlMdl() {
+    $DefaultPrvldgs = array( 
+        /*1*/ "View Hospitality Manager", "View Rooms Dashboard",
+        /*2*/ "View Reservations", "View Check Ins", "View Service Types", 
+        /*5*/ "View Restaurant","View Gym",
+        /*7*/ "Add Service Types","Edit Service Types","Delete Service Types",
+        /*10*/"Add Check Ins","Edit Check Ins","Delete Check Ins", 
+        /*13*/"Add Applications","Edit Applications","Delete Applications",
+        /*16*/"Add Gym Types","Edit Gym Types","Delete Gym Types",
+        /*19*/"Add Gym Registration","Edit Gym Registration","Delete Gym Registration",
+        /*22*/"View SQL","View Record History", 
+        /*24*/"Add Table Order","Edit Table Order","Delete Table Order", "Setup Tables",
+        /*28*/"View Complaints/Observations","Add Complaints/Observations","Edit Complaints/Observations","Delete Complaints/Observations",
+        /*32*/"View only Self-Created Sales","Cancel Documents","Take Payments","Apply Adhoc Discounts", "Apply Pre-defined Discounts", 
+        /*37*/"View Rental Item", "Can Edit Unit Price");
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+    $myName = "Hospitality Management";
+    $myDesc = "This module helps you to manage your organization's Hospitality Needs!";
+    $audit_tbl_name = "hotl.hotl_audit_trail_tbl";
+    $smplRoleName = "Hospitality Management Administrator";
+
+    checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
+
     
 }
 

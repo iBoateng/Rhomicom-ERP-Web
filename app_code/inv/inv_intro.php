@@ -1,29 +1,52 @@
 <?php
 
-$menuItems = array("Summary Dashboard", "Reservations / Check-Ins",
-                           "Facility Types", "Restaurant",
-                           "Gym / Pool/ Sports","Complaints / Issues", "General Rentals"
-    );
-$menuImages = array("dashboard220.png", "booking.png", "categories.png", "menu.ico",  "sports.png"
-    , "list.jpg", "rent1.png");
+$menuItems = array("Sales/Item Issues", "Purchases", "Item List", "Product Categories", "Stores/Warehouses"
+    , "Receipts", "Receipt Returns", "Item Type Templates", "Item Balances", "Unit of Measures", "Stock Transfers",
+    "Misc. Adjustments", "GL Interface Table", "Product Creation");
+$menuImages = array("sale.jpg", "purchases.jpg", "menu.ico", "categories.png", "WareHouseMgmtIcon.png"
+    , "receipt.jpg", "receipt_return.jpg", "item_template.jpg"
+    , "invoice.ico", "MeasurementUnitsDegrees.ico", "stock_trnsfr.png", "adjustments.png",
+    "GL-256.png", "menu.ico");
 
-$mdlNm = "Hospitality Management";
+$mdlNm = "Stores And Inventory Manager";
 $ModuleName = $mdlNm;
 
-$dfltPrvldgs = array( 
-        /*1*/ "View Hospitality Manager", "View Rooms Dashboard",
-        /*2*/ "View Reservations", "View Check Ins", "View Service Types", 
-        /*5*/ "View Restaurant","View Gym",
-        /*7*/ "Add Service Types","Edit Service Types","Delete Service Types",
-        /*10*/"Add Check Ins","Edit Check Ins","Delete Check Ins", 
-        /*13*/"Add Applications","Edit Applications","Delete Applications",
-        /*16*/"Add Gym Types","Edit Gym Types","Delete Gym Types",
-        /*19*/"Add Gym Registration","Edit Gym Registration","Delete Gym Registration",
-        /*22*/"View SQL","View Record History", 
-        /*24*/"Add Table Order","Edit Table Order","Delete Table Order", "Setup Tables",
-        /*28*/"View Complaints/Observations","Add Complaints/Observations","Edit Complaints/Observations","Delete Complaints/Observations",
-        /*32*/"View only Self-Created Sales","Cancel Documents","Take Payments","Apply Adhoc Discounts", "Apply Pre-defined Discounts", 
-        /*37*/"View Rental Item", "Can Edit Unit Price");
+$dfltPrvldgs = array("View Inventory Manager",
+    /* 1 */ "View Item List", "View Product Categories", "View Stores/Warehouses"
+    /* 4 */, "View Receipts", "View Receipt Returns", "View Item Type Templates",
+    /* 7 */ "View Item Balances",
+    /* 8 */ "Add Items", "Update Items",
+    /* 10 */ "Add Item Stores", "Update Item Stores", "Delete Item Stores",
+    /* 13 */ "Add Product Category", "Update Product Category",
+    /* 15 */ "Add Stores", "Update Stores",
+    /* 17 */ "Add Store Users", "Update Store Users", "Delete Store Users",
+    /* 20 */ "Add Store Shelves", "Delete Store Shelves",
+    /* 22 */ "Add Receipt", "Delete Receipt",
+    /* 24 */ "Add Receipt Return", "Delete Receipt Return",
+    /* 26 */ "Add Item Template", "Update Item Template",
+    /* 28 */ "Add Template Stores", "Update Template Stores",
+    /* 30 */ "View GL Interface",
+    /* 31 */ "View SQL", "View Record History", "Send To GL Interface Table",
+    /* 34 */ "View Purchases", "View Sales/Item Issues", "View Sales Returns",
+    /* 37 */ "View Payments Received",
+    /* 38 */ "View Purchase Requisitions", "Add Purchase Requisitions", "Edit Purchase Requisitions", "Delete Purchase Requisitions",
+    /* 42 */ "View Purchase Orders", "Add Purchase Orders", "Edit Purchase Orders", "Delete Purchase Orders",
+    /* 46 */ "View Pro-Forma Invoices", "Add Pro-Forma Invoices", "Edit Pro-Forma Invoices", "Delete Pro-Forma Invoices",
+    /* 50 */ "View Sales Orders", "Add Sales Orders", "Edit Sales Orders", "Delete Sales Orders",
+    /* 54 */ "View Sales Invoices", "Add Sales Invoices", "Edit Sales Invoices", "Delete Sales Invoices",
+    /* 58 */ "View Internal Item Requests", "Add Internal Item Requests", "Edit Internal Item Requests", "Delete Internal Item Requests",
+    /* 62 */ "View Item Issues-Unbilled", "Add Item Issues-Unbilled", "Edit Item Issues-Unbilled", "Delete Item Issues-Unbilled",
+    /* 66 */ "View Sales Returns", "Add Sales Return", "Edit Sales Return", "Delete Sales Return",
+    /* 70 */ "Send GL Interface Records to GL", "Cancel Documents", "View only Self-Created Documents",
+    /* 73 */ "View UOM", "Add UOM", "Edit UOM", "Delete UOM", "Make Payments", "Delete Product Category",
+    /* 79 */ "View UOM Conversion", "Add UOM Conversion", "Edit UOM Conversion", "Delete UOM Conversion",
+    /* 83 */ "View Drug Interactions", "Add Drug Interactions", "Edit Drug Interactions", "Delete Drug Interactions",
+    /* 87 */ "Edit Receipt", "Edit Returns", "Edit Store Transfers", "Edit Adjustments",
+    /* 91 */ "Clear Stock Balance", "Do Quick Receipt",
+    /* 93 */ "View Item Production", "Add Item Production", "Edit Item Production", "Delete Item Production",
+    /* 97 */ "Setup Production Processes", "Apply Adhoc Discounts",
+    /* 99 */ "View Production Runs", "Add Production Runs", "Edit Production Runs", "Delete Production Runs",
+    /* 103 */ "Can Edit Unit Price");
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
 $vwtyp = "0";
@@ -80,14 +103,14 @@ if ($lgn_num > 0 && $canview === true) {
     } else {
         $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
-						<span style=\"text-decoration:none;\">Hospitality Menu</span>
+						<span style=\"text-decoration:none;\">Sales/Inventory Menu</span>
 					</li>";
         if ($pgNo == 0) {
             $cntent .= " </ul></div>
                 <div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
                     <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
-                    font-weight:normal;\">This module helps you to manage your organization's Hospitality Needs! The module has the ff areas:</span>
+                    font-weight:normal;\">This module helps you to manage your organization's Inventory System! The module has the ff areas:</span>
                     </div>
         <p>";
             $grpcntr = 0;

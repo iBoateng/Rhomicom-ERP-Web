@@ -267,7 +267,7 @@ if ($group > 0 && $type > 0) {
     } else if ($group == 12) {
 //Inventory
         if ($type == 1) {
-            require 'app_code/inv/inv_mgr.php';
+            require 'app_code/inv/inv_intro.php';
         }
     } else if ($group == 14) {
 //var_dump($_POST);
