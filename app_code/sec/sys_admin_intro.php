@@ -18,7 +18,7 @@ $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 15 */ "Edit Server Settings", "Set manual password for users",
     /* 17 */ "Send System Generated Passwords to User Mails",
     /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
-    /* 22 */ "Add Articles", "Edit Articles", "Delete Articles");
+    /* 22 */ "Add Articles", "Edit Articles", "Delete Articles", "View Articles Admin");
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || ($pgNo == 9 && test_prmssns("View Self-Service", "Self Service"));
 $vwtyp = "0";
 $qstr = "";
@@ -413,7 +413,8 @@ function get_UsersTblr($searchFor, $searchIn, $offset, $limit_size) {
             . "a.user_id, b.local_id_no, (Select count(1) from sec.sec_users_n_roles z where a.user_id = z.user_id "
             . "and to_char(now(), 'YYYY-MM-DD HH24:MI:SS') between z.valid_start_date and z.valid_end_date) active_roles,"
             . "CASE WHEN age(now(), to_timestamp(last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS')) " .
-            ">= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days' THEN '1' ELSE '0' END is_pswd_exprd , a.modules_needed "
+            ">= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days' THEN '1' ELSE '0' END is_pswd_exprd , "
+            . "a.modules_needed, a.customer_id,  scm.get_cstmr_splr_name(a.customer_id) cstmr_nm  "
             . "FROM ((sec.sec_users a " .
             "LEFT OUTER JOIN prs.prsn_names_nos b ON (a.person_id = b.person_id)) LEFT OUTER JOIN " .
             "sec.sec_users_n_roles c ON a.user_id = c.user_id) LEFT OUTER JOIN sec.sec_roles d " .
@@ -475,7 +476,7 @@ function get_OneUser($pkeyID) {
             . "b.local_id_no, "
             . "(Select count(1) from sec.sec_users_n_roles z where a.user_id = z.user_id and to_char(now(), 'YYYY-MM-DD HH24:MI:SS') between z.valid_start_date and z.valid_end_date) active_roles,"
             . "CASE WHEN age(now(), to_timestamp(last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS')) >= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days' THEN '1' ELSE '0' END is_pswd_exprd , "
-            . "a.modules_needed "
+            . "a.modules_needed, a.customer_id,  scm.get_cstmr_splr_name(a.customer_id) cstmr_nm "
             . "FROM ((sec.sec_users a " .
             "LEFT OUTER JOIN prs.prsn_names_nos b ON (a.person_id = b.person_id)) LEFT OUTER JOIN " .
             "sec.sec_users_n_roles c ON a.user_id = c.user_id) LEFT OUTER JOIN sec.sec_roles d " .
@@ -522,8 +523,12 @@ function get_UserLgns($searchFor, $searchIn, $offset, $limit_size, $shw_faild, $
                 loc_db_escape_string($searchFor) . "')";
     }
 
-    $strSql = "SELECT b.user_name, a.login_time, a.logout_time, a.host_mach_details, " .
-            "CASE WHEN a.was_lgn_atmpt_succsful THEN '1' ELSE '0' END, a.user_id, a.login_number "
+    $strSql = "SELECT b.user_name, "
+            . "to_char(to_timestamp(a.login_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') login_time, "
+            . "CASE WHEN a.logout_time='' THEN a.logout_time ELSE to_char(to_timestamp(a.logout_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END logout_time, "
+            . "a.host_mach_details, " .
+            "CASE WHEN a.was_lgn_atmpt_succsful THEN 'YES' ELSE 'NO' END, "
+            . "a.user_id, a.login_number "
             . "FROM sec.sec_track_user_logins a " .
             " LEFT OUTER JOIN sec.sec_users b ON a.user_id = b.user_id " .
             "WHERE (1=1" . $wherecls . "" . $optional_str1 . "" . $optional_str2 .
@@ -969,6 +974,92 @@ function get_SrvrStngsDet($pkID) {
         WHERE (server_id = $pkID)";
     $result = executeSQLNoParams($sqlStr);
     return $result;
+}
+
+function get_MdlsAdtTrls($searchWord, $searchIn, $subcurIdx, $sublmtSze, $pkID) {
+    $numFrmat = "999999999999999999999999999999";
+    $whereClsFrmts = array("trim(to_char(a.login_number,'" . $numFrmat . "'))",
+        "b.user_name", "a.action_details", "a.action_type",
+        "to_char(to_timestamp(a.action_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS')", "c.host_mach_details");
+    $ordrByClsFrmts = array("a.login_number", "b.user_name", "a.action_details", "a.action_type", "a.action_time", "c.host_mach_details");
+    $sortOrder = array("DESC", "ASC", "ASC", "ASC", "ASC", "ASC");
+    $frmt_to_use = 0;
+    $optional_str = "";
+    if ($searchIn == "Login Number") {
+        $frmt_to_use = 0;
+    } else if ($searchIn == "User Name") {
+        $frmt_to_use = 1;
+    } else if ($searchIn == "Action Details") {
+        $frmt_to_use = 2;
+    } else if ($searchIn == "Action Type") {
+        $frmt_to_use = 3;
+    } else if ($searchIn == "Date/Time") {
+        $frmt_to_use = 4;
+    } else if ($searchIn == "Machine Used") {
+        $frmt_to_use = 5;
+    }
+
+    if ($searchWord == "") {
+        $optional_str = " OR (" . $ordrByClsFrmts[$frmt_to_use] . " IS NULL)";
+    }
+    $ModuleAdtTbl = getGnrlRecNm('sec.sec_modules', 'module_id', 'audit_trail_tbl_name', $pkID);
+    if ($ModuleAdtTbl == "") {
+        $sqlStr = "SELECT '1' FROM sec.sec_users where 1=2";
+    } else {
+        $sqlStr = "SELECT b.user_name, a.action_type, a.action_details, 
+      to_char(to_timestamp(a.action_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS')
+, c.host_mach_details, a.user_id mt, a.login_number FROM " . $ModuleAdtTbl . " a " .
+                "LEFT OUTER JOIN sec.sec_users b ON a.user_id = b.user_id " .
+                "LEFT OUTER JOIN sec.sec_track_user_logins c ON a.login_number = c.login_number " .
+                "WHERE ((" . $whereClsFrmts[$frmt_to_use] . " ilike '" . loc_db_escape_string($searchWord) .
+                "')" . $optional_str . ") ORDER BY " . $ordrByClsFrmts[$frmt_to_use] .
+                " " . $sortOrder[$frmt_to_use] . " LIMIT " . $sublmtSze . " OFFSET " . abs($subcurIdx * $sublmtSze);
+    }
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_MdlsAdtTrlsTtls($searchWord, $searchIn, $pkID) {
+    $numFrmat = "999999999999999999999999999999";
+    $whereClsFrmts = array("trim(to_char(a.login_number,'" . $numFrmat . "'))",
+        "b.user_name", "a.action_details", "a.action_type",
+        "to_char(to_timestamp(a.action_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS')", "c.host_mach_details");
+    $ordrByClsFrmts = array("a.login_number", "b.user_name", "a.action_details", "a.action_type", "a.action_time", "c.host_mach_details");
+
+    $frmt_to_use = 0;
+    $optional_str = "";
+    if ($searchIn == "Login Number") {
+        $frmt_to_use = 0;
+    } else if ($searchIn == "User Name") {
+        $frmt_to_use = 1;
+    } else if ($searchIn == "Action Details") {
+        $frmt_to_use = 2;
+    } else if ($searchIn == "Action Type") {
+        $frmt_to_use = 3;
+    } else if ($searchIn == "Date/Time") {
+        $frmt_to_use = 4;
+    } else if ($searchIn == "Machine Used") {
+        $frmt_to_use = 5;
+    }
+
+    if ($searchWord == "") {
+        $optional_str = " OR (" . $ordrByClsFrmts[$frmt_to_use] . " IS NULL)";
+    }
+    $ModuleAdtTbl = getGnrlRecNm('sec.sec_modules', 'module_id', 'audit_trail_tbl_name', $pkID);
+    if ($ModuleAdtTbl == "") {
+        $sqlStr = "SELECT '1' FROM sec.sec_users where 1=2";
+    } else {
+        $sqlStr = "SELECT count(1) FROM " . $ModuleAdtTbl . " a " .
+                "LEFT OUTER JOIN sec.sec_users b ON a.user_id = b.user_id " .
+                "LEFT OUTER JOIN sec.sec_track_user_logins c ON a.login_number = c.login_number " .
+                "WHERE ((" . $whereClsFrmts[$frmt_to_use] . " ilike '" . loc_db_escape_string($searchWord) .
+                "')" . $optional_str . ")";
+    }
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
 }
 ?>
                              

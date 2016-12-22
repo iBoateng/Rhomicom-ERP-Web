@@ -173,7 +173,6 @@ if ($gDcrpt != '') {
     $type = isset($formArray['typ']) ? $formArray['typ'] : 0;
     $qryStr = isset($formArray['q']) ? cleanInputData($formArray['q']) : '';
     $pgNo = isset($formArray['pg']) ? cleanInputData($formArray['pg']) : 0;
-    //echo $type . "/" . $group . "/" . $qryStr;
 } else {
     $group = isset($_POST['grp']) ? cleanInputData($_POST['grp']) : 0;
     $type = isset($_POST['typ']) ? cleanInputData($_POST['typ']) : 0;
@@ -183,7 +182,6 @@ if ($gDcrpt != '') {
         $qryStr = "changepassword";
     }
 }
-//echo $type . "/" . $group . "/" . $qryStr;
 if ($group > 0 && $type > 0) {
     if ($group == 1) {
         if ($type == 1) {
@@ -229,12 +227,12 @@ if ($group > 0 && $type > 0) {
     } else if ($group == 4) {
 //General Setup
         if ($type == 1) {
-            require 'app_code/gst/general_setup_intro.php';
+            require 'app_code/gst/gst_intro.php';
         }
     } else if ($group == 5) {
 //Organisation Setup
         if ($type == 1) {
-            require 'app_code/org/org_setup.php';
+            require 'app_code/org/org_intro.php';
         }
     } else if ($group == 6) {
 //Accounting
@@ -327,6 +325,8 @@ if ($group > 0 && $type > 0) {
             require 'app_code/evote/evote_intro.php';
         } else if ($type == 11) {
             require 'app_code/self/self_service_setups.php';
+        }else if ($type == 12) {
+            require 'app_code/self/elearn_intro.php';
         }
     } else if ($group == 20) {
 //Basic Person Data

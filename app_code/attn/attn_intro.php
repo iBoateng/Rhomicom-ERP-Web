@@ -8,7 +8,6 @@ $menuImages = array("calendar2.png", "Calander.png", "openfileicon.png", "chckls
 
 $mdlNm = "Events And Attendance";
 $ModuleName = $mdlNm;
-$pageHtmlID = "eventsPage";
 
 $dfltPrvldgs = array("View Events And Attendance",
     /* 1 */ "View Attendance Records", "View Time Tables", "View Events",
@@ -29,58 +28,58 @@ $actyp = "";
 $srchFor = "";
 $srchIn = "Name";
 $PKeyID = -1;
-if (isset($formArray)) {
-    if (count($formArray) > 0) {
-        $vwtyp = isset($formArray['vtyp']) ? cleanInputData($formArray['vtyp']) : "0";
-        $qstr = isset($formArray['q']) ? cleanInputData($formArray['q']) : '';
-    } else {
-        $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-    }
-} else {
-    $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-}
-
+$sortBy = "ID ASC";
 if (isset($_POST['PKeyID'])) {
     $PKeyID = cleanInputData($_POST['PKeyID']);
 }
-
 if (isset($_POST['searchfor'])) {
     $srchFor = cleanInputData($_POST['searchfor']);
 }
-
 if (isset($_POST['searchin'])) {
     $srchIn = cleanInputData($_POST['searchin']);
 }
-
 if (isset($_POST['q'])) {
     $qstr = cleanInputData($_POST['q']);
 }
-
 if (isset($_POST['vtyp'])) {
     $vwtyp = cleanInputData($_POST['vtyp']);
 }
 if (isset($_POST['actyp'])) {
     $actyp = cleanInputData($_POST['actyp']);
 }
+if (isset($_POST['sortBy'])) {
+    $sortBy = cleanInputData($_POST['sortBy']);
+}
 if (strpos($srchFor, "%") === FALSE) {
     $srchFor = " " . $srchFor . " ";
     $srchFor = str_replace(" ", "%", $srchFor);
 }
 
+$cntent = "<div>
+				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
+					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
+                                                <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
+						<span style=\"text-decoration:none;\">Home</span>
+                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>
+					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>";
+
 if ($lgn_num > 0 && $canview === true) {
     if ($pgNo == 0) {
-        $cntent = "<div id='rho_form' style=\"min-height:150px;width:90%;\">
-                <fieldset style=\"padding:5px 5px 5px 5px;margin:0px 0px 0px 0px !important;\">
-                    <div style=\"margin-bottom:2px;\">
-                    <!--<h2>Welcome to the Events/Attendance Records Manager Module</h2>-->
-                    </div>                    
-                    <div class='rho_form3' style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
-                    padding:5px 30px 5px 40px;\" class=\"rho-postcontent rho-postcontent-0 clearfix\">                    
-      <h3>FUNCTIONS UNDER THE EVENTS/ATTENDANCE RECORDS MANAGER</h3>
-      <div class='rho_form44' style=\"padding:5px 30px 5px 10px;margin-bottom:1px;\">
+
+        $cntent .= "
+					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
+						<span style=\"text-decoration:none;\">Events & Attendance Menu</span>
+					</li>
+                                       </ul>
+                                     </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
+                    padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
+      <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
                     font-weight:normal;\">Events assigned to you, Your Attendance History and CPD Points Earned as well as Exam Scores can be seen here. The module has the ff areas:</span>
-                    </div> 
+                    </div>
       <p>";
         $grpcntr = 0;
         for ($i = 0; $i < count($menuItems); $i++) {
@@ -101,97 +100,34 @@ if ($lgn_num > 0 && $canview === true) {
                 continue;
             }
             if ($grpcntr == 0) {
-                $cntent.= "<div style=\"float:none;\">"
-                        . "<ul class=\"no_bullet\" style=\"float:none;\">";
+                $cntent .= "<div class=\"row\">";
             }
 
-            $cntent.= "<li class=\"leaf\" style=\"margin:5px 2px 5px 2px;\">"
-                    . "<a href=\"javascript: showPageDetails('$pageHtmlID', $No);\" class=\"x-btn x-unselectable x-btn-default-large\" "
-                    . "style=\"padding:0px;height:90px;width:140px;margin:5px 2px 5px 2px;\" "
-                    . "hidefocus=\"on\" unselectable=\"on\" id=\"loadRolesButton\" tabindex=\"0\" componentid=\"loadRolesButton\">"
-                    . "<span id=\"loadRolesButton-btnWrap\" data-ref=\"btnWrap\" role=\"presentation\" unselectable=\"on\" "
-                    . " class=\"x-btn-wrap x-btn-wrap-default-large \"><span id=\"loadRolesButton-btnEl\" "
-                    . "data-ref=\"btnEl\" role=\"presentation\" unselectable=\"on\" style=\"\" "
-                    . "class=\"x-btn-button x-btn-button-default-large x-btn-text  x-btn-icon x-btn-icon-top x-btn-button-center \">"
-                    . "<span id=\"loadRolesButton-btnIconEl\" data-ref=\"btnIconEl\" role=\"presentation\" unselectable=\"on\" "
-                    . "class=\"x-btn-icon-el x-btn-icon-el-default-large iconButton \" "
-                    . "style=\"background-image:url(cmn_images/$menuImages[$i]);\">&nbsp;</span>"
-                    . "<span id=\"loadRolesButton-btnInnerEl\" style=\"white-space: normal;overflow:hidden;\" "
-                    . "data-ref=\"btnInnerEl\" unselectable=\"on\" class=\"x-btn-inner x-btn-inner-default-large\">"
-                    . strtoupper($menuItems[$i])
-                    . "</span></span></span></a>"
-                    . "</li>";
+            $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$No&vtyp=0');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
 
             if ($grpcntr == 3) {
-                $cntent.= "</ul>"
-                        . "</div>";
+                $cntent .= "</div>";
                 $grpcntr = 0;
             } else {
                 $grpcntr = $grpcntr + 1;
             }
         }
 
-        $cntent.= "
+        $cntent .= "
       </p>
-    </div>
-    </fieldset>
-        </div>";
+    </div>";
         echo $cntent;
     } else if ($pgNo == 1) {
-
         //Get My Events Attended
-        $prsnid = $_SESSION['PRSN_ID'];
-        if ($vwtyp == 0) {
-
-            $total = get_MyEvntsAttndTtl($srchFor, $srchIn, $prsnid);
-
-            $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-            $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-            $start = isset($_POST['start']) ? $_POST['start'] : 0;
-
-            if ($pageNo > ceil($total / $lmtSze)) {
-                $pageNo = 1;
-            }
-
-            $curIdx = $pageNo - 1;
-            $result = get_MyEvntsAttndTblr($srchFor, $srchIn, $curIdx, $lmtSze, $prsnid);
-            $myEvntsAttnds = array();
-            $cntr = 0;
-            while ($row = loc_db_fetch_array($result)) {
-                $chckd = ($cntr == 0) ? TRUE : FALSE;
-                $myEvntsAttnd = array(
-                    'checked' => var_export($chckd, TRUE),
-                    'AttnRecID' => $row[0],
-                    'AttnRqstID' => -1,
-                    'AttnRgstrID' => $row[1],
-                    'RegNameNum' => $row[2],
-                    'EventNameDesc' => $row[3],
-                    'EventStartDate' => $row[4],
-                    'EventEndDate' => $row[5],
-                    'TimeIn' => $row[9],
-                    'TimeOut' => $row[10],
-                    'IsPresent' => $row[11],
-                    'LnkdFirm' => $row[12],
-                    'InvoiceNumber' => $row[13],
-                    'InvcTtl' => $row[14],
-                    'OutstndngBalance' => $row[16],
-                    'CPDPoints' => $row[19],
-                    'Remarks' => $row[17],
-                    'WkfMsgID' => -1,
-                    'Status' => 'Completed Successfully',
-                    'Attachments' => '');
-                $myEvntsAttnds[] = $myEvntsAttnd;
-                $cntr++;
-            }
-
-            echo json_encode(array('success' => true,
-                'total' => $total,
-                'rows' => $myEvntsAttnds));
-        } else {
-            restricted();
-        }
+        require 'my_evnts_attn.php';
     } else if ($pgNo == 2) {
-        //require "prs_data_chng_rqst.php";
+        //Events Assigned;
+        require 'my_evnts_asgnd.php';
     } else {
         restricted();
     }

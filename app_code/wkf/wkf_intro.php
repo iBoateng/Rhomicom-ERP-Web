@@ -1,12 +1,10 @@
 <?php
 
-//var_dump($_POST);
 $menuItems = array("Workflow Apps", "Workflow Hierarchies", "Workflow Notifications");
 $menuImages = array("chcklst4.png", "bb_flow.gif", "openfileicon.png", "98.png");
 
 $mdlNm = "Workflow Manager";
 $ModuleName = $mdlNm;
-$pageHtmlID = "wkfAdminPage";
 
 $dfltPrvldgs = array("View Workflow Manager", "View Workflow Apps",
     /* 2 */ "View Workflow Hierarchies", "View Workflow Notifications",
@@ -14,55 +12,53 @@ $dfltPrvldgs = array("View Workflow Manager", "View Workflow Apps",
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
 
+$wkfAppID = -1;
+$wkfAppActionID = -1;
 $vwtyp = "0";
 $qstr = "";
 $dsply = "";
 $actyp = "";
 $srchFor = "";
 $srchIn = "Name";
-$wkfAppID = -1;
-$wkfAppActionID = -1;
-if (isset($formArray)) {
-    if (count($formArray) > 0) {
-        $vwtyp = isset($formArray['vtyp']) ? cleanInputData($formArray['vtyp']) : "0";
-        $qstr = isset($formArray['q']) ? cleanInputData($formArray['q']) : '';
-    } else {
-        $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-    }
-} else {
-    $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
+$PKeyID = -1;
+$sortBy = "ID ASC";
+if (isset($_POST['PKeyID'])) {
+    $PKeyID = cleanInputData($_POST['PKeyID']);
 }
-
-if (isset($_POST['appID'])) {
-    $wkfAppID = cleanInputData($_POST['appID']);
-}
-
-if (isset($_POST['appActionID'])) {
-    $wkfAppActionID = cleanInputData($_POST['appActionID']);
-}
-
 if (isset($_POST['searchfor'])) {
     $srchFor = cleanInputData($_POST['searchfor']);
 }
-
 if (isset($_POST['searchin'])) {
     $srchIn = cleanInputData($_POST['searchin']);
 }
-
 if (isset($_POST['q'])) {
     $qstr = cleanInputData($_POST['q']);
 }
-
 if (isset($_POST['vtyp'])) {
     $vwtyp = cleanInputData($_POST['vtyp']);
 }
 if (isset($_POST['actyp'])) {
     $actyp = cleanInputData($_POST['actyp']);
 }
+if (isset($_POST['sortBy'])) {
+    $sortBy = cleanInputData($_POST['sortBy']);
+}
 if (strpos($srchFor, "%") === FALSE) {
     $srchFor = " " . $srchFor . " ";
     $srchFor = str_replace(" ", "%", $srchFor);
 }
+
+
+$cntent = "<div>
+				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
+					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
+                                                <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
+						<span style=\"text-decoration:none;\">Home</span>
+                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>
+					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>";
 
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
@@ -381,31 +377,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else {
             if ($pgNo == 0) {
-                /*<div style=\"margin-bottom:10px;\">
-                    <h3>WORKFLOW MANAGER MODULE</h3>
-                        <span>&nbsp;&nbsp;&nbsp;This is where the workflow behind the application is configured. The module has the ff areas:
-                        </span>
-                    </div>
-                    <!--<div class='rho_form1' style=\"background-color:#e3e3e3;border: 1px solid #999;
-            padding:5px 30px 5px 10px;max-height:50px;\">
-                    <span style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
-                    font-weight:bold;\">WORKFLOW MANAGER MODULE</span>
-                    </div>-->  <legend>   WORKFLOW MANAGER MODULE                
-                    </legend>
-                 * background-color:#e3e3e3;border: 1px solid #999;            
-                    */
-                $cntent = "<div id='rho_form' style=\"min-height:150px;width:100%;\">                
-                    <fieldset style=\"padding:10px 20px 20px 20px;margin:0px 0px 0px 0px !important;\"> 
-                    <div class='rho_form3' style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
-                    padding:20px 30px 30px 20px;\"> 
-                    <h3>WELCOME TO THE WORKFLOW MANAGER</h3>
-                    <div class='rho_form44' style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
+
+                $cntent .= "
+					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
+						<span style=\"text-decoration:none;\">Workflow Manager Menu</span>
+					</li>
+                                       </ul>
+                                     </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
+                    padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
+      <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
                     font-weight:normal;\">This is where the workflow behind the application is configured. The module has the ff areas:</span>
-                    </div> 
+                    </div>
       <p>";
-//<a onclick=\"showPageDetails('$pageHtmlID', $No);\">$menuItems[$i]</a>
-                //style=\"background: url('cmn_images/start.png') no-repeat 3px 4px; background-size:20px 20px;\"
                 $grpcntr = 0;
                 for ($i = 0; $i < count($menuItems); $i++) {
                     $No = $i + 1;
@@ -417,199 +401,35 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         continue;
                     }
                     if ($grpcntr == 0) {
-                        $cntent.= "<div style=\"float:none;\">"
-                                . "<ul class=\"no_bullet\" style=\"float:none;\">";
+                        $cntent .= "<div class=\"row\">";
                     }
-                    //
-                    $cntent.= "<li class=\"leaf\" style=\"margin:5px 2px 5px 2px;\">"
-                            . "<a href=\"javascript: showPageDetails('$pageHtmlID', $No);\" class=\"x-btn x-unselectable x-btn-default-large\" "
-                            . "style=\"padding:0px;height:90px;width:130px;\" "
-                            . "hidefocus=\"on\" unselectable=\"on\" id=\"loadRolesButton\" tabindex=\"0\" componentid=\"loadRolesButton\">"
-                            . "<span id=\"loadRolesButton-btnWrap\" data-ref=\"btnWrap\" role=\"presentation\" unselectable=\"on\" "
-                            . " class=\"x-btn-wrap x-btn-wrap-default-large \"><span id=\"loadRolesButton-btnEl\" "
-                            . "data-ref=\"btnEl\" role=\"presentation\" unselectable=\"on\" style=\"\" "
-                            . "class=\"x-btn-button x-btn-button-default-large x-btn-text  x-btn-icon x-btn-icon-top x-btn-button-center \">"
-                            . "<span id=\"loadRolesButton-btnIconEl\" data-ref=\"btnIconEl\" role=\"presentation\" unselectable=\"on\" "
-                            . "class=\"x-btn-icon-el x-btn-icon-el-default-large iconButton \" "
-                            . "style=\"background-image:url(cmn_images/$menuImages[$i]);\">&nbsp;</span>"
-                            . "<span id=\"loadRolesButton-btnInnerEl\" style=\"white-space: normal;overflow:hidden;\" "
-                            . "data-ref=\"btnInnerEl\" unselectable=\"on\" class=\"x-btn-inner x-btn-inner-default-large\">"
-                            . strtoupper($menuItems[$i])
-                            . "</span></span></span></a>"
-                            . "</li>";
+
+                    $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$No&vtyp=0');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
 
                     if ($grpcntr == 3) {
-                        $cntent.= "</ul>"
-                                . "</div>";
+                        $cntent .= "</div>";
                         $grpcntr = 0;
                     } else {
                         $grpcntr = $grpcntr + 1;
                     }
                 }
 
-                $cntent.= "
+                $cntent .= "
       </p>
-    </div>
-    </fieldset>
-        </div>";
+    </div>";
                 echo $cntent;
-                echo "";
             } else if ($pgNo == 1) {
-                //require "wkf_apps.php";
-                if ($vwtyp == 0) {
-                    $total = get_WkfAppsTtl($srchFor, $srchIn);
-
-                    $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                    $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                    $start = isset($_POST['start']) ? $_POST['start'] : 0;
-                    if ($pageNo > ceil($total / $lmtSze)) {
-                        $pageNo = 1;
-                    }
-
-                    $curIdx = $pageNo - 1;
-                    $result = get_WkfAppsTblr($srchFor, $srchIn, $curIdx, $lmtSze);
-                    $wkfapps = array();
-                    $cntr = 0;
-                    while ($row = loc_db_fetch_array($result)) {
-                        $chckd = ($cntr == 0) ? TRUE : FALSE;
-                        $wkfapp = array(
-                            'checked' => var_export($chckd, TRUE),
-                            'AppID' => $row[0],
-                            'AppName' => $row[1],
-                            'SourceModule' => $row[2],
-                            'Description' => $row[3]);
-                        $wkfapps[] = $wkfapp;
-                        $cntr++;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfapps));
-                } else if ($vwtyp == 1) {
-                    $total = 500;
-
-                    $pkID = isset($_POST['appID']) ? $_POST['appID'] : -1;
-                    $result = get_WkfAppsActns($pkID);
-                    $wkfapps = array();
-                    while ($row = loc_db_fetch_array($result)) {
-                        //$chckd = FALSE;
-                        $wkfapp = array(
-                            'ActionID' => $row[0],
-                            'ActionName' => $row[1],
-                            'SQLAction' => $row[3],
-                            'Description' => $row[2],
-                            'ExecFileName' => $row[9],
-                            'WebURLParams' => $row[10],
-                            'WebDisplayType' => var_export(($row[11] == 'Dialog' ? TRUE : FALSE), TRUE),
-                            'AdminOnly' => var_export(($row[12] == 'YES' ? TRUE : FALSE), TRUE));
-                        $wkfapps[] = $wkfapp;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfapps));
-                } else if ($vwtyp == 2) {
-                    $total = 500;
-
-                    $pkID = isset($_POST['appID']) ? $_POST['appID'] : -1;
-                    $result = get_WkfAppsHrchies($pkID);
-                    $wkfapps = array();
-                    while ($row = loc_db_fetch_array($result)) {
-                        //$chckd = FALSE;
-                        $wkfapp = array(
-                            'AppHrchyID' => $row[0],
-                            'HrchyName' => $row[1],
-                            'HrchyType' => $row[2],
-                            'HrchyEnabled' => var_export(($row[3] == '1' ? TRUE : FALSE), TRUE),
-                            'LinkageEnabled' => var_export(($row[4] == '1' ? TRUE : FALSE), TRUE));
-                        $wkfapps[] = $wkfapp;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfapps));
-                }
+                require "wkf_apps.php";
             } else if ($pgNo == 2) {
-                //require "wkf_hrchy.php";
-                if ($vwtyp == 0) {
-                    $total = get_WkfHrchyTtl($srchFor, $srchIn);
-
-                    $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                    $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                    $start = isset($_POST['start']) ? $_POST['start'] : 0;
-                    if ($pageNo > ceil($total / $lmtSze)) {
-                        $pageNo = 1;
-                    }
-
-                    $curIdx = $pageNo - 1;
-                    $result = get_WkfHrchyTblr($srchFor, $srchIn, $curIdx, $lmtSze);
-                    $wkfhrchys = array();
-                    $cntr = 0;
-                    while ($row = loc_db_fetch_array($result)) {
-                        $chckd = ($cntr == 0) ? TRUE : FALSE;
-                        $wkfhrchy = array(
-                            'checked' => var_export($chckd, TRUE),
-                            'HrchyID' => $row[0],
-                            'HrchyName' => $row[1],
-                            'HrchyDesc' => $row[2],
-                            'HrchyType' => $row[3],
-                            'SQLStmnt' => $row[4],
-                            'IsEnabled' => var_export(($row[5] == '1' ? TRUE : FALSE), TRUE));
-                        $wkfhrchys[] = $wkfhrchy;
-                        $cntr++;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfhrchys));
-                } else if ($vwtyp == 1) {
-                    $total = 500;
-
-                    $pkID = isset($_POST['hrchyID']) ? $_POST['hrchyID'] : -1;
-                    $result = get_HrchyCntntMnl($pkID);
-                    $wkfapps = array();
-                    while ($row = loc_db_fetch_array($result)) {
-                        //$chckd = FALSE;
-                        $wkfapp = array(
-                            'MnlHrchyDetID' => $row[0],
-                            'PersonName' => $row[2],
-                            'PersonLocID' => $row[1],
-                            'HrchyLevel' => $row[3],
-                            'IsEnabled' => var_export(($row[4] == '1' ? TRUE : FALSE), TRUE));
-                        $wkfapps[] = $wkfapp;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfapps));
-                } else if ($vwtyp == 2) {
-                    $total = 500;
-
-                    $pkID = isset($_POST['hrchyID']) ? $_POST['hrchyID'] : -1;
-                    $result = get_HrchyCntntPos($pkID);
-                    $wkfapps = array();
-                    while ($row = loc_db_fetch_array($result)) {
-                        //$chckd = FALSE;
-                        $wkfapp = array(
-                            'PosHrchyDetID' => $row[0],
-                            'PositionName' => $row[2],
-                            'PositionID' => $row[1],
-                            'HrchyLevel' => $row[3],
-                            'IsEnabled' => var_export(($row[4] == '1' ? TRUE : FALSE), TRUE));
-                        $wkfapps[] = $wkfapp;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfapps));
-                }
+                require "wkf_hrchy.php";
             } else if ($pgNo == 3) {
-                //require "wkf_msgs.php";
+                require "wkf_msgs.php";
             } else {
-                /* else if ($pgNo == 4) {
-                  echo "<p style=\"font-size:12px;\">calling functions for checking and creating requirements</p>";
-                  loadWkfRqrmnts();
-                  } */
                 restricted();
             }
         }
@@ -732,7 +552,7 @@ function updateWkfAppHrchy($apphrchyID, $appID, $hrchyID, $isEnbld) {
 
 function deleteWkfAppHrchy($apphrchyID) {
     $insSQL = "DELETE FROM wkf.wkf_apps_n_hrchies WHERE app_hrchy_id = " . $apphrchyID;
-    $affctd1 +=execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL);
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 App Hierarchy(ies)!";
@@ -782,11 +602,11 @@ function deleteWkfHrchy($hrchyID) {
     $affctd3 = 0;
 
     $insSQL = "DELETE FROM wkf.wkf_pstn_hierarchy_details WHERE hierarchy_id = " . $hrchyID;
-    $affctd1 +=execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL);
     $insSQL = "DELETE FROM wkf.wkf_manl_hierarchy_details WHERE hierarchy_id = " . $hrchyID;
-    $affctd2 +=execUpdtInsSQL($insSQL);
+    $affctd2 += execUpdtInsSQL($insSQL);
     $insSQL = "DELETE FROM wkf.wkf_hierarchy_hdr WHERE hierarchy_id = " . $hrchyID;
-    $affctd3 +=execUpdtInsSQL($insSQL);
+    $affctd3 += execUpdtInsSQL($insSQL);
     if ($affctd3 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 Position Hierarchies Deleted!";
@@ -826,7 +646,7 @@ function updateWkfMnlHrchy($hrchyDetID, $prsnID, $hrchyLvl, $isEnbld) {
 
 function deleteWkfMnlHrchy($hrchyDetID) {
     $insSQL = "DELETE FROM wkf.wkf_manl_hierarchy_details WHERE mnl_hrchy_det_id = " . $hrchyDetID;
-    $affctd1 +=execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL);
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 Manual Hierarchy(ies)!";
@@ -864,7 +684,7 @@ function updateWkfPosHrchy($hrchyDetID, $postnID, $hrchyLvl, $isEnbld) {
 
 function deleteWkfPosHrchy($hrchyDetID) {
     $insSQL = "DELETE FROM wkf.wkf_pstn_hierarchy_details WHERE hierarchy_det_id = " . $hrchyDetID;
-    $affctd1 +=execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL);
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 Position Hierarchy(ies)!";

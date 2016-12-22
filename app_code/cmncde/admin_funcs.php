@@ -1,4 +1,5 @@
 <?php
+
 $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 2 */ "View Roles & their Priviledges", "View Registered Modules & their Priviledges",
     /* 4 */ "View Security Policies", "View Server Settings", "View User Logins",
@@ -7,8 +8,8 @@ $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 12 */ "Add New Security Policies", "Edit Security Policies", "Add New Server Settings",
     /* 15 */ "Edit Server Settings", "Set manual password for users",
     /* 17 */ "Send System Generated Passwords to User Mails",
-    /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels",
-    "Delete Extra Info Labels");
+    /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
+    /* 22 */ "Add Articles", "Edit Articles", "Delete Articles", "View Articles Admin");
 
 $sysLovs = array("Benefits Types", "Relationship Types"
     , "Person Types-Further Details", "Countries", "Currencies", "Organisation Types"
@@ -80,7 +81,7 @@ $sysLovsDynQrys = array("", ""
     "select distinct trim(to_char(div_id,'999999999999999999999999999999')) a, div_code_name b, '' c, org_id d from org.org_divs_groups order by 2",
     "select distinct trim(to_char(job_id,'999999999999999999999999999999')) a, job_code_name b, '' c, org_id d from org.org_jobs order by 2",
     "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts order by accnt_num",
-    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, (CASE WHEN prnt_accnt_id>0 THEN accnt_num || '.' || accnt_name || ' ('|| accb.get_accnt_num(prnt_accnt_id)||'.'||accb.get_accnt_name(prnt_accnt_id)|| ')' WHEN control_account_id>0 THEN accnt_num || '.' || accnt_name || ' ('|| accb.get_accnt_num(control_account_id)||'.'||accb.get_accnt_name(control_account_id)|| ')' ELSE accnt_num || '.' || accnt_name END) b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (is_prnt_accnt = '0' and is_enabled = '1' and is_net_income = '0' and has_sub_ledgers = '0') order by accnt_num",  
+    "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, (CASE WHEN prnt_accnt_id>0 THEN accnt_num || '.' || accnt_name || ' ('|| accb.get_accnt_num(prnt_accnt_id)||'.'||accb.get_accnt_name(prnt_accnt_id)|| ')' WHEN control_account_id>0 THEN accnt_num || '.' || accnt_name || ' ('|| accb.get_accnt_num(control_account_id)||'.'||accb.get_accnt_name(control_account_id)|| ')' ELSE accnt_num || '.' || accnt_name END) b, '' c, org_id d, accnt_num e from accb.accb_chart_of_accnts where (is_prnt_accnt = '0' and is_enabled = '1' and is_net_income = '0' and has_sub_ledgers = '0') order by accnt_num",
     "select distinct trim(to_char(accnt_id,'999999999999999999999999999999')) a, accnt_num || '.' || accnt_name b, '' c, org_id d, accnt_type e, accnt_num f from accb.accb_chart_of_accnts where (is_prnt_accnt = '1') order by accnt_num",
     "select distinct trim(to_char(user_id,'999999999999999999999999999999')) a, user_name b, '' c FROM sec.sec_users WHERE (now() between to_timestamp(valid_start_date,'YYYY-MM-DD HH24:MI:SS') AND " +
     "to_timestamp(valid_end_date,'YYYY-MM-DD HH24:MI:SS')) order by 1", "", "", "", "",
@@ -1181,7 +1182,7 @@ function checkNAssignReqrmnts($ModuleName
     }
 
     if ($ModuleName != "System Administration") {
-        echo "<p style=\"font-size:12px;\">$msg Completed Module load for <b>$ModuleName!</b></p>";
+        echo "<p style=\"font-size:12px;\">$msg Completed Module load for <b>$ModuleName ($SampleRole)!</b></p>";
     }
 }
 
@@ -1486,7 +1487,7 @@ function loadSysAdminMdl() {
         /* 15 */ "Edit Server Settings", "Set manual password for users",
         /* 17 */ "Send System Generated Passwords to User Mails",
         /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
-        /* 22 */ "Add Articles", "Edit Articles", "Delete Articles");
+        /* 22 */ "Add Articles", "Edit Articles", "Delete Articles", "View Articles Admin");
 
     $subGrpNames = ""; //, "Accounting Transactions"
     $mainTableNames = ""; //, "accb.accb_trnsctn_details"
@@ -1703,6 +1704,26 @@ function loadEvoteMdl() {
         . "from self.self_question_possible_answers where is_enabled='1' order by psbl_ansr_order_no");
 
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
+}
+
+function loadELearnMdl() {
+    $DefaultPrvldgs = array("View e-Learning",
+        /* 1 */ "View All Exams/Tests", "View Questions Bank", "View Person Sets",
+        /* 4 */ "View Record History", "View SQL",
+        /* 6 */ "Add Exams/Tests", "Edit Exams/Tests", "Delete Exams/Tests",
+        /* 9 */ "Add Questions Bank", "Edit Questions Bank", "Delete Questions Bank");
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+
+    $myName = "e-Learning";
+    $myDesc = "This is where Examinations/Tests in the Institution are Conducted and Managed!";
+    $audit_tbl_name = "self.self_prsn_audit_trail_tbl";
+
+    $smplRoleName = "e-Learning Administrator";
+
+    checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
 
 function loadHospMdl() {

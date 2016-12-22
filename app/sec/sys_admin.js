@@ -175,6 +175,35 @@ function prepareSysAdmin(lnkArgs, htBody, targ, rspns)
                         });
             });
         }
+         else if (lnkArgs.indexOf("&pg=7&vtyp=0") !== -1)
+        {
+            var table1 = $('#trckUsrLgnsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#trckUsrLgnsTable').wrap('<div class="dataTables_scroll"/>');
+            $('#trckUsrLgnsForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+        } else if (lnkArgs.indexOf("&pg=8&vtyp=0") !== -1)
+        {
+            var table1 = $('#adtTrailsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#adtTrailsTable').wrap('<div class="dataTables_scroll"/>');
+            $('#adtTrailsForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+        }
         htBody.removeClass("mdlloading");
     });
 }
@@ -1052,4 +1081,68 @@ function saveSrvrStngForm()
     });
     lnkArgs = lnkArgs + "&slctdApiVals=" + slctdApiVals.slice(0, -1);
     doAjax(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody');
+}
+
+function getTrckUsrLgns(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#trckUsrLgnsSrchFor").val() === 'undefined' ? '%' : $("#trckUsrLgnsSrchFor").val();
+    var srchIn = typeof $("#trckUsrLgnsSrchIn").val() === 'undefined' ? 'Both' : $("#trckUsrLgnsSrchIn").val();
+    var pageNo = typeof $("#trckUsrLgnsPageNo").val() === 'undefined' ? 1 : $("#trckUsrLgnsPageNo").val();
+    var limitSze = typeof $("#trckUsrLgnsDsplySze").val() === 'undefined' ? 10 : $("#trckUsrLgnsDsplySze").val();
+    var sortBy = typeof $("#trckUsrLgnsSortBy").val() === 'undefined' ? '' : $("#trckUsrLgnsSortBy").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncTrckUsrLgns(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getTrckUsrLgns(actionText, slctr, linkArgs);
+    }
+}
+
+
+function getAdtTrails(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#adtTrailsSrchFor").val() === 'undefined' ? '%' : $("#adtTrailsSrchFor").val();
+    var srchIn = typeof $("#adtTrailsSrchFor").val() === 'undefined' ? 'Both' : $("#adtTrailsSrchFor").val();
+    var pageNo = typeof $("#adtTrailsPageNo").val() === 'undefined' ? 1 : $("#adtTrailsPageNo").val();
+    var limitSze = typeof $("#adtTrailsDsplySze").val() === 'undefined' ? 10 : $("#adtTrailsDsplySze").val();
+    var sortBy = typeof $("#adtTrailsSortBy").val() === 'undefined' ? '' : $("#adtTrailsSortBy").val();
+    var sbmtdMdlID = typeof $("#allMdlsToSlct").val() === 'undefined' ? -1 : $("#allMdlsToSlct").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy + "&sbmtdMdlID=" + sbmtdMdlID;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncAdtTrails(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAdtTrails(actionText, slctr, linkArgs);
+    }
 }

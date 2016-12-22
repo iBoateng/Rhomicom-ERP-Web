@@ -5,7 +5,6 @@ $menuImages = array("election.png", "world_48.png", "chcklst4.png", "person.png"
 
 $mdlNm = "e-Voting";
 $ModuleName = $mdlNm;
-$pageHtmlID = "eVotingPage";
 
 $dfltPrvldgs = array("View e-Voting",
     /* 1 */ "View All Surveys/Elections", "View Questions Bank", "View Person Sets",
@@ -22,46 +21,43 @@ $actyp = "";
 $srchFor = "";
 $srchIn = "Name";
 $PKeyID = -1;
-$prsnid = $_SESSION['PRSN_ID'];
-$usrID = $_SESSION['USRID'];
-$orgID = $_SESSION['ORG_ID'];
-if (isset($formArray)) {
-    if (count($formArray) > 0) {
-        $vwtyp = isset($formArray['vtyp']) ? cleanInputData($formArray['vtyp']) : "0";
-        $qstr = isset($formArray['q']) ? cleanInputData($formArray['q']) : '';
-    } else {
-        $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-    }
-} else {
-    $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-}
-
+$sortBy = "ID ASC";
 if (isset($_POST['PKeyID'])) {
     $PKeyID = cleanInputData($_POST['PKeyID']);
 }
-
 if (isset($_POST['searchfor'])) {
     $srchFor = cleanInputData($_POST['searchfor']);
 }
-
 if (isset($_POST['searchin'])) {
     $srchIn = cleanInputData($_POST['searchin']);
 }
-
 if (isset($_POST['q'])) {
     $qstr = cleanInputData($_POST['q']);
 }
-
 if (isset($_POST['vtyp'])) {
     $vwtyp = cleanInputData($_POST['vtyp']);
 }
 if (isset($_POST['actyp'])) {
     $actyp = cleanInputData($_POST['actyp']);
 }
+if (isset($_POST['sortBy'])) {
+    $sortBy = cleanInputData($_POST['sortBy']);
+}
 if (strpos($srchFor, "%") === FALSE) {
     $srchFor = " " . $srchFor . " ";
     $srchFor = str_replace(" ", "%", $srchFor);
 }
+
+$cntent = "<div>
+				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
+					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
+                                                <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
+						<span style=\"text-decoration:none;\">Home</span>
+                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>
+					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>";
 
 if ($lgn_num > 0 && $canview === true) {
     if ($qstr == "DELETE") {
@@ -139,7 +135,7 @@ if ($lgn_num > 0 && $canview === true) {
             for ($i = 0; $i < count($arry1); $i++) {
                 $inPrsnID = getPersonID($arry1[$i]);
                 if (doesPrsStHvPrs($inptPrsnSetHdrID, $inPrsnID) == false) {
-                    $affctd+=createPersonSetDet($inptPrsnSetHdrID, $inPrsnID);
+                    $affctd += createPersonSetDet($inptPrsnSetHdrID, $inPrsnID);
                 }
                 $cntr++;
             }
@@ -375,15 +371,17 @@ if ($lgn_num > 0 && $canview === true) {
             }
         }
     } else if ($pgNo == 0) {
-        $cntent = "<div id='rho_form' style=\"min-height:150px;width:100%;\">
-                <fieldset style=\"padding:2px 2px 2px 2px;margin:0px 0px 0px 0px !important;\">
-                    <div class='rho_form3' style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
-                    padding:2px 30px 5px 20px;\" class=\"rho-postcontent rho-postcontent-0 clearfix\">        
-                    <h3>WELCOME TO THE E-VOTING CENTRE</h3>
-                    <div class='rho_form44' style=\"padding:5px 30px 5px 10px;margin-bottom:1px;\">
+        $cntent .= "
+					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
+						<span style=\"text-decoration:none;\">e-Voting Menu</span>
+					</li>
+                                       </ul>
+                                     </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
+                    padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
+      <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
                     font-weight:normal;\">This is where Elections/Polls/Surveys in the Institution are Conducted and Managed. The module has the ff areas:</span>
-                    </div> 
+                    </div>
       <p>";
         $grpcntr = 0;
         for ($i = 0; $i < count($menuItems); $i++) {
@@ -398,41 +396,27 @@ if ($lgn_num > 0 && $canview === true) {
                 continue;
             }
             if ($grpcntr == 0) {
-                $cntent.= "<div style=\"float:none;\">"
-                        . "<ul class=\"no_bullet\" style=\"float:none;\">";
+                $cntent .= "<div class=\"row\">";
             }
 
-            $cntent .= "<li class=\"leaf\" style=\"margin:2px 2px 2px 2px;\">"
-                    . "<a href=\"javascript: showPageDetails('$pageHtmlID', $No);\" class=\"x-btn x-unselectable x-btn-default-large\" "
-                    . "style=\"padding:0px;height:90px;width:140px;\" "
-                    . "hidefocus=\"on\" unselectable=\"on\" id=\"loadRolesButton\" tabindex=\"0\" componentid=\"loadRolesButton\">"
-                    . "<span id=\"loadRolesButton-btnWrap\" data-ref=\"btnWrap\" role=\"presentation\" unselectable=\"on\" "
-                    . " class=\"x-btn-wrap x-btn-wrap-default-large \"><span id=\"loadRolesButton-btnEl\" "
-                    . "data-ref=\"btnEl\" role=\"presentation\" unselectable=\"on\" style=\"\" "
-                    . "class=\"x-btn-button x-btn-button-default-large x-btn-text  x-btn-icon x-btn-icon-top x-btn-button-center \">"
-                    . "<span id=\"loadRolesButton-btnIconEl\" data-ref=\"btnIconEl\" role=\"presentation\" unselectable=\"on\" "
-                    . "class=\"x-btn-icon-el x-btn-icon-el-default-large iconButton \" "
-                    . "style=\"background-image:url(cmn_images/$menuImages[$i]);\">&nbsp;</span>"
-                    . "<span id=\"loadRolesButton-btnInnerEl\" style=\"white-space: normal;overflow:hidden;\" "
-                    . "data-ref=\"btnInnerEl\" unselectable=\"on\" class=\"x-btn-inner x-btn-inner-default-large\">"
-                    . strtoupper($menuItems[$i])
-                    . "</span></span></span></a>"
-                    . "</li>";
+            $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$No&vtyp=0');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
 
             if ($grpcntr == 3) {
-                $cntent.= "</ul>"
-                        . "</div>";
+                $cntent .= "</div>";
                 $grpcntr = 0;
             } else {
                 $grpcntr = $grpcntr + 1;
             }
         }
 
-        $cntent.= "
-    </p>
-    </div>
-    </fieldset>
-        </div>";
+        $cntent .= "
+      </p>
+    </div>";
         echo $cntent;
     } else if ($pgNo == 1) {
         //Get My Linked Elections/Surveys        
@@ -448,7 +432,7 @@ if ($lgn_num > 0 && $canview === true) {
             while ($row = loc_db_fetch_array($result)) {
                 $No = 5;
                 if ($grpcntr == 0) {
-                    $cntent.= "<div style=\"float:none;\">"
+                    $cntent .= "<div style=\"float:none;\">"
                             . "<ul class=\"no_bullet\" style=\"float:none;\">";
                 }
                 $cntent .= "<li class=\"leaf\" style=\"margin:2px 2px 2px 2px;\">"
@@ -469,7 +453,7 @@ if ($lgn_num > 0 && $canview === true) {
                         . "</li>";
 
                 if ($grpcntr == 3) {
-                    $cntent.= "</ul>"
+                    $cntent .= "</ul>"
                             . "</div>";
                     $grpcntr = 0;
                 } else {
@@ -479,7 +463,7 @@ if ($lgn_num > 0 && $canview === true) {
 
 
             $buttons = "";
-            $cntent.= "
+            $cntent .= "
     </p>
     </div>
     </fieldset>
@@ -792,8 +776,8 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>PERSON SET DETAILS</caption>";
             $cntent .= "<thead><tr>";
-            $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-            $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
+            $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
+            $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
             $cntent .= "</tr></thead>";
             $cntent .= "<tbody>";
             $i = 0;
@@ -813,14 +797,14 @@ if ($lgn_num > 0 && $canview === true) {
                         $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
                     }
 
-                    $cntent.="<tr $style>";
-                    $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-                    $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "<tr $style>";
+                    $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
+                    $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
+                    $cntent .= "</tr>";
                 }
                 $i++;
             }
-            $cntent.="</tbody></table></div>";
+            $cntent .= "</tbody></table></div>";
             echo $cntent;
         } else if ($vwtyp == 3) {
             //Question Detail
@@ -831,8 +815,8 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>QUESTION DETAILS</caption>";
             $cntent .= "<thead><tr>";
-            $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-            $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
+            $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
+            $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
             $cntent .= "</tr></thead>";
             $cntent .= "<tbody>";
             $i = 0;
@@ -852,14 +836,14 @@ if ($lgn_num > 0 && $canview === true) {
                         $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
                     }
 
-                    $cntent.="<tr $style>";
-                    $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-                    $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "<tr $style>";
+                    $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
+                    $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
+                    $cntent .= "</tr>";
                 }
                 $i++;
             }
-            $cntent.="</tbody></table></div>";
+            $cntent .= "</tbody></table></div>";
             echo $cntent;
         } else if ($vwtyp == 4) {
             //Answer Detail
@@ -870,8 +854,8 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>POSSIBLE ANSWER DETAILS</caption>";
             $cntent .= "<thead><tr>";
-            $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-            $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
+            $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
+            $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
             $cntent .= "</tr></thead>";
             $cntent .= "<tbody>";
             $i = 0;
@@ -891,14 +875,14 @@ if ($lgn_num > 0 && $canview === true) {
                         $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
                     }
 
-                    $cntent.="<tr $style>";
-                    $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-                    $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "<tr $style>";
+                    $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
+                    $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
+                    $cntent .= "</tr>";
                 }
                 $i++;
             }
-            $cntent.="</tbody></table></div>";
+            $cntent .= "</tbody></table></div>";
             echo $cntent;
         } else if ($vwtyp == 5) {
             //Survey/Election Detail 
@@ -909,8 +893,8 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>ELECTION DETAILS</caption>";
             $cntent .= "<thead><tr>";
-            $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-            $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
+            $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
+            $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
             $cntent .= "</tr></thead>";
             $cntent .= "<tbody>";
             $i = 0;
@@ -930,14 +914,14 @@ if ($lgn_num > 0 && $canview === true) {
                         $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
                     }
 
-                    $cntent.="<tr $style>";
-                    $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-                    $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "<tr $style>";
+                    $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
+                    $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
+                    $cntent .= "</tr>";
                 }
                 $i++;
             }
-            $cntent.="</tbody></table></div>";
+            $cntent .= "</tbody></table></div>";
             echo $cntent;
         } else if ($vwtyp == 6) {
             //Survey Questions
@@ -948,8 +932,8 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>SURVEY QUESTION DETAILS</caption>";
             $cntent .= "<thead><tr>";
-            $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-            $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
+            $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
+            $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
             $cntent .= "</tr></thead>";
             $cntent .= "<tbody>";
             $i = 0;
@@ -969,14 +953,14 @@ if ($lgn_num > 0 && $canview === true) {
                         $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
                     }
 
-                    $cntent.="<tr $style>";
-                    $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-                    $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "<tr $style>";
+                    $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
+                    $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
+                    $cntent .= "</tr>";
                 }
                 $i++;
             }
-            $cntent.="</tbody></table></div>";
+            $cntent .= "</tbody></table></div>";
             echo $cntent;
         } else if ($vwtyp == 7) {
             $result = get_QstnCtgries();
@@ -1005,17 +989,17 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>PROVISIONAL RESULTS OF " . ($row[1]) . " (Submitted Electronic Votes Only)</caption>";
                 $cntent .= "<thead><tr>";
-                $cntent.= "<th width=\"200px\" style=\"font-weight:bold;\">ELECTION ITEM OR QUESTION</th>";
-                $cntent.= "<th width=\"250px\" style=\"font-weight:bold;\">POSSIBLE OPTIONS</th>";
-                $cntent.= "<th width=\"50px\" style=\"font-weight:bold;\">NUMBER OF VOTES</th>";
-                $cntent.= "<th width=\"50px\" style=\"font-weight:bold;\">PERCENTAGE OF VOTES</th>";
+                $cntent .= "<th width=\"200px\" style=\"font-weight:bold;\">ELECTION ITEM OR QUESTION</th>";
+                $cntent .= "<th width=\"250px\" style=\"font-weight:bold;\">POSSIBLE OPTIONS</th>";
+                $cntent .= "<th width=\"50px\" style=\"font-weight:bold;\">NUMBER OF VOTES</th>";
+                $cntent .= "<th width=\"50px\" style=\"font-weight:bold;\">PERCENTAGE OF VOTES</th>";
                 $cntent .= "</tr></thead>";
                 $cntent .= "<tbody>";
                 $i = 0;
                 $labl = "";
                 $labl1 = "";
                 while ($row1 = loc_db_fetch_array($rslt2)) {
-                    $cntent.="<tr>";
+                    $cntent .= "<tr>";
                     $labl1 = "";
                     if ($i == 0) {
                         $labl = "(" . $row1[1] . ") " . $row1[2];
@@ -1026,14 +1010,14 @@ if ($lgn_num > 0 && $canview === true) {
                     } else {
                         $labl1 = "";
                     }
-                    $cntent.= "<td width=\"200px\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . $labl1 . "</td>";
-                    $cntent.= "<td width=\"250px\">" . $row1[6] . "</td>";
-                    $cntent.= "<td width=\"50px\">$row1[8]</td>";
-                    $cntent.= "<td width=\"50px\">" . $row1[9] . "%</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "<td width=\"200px\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . $labl1 . "</td>";
+                    $cntent .= "<td width=\"250px\">" . $row1[6] . "</td>";
+                    $cntent .= "<td width=\"50px\">$row1[8]</td>";
+                    $cntent .= "<td width=\"50px\">" . $row1[9] . "%</td>";
+                    $cntent .= "</tr>";
                     $i++;
                 }
-                $cntent.="</tbody></table></div>";
+                $cntent .= "</tbody></table></div>";
             }
             echo $cntent;
         } else if ($vwtyp == 9) {
@@ -1045,8 +1029,8 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>SURVEY QUESTION ANSWER DETAILS</caption>";
             $cntent .= "<thead><tr>";
-            $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-            $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
+            $cntent .= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
+            $cntent .= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
             $cntent .= "</tr></thead>";
             $cntent .= "<tbody>";
             $i = 0;
@@ -1066,14 +1050,14 @@ if ($lgn_num > 0 && $canview === true) {
                         $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
                     }
 
-                    $cntent.="<tr $style>";
-                    $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-                    $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "<tr $style>";
+                    $cntent .= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
+                    $cntent .= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
+                    $cntent .= "</tr>";
                 }
                 $i++;
             }
-            $cntent.="</tbody></table></div>";
+            $cntent .= "</tbody></table></div>";
             echo $cntent;
         }
     } else if ($pgNo == 5) {
@@ -1152,17 +1136,17 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>PROVISIONAL RESULTS OF " . ($row[1]) . " (Submitted Electronic Votes Only)</caption>";
                 $cntent .= "<thead><tr>";
-                $cntent.= "<th width=\"200px\" style=\"font-weight:bold;\">ELECTION ITEM OR QUESTION</th>";
-                $cntent.= "<th width=\"250px\" style=\"font-weight:bold;\">POSSIBLE OPTIONS</th>";
-                $cntent.= "<th width=\"50px\" style=\"font-weight:bold;\">NUMBER OF VOTES</th>";
-                $cntent.= "<th width=\"50px\" style=\"font-weight:bold;\">PERCENTAGE OF VOTES</th>";
+                $cntent .= "<th width=\"200px\" style=\"font-weight:bold;\">ELECTION ITEM OR QUESTION</th>";
+                $cntent .= "<th width=\"250px\" style=\"font-weight:bold;\">POSSIBLE OPTIONS</th>";
+                $cntent .= "<th width=\"50px\" style=\"font-weight:bold;\">NUMBER OF VOTES</th>";
+                $cntent .= "<th width=\"50px\" style=\"font-weight:bold;\">PERCENTAGE OF VOTES</th>";
                 $cntent .= "</tr></thead>";
                 $cntent .= "<tbody>";
                 $i = 0;
                 $labl = "";
                 $labl1 = "";
                 while ($row1 = loc_db_fetch_array($rslt2)) {
-                    $cntent.="<tr>";
+                    $cntent .= "<tr>";
                     $labl1 = "";
                     if ($i == 0) {
                         $labl = "(" . $row1[1] . ") " . $row1[2];
@@ -1173,11 +1157,11 @@ if ($lgn_num > 0 && $canview === true) {
                     } else {
                         $labl1 = "";
                     }
-                    $cntent.= "<td width=\"200px\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . $labl1 . "</td>";
-                    $cntent.= "<td width=\"250px\">" . $row1[6] . "</td>";
-                    $cntent.= "<td width=\"50px\">$row1[8]</td>";
-                    $cntent.= "<td width=\"50px\">" . $row1[9] . "%</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "<td width=\"200px\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . $labl1 . "</td>";
+                    $cntent .= "<td width=\"250px\">" . $row1[6] . "</td>";
+                    $cntent .= "<td width=\"50px\">$row1[8]</td>";
+                    $cntent .= "<td width=\"50px\">" . $row1[9] . "%</td>";
+                    $cntent .= "</tr>";
                     $i++;
                 }
                 $No = 5;
@@ -1201,7 +1185,7 @@ if ($lgn_num > 0 && $canview === true) {
                         . "</li>";
                 $buttons .= "</ul>"
                         . "</div>";
-                $cntent.="</tbody></table>" . $buttons . "</div>";
+                $cntent .= "</tbody></table>" . $buttons . "</div>";
             }
         } else if (getPrsnsUnSbmttdAnswerTtl($prsnid, $srvyID) <= 0 && getPrsnsAnswersTtl($prsnid, $srvyID) > 0) {
             $cntent = "<div class=\"rho_form1\" style=\"padding:10px;max-width:816px;margin-bottom:10px;\">You have submitted this Survey/Electronic Voting!<br/>Please wait for the Election to be Over to View the Results!<br/>Thank you!<br/><br/>Should you have any genuine concerns please do not hesitate to contact the Electoral Commissioner for further Clarifications!</div>";
@@ -1215,9 +1199,9 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>SUMMARY OF YOUR VOTES/OPTIONS CHOSEN (" . ($row[1]) . ")</caption>";
                 $cntent .= "<thead><tr>";
-                $cntent.= "<th width=\"200px\" style=\"font-weight:bold;\">ELECTION ITEM OR QUESTION</th>";
-                $cntent.= "<th width=\"250px\" style=\"font-weight:bold;\">POSSIBLE OPTIONS</th>";
-                $cntent.= "<th width=\"50px\" style=\"font-weight:bold;\">NUMBER OF VOTES</th>";
+                $cntent .= "<th width=\"200px\" style=\"font-weight:bold;\">ELECTION ITEM OR QUESTION</th>";
+                $cntent .= "<th width=\"250px\" style=\"font-weight:bold;\">POSSIBLE OPTIONS</th>";
+                $cntent .= "<th width=\"50px\" style=\"font-weight:bold;\">NUMBER OF VOTES</th>";
                 //$cntent.= "<th width=\"50px\" style=\"font-weight:bold;\">PERCENTAGE OF VOTES</th>";
                 $cntent .= "</tr></thead>";
                 $cntent .= "<tbody>";
@@ -1225,7 +1209,7 @@ if ($lgn_num > 0 && $canview === true) {
                 $labl = "";
                 $labl1 = "";
                 while ($row1 = loc_db_fetch_array($rslt2)) {
-                    $cntent.="<tr>";
+                    $cntent .= "<tr>";
                     $labl1 = "";
                     if ($i == 0) {
                         $labl = "(" . $row1[1] . ") " . $row1[2];
@@ -1236,11 +1220,11 @@ if ($lgn_num > 0 && $canview === true) {
                     } else {
                         $labl1 = "";
                     }
-                    $cntent.= "<td width=\"200px\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . $labl1 . "</td>";
-                    $cntent.= "<td width=\"250px\">" . $row1[6] . "</td>";
-                    $cntent.= "<td width=\"50px\">$row1[8]</td>";
+                    $cntent .= "<td width=\"200px\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . $labl1 . "</td>";
+                    $cntent .= "<td width=\"250px\">" . $row1[6] . "</td>";
+                    $cntent .= "<td width=\"50px\">$row1[8]</td>";
                     //$cntent.= "<td width=\"50px\">" . $row1[9] . "%</td>";
-                    $cntent.="</tr>";
+                    $cntent .= "</tr>";
                     $i++;
                 }
                 $No = 5;
@@ -1264,7 +1248,7 @@ if ($lgn_num > 0 && $canview === true) {
                         . "</li>";
                 $buttons .= "</ul>"
                         . "</div>";
-                $cntent.="</tbody></table>" . $buttons . "</div>";
+                $cntent .= "</tbody></table>" . $buttons . "</div>";
             }
         } else {
             $nxQstnIdx = isset($_POST['nxQstnIdx']) ? cleanInputData($_POST['nxQstnIdx']) : 0;
@@ -1279,8 +1263,8 @@ if ($lgn_num > 0 && $canview === true) {
                     while ($row = loc_db_fetch_array($rslt)) {
                         $cntent = "<div class=\"rho_form1\" style=\"max-width:600px;padding:20px;\">"
                                 . "<p style=\"margin-bottom:10px;\"><span style=\"font-weight:bold;font-size:24px;color:blue;text-shadow: 0px 1px #ccccff;\">" . $row[1] . "</span></p>";
-                        $cntent .="<p style=\"margin-bottom:10px;\"><span style=\"font-weight:bold;font-style:italic;font-family:Times;font-size:16px;color:green;text-shadow: 0px 1px #ccffcc;padding-bottom:10px;\">" . $row[2] . "</span></p>";
-                        $cntent .="<p style=\"font-weight:bold;font-style:italic;font-family:Times;font-size:14px;color:#000000;margin:10px;\">" . $row[3] . "</p></div>";
+                        $cntent .= "<p style=\"margin-bottom:10px;\"><span style=\"font-weight:bold;font-style:italic;font-family:Times;font-size:16px;color:green;text-shadow: 0px 1px #ccffcc;padding-bottom:10px;\">" . $row[2] . "</span></p>";
+                        $cntent .= "<p style=\"font-weight:bold;font-style:italic;font-family:Times;font-size:14px;color:#000000;margin:10px;\">" . $row[3] . "</p></div>";
                     }
                     $No = 5;
                     $buttons = "<br/><div style=\"float:left;min-width:50%;\">"
@@ -1381,9 +1365,9 @@ if ($lgn_num > 0 && $canview === true) {
         <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
             <caption>SUMMARY OF YOUR VOTES/OPTIONS CHOSEN (" . ($row[1]) . ")</caption>";
                         $cntent .= "<thead><tr>";
-                        $cntent.= "<th width=\"200px\" style=\"font-weight:bold;\">ELECTION ITEM OR QUESTION</th>";
-                        $cntent.= "<th width=\"250px\" style=\"font-weight:bold;\">POSSIBLE OPTIONS</th>";
-                        $cntent.= "<th width=\"50px\" style=\"font-weight:bold;\">NUMBER OF VOTES</th>";
+                        $cntent .= "<th width=\"200px\" style=\"font-weight:bold;\">ELECTION ITEM OR QUESTION</th>";
+                        $cntent .= "<th width=\"250px\" style=\"font-weight:bold;\">POSSIBLE OPTIONS</th>";
+                        $cntent .= "<th width=\"50px\" style=\"font-weight:bold;\">NUMBER OF VOTES</th>";
                         //$cntent.= "<th width=\"50px\" style=\"font-weight:bold;\">PERCENTAGE OF VOTES</th>";
                         $cntent .= "</tr></thead>";
                         $cntent .= "<tbody>";
@@ -1391,7 +1375,7 @@ if ($lgn_num > 0 && $canview === true) {
                         $labl = "";
                         $labl1 = "";
                         while ($row1 = loc_db_fetch_array($rslt2)) {
-                            $cntent.="<tr>";
+                            $cntent .= "<tr>";
                             $labl1 = "";
                             if ($i == 0) {
                                 $labl = "(" . $row1[1] . ") " . $row1[2];
@@ -1402,20 +1386,20 @@ if ($lgn_num > 0 && $canview === true) {
                             } else {
                                 $labl1 = "";
                             }
-                            $cntent.= "<td width=\"200px\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . $labl1 . "</td>";
-                            $cntent.= "<td width=\"250px\">" . $row1[6] . "</td>";
-                            $cntent.= "<td width=\"50px\">$row1[8]</td>";
+                            $cntent .= "<td width=\"200px\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . $labl1 . "</td>";
+                            $cntent .= "<td width=\"250px\">" . $row1[6] . "</td>";
+                            $cntent .= "<td width=\"50px\">$row1[8]</td>";
                             //$cntent.= "<td width=\"50px\">" . $row1[9] . "%</td>";
-                            $cntent.="</tr>";
+                            $cntent .= "</tr>";
                             $i++;
                         }
-                        $cntent.="</tbody></table></div>";
+                        $cntent .= "</tbody></table></div>";
                     }
                 } else {
                     $_SESSION['PRV_OFFST'] = $offst;
                     while ($row = loc_db_fetch_array($rslt)) {
                         $hntTxt = "<button onclick=\"showPageDetails2('$pageHtmlID',7,'$srvyNm',$row[0],0,'QUESTION');\" class=\"btnExample\" type=\"button\" value=\"Further Info!\"><img src=\"cmn_images/alert_info.gif\" width=\"18\" height=\"18\" style=\"height:18px !important;\"/> Further Info!</button>";
-                        $cntent .="<p style=\"margin-bottom:10px;\"><span style=\"font-weight:bold;font-style:italic;font-family:Times;font-size:16px;color:green;text-shadow: 0px 1px #ccffcc;\">" . $row[7] . "</span></p>";
+                        $cntent .= "<p style=\"margin-bottom:10px;\"><span style=\"font-weight:bold;font-style:italic;font-family:Times;font-size:16px;color:green;text-shadow: 0px 1px #ccffcc;\">" . $row[7] . "</span></p>";
                         $cntent .= "<form action=\"index.php\" method=\"post\">"
                                 . "<div><p>(" . $row[1] . ") " . $row[3] . "&nbsp;&nbsp;" . $hntTxt . "</p></div><div><p>"
                                 . "<input type=\"hidden\" name=\"grp\" value=\"19\">"
@@ -1431,24 +1415,24 @@ if ($lgn_num > 0 && $canview === true) {
                         if ($row[4] == "Single Answer (Radio)") {
                             while ($row1 = loc_db_fetch_array($rslt1)) {
                                 $checked = "";
-                                $ansTagType .="<tr>";
+                                $ansTagType .= "<tr>";
                                 if (getPrsnChosenAnswerID($row[0], $prsnid, $srvyID, $row1[0]) > 0) {
                                     $checked = "checked=\"checked\"";
                                 }
                                 $hntTxt = "<button onclick=\"showPageDetails2('$pageHtmlID',7,'$srvyNm',$row1[0],0,'ANSWER');\" class=\"btnExample\" type=\"button\" value=\"$row[5]\"><img src=\"cmn_images/alert_info.gif\" width=\"18\" height=\"18\" style=\"height:18px !important;\"/>$row[5]</button>";
                                 $ansTagType .= "<td><input type=\"radio\" name=\"answer\" value=\"$row1[0]\" $checked> $row1[1]</td><td>&nbsp;</td><td>$hntTxt</td>";
-                                $ansTagType .="</tr>";
+                                $ansTagType .= "</tr>";
                             }
                         } else if ($row[4] == "Multiple-Select Answers (Checkbox)") {
                             while ($row1 = loc_db_fetch_array($rslt1)) {
                                 $checked = "";
-                                $ansTagType .="<tr>";
+                                $ansTagType .= "<tr>";
                                 if (getPrsnChosenAnswerID($row[0], $prsnid, $srvyID, $row1 [0]) > 0) {
                                     $checked = "checked=\"checked\"";
                                 }
                                 $hntTxt = "<button onclick=\"showPageDetails2('$pageHtmlID',7,'$srvyNm',$row1[0],0,'ANSWER');\" class=\"btnExample\" type=\"button\" value=\"$row[5]\"><img src=\"cmn_images/alert_info.gif\" width=\"18\" height=\"18\" style=\"height:18px !important;\"/>$row[5]</button>";
                                 $ansTagType .= "<td><input type=\"checkbox\" name=\"answer\" value=\"$row1[0]\" $checked> $row1[1]</td><td>&nbsp;</td><td>$hntTxt</td>";
-                                $ansTagType .="</tr>";
+                                $ansTagType .= "</tr>";
                             }
                         } else if ($row[4] == "Single-Text Answer (Textfield)") {
                             $prvAnswer = getPrsnChosenAnswer($row[0], $prsnid, $srvyID, -1);
@@ -1495,7 +1479,7 @@ if ($lgn_num > 0 && $canview === true) {
                                 . "</li>";
                         $buttons .= "</ul>"
                                 . "</div>";
-                        $cntent .=$ansTagType . "</tbody></table></p></div></form>" . "</div>$buttons";
+                        $cntent .= $ansTagType . "</tbody></table></p></div></form>" . "</div>$buttons";
                     }
                 }
             } else if ($nxQstnIdx >= $ttlQstns + 1) {
@@ -2333,14 +2317,14 @@ function get_PrsnSetsDt($searchFor, $searchIn, $offset, $limit_size, $prsStID) {
             "from prs.prsn_names_nos a, pay.pay_prsn_sets_det b " .
             "WHERE ((a.person_id = b.person_id) and (b.prsn_set_hdr_id = " . $prsStID .
             " ) and (a.local_id_no ilike '" .
-                loc_db_escape_string($searchFor) . "' or trim(a.title || ' ' || a.sur_name || " .
+            loc_db_escape_string($searchFor) . "' or trim(a.title || ' ' || a.sur_name || " .
             "', ' || a.first_name || ' ' || a.other_names) ilike '" .
-                loc_db_escape_string($searchFor) . "')) ORDER BY a.local_id_no DESC LIMIT " . $limit_size .
+            loc_db_escape_string($searchFor) . "')) ORDER BY a.local_id_no DESC LIMIT " . $limit_size .
             " OFFSET " . abs($offset * $limit_size);
     $strSql = "select * from (" . $prsSQL . ") tbl1 "
             . "WHERE (tbl1.local_id_no ilike '" .
-                loc_db_escape_string($searchFor) . "' or tbl1.full_name ilike '" .
-                loc_db_escape_string($searchFor) . "') ORDER BY tbl1.local_id_no DESC LIMIT " . $limit_size .
+            loc_db_escape_string($searchFor) . "' or tbl1.full_name ilike '" .
+            loc_db_escape_string($searchFor) . "') ORDER BY tbl1.local_id_no DESC LIMIT " . $limit_size .
             " OFFSET " . abs($offset * $limit_size);
     if ($prsSQL == "") {
         $strSql = $mnlSQL;
@@ -2360,11 +2344,11 @@ function get_PrsnSetsDtTtl($searchFor, $searchIn, $prsStID) {
             " ))";
     $strSql = "select count(1) from (" . $prsSQL . ") tbl1 "
             . "WHERE (tbl1.local_id_no ilike '" .
-                loc_db_escape_string($searchFor) . "' or tbl1.full_name ilike '" .
-                loc_db_escape_string($searchFor) . "') ";
+            loc_db_escape_string($searchFor) . "' or tbl1.full_name ilike '" .
+            loc_db_escape_string($searchFor) . "') ";
     if ($prsSQL == "") {
         $strSql = "select count(1) from (" . $mnlSQL . ") tbl1 "
-            . "WHERE (tbl1.local_id_no ilike '" .
+                . "WHERE (tbl1.local_id_no ilike '" .
                 loc_db_escape_string($searchFor) . "' or tbl1.full_name ilike '" .
                 loc_db_escape_string($searchFor) . "') ";
     }

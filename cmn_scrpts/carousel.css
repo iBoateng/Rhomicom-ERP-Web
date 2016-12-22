@@ -666,7 +666,7 @@ select option[disabled]:first-child {
     margin-bottom: 5px !important;
 }
 body {
-    font-family: Tahoma, Calibri, Helvetica,"Helvetica Neue","Open Sans",Arial,sans-serif !important;
+    font-family: Tahoma, georgia, Calibri, Helvetica,"Helvetica Neue","Open Sans",Arial,sans-serif !important;
     font-size: 12px;/*14px*/
     line-height: 1.22857143;/*1.42857143*/
     color: #333;

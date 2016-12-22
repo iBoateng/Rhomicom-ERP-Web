@@ -5,7 +5,6 @@ $menuImages = array("chcklst4.png");
 
 $mdlNm = "General Setup";
 $ModuleName = $mdlNm;
-$pageHtmlID = "genStpPage";
 
 $dfltPrvldgs = array("View General Setup", "View Value List Names"
     , "View possible values", /* 3 */ "Add Value List Names", "Edit Value List Names"
@@ -13,59 +12,56 @@ $dfltPrvldgs = array("View General Setup", "View Value List Names"
     , "Delete Possible Values", "View Record History", "View SQL");
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
-
 $vwtyp = "0";
 $qstr = "";
 $dsply = "";
 $actyp = "";
 $srchFor = "";
-$srchIn = "Lov Name";
+$srchIn = "Name";
 $PKeyID = -1;
-if (isset($formArray)) {
-    if (count($formArray) > 0) {
-        $vwtyp = isset($formArray['vtyp']) ? cleanInputData($formArray['vtyp']) : "0";
-        $qstr = isset($formArray['q']) ? cleanInputData($formArray['q']) : '';
-    } else {
-        $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-    }
-} else {
-    $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-}
-
+$sortBy = "ID ASC";
 if (isset($_POST['PKeyID'])) {
     $PKeyID = cleanInputData($_POST['PKeyID']);
 }
-
 if (isset($_POST['searchfor'])) {
     $srchFor = cleanInputData($_POST['searchfor']);
 }
-
 if (isset($_POST['searchin'])) {
     $srchIn = cleanInputData($_POST['searchin']);
 }
-
 if (isset($_POST['q'])) {
     $qstr = cleanInputData($_POST['q']);
 }
-
 if (isset($_POST['vtyp'])) {
     $vwtyp = cleanInputData($_POST['vtyp']);
 }
-
 if (isset($_POST['actyp'])) {
     $actyp = cleanInputData($_POST['actyp']);
+}
+if (isset($_POST['sortBy'])) {
+    $sortBy = cleanInputData($_POST['sortBy']);
 }
 if (strpos($srchFor, "%") === FALSE) {
     $srchFor = " " . $srchFor . " ";
     $srchFor = str_replace(" ", "%", $srchFor);
 }
 
+$cntent = "<div>
+				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
+					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
+                                                <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
+						<span style=\"text-decoration:none;\">Home</span>
+                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>
+					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>";
 if ($lgn_num > 0 && $canview === true) {
     if ($qstr == "DELETE") {
         if ($actyp == 1) {
             $inptValListID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
             echo deleteValListNm($inptValListID);
-        }else if ($actyp == 2) {
+        } else if ($actyp == 2) {
             $inptPssblValID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
             echo deletePssblVal($inptPssblValID);
         }
@@ -150,221 +146,52 @@ if ($lgn_num > 0 && $canview === true) {
                 exit();
             }
         }
-    } else if ($pgNo == 0) {
-        /*
-          <div style=\"margin-bottom:2px;\">
-          <!--<h2>Welcome to the List of Values Manager Module</h2>-->
-          &nbsp;&nbsp;&nbsp;This is where List of Possible Values for Data Fields in the Application are Captured and Managed. The module has the ff areas:
-          </div><div class='rho_form1' style=\"background-color:#e3e3e3;border: 1px solid #999;
-          padding:5px 30px 5px 20px;max-height:50px;\">
-          <span style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
-          font-weight:bold;\">VALUE LISTS SETUP MODULE</span>
-          </div><legend>   VALUE LISTS SETUP MODULE
-          </legend>
-         */
-        $cntent = "<div id='rho_form' style=\"min-height:150px;\"> 
-            <fieldset style=\"padding:15px 15px 15px 15px;margin:0px 0px 0px 0px !important;\">
-            <!--<legend>   Intro Page   </legend>-->
-                    <div class='rho_form3' style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
-                    padding:5px 30px 5px 20px;\">   
-                    <h3>WELCOME TO THE VALUE LISTS SETUP</h3>
-                    <div class='rho_form44' style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
+    } else if ($pgNo == 0) {        
+            $cntent .= "
+					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
+						<span style=\"text-decoration:none;\">Value Lists Setup Menu</span>
+					</li>
+                                       </ul>
+                                     </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
+                    padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
+      <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
                     font-weight:normal;\">This is where List of Possible Values for Data Fields in the Application are Captured and Managed. The module has the ff areas:</span>
-                    </div> 
-      <p>"; /* background-color:#e3e3e3;border: 1px solid #999;
-         */
-//<a onclick=\"showPageDetails('$pageHtmlID', $No);\">$menuItems[$i]</a>
-        //style=\"background: url('cmn_images/start.png') no-repeat 3px 4px; background-size:20px 20px;\"
-        $grpcntr = 0;
+                    </div>
+      <p>";
+            $grpcntr = 0;
+        
         for ($i = 0; $i < count($menuItems); $i++) {
             $No = $i + 1;
-            if ($grpcntr == 0) {
-                $cntent.= "<div style=\"float:none;\">"
-                        . "<ul class=\"no_bullet\" style=\"float:none;\">";
+            if ($i == 0) {
+                
             }
-            $cntent.= "<li class=\"leaf\" style=\"margin:5px 2px 5px 2px;\">"
-                    . "<a href=\"javascript: showPageDetails('$pageHtmlID', $No);\" class=\"x-btn x-unselectable x-btn-default-large\" "
-                    . "style=\"padding:0px;height:90px;width:140px;\" "
-                    . "hidefocus=\"on\" unselectable=\"on\" id=\"loadRolesButton\" tabindex=\"0\" componentid=\"loadRolesButton\">"
-                    . "<span id=\"loadRolesButton-btnWrap\" data-ref=\"btnWrap\" role=\"presentation\" unselectable=\"on\" "
-                    . " class=\"x-btn-wrap x-btn-wrap-default-large \"><span id=\"loadRolesButton-btnEl\" "
-                    . "data-ref=\"btnEl\" role=\"presentation\" unselectable=\"on\" style=\"\" "
-                    . "class=\"x-btn-button x-btn-button-default-large x-btn-text  x-btn-icon x-btn-icon-top x-btn-button-center \">"
-                    . "<span id=\"loadRolesButton-btnIconEl\" data-ref=\"btnIconEl\" role=\"presentation\" unselectable=\"on\" "
-                    . "class=\"x-btn-icon-el x-btn-icon-el-default-large iconButton \" "
-                    . "style=\"background-image:url(cmn_images/$menuImages[$i]);\">&nbsp;</span>"
-                    . "<span id=\"loadRolesButton-btnInnerEl\" style=\"white-space: normal;overflow:hidden;\" "
-                    . "data-ref=\"btnInnerEl\" unselectable=\"on\" class=\"x-btn-inner x-btn-inner-default-large\">"
-                    . strtoupper($menuItems[$i])
-                    . "</span></span></span></a>"
-                    . "</li>";
+            if ($grpcntr == 0) {
+                $cntent .= "<div class=\"row\">";
+            }
+
+            $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$No&vtyp=0');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
 
             if ($grpcntr == 3) {
-                $cntent.= "</ul>"
-                        . "</div>";
+                $cntent .= "</div>";
                 $grpcntr = 0;
             } else {
                 $grpcntr = $grpcntr + 1;
             }
         }
 
-        $cntent.= "
+        $cntent .= "
       </p>
-    </div>
-    </fieldset>
-        </div>";
+    </div>";
         echo $cntent;
     } else if ($pgNo == 1) {
         //Get LOVs
-        if ($vwtyp == 0) {
-
-            $total = get_LovsTtl($srchFor, $srchIn);
-
-            $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-            $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-            $start = isset($_POST['start']) ? $_POST['start'] : 0;
-
-            if ($pageNo > ceil($total / $lmtSze)) {
-                $pageNo = 1;
-            }
-
-            $curIdx = $pageNo - 1;
-            $result = get_LovsTblr($srchFor, $srchIn, $curIdx, $lmtSze);
-            $lovss = array();
-            $cntr = 0;
-            while ($row = loc_db_fetch_array($result)) {
-                $chckd = ($cntr == 0) ? TRUE : FALSE;
-                $lovs = array(
-                    'checked' => var_export($chckd, TRUE),
-                    'ValListID' => $row[0],
-                    'RowNum' => ($curIdx * $lmtSze) + ( $cntr + 1),
-                    'ValListName' => $row[1],
-                    'ValListDesc' => $row[2],
-                    'SQLQuery' => $row[3],
-                    'DefinedBy' => $row[4],
-                    'IsListDynmc' => var_export(($row[5] == '1' ? TRUE : FALSE), TRUE),
-                    'IsEnabled' => var_export(($row[6] == '1' ? TRUE : FALSE), TRUE));
-                $lovss[] = $lovs;
-                $cntr++;
-            }
-
-            echo json_encode(array('success' => true,
-                'total' => $total,
-                'rows' => $lovss));
-        } else if ($vwtyp == 1) {
-            //Get LOV Possible Values 
-            //$brghtsqlStr = "";
-            //$is_dynamic = FALSE;
-            $pkID = isset($_POST['valListID']) ? $_POST['valListID'] : -1;
-
-            $total = get_TtlLovsPssblVals($srchFor, $srchIn, $pkID);
-            //$total = getTtlLovValues($srchFor, $srchIn, $brghtsqlStr, $pkID, $is_dynamic, -1, "", "");
-            $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-            $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-            $start = isset($_POST['start']) ? $_POST['start'] : 0;
-
-            if ($pageNo > ceil($total / $lmtSze)) {
-                $pageNo = 1;
-            }
-            $curIdx = $pageNo - 1;
-            //$result = getLovValues($srchFor, $srchIn, $curIdx, $lmtSze, $brghtsqlStr, $pkID, $is_dynamic, -1, "", "");
-            $result = get_LovsPssblVals($srchFor, $srchIn, $curIdx, $lmtSze, $pkID);
-            $lovsDts = array();
-            $cntr = 0;
-            while ($row = loc_db_fetch_array($result)) {
-                //$chckd = FALSE;
-                $lovsDt = array(
-                    'PssblValID' => $row[0],
-                    'RowNum' => ($curIdx * $lmtSze) + ($cntr + 1),
-                    'PssblVal' => $row[2],
-                    'PssblValDesc' => $row[3],
-                    'IsEnabled' => var_export(($row[4] == '1' ? TRUE : FALSE), TRUE),
-                    'AllwdOrgIDs' => $row[5]);
-                $lovsDts[] = $lovsDt;
-                $cntr++;
-            }
-
-            echo json_encode(array('success' => true,
-                'total' => $total,
-                'rows' => $lovsDts));
-        } else if ($vwtyp == 3) {
-            $pkID = isset($_POST['valListID']) ? $_POST['valListID'] : -1;
-            $result = get_LovsDetail($pkID);
-            $colsCnt = loc_db_num_fields($result);
-            $cntent = "<div style=\"padding:2px;width:100%;\">
-        <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
-            <caption>VALUE LIST DETAILS</caption>";
-            $cntent .= "<thead><tr>";
-            $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-            $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
-            $cntent .= "</tr></thead>";
-            $cntent .= "<tbody>";
-            $i = 0;
-
-            $labl = "";
-            $labl1 = "";
-            while ($row = loc_db_fetch_array($result)) {
-                for ($d = 0; $d < $colsCnt; $d++) {
-                    $style = "";
-                    $style2 = "";
-                    if (trim(loc_db_field_name($result, $d)) == "mt") {
-                        $style = "style=\"display:none;\"";
-                    }
-                    if (strtoupper($row[$d]) == 'NO') {
-                        $style2 = "style=\"color:red;font-weight:bold;\"";
-                    } else if (strtoupper($row[$d]) == 'YES') {
-                        $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
-                    }
-
-                    $cntent.="<tr $style>";
-                    $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-                    $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                    $cntent.="</tr>";
-                }
-                $i++;
-            }
-            $cntent.="</tbody></table></div>";
-            echo $cntent;
-        } else if ($vwtyp == 4) {
-            $pkID = isset($_POST['pssblValID']) ? $_POST['pssblValID'] : -1;
-            $result = get_LovsPssblValsDet($pkID);
-            $colsCnt = loc_db_num_fields($result);
-            $cntent = "<div style=\"padding:2px;width:100%;\">
-        <table style=\"width:100%;border-collapse: collapse;border-spacing: 0;\"class=\"gridtable\">
-            <caption>POSSIBLE VALUE DETAILS</caption>";
-            $cntent .= "<thead><tr>";
-            $cntent.= "<th width=\"40%\" style=\"font-weight:bold;\">LABEL</th>";
-            $cntent.= "<th width=\"60%\" style=\"font-weight:bold;\">VALUE</th>";
-            $cntent .= "</tr></thead>";
-            $cntent .= "<tbody>";
-            $i = 0;
-            $labl = "";
-            $labl1 = "";
-            while ($row = loc_db_fetch_array($result)) {
-                for ($d = 0; $d < $colsCnt; $d++) {
-                    $style = "";
-                    $style2 = "";
-                    if (trim(loc_db_field_name($result, $d)) == "mt") {
-                        $style = "style=\"display:none;\"";
-                    }
-                    if (strtoupper($row[$d]) == 'NO') {
-                        $style2 = "style=\"color:red;font-weight:bold;\"";
-                    } else if (strtoupper($row[$d]) == 'YES') {
-                        $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
-                    }
-
-                    $cntent.="<tr $style>";
-                    $cntent.= "<td width=\"40%\" style=\"font-weight:bold;vertical-align:top;\" class=\"likeheader\">" . trim(loc_db_field_name($result, $d)) . "</td>";
-                    $cntent.= "<td width=\"60%\" $style2>" . $row[$d] . "</td>";
-                    $cntent.="</tr>";
-                }
-                $i++;
-            }
-
-            $cntent.="</tbody></table></div>";
-            echo $cntent;
-        }
+        require 'gst_setups.php';
     } else {
         restricted();
     }
@@ -387,14 +214,14 @@ function createPssblVals($lovID, $pssblVal, $pssblValDesc, $isEnbld, $allwd) {
 function updatePssblVals($pssblVlID, $pssblVal, $pssblValDesc, $isEnbld, $allwd) {
     global $usrID;
     $dateStr = getDB_Date_time();
-    $sqlStr ="UPDATE gst.gen_stp_lov_values SET " .
-   "pssbl_value = '" . loc_db_escape_string($pssblVal) .
-   "', pssbl_value_desc = '" . loc_db_escape_string($pssblValDesc) . "', " .
-   "last_update_by = " . $usrID .
-   ", last_update_date = '" . $dateStr .
-   "', is_enabled = '" . $isEnbld . "', " .
-   "allowed_org_ids ='" . loc_db_escape_string($allwd) . "' " .
-   "WHERE(pssbl_value_id = " . $pssblVlID . ")";
+    $sqlStr = "UPDATE gst.gen_stp_lov_values SET " .
+            "pssbl_value = '" . loc_db_escape_string($pssblVal) .
+            "', pssbl_value_desc = '" . loc_db_escape_string($pssblValDesc) . "', " .
+            "last_update_by = " . $usrID .
+            ", last_update_date = '" . $dateStr .
+            "', is_enabled = '" . $isEnbld . "', " .
+            "allowed_org_ids ='" . loc_db_escape_string($allwd) . "' " .
+            "WHERE(pssbl_value_id = " . $pssblVlID . ")";
     execUpdtInsSQL($sqlStr);
 }
 
@@ -405,7 +232,7 @@ function deletePssblVal($pssblVlID) {
 
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
-       $dsply .= "<br/>$affctd1 LOV Possible Value(s)!";
+        $dsply .= "<br/>$affctd1 LOV Possible Value(s)!";
         return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
     } else {
         $dsply = "No Record Deleted!";

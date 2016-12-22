@@ -280,11 +280,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </li>
                                     <li class="nav-item  ">
                                         <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
-                                            <span class="title">e-Library</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
                                             <span class="title">e-Learning</span>
                                         </a>
                                     </li>

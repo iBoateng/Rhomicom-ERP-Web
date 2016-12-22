@@ -619,7 +619,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </label>
                                 </div>
                             </div>
-                        </div>                
+                        </div> 
+                        <div class="form-group form-group-sm">
+                            <label for="usrLnkdCstmr" class="control-label col-md-4">Linked Customer/Supplier:</label>
+                            <div  class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" aria-label="..." id="usrLnkdCstmr" value="">
+                                    <input type="hidden" class="form-control" aria-label="..." id="usrLnkdCstmrID" value="">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', '', '', '', 'radio', true, '', 'usrLnkdCstmrID', 'usrLnkdCstmr', 'clear', 1, '');">
+                                        <span class="glyphicon glyphicon-th-list"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div> 
                         <div class="form-group form-group-sm">
                             <label for="usrVldtyStartDate" class="control-label col-md-4">Start Date:</label>
                             <div class="col-md-8">
