@@ -19,7 +19,6 @@ $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 17 */ "Send System Generated Passwords to User Mails",
     /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
     /* 22 */ "Add Articles", "Edit Articles", "Delete Articles", "View Articles Admin");
-$canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || ($pgNo == 9 && test_prmssns("View Self-Service", "Self Service"));
 $vwtyp = "0";
 $qstr = "";
 $dsply = "";
@@ -73,6 +72,8 @@ $cntent = "<div>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
 						<span style=\"text-decoration:none;\">All Modules</span>
 					</li>";
+$canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || ($pgNo == 1 && $vwtyp == 4 && test_prmssns("View Self-Service", "Self Service"));
+
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
         if ($qstr == "DELETE") {

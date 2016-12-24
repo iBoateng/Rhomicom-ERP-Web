@@ -58,7 +58,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 ?>
                 <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                     <div class="input-group">
-                        <input class="form-control" id="dataAdminSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncDtAdmn(event, '', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0')">
+                        <input class="form-control" id="dataAdminSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncDtAdmn(event, '', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0')">
                         <input id="dataAdminPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                         <label class="btn btn-primary btn-file input-group-addon" onclick="getDataAdmin('clear', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0')">
                             <span class="glyphicon glyphicon-remove"></span>
@@ -270,7 +270,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </div>
                 <div class="col-lg-3" style="padding:0px 15px 0px 15px !important;">
                     <div class="input-group">
-                        <input class="form-control" id="dataAdminSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncDtAdmn(event, '', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1')">
+                        <input class="form-control" id="dataAdminSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncDtAdmn(event, '', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1')">
                         <input id="dataAdminPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                         <label class="btn btn-primary btn-file input-group-addon" onclick="getDataAdmin('clear', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1')">
                             <span class="glyphicon glyphicon-remove"></span>

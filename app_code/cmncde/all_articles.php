@@ -84,7 +84,7 @@ $cntent = "<div>
 					<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=0');\">
 						<span style=\"text-decoration:none;\">All Articles</span>
 					</li>";
-$canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || ($vwtyp <= 2 && test_prmssns("View Self-Service", "Self Service"));
+$canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || (($vwtyp <= 1 || $vwtyp >= 4) && test_prmssns("View Self-Service", "Self Service"));
 $canAddArticles = test_prmssns($dfltPrvldgs[22], $mdlNm);
 $canEdtArticles = test_prmssns($dfltPrvldgs[23], $mdlNm);
 $canDelArticles = test_prmssns($dfltPrvldgs[24], $mdlNm);
@@ -174,7 +174,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="row" style="margin-bottom:10px;">
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="allArticlesSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncArticles(event, '', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
+                                    <input class="form-control" id="allArticlesSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncArticles(event, '', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
                                     <input id="allArticlesPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getAllArticles('clear', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
                                         <span class="glyphicon glyphicon-remove"></span>
@@ -197,7 +197,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $valslctdArry[$z] = "selected";
                                         }
                                         ?>
-                                                                                                                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                                                                                                                                                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                                     </select>-->
                                     <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
@@ -339,7 +339,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             ?>
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="allArticlesSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncArticles(event, '', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
+                                    <input class="form-control" id="allArticlesSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncArticles(event, '', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
                                     <input id="allArticlesPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getAllArticles('clear', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
                                         <span class="glyphicon glyphicon-remove"></span>
@@ -362,7 +362,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $valslctdArry[$z] = "selected";
                                         }
                                         ?>
-                                                                                                                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                                                                                                                                                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                     <?php } ?>
                                     </select>-->
                                     <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
@@ -518,10 +518,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <div  class="col-md-9">
                                                                             <select class="form-control" id="articleCategory" >
                                                                                 <?php
-                                                                                $valslctdArry = array("", "", "", "", "", "", "", "", "", "");
+                                                                                $valslctdArry = array("", "", "", "", "", "", "", "", "", "", "");
                                                                                 $valuesArry = array("Notices/Announcements", "Welcome Message", "Latest News", "Useful Links",
                                                                                     "System Help", "Write-Ups/Research Papers", "Operational Manuals", "About Organisation",
-                                                                                    "Other Articles", "Forum Topic");
+                                                                                    "Other Articles", "Forum Topic", "Chat Room");
                                                                                 for ($y = 0; $y < count($valuesArry); $y++) {
                                                                                     /* if ($lmtSze == $valuesArry[$y]) {
                                                                                       $valslctdArry[$y] = "selected";
@@ -534,6 +534,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 }
                                                                                 ?>
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">                                                                        
+                                                                    <div class="form-group form-group-sm">
+                                                                        <label for="articleLoclClsfctn" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Local Classification:</label>
+                                                                        <div  class="col-md-9">
+                                                                            <div class="input-group">
+                                                                                <input type="text" class="form-control" aria-label="..." id="articleLoclClsfctn" value="">
+                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Article Classifications', 'gnrlOrgID', '', '', 'radio', true, '', 'articleLoclClsfctn', 'articleLoclClsfctn', 'clear', 1, '');">
+                                                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                                                </label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -622,8 +635,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </div> 
                                         </div>                                         
                                         <div class="col-md-8">
-                                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Article/Forum Intro Message</legend>
-                                                <div class="row" style="margin: -5px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
+                                            <fieldset class="basic_person_fs"><legend class="basic_person_lg">Article/Forum Intro Message</legend>
+                                                <div class="row" style="margin: 1px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
                                                     <div class="form-group form-group-sm">
                                                         <label for="articleTitle" class="control-label col-md-2">Topic/Title:</label>
                                                         <div  class="col-md-10" style="padding:0px 1px 0px 15px !important;">
@@ -684,10 +697,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             <div  class="col-md-9">
                                                                                 <select class="form-control" id="articleCategory" >
                                                                                     <?php
-                                                                                    $valslctdArry = array("", "", "", "", "", "", "", "", "", "");
+                                                                                    $valslctdArry = array("", "", "", "", "", "", "", "", "", "", "");
                                                                                     $valuesArry = array("Notices/Announcements", "Welcome Message", "Latest News", "Useful Links",
                                                                                         "System Help", "Write-Ups/Research Papers", "Operational Manuals", "About Organisation",
-                                                                                        "Other Articles", "Forum Topic");
+                                                                                        "Other Articles", "Forum Topic", "Chat Room");
                                                                                     for ($y = 0; $y < count($valuesArry); $y++) {
                                                                                         if ($row[1] == $valuesArry[$y]) {
                                                                                             $valslctdArry[$y] = "selected";
@@ -700,6 +713,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     }
                                                                                     ?>
                                                                                 </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">                                                                        
+                                                                        <div class="form-group form-group-sm">
+                                                                            <label for="articleLoclClsfctn" class="control-label col-md-3" style="padding:0px 0px 0px 15px !important;">Local Classification:</label>
+                                                                            <div  class="col-md-9">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control" aria-label="..." id="articleLoclClsfctn" value="">
+                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Article Classifications', 'gnrlOrgID', '', '', 'radio', true, '', 'articleLoclClsfctn', 'articleLoclClsfctn', 'clear', 1, '');">
+                                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                                    </label>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -788,8 +814,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div> 
                                             </div>                                         
                                             <div class="col-md-8">
-                                                <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Article/Forum Intro Message</legend>
-                                                    <div class="row" style="margin: -5px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
+                                                <fieldset class="basic_person_fs"><legend class="basic_person_lg">Article/Forum Intro Message</legend>
+                                                    <div class="row" style="margin: 1px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
                                                         <div class="form-group form-group-sm">
                                                             <label for="articleTitle" class="control-label col-md-2">Topic/Title:</label>
                                                             <div  class="col-md-10" style="padding:0px 1px 0px 15px !important;">
@@ -829,7 +855,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $(document).ready(function () {
 
                                 $('#articleIntroMsg').summernote({
-                                    minHeight: 100,
+                                    minHeight: 145,
                                     focus: true
                                 });
                                 $('#articleBodyText').summernote({
@@ -867,8 +893,283 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <p><?php echo $row[4]; ?></p>
                             </div>
                         </div>
+                        <div class="row container-fluid">
+                            <p style="border-top:1px solid #ddd;border-bottom:1px solid #ddd;font-size:16px;padding:5px;"><a href="#" style="font-size:16px;padding:5px;">Show Comments (
+                                    <span style="color:red;">3</span> ): Post Your Comments &gt;&gt;</a></p>
+                        </div>
+                        <div class="row container-fluid">
+                            <form class="form-inline">
+                                <div class="form-group col-md-12" style="padding:0px 1px 0px 25px !important;">
+                                    <div class="col-md-11" style="padding:0px 1px 0px 15px !important;">
+                                        <input type="text" class="form-control" placeholder="Type your message here..." style="width:100% !important;">
+                                    </div>
+                                    <div class="col-md-1" style="padding:0px 1px 0px 15px !important;">
+                                        <button type="submit" class="btn btn-info" style="width:100% !important;">Send</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         <?php
                     }
+                } else if ($vwtyp == 5) {
+                    //Comments/Feedback Email Form
+                    echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Articles List</span>
+					</li>
+                                        <li>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Send Feedback</span>
+					</li>
+                                       </ul>
+                                     </div>";
+                    ?>
+                    <form class="form-horizontal" id="cmntsFdbckForm">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <fieldset class = "basic_person_fs"><legend class = "basic_person_lg">Addresses / Subject / Attachments</legend>
+                                    <div class="form-group form-group-sm">
+                                        <label for="fdbckMailCc" class="control-label col-md-2">Cc:</label>
+                                        <div  class="col-md-10">
+                                            <input class="form-control" id="fdbckMailCc" name="fdbckMailCc" type = "text" placeholder="Cc"/>                                    
+                                        </div>
+                                    </div> 
+                                    <div class="form-group form-group-sm">
+                                        <label for="fdbckSubject" class="control-label col-md-2">Subject:</label>
+                                        <div  class="col-md-10">
+                                            <input class="form-control" id="fdbckSubject" type = "text" placeholder="Subject"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <label for="fdbckMailAttchmnts" class="control-label col-md-2">Attached Files <span class="glyphicon glyphicon-paperclip"></span>:</label>
+                                        <div  class="col-md-10">
+                                            <div  class="col-xs-10" style="padding:0px 1px 0px 0px !important;">
+                                                <textarea class="form-control" id="fdbckMailAttchmnts" cols="2" placeholder="Attachments" rows="3"></textarea>
+                                            </div>
+                                            <div  class="col-xs-2" style="padding:0px 1px 0px 5px !important;">
+                                                <button type="button" class="btn btn-default btn-sm" style="float:right;"><span class="glyphicon glyphicon-paperclip"></span>Browse...</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <fieldset class="basic_person_fs"><legend class="basic_person_lg">Message Body</legend>
+                                    <div id="fdbckMsgBody"></div> 
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="row" style="margin: -5px 0px 0px 0px !important;"> 
+                            <div class="col-md-6" style="padding:0px 0px 0px 1px !important;">&nbsp;</div>
+                            <div class="col-md-6" style="padding:0px 0px 0px 0px">
+                                <div class="col-md-5" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/reload.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">RESET</button></div>
+                                <div class="col-md-7" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SEND MESSAGE</button></div>
+                            </div>
+                        </div>
+                    </form>
+                    <?php
+                } else if ($vwtyp == 6) {
+                    //Forums/Chat Rooms
+                    echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Articles List</span>
+					</li>
+                                        <li>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Forums and Chart Rooms</span>
+					</li>
+                                       </ul>
+                                     </div>";
+                    ?>
+                    <button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="openATab('#allarticles', 'grp=40&typ=3&vtyp=7');"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SAMPLE CHAT</button>
+                    <div class="container-fluid">
+                        <div class="row">   
+                            <div class="col-md-12">
+                                <table class="table table-striped table-responsive" id="allForumsTable" style="width:100% !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>2015 IRS Forum</th>
+                                            <th>IRS Forum Dates</th>        
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Washington DC<br/><a href="https://aws.passkey.com/g/42238120" target="_blank">Gaylord National Hotel Convention Center</a><br/><i class="fa fa-map-marker"></i> 201 Waterfront Street<br/>National Harbor, MD 20745</td>
+                                            <td>July 7 - 9, 2015</td>
+                                        </tr>
+                                        <tr class="active">    
+                                            <td><strong>NSTP Annual Federal Tax Refresher Course</strong><br/><a href="https://aws.passkey.com/g/42238120" target="_blank">Gaylord National Hotel Convention Center</a><br/><i class="fa fa-map-marker"></i> 201 Waterfront Street<br/>National Harbor, MD 20745</td>
+                                            <td><strong>AFTR Date & Registration</strong><br/>July 10, 2015<br/><br/><a class="btn btn-hot btn-block " href="/course/2015-Annual-Federal-Tax-Refresher-Course---National-Harbor%2C-MD" target="_blank"><i class="fa fa-hand-o-right"></i> Register Here</a></td>
+                                        </tr>           
+                                        <!--Denbver-->
+                                        <tr>
+                                            <td>Denver , CO <br/><a href="https://aws.passkey.com/g/34249128"target="_blank">Hyatt Regency Denver at Colorado Convention Center</a><br/><i class="fa fa-map-marker"></i> 650 15th Street<br/>Denver, CO 80202</td>
+                                            <td>July 28 - 30, 2015</td>
+                                        </tr>
+                                        <tr class="active">       
+                                            <td><strong>NSTP Annual Federal Tax Refresher Course</strong> <br/><a href="http://embassysuites3.hilton.com/en/hotels/colorado/embassy-suites-denver-downtown-convention-center-DENESES/index.html"target="_blank">Embassy Suites Denver</a><br/><i class="fa fa-map-marker"></i> 1420 Stout St<br/>Denver, CO 80202</td>
+                                            <td><strong>AFTR Date & Registration</strong><br/>July 31, 2015<br/><br/><a class="btn btn-hot btn-block " href="/course/2015-Annual-Federal-Tax-Refresher-Course---Denver%2C-CO" target="_blank"><i class="fa fa-hand-o-right"></i> Register Here</a></td>
+                                        </tr>
+                                        <!--Denver-->
+                                        <tr>
+                                            <td>San Diego, CA <br/><a href="https://aws.passkey.com/g/42502120"target="_blank">San Diego Town & Country</a><br/><i class="fa fa-map-marker"></i> 500 Hotel Circle North <br/>San Diego, CA , 92108</td>
+                                            <td>August 11 - 13, 2015</td>
+                                        </tr>
+                                        <tr class="active">
+                                            <td><strong>NSTP Annual Federal Tax Refresher Course</strong> <br/><a href="https://aws.passkey.com/g/42502120"target="_blank">San Diego Town & Country</a><br/><i class="fa fa-map-marker"></i> 500 Hotel Circle North <br/>San Diego, CA , 92108</td>
+                                            <td><strong>AFTR Date & Registration</strong><br/>August 14, 2015<br/><br/><a class="btn btn-hot btn-block " href="/course/2015-Annual-Federal-Tax-Refresher-Course---San-Diego%2C-CA" target="_blank"><i class="fa fa-hand-o-right"></i> Register Here</a></td>
+                                        </tr>
+                                        <!--washington-->
+                                        <tr>
+                                            <td>Atlanta, GA <br/><a href="https://aws.passkey.com/event/13001814/owner/321/home"target="_blank">Atlanta Marriott Marquis</a><br/><i class="fa fa-map-marker"></i> 265 Peachtree Center Avenue <br/>Atlanta, GA , 30303</td>
+                                            <td>August 25 - 27, 2015</td>
+                                        </tr>
+                                        <tr class="active">   
+                                            <td><strong>NSTP Annual Federal Tax Refresher Course</strong><br/><a href="https://aws.passkey.com/event/13001814/owner/321/home"target="_blank">Atlanta Marriott Marquis</a><br/><i class="fa fa-map-marker"></i> 265 Peachtree Center Avenue  <br/>Atlanta, GA , 30303</td>
+                                            <td><strong>AFTR Date & Registration</strong><br/>August 28, 2015<br/><br/><a class="btn btn-hot btn-block " href="/course/2015-Annual-Federal-Tax-Refresher-Course---Atlanta%2C-GA" target="_blank"><i class="fa fa-hand-o-right"></i> Register Here</a></td>
+                                        </tr>
+                                        <!--washington-->
+                                        <tr>
+                                            <td>Orlando, FL<br/><a href="https://aws.passkey.com/g/30187120"target="_blank">Hyatt Regency Orlando</a><br/><i class="fa fa-map-marker"></i> 9801 International Drive <br/>Orlando, FL , 32819</td>
+                                            <td>September 1 - 3, 2015</td>
+                                        </tr>
+                                        <tr class="active">
+                                            <td><strong>NSTP Annual Federal Tax Refresher Course</strong><br/><a href="https://aws.passkey.com/g/30187120"target="_blank">Hyatt Regency Orlando</a><br/><i class="fa fa-map-marker"></i> 9801 International Drive <br/>Orlando, FL , 32819</td>
+                                            <td><strong>AFTR Date & Registration</strong><br/>September 4, 2015<br/><br/><a class="btn btn-hot btn-block " href="/course/2015-Annual-Federal-Tax-Refresher-Course---Orlando%2C-FL" target="_blank"><i class="fa fa-hand-o-right"></i> Register Here</a></td>
+                                        </tr>
+                                        <!--washington-->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <?php
+                } else if ($vwtyp == 7) {
+                    //Forums / Chats Messages Posted
+                    echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Articles List</span>
+					</li>
+                                        <li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=6');\">
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Forums and Chart Rooms</span>
+					</li>
+                                        <li>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">One Chart Room</span>
+					</li>
+                                       </ul>
+                                     </div>";
+                    ?>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="pull-left">Message</div>
+                            <div class="widget-icons pull-right">
+                                <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
+                                <a href="#" class="wclose"><i class="fa fa-times"></i></a>
+                            </div>  
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <!-- Widget content -->
+                            <div class="padd sscroll">
+                                <ul class="chats">
+                                    <!-- Chat by us. Use the class "by-me". -->
+                                    <li class="by-me">
+                                        <!-- Use the class "pull-left" in avatar -->
+                                        <div class="avatar pull-left">
+                                            <img src="cmn_images/user.jpg" alt="">
+                                        </div>
+                                        <div class="chat-content">
+                                            <!-- In meta area, first include "name" and then "time" -->
+                                            <div class="chat-meta">John Smith <span class="pull-right">3 hours ago</span></div>
+                                            Vivamus diam elit diam, consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li> 
+                                    <!-- Chat by other. Use the class "by-other". -->
+                                    <li class="by-other">
+                                        <!-- Use the class "pull-right" in avatar -->
+                                        <div class="avatar pull-right">
+                                            <img src="cmn_images/user22.png" alt="">
+                                        </div>
+
+                                        <div class="chat-content">
+                                            <!-- In the chat meta, first include "time" then "name" -->
+                                            <div class="chat-meta">3 hours ago <span class="pull-right">Jenifer Smith</span></div>
+                                            Vivamus diam elit diam, consectetur fconsectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li>   
+
+                                    <li class="by-me">
+                                        <div class="avatar pull-left">
+                                            <img src="cmn_images/user.jpg" alt="">
+                                        </div>
+
+                                        <div class="chat-content">
+                                            <div class="chat-meta">John Smith <span class="pull-right">4 hours ago</span></div>
+                                            Vivamus diam elit diam, consectetur fermentum sed dapibus eget, Vivamus consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li>
+                                    <li class="by-other">
+                                        <!-- Use the class "pull-right" in avatar -->
+                                        <div class="avatar pull-right">
+                                            <img src="cmn_images/user22.png" alt="">
+                                        </div>
+
+                                        <div class="chat-content">
+                                            <!-- In the chat meta, first include "time" then "name" -->
+                                            <div class="chat-meta">3 hours ago <span class="pull-right">Jenifer Smith</span></div>
+                                            Vivamus diam elit diam, consectetur fermentum sed dapibus eget, Vivamus consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li>   
+                                </ul>
+                            </div>
+                            <!-- Widget footer -->
+                            <div class="widget-foot">
+                                <form class="form-inline">
+                                    <div class="form-group col-md-12" style="padding:0px 1px 0px 25px !important;">
+                                        <div class="col-md-11" style="padding:0px 1px 0px 15px !important;">
+                                            <input type="text" class="form-control" placeholder="Type your message here..." style="width:100% !important;">
+                                        </div>
+                                        <div class="col-md-1" style="padding:0px 1px 0px 15px !important;">
+                                            <button type="submit" class="btn btn-info" style="width:100% !important;">Send</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                } else if ($vwtyp == 20) {
+                    //Help Articles Tabular
+                    echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Articles List</span>
+					</li>
+                                        <li>
+						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                                <span style=\"text-decoration:none;\">Help</span>
+					</li>
+                                       </ul>
+                                     </div>";
+                    ?>
+                    <div class="container-fluid">
+                        <div class="row">   
+                            <div class="col-md-12">
+                                Help Articles Tabular
+                            </div>
+                        </div>
+                    </div>
+                    <?php
                 }
             }
         }

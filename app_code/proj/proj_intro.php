@@ -1,18 +1,21 @@
 <?php
+$menuItems = array("Summary Dashboard", "Projects", "Account Setups", "Equipment / Resources", "Project Search"
+    );
+$menuImages = array("dashboard220.png","Project-Management.png","GL-256.png","ma-logo.png","CustomIcon.png");
 
-$menuItems = array("Available Tests", "All Tests", "Questions Bank", "Person Sets", "Electronic Books", "Library Management");
-$menuImages = array("election.png", "world_48.png", "chcklst4.png", "person.png", "approve1.png", "person.png", "approve1.png");
-
-$mdlNm = "e-Learning";
+$mdlNm = "Projects Management";
 $ModuleName = $mdlNm;
 
-$dfltPrvldgs = array("View e-Learning",
-    /* 1 */ "View All Exams/Tests", "View Questions Bank", "View Person Sets",
-    /* 4 */ "View Record History", "View SQL",
-    /* 6 */ "Add Exams/Tests", "Edit Exams/Tests", "Delete Exams/Tests",
-    /* 9 */ "Add Questions Bank", "Edit Questions Bank", "Delete Questions Bank");
+$dfltPrvldgs = array(
+       "View Projects Management", 
+      /*1*/"View Projects", "View Accounts Setup", 
+      /*3*/"View Resources Setup", "View SQL", "View Record History",
+      /*6*/"Add Projects","Edit Projects","Delete Projects",
+      /*9*/"Add Accounts","Edit Accounts","Delete Accounts",
+      /*12*/"Add Resource","Edit Resource","Delete Resource",
+      /*15*/"View Project Costs","Edit Project Costs");
 
-$canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || test_prmssns("View Elections", "Self Service");
+$canview = test_prmssns($dfltPrvldgs[0], $ModuleName);
 
 $vwtyp = "0";
 $qstr = "";
@@ -58,60 +61,61 @@ $cntent = "<div>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
 						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>";
-
 if ($lgn_num > 0 && $canview === true) {
     if ($qstr == "DELETE") {
         
     } else if ($qstr == "UPDATE") {
-        
-    } else if ($pgNo == 0) {
-        $cntent .= "
+        if ($actyp == 1) {
+            
+        }
+    } else {
+        if ($pgNo == 0) {
+            $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
-						<span style=\"text-decoration:none;\">e-Learning Menu</span>
+						<span style=\"text-decoration:none;\">Projects Management Menu</span>
 					</li>
                                        </ul>
                                      </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
                     padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
       <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
                     <span style=\"font-family: georgia, times;font-size: 12px;font-style:italic;
-                    font-weight:normal;\">This is where Examinations/Tests in the Institution are Conducted and Managed. The module has the ff areas:</span>
+                    font-weight:normal;\">This module helps you to manage your organization's Projects and their Associated Costs! The module has the ff areas:</span>
                     </div>
       <p>";
-        $grpcntr = 0;
-        for ($i = 0; $i < count($menuItems); $i++) {
-            $No = $i + 1;
-            if ($i == 0) {
-                
-            }
-            if ($grpcntr == 0) {
-                $cntent .= "<div class=\"row\">";
-            }
+            $grpcntr = 0;
+            for ($i = 0; $i < count($menuItems); $i++) {
+                $No = $i + 1;
+                if ($i == 0) {
+                    
+                }
+                if ($grpcntr == 0) {
+                    $cntent .= "<div class=\"row\">";
+                }
 
-            $cntent .= "<div class=\"col-md-3 colmd3special2\">
+                $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$No&vtyp=0');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
             </div>";
 
-            if ($grpcntr == 3) {
-                $cntent .= "</div>";
-                $grpcntr = 0;
-            } else {
-                $grpcntr = $grpcntr + 1;
+                if ($grpcntr == 3) {
+                    $cntent .= "</div>";
+                    $grpcntr = 0;
+                } else {
+                    $grpcntr = $grpcntr + 1;
+                }
             }
-        }
 
-        $cntent .= "
+            $cntent .= "
       </p>
     </div>";
-        echo $cntent;
-    } else if ($pgNo == 1) {
-        
-    } else {
-        restricted();
+            echo $cntent;
+        } else if ($pgNo == 1) {
+            //require "org_setups.php";
+        } else {
+            restricted();
+        }
     }
-} else {
-    restricted();
 }
 ?>

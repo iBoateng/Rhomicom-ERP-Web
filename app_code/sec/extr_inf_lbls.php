@@ -50,7 +50,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                         <div class="col-md-3" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allSbgrpsSrchFor" name="allSbgrpsSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncAllSbgrps(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                <input class="form-control" id="allSbgrpsSrchFor" name="allSbgrpsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllSbgrps(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                 <input id="allSbgrpsPageNo" name="allSbgrpsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllSbgrps('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -216,7 +216,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </div>
                                 <div class="col-md-3" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="sbgrpsLblsSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncOneSbgrp(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
+                                        <input class="form-control" id="sbgrpsLblsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncOneSbgrp(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
                                         <input id="sbgrpsLblsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getOneSbgrpForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'sbgrpsLblsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, 'clear');">
                                             <span class="glyphicon glyphicon-remove"></span>

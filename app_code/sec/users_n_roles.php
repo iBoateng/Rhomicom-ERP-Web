@@ -60,7 +60,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         ?>
                         <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allUsersSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncAllUsers(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input class="form-control" id="allUsersSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllUsers(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                 <input id="allUsersPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllUsers('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -458,7 +458,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 ?>
                                 <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="userRolesSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncOneUser(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1, '');">
+                                        <input class="form-control" id="userRolesSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncOneUser(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1, '');">
                                         <input id="userRolesPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1, 'clear');">
                                             <span class="glyphicon glyphicon-remove"></span>
@@ -737,7 +737,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="row" style="margin-bottom:10px;">
                             <div class="col-lg-5" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="usrPrflSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncUsrPrfl(event, '', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
+                                    <input class="form-control" id="usrPrflSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncUsrPrfl(event, '', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
                                     <input id="usrPrflPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getUsrPrfl('clear', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
                                         <span class="glyphicon glyphicon-remove"></span>

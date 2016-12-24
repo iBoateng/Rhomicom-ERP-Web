@@ -1177,7 +1177,6 @@ function checkNAssignReqrmnts($ModuleName
     $msg = "";
     $uID = getUserID("admin");
     if (doesUsrIDHvThsRoleID($uID, $roleID) == false) {
-        //$msg = $uID . "/" . $roleID . " User Has Not " . $SampleRole;
         asgnRoleToUser($uID, $roleID);
     }
 
@@ -1226,6 +1225,7 @@ function loadMdlsNthrRolesNLovs() {
     set_time_limit(300);
     loadSysAdminMdl();
     loadGenStpMdl();
+    loadGenericMdl();
     loadOrgStpMdl();
     loadAccntngMdl();
     loadIntPymntsMdl();
@@ -1240,8 +1240,10 @@ function loadMdlsNthrRolesNLovs() {
     loadHotlMdl();
     loadMcfMdl();
     loadSelfMdl();
-    loadPSBMdl();
+    //loadPSBMdl();
+    loadProjsMdl();
     loadEvoteMdl();
+    loadELibraryMdl();
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
     createSysLovsPssblVals($pssblVals, $sysLovs);
 
@@ -1255,41 +1257,41 @@ function loadMdlsNthrRolesNLovs() {
 
 function loadInvMdl() {
     $DefaultPrvldgs = array("View Inventory Manager",
-    /* 1 */ "View Item List", "View Product Categories", "View Stores/Warehouses"
-    /* 4 */, "View Receipts", "View Receipt Returns", "View Item Type Templates",
-    /* 7 */ "View Item Balances",
-    /* 8 */ "Add Items", "Update Items",
-    /* 10 */ "Add Item Stores", "Update Item Stores", "Delete Item Stores",
-    /* 13 */ "Add Product Category", "Update Product Category",
-    /* 15 */ "Add Stores", "Update Stores",
-    /* 17 */ "Add Store Users", "Update Store Users", "Delete Store Users",
-    /* 20 */ "Add Store Shelves", "Delete Store Shelves",
-    /* 22 */ "Add Receipt", "Delete Receipt",
-    /* 24 */ "Add Receipt Return", "Delete Receipt Return",
-    /* 26 */ "Add Item Template", "Update Item Template",
-    /* 28 */ "Add Template Stores", "Update Template Stores",
-    /* 30 */ "View GL Interface",
-    /* 31 */ "View SQL", "View Record History", "Send To GL Interface Table",
-    /* 34 */ "View Purchases", "View Sales/Item Issues", "View Sales Returns",
-    /* 37 */ "View Payments Received",
-    /* 38 */ "View Purchase Requisitions", "Add Purchase Requisitions", "Edit Purchase Requisitions", "Delete Purchase Requisitions",
-    /* 42 */ "View Purchase Orders", "Add Purchase Orders", "Edit Purchase Orders", "Delete Purchase Orders",
-    /* 46 */ "View Pro-Forma Invoices", "Add Pro-Forma Invoices", "Edit Pro-Forma Invoices", "Delete Pro-Forma Invoices",
-    /* 50 */ "View Sales Orders", "Add Sales Orders", "Edit Sales Orders", "Delete Sales Orders",
-    /* 54 */ "View Sales Invoices", "Add Sales Invoices", "Edit Sales Invoices", "Delete Sales Invoices",
-    /* 58 */ "View Internal Item Requests", "Add Internal Item Requests", "Edit Internal Item Requests", "Delete Internal Item Requests",
-    /* 62 */ "View Item Issues-Unbilled", "Add Item Issues-Unbilled", "Edit Item Issues-Unbilled", "Delete Item Issues-Unbilled",
-    /* 66 */ "View Sales Returns", "Add Sales Return", "Edit Sales Return", "Delete Sales Return",
-    /* 70 */ "Send GL Interface Records to GL", "Cancel Documents", "View only Self-Created Documents",
-    /* 73 */ "View UOM", "Add UOM", "Edit UOM", "Delete UOM", "Make Payments", "Delete Product Category",
-    /* 79 */ "View UOM Conversion", "Add UOM Conversion", "Edit UOM Conversion", "Delete UOM Conversion",
-    /* 83 */ "View Drug Interactions", "Add Drug Interactions", "Edit Drug Interactions", "Delete Drug Interactions",
-    /* 87 */ "Edit Receipt", "Edit Returns", "Edit Store Transfers", "Edit Adjustments",
-    /* 91 */ "Clear Stock Balance", "Do Quick Receipt",
-    /* 93 */ "View Item Production", "Add Item Production", "Edit Item Production", "Delete Item Production",
-    /* 97 */ "Setup Production Processes", "Apply Adhoc Discounts",
-    /* 99 */ "View Production Runs", "Add Production Runs", "Edit Production Runs", "Delete Production Runs",
-    /* 103 */ "Can Edit Unit Price");
+        /* 1 */ "View Item List", "View Product Categories", "View Stores/Warehouses"
+        /* 4 */, "View Receipts", "View Receipt Returns", "View Item Type Templates",
+        /* 7 */ "View Item Balances",
+        /* 8 */ "Add Items", "Update Items",
+        /* 10 */ "Add Item Stores", "Update Item Stores", "Delete Item Stores",
+        /* 13 */ "Add Product Category", "Update Product Category",
+        /* 15 */ "Add Stores", "Update Stores",
+        /* 17 */ "Add Store Users", "Update Store Users", "Delete Store Users",
+        /* 20 */ "Add Store Shelves", "Delete Store Shelves",
+        /* 22 */ "Add Receipt", "Delete Receipt",
+        /* 24 */ "Add Receipt Return", "Delete Receipt Return",
+        /* 26 */ "Add Item Template", "Update Item Template",
+        /* 28 */ "Add Template Stores", "Update Template Stores",
+        /* 30 */ "View GL Interface",
+        /* 31 */ "View SQL", "View Record History", "Send To GL Interface Table",
+        /* 34 */ "View Purchases", "View Sales/Item Issues", "View Sales Returns",
+        /* 37 */ "View Payments Received",
+        /* 38 */ "View Purchase Requisitions", "Add Purchase Requisitions", "Edit Purchase Requisitions", "Delete Purchase Requisitions",
+        /* 42 */ "View Purchase Orders", "Add Purchase Orders", "Edit Purchase Orders", "Delete Purchase Orders",
+        /* 46 */ "View Pro-Forma Invoices", "Add Pro-Forma Invoices", "Edit Pro-Forma Invoices", "Delete Pro-Forma Invoices",
+        /* 50 */ "View Sales Orders", "Add Sales Orders", "Edit Sales Orders", "Delete Sales Orders",
+        /* 54 */ "View Sales Invoices", "Add Sales Invoices", "Edit Sales Invoices", "Delete Sales Invoices",
+        /* 58 */ "View Internal Item Requests", "Add Internal Item Requests", "Edit Internal Item Requests", "Delete Internal Item Requests",
+        /* 62 */ "View Item Issues-Unbilled", "Add Item Issues-Unbilled", "Edit Item Issues-Unbilled", "Delete Item Issues-Unbilled",
+        /* 66 */ "View Sales Returns", "Add Sales Return", "Edit Sales Return", "Delete Sales Return",
+        /* 70 */ "Send GL Interface Records to GL", "Cancel Documents", "View only Self-Created Documents",
+        /* 73 */ "View UOM", "Add UOM", "Edit UOM", "Delete UOM", "Make Payments", "Delete Product Category",
+        /* 79 */ "View UOM Conversion", "Add UOM Conversion", "Edit UOM Conversion", "Delete UOM Conversion",
+        /* 83 */ "View Drug Interactions", "Add Drug Interactions", "Edit Drug Interactions", "Delete Drug Interactions",
+        /* 87 */ "Edit Receipt", "Edit Returns", "Edit Store Transfers", "Edit Adjustments",
+        /* 91 */ "Clear Stock Balance", "Do Quick Receipt",
+        /* 93 */ "View Item Production", "Add Item Production", "Edit Item Production", "Delete Item Production",
+        /* 97 */ "Setup Production Processes", "Apply Adhoc Discounts",
+        /* 99 */ "View Production Runs", "Add Production Runs", "Edit Production Runs", "Delete Production Runs",
+        /* 103 */ "Can Edit Unit Price");
 
     $subGrpNames = "";
     $mainTableNames = "";
@@ -1521,44 +1523,44 @@ function loadSysAdminMdl() {
 
 function loadAccntngMdl() {
     //For Accounting
-    $DefaultPrvldgs = array("View Accounting","View Chart of Accounts", 
-    /*2*/"View Account Transactions", "View Transactions Search",
-    /*4*/"View/Generate Trial Balance", "View/Generate Profit & Loss Statement", 
-    /*6*/"View/Generate Balance Sheet","View Budgets",
-		/*8*/"View Transaction Templates", "View Record History", "View SQL",
-    /*11*/"Add Chart of Accounts", "Edit Chart of Accounts", "Delete Chart of Accounts",
-    /*14*/"Add Batch for Transactions","Edit Batch for Transactions","Void/Delete Batch for Transactions",
-    /*17*/"Add Transactions Directly", "Edit Transactions","Delete Transactions",
-    /*20*/"Add Transactions Using Template","Post Transactions",
-    /*22*/"Add Budgets","Edit Budgets","Delete Budgets",
-    /*25*/"Add Transaction Templates","Edit Transaction Templates","Delete Transaction Templates",
-    /*28*/"View Only Self-Created Transaction Batches",
-    /*29*/"View Financial Statements","View Accounting Periods","View Payables",
-    /*32*/"View Receivables","View Customers/Suppliers","View Tax Codes",
-    /*35*/"View Default Accounts","View Account Reconciliation",
-    /*37*/"Add Accounting Periods","Edit Accounting Periods", "Delete Accounting Periods",
-    /*40*/"View Fixed Assets","View Payments",
-    /*42*/"Add Payment Methods", "Edit Payment Methods","Delete Payment Methods",
-    /*45*/"Add Supplier Standard Payments", "Edit Supplier Standard Payments","Delete Supplier Standard Payments",
-    /*48*/"Add Supplier Advance Payments", "Edit Supplier Advance Payments","Delete Supplier Advance Payments", 
-    /*51*/"Setup Exchange Rates", "Setup Document Templates","Review/Approve Payables Documents","Review/Approve Receivables Documents",
-    /*55*/"Add Direct Refund from Supplier", "Edit Direct Refund from Supplier","Delete Direct Refund from Supplier",
-    /*58*/"Add Supplier Credit Memo (InDirect Refund)", "Edit Supplier Credit Memo (InDirect Refund)","Delete Supplier Credit Memo (InDirect Refund)",
-    /*61*/"Add Direct Topup for Supplier", "Edit Direct Topup for Supplier","Delete Direct Topup for Supplier",
-    /*64*/"Add Supplier Debit Memo (InDirect Topup)", "Edit Supplier Debit Memo (InDirect Topup)", "Delete Supplier Debit Memo (InDirect Topup)",
-    /*67*/"Cancel Payables Documents", "Cancel Receivables Documents",
-    /*69*/"Reject Payables Documents", "Reject Receivables Documents",
-    /*71*/"Pay Payables Documents", "Pay Receivables Documents",
-    /*73*/"Add Customer Standard Payments", "Edit Customer Standard Payments","Delete Customer Standard Payments",
-    /*76*/"Add Customer Advance Payments", "Edit Customer Advance Payments","Delete Customer Advance Payments", 
-    /*79*/"Add Direct Refund to Customer", "Edit Direct Refund to Customer","Delete Direct Refund to Customer",
-    /*82*/"Add Customer Credit Memo (InDirect Topup)", "Edit Customer Credit Memo (InDirect Topup)","Delete Customer Credit Memo (InDirect Topup)",
-    /*85*/"Add Direct Topup from Customer", "Edit Direct Topup from Customer","Delete Direct Topup from Customer",
-    /*88*/"Add Customer Debit Memo (InDirect Refund)", "Edit Customer Debit Memo (InDirect Refund)", "Delete Customer Debit Memo (InDirect Refund)",
-    /*91*/"Add Customers/Suppliers", "Edit Customers/Suppliers", "Delete Customers/Suppliers",
-    /*94*/"Add Fixed Assets","Edit Fixed Assets", "Delete Fixed Assets"
-                /*97*/,"View Petty Cash Vouchers", "View Petty Cash Payments","Add Petty Cash Payments","Edit Petty Cash Payments","Delete Petty Cash Payments"
-                /*102*/,"View Petty Cash Re-imbursements","Add Petty Cash Re-imbursements","Edit Petty Cash Re-imbursements","Delete Petty Cash Re-imbursements");
+    $DefaultPrvldgs = array("View Accounting", "View Chart of Accounts",
+        /* 2 */ "View Account Transactions", "View Transactions Search",
+        /* 4 */ "View/Generate Trial Balance", "View/Generate Profit & Loss Statement",
+        /* 6 */ "View/Generate Balance Sheet", "View Budgets",
+        /* 8 */ "View Transaction Templates", "View Record History", "View SQL",
+        /* 11 */ "Add Chart of Accounts", "Edit Chart of Accounts", "Delete Chart of Accounts",
+        /* 14 */ "Add Batch for Transactions", "Edit Batch for Transactions", "Void/Delete Batch for Transactions",
+        /* 17 */ "Add Transactions Directly", "Edit Transactions", "Delete Transactions",
+        /* 20 */ "Add Transactions Using Template", "Post Transactions",
+        /* 22 */ "Add Budgets", "Edit Budgets", "Delete Budgets",
+        /* 25 */ "Add Transaction Templates", "Edit Transaction Templates", "Delete Transaction Templates",
+        /* 28 */ "View Only Self-Created Transaction Batches",
+        /* 29 */ "View Financial Statements", "View Accounting Periods", "View Payables",
+        /* 32 */ "View Receivables", "View Customers/Suppliers", "View Tax Codes",
+        /* 35 */ "View Default Accounts", "View Account Reconciliation",
+        /* 37 */ "Add Accounting Periods", "Edit Accounting Periods", "Delete Accounting Periods",
+        /* 40 */ "View Fixed Assets", "View Payments",
+        /* 42 */ "Add Payment Methods", "Edit Payment Methods", "Delete Payment Methods",
+        /* 45 */ "Add Supplier Standard Payments", "Edit Supplier Standard Payments", "Delete Supplier Standard Payments",
+        /* 48 */ "Add Supplier Advance Payments", "Edit Supplier Advance Payments", "Delete Supplier Advance Payments",
+        /* 51 */ "Setup Exchange Rates", "Setup Document Templates", "Review/Approve Payables Documents", "Review/Approve Receivables Documents",
+        /* 55 */ "Add Direct Refund from Supplier", "Edit Direct Refund from Supplier", "Delete Direct Refund from Supplier",
+        /* 58 */ "Add Supplier Credit Memo (InDirect Refund)", "Edit Supplier Credit Memo (InDirect Refund)", "Delete Supplier Credit Memo (InDirect Refund)",
+        /* 61 */ "Add Direct Topup for Supplier", "Edit Direct Topup for Supplier", "Delete Direct Topup for Supplier",
+        /* 64 */ "Add Supplier Debit Memo (InDirect Topup)", "Edit Supplier Debit Memo (InDirect Topup)", "Delete Supplier Debit Memo (InDirect Topup)",
+        /* 67 */ "Cancel Payables Documents", "Cancel Receivables Documents",
+        /* 69 */ "Reject Payables Documents", "Reject Receivables Documents",
+        /* 71 */ "Pay Payables Documents", "Pay Receivables Documents",
+        /* 73 */ "Add Customer Standard Payments", "Edit Customer Standard Payments", "Delete Customer Standard Payments",
+        /* 76 */ "Add Customer Advance Payments", "Edit Customer Advance Payments", "Delete Customer Advance Payments",
+        /* 79 */ "Add Direct Refund to Customer", "Edit Direct Refund to Customer", "Delete Direct Refund to Customer",
+        /* 82 */ "Add Customer Credit Memo (InDirect Topup)", "Edit Customer Credit Memo (InDirect Topup)", "Delete Customer Credit Memo (InDirect Topup)",
+        /* 85 */ "Add Direct Topup from Customer", "Edit Direct Topup from Customer", "Delete Direct Topup from Customer",
+        /* 88 */ "Add Customer Debit Memo (InDirect Refund)", "Edit Customer Debit Memo (InDirect Refund)", "Delete Customer Debit Memo (InDirect Refund)",
+        /* 91 */ "Add Customers/Suppliers", "Edit Customers/Suppliers", "Delete Customers/Suppliers",
+        /* 94 */ "Add Fixed Assets", "Edit Fixed Assets", "Delete Fixed Assets"
+        /* 97 */, "View Petty Cash Vouchers", "View Petty Cash Payments", "Add Petty Cash Payments", "Edit Petty Cash Payments", "Delete Petty Cash Payments"
+        /* 102 */, "View Petty Cash Re-imbursements", "Add Petty Cash Re-imbursements", "Edit Petty Cash Re-imbursements", "Delete Petty Cash Re-imbursements");
 
     $subGrpNames = array("Chart of Accounts"); //, "Accounting Transactions"
     $mainTableNames = array("accb.accb_chart_of_accnts"); //, "accb.accb_trnsctn_details"
@@ -1610,6 +1612,45 @@ function loadGenStpMdl() {
     $audit_tbl_name = "gst.gen_stp_audit_trail_tbl";
 
     $smplRoleName = "General Setup Administrator";
+
+    checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
+}
+
+function loadProjsMdl()
+{ 
+    $DefaultPrvldgs = array(
+       "View Projects Management", 
+      /*1*/"View Projects", "View Accounts Setup", 
+      /*3*/"View Resources Setup", "View SQL", "View Record History",
+      /*6*/"Add Projects","Edit Projects","Delete Projects",
+      /*9*/"Add Accounts","Edit Accounts","Delete Accounts",
+      /*12*/"Add Resource","Edit Resource","Delete Resource",
+      /*15*/"View Project Costs","Edit Project Costs");
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+    $myName = "Projects Management";
+    $myDesc = "This module helps you to manage your organization's Projects and their Associated Costs!";
+    $audit_tbl_name = "proj.proj_audit_trail_tbl";
+
+    $smplRoleName = "Projects Management Administrator";
+
+    checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
+   
+}
+
+function loadGenericMdl() {
+    $DefaultPrvldgs = array("View Generic Module");
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+    $myName = "Generic Module";
+    $myDesc = "This module is a mere place holder for categorising reports and processes!";
+    $audit_tbl_name = "sec.sec_audit_trail_tbl";
+
+    $smplRoleName = "Generic Module Administrator";
 
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
@@ -1751,8 +1792,8 @@ function loadEvoteMdl() {
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
 }
 
-function loadELearnMdl() {
-    $DefaultPrvldgs = array("View e-Learning",
+function loadELibraryMdl() {
+    $DefaultPrvldgs = array("View e-Library",
         /* 1 */ "View All Exams/Tests", "View Questions Bank", "View Person Sets",
         /* 4 */ "View Record History", "View SQL",
         /* 6 */ "Add Exams/Tests", "Edit Exams/Tests", "Delete Exams/Tests",
@@ -1762,50 +1803,117 @@ function loadELearnMdl() {
     $mainTableNames = "";
     $keyColumnNames = "";
 
-    $myName = "e-Learning";
+    $myName = "e-Library";
     $myDesc = "This is where Examinations/Tests in the Institution are Conducted and Managed!";
     $audit_tbl_name = "self.self_prsn_audit_trail_tbl";
 
-    $smplRoleName = "e-Learning Administrator";
+    $smplRoleName = "e-Library Administrator";
 
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
 
 function loadHospMdl() {
-    //For Accounting
-    $DefaultPrvldgs = array("View Visits & Appointments", "View Appointment Data", "View Service Types & Providers",
-        /* 3 */ "View List of Diagnosis", "Add Visits & Appointments", "Edit Appointment Data",
-        /* 6 */ "Delete Appointment Data", "Add Appointment Data", "Edit Appointment Data",
-        /* 9 */ "Delete Appointment Data", "Add Service Types & Providers", "Edit Service Types & Providers",
-        /* 12 */ "Delete Service Types & Providers", "Add List of Diagnosis", "Edit List of Diagnosis",
-        /* 15 */ "Delete List of Diagnosis", "View Record History", "View SQL");
+    $DefaultPrvldgs = array(/* 0 */ "View Visits and Appointments",
+        /* 1 */ "View Visits/Appointments", "View Appointments Data", "View Service Providers", "View Services Offered",
+        /* 5 */ "View SQL", "View Record History",
+        /* 7 */ "Add Visits/Appointments", "Edit Visits/Appointments", "Delete Visits/Appointments",
+        /* 10 */ "Add Appointment Data", "Edit Appointment Data", "Delete Appointment Data",
+        /* 13 */ "Add Services Offered", "Edit Services Offered", "Delete Services Offered",
+        /* 16 */ "Add Service Providers", "Edit Service Providers", "Delete Service Providers",
+        /* 19 */ "View only Self-Created Sales", "Cancel Documents", "Take Payments",
+        /* 22 */ "Apply Adhoc Discounts", "Apply Pre-defined Discounts",
+        /* 24 */ "Can Edit Unit Price", "View Other Provider's Data");
 
-    $subGrpNames = ""; //, "Accounting Transactions"
-    $mainTableNames = ""; //, "accb.accb_trnsctn_details"
-    $keyColumnNames = ""; //, "transctn_id" 
-    $myName = "Clinic/Hospital";
-    $myDesc = "This module helps you to manage your Clinic/Hospital!";
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+    $myName = "Visits and Appointments";
+    $myDesc = "This module helps you to manage your organization's Client Visits and Appointments Scheduling!!";
     $audit_tbl_name = "hosp.hosp_audit_trail_tbl";
-    $smplRoleName = "Clinic/Hospital Administrator";
+    $smplRoleName = "Visits and Appointments Administrator";
+
+    $DefaultPrvldgs1 = array(/* 0 */ "View Visits and Appointments",
+        /* 1 */ "View Visits/Appointments", "View Appointments Data", "View Service Providers", "View Services Offered",
+        /* 5 */ "View SQL", "View Record History",
+        /* 7 */ "Add Visits/Appointments", "Edit Visits/Appointments", "Delete Visits/Appointments",
+        /* 10 */ "Add Appointment Data", "Edit Appointment Data", "Delete Appointment Data",
+        /* 13 */ "Add Services Offered", "Edit Services Offered", "Delete Services Offered",
+        /* 16 */ "Add Service Providers", "Edit Service Providers", "Delete Service Providers",
+        /* 19 */ "View only Self-Created Sales", "Cancel Documents", "Take Payments",
+        /* 22 */ "Apply Adhoc Discounts", "Apply Pre-defined Discounts",
+        /* 24 */ "Can Edit Unit Price", "View Other Provider's Data",
+        /* 26 */ "Add List of Diagnosis", "Edit List of Diagnosis", "Delete List of Diagnosis",
+        /* 29 */ "View Lab Investigations List", "Edit Lab Investigations List", "Delete Lab Investigations List");
+    $smplRoleName1 = "Clinic/Hospital Administrator";
+    $myName1 = "Clinic/Hospital";
+    $myDesc1 = "This module helps you to manage your Clinic/Hospital's Appointments Scheduling and Data Capturing!";
 
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
+    checkNAssignReqrmnts($myName1, $myDesc1, $audit_tbl_name, $smplRoleName1, $DefaultPrvldgs1, $subGrpNames, $mainTableNames, $keyColumnNames);
+    createRqrdHospLOVs();
+}
+
+function createRqrdHospLOVs() {
+
+    $sysLovs = array("Service Types", "Service Providers", "Provider Groups", "Dosage Methods", "Inventory Services"
+        , "Diagnosis Types", "Investigation Types", "Laboratory Locations", "Inventory Items", "Recommended Services",
+        "Service Provider Groups", "Item UOM"
+    );
+    $sysLovsDesc = array("Service Types", "Service Providers", "Provider Groups", "Dosage Methods", "Inventory Services"
+        , "Diagnosis Types", "Investigation Types", "Laboratory Locations", "Inventory Items", "Recommended Services",
+        "Service Provider Groups", "Item UOM"
+    );
+    $sysLovsDynQrys = array("select distinct trim(to_char(type_id,'999999999999999999999999999999')) a, trim(type_name ||' ('||type_desc||')') b, '' c from hosp.srvs_types order by 2",
+        "SELECT distinct trim(to_char(x.prsn_id,'999999999999999999999999999999')) a, 
+    (SELECT trim(title || ' ' || sur_name || ', ' || first_name || ' ' || other_names) FROM prs.prsn_names_nos WHERE person_id = x.prsn_id)
+    ||'('||(SELECT type_name from hosp.srvs_types WHERE type_id = x.srvs_type_id)||')' b, '' c, srvs_type_id d FROM hosp.srvs_prvdrs x order by 2",
+        "SELECT distinct trim(to_char(prvdr_grp_id,'999999999999999999999999999999')) a, prvdr_grp_name b, '' c FROM hosp.prvdr_grps order by 2",
+        "",
+        "SELECT distinct trim(to_char(item_id,'999999999999999999999999999999')) a, item_code||' ('||item_desc||')' b, '' c FROM inv.inv_itm_list WHERE item_type = 'Services' AND org_id = 6 order by 2",
+        "SELECT distinct trim(disease_name) a, symtms b, '' c  FROM hosp.diseases order by 1",
+        "SELECT distinct trim(to_char(invstgtn_list_id,'999999999999999999999999999999')) a, invstgtn_name||' ('||invstgtn_desc||')' b, '' c  FROM hosp.invstgtn_list order by 2",
+        "",
+        "SELECT distinct trim(item_code) a, item_desc b, '' c FROM inv.inv_itm_list WHERE org_id = 6 order by 2",
+        "select distinct trim(to_char(type_id,'999999999999999999999999999999')) a, trim(type_name ||' ('||type_desc||')') b, '' c from hosp.srvs_types where sys_code not in ('1-Consultation','2-Investigations','3-Vitals','4-Pharmacy') order by 2",
+        "SELECT distinct trim(to_char(prvdr_grp_id,'999999999999999999999999999999')) a, (SELECT prvdr_grp_name FROM hosp.prvdr_grps WHERE prvdr_grp_id = x.prvdr_grp_id) b, '' c, type_id d FROM hosp.prvdr_grp_srvs x order by 2",
+        "SELECT (SELECT v.uom_name FROM inv.unit_of_measure v WHERE v.uom_id = x.uom_id) a, (SELECT w.uom_desc FROM inv.unit_of_measure w WHERE w.uom_id = x.uom_id) b,
+            '' c, z.org_id d, (SELECT w.item_code FROM inv.inv_itm_list w WHERE w.item_id = x.item_id) e
+            FROM inv.inv_itm_list z, inv.itm_uoms x WHERE z.item_id = x.item_id 
+            union
+            SELECT (SELECT y.uom_name FROM inv.unit_of_measure y WHERE y.uom_id = x.base_uom_id) a, (SELECT y.uom_desc FROM inv.unit_of_measure y WHERE y.uom_id = x.base_uom_id) b,
+            '' c, x.org_id d, x.item_code e FROM inv.inv_itm_list x  ORDER BY 1"
+    );
+
+    $pssblVals = array(
+        "3", "Oral", "To be taken my mouth"
+        , "3", "Suppository", "To be taken through the anus, urethra"
+        , "3", "External", "External applications"
+        , "3", "Injection", "To be injected"
+        , "3", "Intra-venous Infusion", "To be infused into the veins"
+        , "7", "BOG Clinic", "Bank Of Ghana Clinic Laboratory"
+        , "7", "Ridge Hospital", "Ridge Hospital Laboratory"
+    );
+
+    createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
+    createSysLovsPssblVals($pssblVals, $sysLovs);
 }
 
 function loadHotlMdl() {
-    $DefaultPrvldgs = array( 
-        /*1*/ "View Hospitality Manager", "View Rooms Dashboard",
-        /*2*/ "View Reservations", "View Check Ins", "View Service Types", 
-        /*5*/ "View Restaurant","View Gym",
-        /*7*/ "Add Service Types","Edit Service Types","Delete Service Types",
-        /*10*/"Add Check Ins","Edit Check Ins","Delete Check Ins", 
-        /*13*/"Add Applications","Edit Applications","Delete Applications",
-        /*16*/"Add Gym Types","Edit Gym Types","Delete Gym Types",
-        /*19*/"Add Gym Registration","Edit Gym Registration","Delete Gym Registration",
-        /*22*/"View SQL","View Record History", 
-        /*24*/"Add Table Order","Edit Table Order","Delete Table Order", "Setup Tables",
-        /*28*/"View Complaints/Observations","Add Complaints/Observations","Edit Complaints/Observations","Delete Complaints/Observations",
-        /*32*/"View only Self-Created Sales","Cancel Documents","Take Payments","Apply Adhoc Discounts", "Apply Pre-defined Discounts", 
-        /*37*/"View Rental Item", "Can Edit Unit Price");
+    $DefaultPrvldgs = array(
+        /* 1 */ "View Hospitality Manager", "View Rooms Dashboard",
+        /* 2 */ "View Reservations", "View Check Ins", "View Service Types",
+        /* 5 */ "View Restaurant", "View Gym",
+        /* 7 */ "Add Service Types", "Edit Service Types", "Delete Service Types",
+        /* 10 */ "Add Check Ins", "Edit Check Ins", "Delete Check Ins",
+        /* 13 */ "Add Applications", "Edit Applications", "Delete Applications",
+        /* 16 */ "Add Gym Types", "Edit Gym Types", "Delete Gym Types",
+        /* 19 */ "Add Gym Registration", "Edit Gym Registration", "Delete Gym Registration",
+        /* 22 */ "View SQL", "View Record History",
+        /* 24 */ "Add Table Order", "Edit Table Order", "Delete Table Order", "Setup Tables",
+        /* 28 */ "View Complaints/Observations", "Add Complaints/Observations", "Edit Complaints/Observations", "Delete Complaints/Observations",
+        /* 32 */ "View only Self-Created Sales", "Cancel Documents", "Take Payments", "Apply Adhoc Discounts", "Apply Pre-defined Discounts",
+        /* 37 */ "View Rental Item", "Can Edit Unit Price");
 
     $subGrpNames = "";
     $mainTableNames = "";
@@ -1816,8 +1924,6 @@ function loadHotlMdl() {
     $smplRoleName = "Hospitality Management Administrator";
 
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
-
-    
 }
 
 function loadSelfMdl() {
@@ -1851,11 +1957,48 @@ function loadSelfMdl() {
 }
 
 function loadAcaMdl() {
-    
+    $DefaultPrvldgs = array("View Summary Reports", "View Learning/Performance Management",
+        /* 1 */ "View Assessment Sheets", "View Task Assignment Setups", "View Groups/Courses/Subjects",
+        /* 4 */ "View Position Holders", "View Assessment Periods", "View Assessment Reports Types"
+            /* 7 */            );
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+    $myName = "Learning/Performance Management";
+    $myDesc = "This module helps you to manage your organization's Learning/Performance Assessment Needs!";
+    $audit_tbl_name = "aca.aca_audit_trail_tbl";
+
+    $smplRoleName = "Learning/Performance Management Administrator";
+    checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
 
 function loadAttnMdl() {
-    
+    $DefaultPrvldgs = array(
+        "View Events And Attendance",
+        /* 1 */ "View Attendance Records", "View Time Tables", "View Events",
+        /* 4 */ "View Venues", "View Attendance Search", "View SQL", "View Record History",
+        /* 8 */ "Add Attendance Records", "Edit Attendance Records", "Delete Attendance Records",
+        /* 11 */ "Add Time Tables", "Edit Time Tables", "Delete Time Tables",
+        /* 14 */ "Add Events", "Edit Events", "Delete Events",
+        /* 17 */ "Add Venues", "Edit Venues", "Delete Venues",
+        /* 20 */ "Add Event Results", "Edit Event Results", "Delete Event Results",
+        /* 23 */ "View Adhoc Registers", "Add Adhoc Registers", "Edit Adhoc Registers", "Delete Adhoc Registers",
+        /* 27 */ "View Event Cost", "Add Event Cost", "Edit Event Cost", "Delete Event Cost",
+        /* 31 */ "View Complaints/Observations", "Add Complaints/Observations", "Edit Complaints/Observations", "Delete Complaints/Observations",
+        /* 35 */ "View only Self-Created Sales", "Cancel Documents", "Take Payments", "Apply Adhoc Discounts", "Apply Pre-defined Discounts",
+        /* 40 */ "Can Edit Unit Price"
+    );
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+    $myName = "Events And Attendance";
+    $myDesc = "This module helps you to manage your organization's Events And Attendance!";
+    $audit_tbl_name = "attn.attn_audit_trail_tbl";
+
+    $smplRoleName = "Events And Attendance Administrator";
+    checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
 
 function loadMcfMdl() {

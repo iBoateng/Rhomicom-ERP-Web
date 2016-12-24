@@ -172,7 +172,7 @@
                     </button>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=5');">
+                    <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=19&typ=10');">
                         <img src="cmn_images/election.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
                         <span class="wordwrap1"> Elections Centre</span>
                     </button>
@@ -180,9 +180,9 @@
                 <!--id="gnrlDshBrd"
                  id="otherMdls"-->
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=5');">
+                    <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=4');">
                         <img src="cmn_images/dashboard220.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-                        <span class="wordwrap1"> General Dashboard</span>
+                        <span class="wordwrap1"> Summary Dashboard</span>
                     </button>
                 </div>
                 <div class="col-md-3">

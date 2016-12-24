@@ -9,6 +9,27 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $orgID = $_SESSION['ORG_ID'];
         $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
         $nwFileName = $myImgFileName;
+        
+        $canViewSelfsrvc = test_prmssns("View Self-Service", "Self Service");
+        $canViewEvote = test_prmssns("View e-Voting", "e-Voting") || test_prmssns("View Elections", "Self Service");
+        $canViewELbry = test_prmssns("View e-Library", "e-Library");
+        $canViewAcntng = test_prmssns("View Accounting", "Accounting");
+        $canViewPrsn = test_prmssns("View Person", "Basic Person Data");
+        $canViewIntrnlPay = test_prmssns("View Internal Payments", "Internal Payments");
+        $canViewSales = test_prmssns("View Inventory Manager", "Stores And Inventory Manager");
+        $canViewVsts = test_prmssns("View Visits and Appointments", "Visits and Appointments");
+        $canViewEvnts = test_prmssns("View Events And Attendance", "Events And Attendance");
+        $canViewHotel = test_prmssns("View Hospitality Manager", "Hospitality Management");
+        $canViewClnc = test_prmssns("View Clinic/Hospital", "Clinic/Hospital");
+        $canViewBnkng = test_prmssns("View Person", "Basic Person Data");
+        $canViewPrfmnc = test_prmssns("View Learning/Performance Management", "Learning/Performance Management");
+        $canViewProjs = test_prmssns("View Projects Management", "Projects Management");
+        $canViewSysAdmin = test_prmssns("View System Administration", "System Administration");
+        $canViewOrgStp = test_prmssns("View Organization Setup", "Organization Setup");
+        $canViewLov = test_prmssns("View General Setup", "General Setup");
+        $canViewWkf = test_prmssns("View Workflow Manager", "Workflow Manager");
+        $canViewArtclAdmn = test_prmssns("View Articles Admin", "System Administration");
+        $canViewRpts = test_prmssns("View Reports And Processes", "Reports And Processes");
         ?>
         <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
         <link href="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />  
@@ -124,7 +145,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="top-menu">
                             <ul class="nav navbar-top-links navbar-right navbar-nav">                               
                                 <li class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle" data-toggle="tooltip" data-placement="bottom" title="Forums/Chat Rooms">
+                                    <a href="javascript:openATab('#allarticles', 'grp=40&typ=3&vtyp=6');" class="dropdown-toggle" data-toggle="tooltip" data-placement="bottom" title="Forums/Chat Rooms">
                                         <i class="fa fa-wechat fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                         <span class="badge bg-success" style="background-color: red;float:right;">15</span>
                                     </a>
@@ -211,17 +232,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </a>
                                 <ul class="sub-menu">
                                     <li>
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                        <a href="javascript:openATab('#allmodules', 'grp=40&typ=4');" class="nav-link " style="<?php echo $forecolors; ?>">
                                             <span class="title">My Charts</span>
                                         </a>
                                     </li>
                                     <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                        <a href="javascript:openATab('#allmodules', 'grp=40&typ=4');" class="nav-link " style="<?php echo $forecolors; ?>">
                                             <span class="title">General Charts</span>
                                         </a>
                                     </li>
                                     <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                        <a href="javascript:openATab('#allmodules', 'grp=9&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
                                             <span class="title">Reports/Processes</span>
                                         </a>
                                     </li>
@@ -235,56 +256,66 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                <a href="javascript:openATab('#myinbox', 'grp=40&typ=2');" class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-envelope fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Inbox/Worklist</span>
                                     <span class="badge bg-success" style="background-color: lime;float:right;">7</span>
                                 </a>
                             </li>
-                            <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
-                                    <i class="fa fa-wrench fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                    <span class="title">Self-Service</span>
-                                    <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item  ">
-                                        <a href="javascript:openATab('#allmodules', 'grp=8&typ=1]');" class="nav-link " style="<?php echo $forecolors; ?>">
-                                            <span class="title">Personal Records</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
-                                            <span class="title">Bills/Payments</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
-                                            <span class="title">Events/Attendances</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-second-level -->
-                            </li>
-                            <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
-                                    <i class="fa fa-files-o fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                    <span class="title">e-Systems</span>
-                                    <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
-                                            <span class="title">e-Voting</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
-                                            <span class="title">e-Learning</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <?php if ($canViewSelfsrvc) { ?>
+                                <li class="nav-item  ">
+                                    <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                        <i class="fa fa-wrench fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                        <span class="title">Self-Service</span>
+                                        <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="nav-item  ">
+                                            <a href="javascript:openATab('#allmodules', 'grp=8&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                                <span class="title">Personal Records</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item  ">
+                                            <a href="javascript:openATab('#allmodules', 'grp=7&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                                <span class="title">Bills/Payments</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item  ">
+                                            <a href="javascript:openATab('#allmodules', 'grp=16&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                                <span class="title">Events/Attendances</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-second-level -->
+                                </li>
+                            <?php } ?>
+                            <?php
+                            if ($canViewEvote || $canViewELbry) {
+                                ?>
+                                <li class="nav-item  ">
+                                    <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                        <i class="fa fa-files-o fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                        <span class="title">e-Systems</span>
+                                        <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <?php if ($canViewEvote) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=19&typ=10');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                                    <span class="title">e-Voting</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewELbry) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=19&typ=12');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                                    <span class="title">e-Library</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                            <?php } ?>
                             <!--<li class="nav-item  ">
                                 <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-sitemap fa-fw" style="<?php echo $forecolors; ?>"></i> 
@@ -294,123 +325,170 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <ul class="sub-menu">
                                 </ul>
                             </li>-->
+                            <?php
+                            if ($canViewAcntng || $canViewPrsn || $canViewIntrnlPay || $canViewSales || $canViewVsts || $canViewEvnts) {
+                                ?>
+                                <li class="nav-item  ">
+                                    <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                        <i class="fa fa-anchor fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                        <span class="title">Core Modules</span> 
+                                        <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <?php if ($canViewAcntng) { ?>
+                                            <li>
+                                                <a href="javascript:openATab('#allmodules', 'grp=6&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Accounting</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewPrsn) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=8&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Basic Person Data</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewIntrnlPay) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=7&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Internal Payments</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewSales) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=12&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Sales/Inventory</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewVsts) { ?>
+                                            <li>
+                                                <a href="javascript:openATab('#allmodules', 'grp=14&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Visits/Appointments</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewEvnts) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=16&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Events/Attendance</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                            <?php } ?>
+                            <?php
+                            if ($canViewHotel || $canViewClnc || $canViewBnkng || $canViewPrfmnc || $canViewProjs) {
+                                ?>
+                                <li class="nav-item  ">
+                                    <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                        <i class="fa fa-desktop fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                        <span class="title">Specialty Modules</span> 
+                                        <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
+                                    </a>
+                                    <ul class="sub-menu">  
+                                        <?php if ($canViewHotel) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=18&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Hospitality Management</span>
+                                                </a>
+                                            </li>                                        
+                                        <?php } ?>
+                                        <?php if ($canViewClnc) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=14&typ=1&mdl=Clinic/Hospital');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Clinic/Hospital</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewBnkng) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=17&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Banking/Microfinance</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewPrfmnc) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=15&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Performance Management</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewProjs) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=13&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                                    <span class="title">Projects Management</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                            <?php } ?>
+                            <?php
+                            if ($canViewSysAdmin || $canViewOrgStp || $canViewLov || $canViewWkf) {
+                                ?>
+                                <li class="nav-item  ">
+                                    <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
+                                        <i class="fa fa-key fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                        <span class="title">Administration</span> 
+                                        <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <?php if ($canViewSysAdmin) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=3&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">  
+                                                    <i class="fa fa-user fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                                    <span class="title">System Administration</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewOrgStp) { ?>
+                                            <li>
+                                                <a href="javascript:openATab('#allmodules', 'grp=5&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">  
+                                                    <i class="fa fa-group fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                                    <span class="title">Organisation Setup</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewLov) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=4&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">  
+                                                    <i class="fa fa-list-ul fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                                    <span class="title">Value Lists Setup</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if ($canViewWkf) { ?>
+                                            <li class="nav-item  ">
+                                                <a href="javascript:openATab('#allmodules', 'grp=11&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">  
+                                                    <i class="fa fa-globe fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                                    <span class="title">Workflow Administration</span>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                            <?php } ?>
                             <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                    <i class="fa fa-anchor fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                    <span class="title">Core Modules</span> 
-                                    <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Accounting</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:openATab('#allmodules', 'grp=8&typ=1]');" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Basic Person Data</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Internal Payments</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Sales/Inventory</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Visits/Appointments</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Events/Attendance</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                    <i class="fa fa-desktop fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                    <span class="title">Specialty Modules</span> 
-                                    <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
-                                </a>
-                                <ul class="sub-menu">                                                
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Hospitality Management</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Clinic/Hospital</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Banking/Microfinance</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                            <span class="title">Performance Management</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>"> 
-                                    <i class="fa fa-key fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                    <span class="title">Administration</span> 
-                                    <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item  ">
-                                        <a href="javascript:openATab('#allmodules', 'grp=3&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">  
-                                            <i class="fa fa-user fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                            <span class="title">System Administration</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">  
-                                            <i class="fa fa-group fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                            <span class="title">Organisation Setup</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">  
-                                            <i class="fa fa-list-ul fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                            <span class="title">Value Lists Setup</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">  
-                                            <i class="fa fa-globe fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                            <span class="title">Workflow Administration</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                <a href="javascript:openATab('#allarticles', 'grp=40&typ=3&vtyp=5');" class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-comment fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Comments/Feedback</span>
                                 </a>
                             </li>
                             <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
+                                <a href="javascript:openATab('#allarticles', 'grp=40&typ=3&vtyp=6');" class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-wechat fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Forums/Chat Rooms</span>
                                     <span class="badge bg-success" style="background-color: red;float:right;">15</span>
                                 </a>
                             </li>
                             <li class="nav-item  ">
-                                <a href="javascript:;"  class="nav-link " style="<?php echo $forecolors; ?>">
+                                <a href="javascript:openATab('#allarticles', 'grp=40&typ=3&vtyp=20');"  class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-file-text-o fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Help</span>
                                 </a>
@@ -561,4 +639,5 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
         <?php
     }
-}?>
+}
+?>

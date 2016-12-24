@@ -1,5 +1,5 @@
 <?php
-
+echo "Dashborad";
 $vwtyp = "0";
 $qstr = "";
 $dsply = "";

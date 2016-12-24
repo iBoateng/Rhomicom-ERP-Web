@@ -50,7 +50,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                         <div class="col-md-3" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="adtTrailsSrchFor" name="adtTrailsSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncAdtTrails(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                <input class="form-control" id="adtTrailsSrchFor" name="adtTrailsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAdtTrails(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                 <input id="adtTrailsPageNo" name="adtTrailsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAdtTrails('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                     <span class="glyphicon glyphicon-remove"></span>

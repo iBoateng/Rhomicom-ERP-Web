@@ -40,7 +40,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="row" style="margin-bottom:10px;">
                         <div class="col-md-5" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
-                                <input class="form-control" id="allMdlsSrchFor" name="allMdlsSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncAllMdls(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
+                                <input class="form-control" id="allMdlsSrchFor" name="allMdlsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllMdls(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                 <input id="allMdlsPageNo" name="allMdlsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getAllMdls('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -190,7 +190,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="row">
                                 <div class="col-md-5" style="padding:0px 15px 0px 15px !important;">
                                     <div class="input-group">
-                                        <input class="form-control" id="mdlPrvldgsSrchFor" type = "text" placeholder="Search For" value="<?php echo $srchFor; ?>" onkeyup="enterKeyFuncOneMdl(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
+                                        <input class="form-control" id="mdlPrvldgsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncOneMdl(event, 'myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, '');">
                                         <input id="mdlPrvldgsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
                                         <label class="btn btn-primary btn-file input-group-addon" onclick="getOneMdlForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>, 'clear');">
                                             <span class="glyphicon glyphicon-remove"></span>

@@ -556,6 +556,28 @@ function prepareArticles(lnkArgs, htBody, targ, rspns)
                 e.preventDefault();
                 return false;
             });
+        }else if (lnkArgs.indexOf("&vtyp=5") !== -1)
+        {
+            $('#fdbckMsgBody').summernote({
+                minHeight: 375,
+                focus: true
+            });
+            $('.note-editable').trigger('focus');
+            $('#cmntsFdbckForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+        }
+        else if (lnkArgs.indexOf("&vtyp=6") !== -1)
+        {
+            var table1 = $('#allForumsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#allForumsTable').wrap('<div class="dataTables_scroll"/>');
         }
         htBody.removeClass("mdlloading");
     });
@@ -633,7 +655,7 @@ function getOneArticleForm(elementID, modalBodyID, titleElementID, formElementID
                 if (vtyp != 3)
                 {
                     $('#articleIntroMsg').summernote({
-                        minHeight: 100,
+                        minHeight: 145,
                         focus: true
                     });
                     $('#articleBodyText').summernote({
