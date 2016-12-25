@@ -9,7 +9,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $orgID = $_SESSION['ORG_ID'];
         $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
         $nwFileName = $myImgFileName;
-        
+
         $canViewSelfsrvc = test_prmssns("View Self-Service", "Self Service");
         $canViewEvote = test_prmssns("View e-Voting", "e-Voting") || test_prmssns("View Elections", "Self Service");
         $canViewELbry = test_prmssns("View e-Library", "e-Library");
@@ -28,7 +28,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $canViewOrgStp = test_prmssns("View Organization Setup", "Organization Setup");
         $canViewLov = test_prmssns("View General Setup", "General Setup");
         $canViewWkf = test_prmssns("View Workflow Manager", "Workflow Manager");
-        $canViewArtclAdmn = test_prmssns("View Articles Admin", "System Administration");
+        $canViewArtclAdmn = test_prmssns("View Notices Admin", "System Administration");
         $canViewRpts = test_prmssns("View Reports And Processes", "Reports And Processes");
         ?>
         <link href="cmn_scrpts/bootstrap337/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
@@ -145,7 +145,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="top-menu">
                             <ul class="nav navbar-top-links navbar-right navbar-nav">                               
                                 <li class="dropdown">
-                                    <a href="javascript:openATab('#allarticles', 'grp=40&typ=3&vtyp=6');" class="dropdown-toggle" data-toggle="tooltip" data-placement="bottom" title="Forums/Chat Rooms">
+                                    <a href="javascript:openATab('#allnotices', 'grp=40&typ=3&vtyp=6');" class="dropdown-toggle" data-toggle="tooltip" data-placement="bottom" title="Forums/Chat Rooms">
                                         <i class="fa fa-wechat fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                         <span class="badge bg-success" style="background-color: red;float:right;">15</span>
                                     </a>
@@ -207,7 +207,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <i class="fa fa-search-plus fa-fw" style="<?php echo $forecolors; ?>float:left;"></i> 
                                     <span class="title" style="float:right;max-width:88%;">
                                         <div class="input-group custom-search-form" style="float:right;margin-top:-7px;">
-                                            <input type="text" class="form-control" placeholder="Search Articles...">
+                                            <input type="text" class="form-control" placeholder="Search Notices...">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default" type="button">
                                                     <i class="fa fa-search"></i>
@@ -448,9 +448,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <?php } ?>
                                         <?php if ($canViewOrgStp) { ?>
                                             <li>
-                                                <a href="javascript:openATab('#allmodules', 'grp=5&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">  
+                                                <a href="javascript:openATab('#allmodules', 'grp=5&typ=1&pg=1&vtyp=0');" class="nav-link " style="<?php echo $forecolors; ?>">  
                                                     <i class="fa fa-group fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                                    <span class="title">Organisation Setup</span>
+                                                    <span class="title">Organization Setup</span>
                                                 </a>
                                             </li>
                                         <?php } ?>
@@ -475,20 +475,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </li>
                             <?php } ?>
                             <li class="nav-item  ">
-                                <a href="javascript:openATab('#allarticles', 'grp=40&typ=3&vtyp=5');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                <a href="javascript:openATab('#allnotices', 'grp=40&typ=3&vtyp=5');" class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-comment fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Comments/Feedback</span>
                                 </a>
                             </li>
                             <li class="nav-item  ">
-                                <a href="javascript:openATab('#allarticles', 'grp=40&typ=3&vtyp=6');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                <a href="javascript:openATab('#allnotices', 'grp=40&typ=3&vtyp=6');" class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-wechat fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Forums/Chat Rooms</span>
                                     <span class="badge bg-success" style="background-color: red;float:right;">15</span>
                                 </a>
                             </li>
                             <li class="nav-item  ">
-                                <a href="javascript:openATab('#allarticles', 'grp=40&typ=3&vtyp=20');"  class="nav-link " style="<?php echo $forecolors; ?>">
+                                <a href="javascript:openATab('#allnotices', 'grp=40&typ=3&vtyp=20');"  class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-file-text-o fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Help</span>
                                 </a>
@@ -512,7 +512,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <ul class="nav nav-tabs rho-hideable-tabs" role="tablist" style="padding-top:0px;" id="navtabheaders">
                             <li class="active"><a href="#home" id="hometab" data-toggle="tab" data-rhodata="grp=40&typ=1"><i class="fa fa-home fa-fw"></i><span class="nav-label">Home</span><span class="badge bg-success" style="background: none;">&nbsp;</span></a></li>
                             <li><a href="#myinbox" id="myinboxtab" data-toggle="tabajax" data-rhodata="grp=40&typ=2"><i class="fa fa-envelope fa-fw"></i><span class="nav-label">My Inbox&nbsp;&nbsp;</span><span class="badge bg-success" style="background-color: lime;">7</span></a></li>
-                            <li><a href="#allarticles" id="allarticlestab" data-toggle="tabajax" data-rhodata="grp=40&typ=3"><i class="fa fa-file-text-o fa-fw"></i><span class="nav-label">All Articles&nbsp;&nbsp;</span><span class="badge bg-success" style="background-color: #f0ad4e;">24</span></a></li>
+                            <li><a href="#allnotices" id="allnoticestab" data-toggle="tabajax" data-rhodata="grp=40&typ=3"><i class="fa fa-file-text-o fa-fw"></i><span class="nav-label">All Notices&nbsp;&nbsp;</span><span class="badge bg-success" style="background-color: #f0ad4e;">24</span></a></li>
                             <li><a href="#profile" id="profiletab" data-toggle="tabajax" data-rhodata="grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $usrID; ?>"><i class="fa fa-user fa-fw"></i><span class="nav-label">Profile&nbsp;&nbsp;</span><span class="badge bg-success" style="background: none;">&nbsp;</span></a></li>
                             <li><a href="#allmodules" id="allmodulestab" data-toggle="tabajax" data-rhodata="grp=40&typ=5"><i class="fa fa-sitemap fa-fw"></i><span class="nav-label">All Apps/Modules&nbsp;&nbsp;</span><span class="badge bg-success" style="background-color: cyan;color:#333;" id="appsMdlsCnt">13</span></a></li>
                         </ul>
@@ -523,7 +523,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <?php require 'app_code/cmncde/home.php'; ?>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="myinbox"></div>
-                            <div role="tabpanel" class="tab-pane" id="allarticles"></div>
+                            <div role="tabpanel" class="tab-pane" id="allnotices"></div>
                             <div role="tabpanel" class="tab-pane" id="profile"></div>
                             <div role="tabpanel" class="tab-pane" id="allmodules"></div>
                             <!-- END PAGE BASE CONTENT -->
@@ -617,6 +617,32 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <script src="cmn_scrpts/bootstrap337/datatables/DataTables-1.10.11/js/dataTables.bootstrap.min.js"></script>        
                 <script type="text/javascript" src="cmn_scrpts/bootstrap337/bootstrap-dtimepckr/js/bootstrap-datetimepicker.min.js"></script>
                 <script type="text/javascript" src="cmn_scrpts/summernote081/summernote.min.js"></script>
+                <!-- this cssfile can be found in the jScrollPane package -->
+                <link rel="stylesheet" type="text/css" href="cmn_scrpts/jquery.jscrollpane.css" /><!-- the jScrollPane script -->
+                <!-- the mousewheel plugin - optional to provide mousewheel support -->
+                <script type="text/javascript" src="cmn_scrpts/jquery.mousewheel.js"></script>
+                <script type="text/javascript" src="cmn_scrpts/mwheelIntent.js"></script>
+                <script type="text/javascript" src="cmn_scrpts/jquery.jscrollpane.min.js"></script>                
+                <style type="text/css">
+                    .jspTrack
+                    {
+                        background: #fff; /* changed from #b46868 #dde */
+                        position: relative;
+                        padding: 5px;
+                    }
+
+                    .jspDrag
+                    {
+                        background: #ddd; /* changed from #bbd */
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        cursor: pointer;                        
+                        -moz-border-radius: 10px;
+                        -webkit-border-radius: 10px;
+                        border-radius: 10px;
+                    }
+                </style>
                 <script type="text/javascript">
                     $(document).ready(function () {
                     $('[data-toggle="tooltip"]').tooltip();

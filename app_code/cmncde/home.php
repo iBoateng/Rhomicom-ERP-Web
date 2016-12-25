@@ -6,9 +6,9 @@
                     </button>
                 </div>
                 <div class="col-md-3 colmd3special1">
-                    <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allarticles', 'grp=40&typ=3');">
+                    <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allnotices', 'grp=40&typ=3');">
                         <img src="cmn_images/Notebook.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-                        <span class="wordwrap1"> Articles & Notices</span>
+                        <span class="wordwrap1"> Notices</span>
                     </button>
                 </div>-->
 
@@ -95,7 +95,7 @@
             </div>
             <div class="col-md-3" style="padding:0px 13px 0px 15px;">
                 <div class="panel panel-default" style="color:white;background-color:#337ab7;border-radius:2px;border:1px solid #337ab7;" >
-                    <a href="javascript:openATab('#allarticles', 'grp=40&typ=3');">
+                    <a href="javascript:openATab('#allnotices', 'grp=40&typ=3');">
                         <div class="panel-heading" style="color:white;background-color:#337ab7;border-radius:5px;border:1px solid #337ab7;">
                             <div class="row">
                                 <div class="col-xs-3">
@@ -104,7 +104,7 @@
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">&nbsp;</div>
                                     <div class="huge">26</div>
-                                    <div>Unread Articles!</div>
+                                    <div>Unread Notices!</div>
                                 </div>
                             </div>
                         </div>

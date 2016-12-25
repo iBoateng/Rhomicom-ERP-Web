@@ -1,4 +1,5 @@
 <?php
+
 $menuItems = array("Organization Setup");
 $menuImages = array("rho_arrow1.png");
 
@@ -120,4 +121,151 @@ if ($lgn_num > 0 && $canview === true) {
         }
     }
 }
+
+function get_OrgLstsTblr($searchWord, $searchIn, $offset, $limit_size) {
+    $whereCls = "1=1";
+    if ($searchIn == "Organization Name") {
+        $whereCls = "(a.org_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Parent Organisation Name") {
+        $whereCls = "((select b.org_name FROM org.org_details b where b.org_id = a.parent_org_id) ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+    $strSql = "SELECT a.org_id mt, a.org_name FROM org.org_details a 
+    WHERE ($whereCls) ORDER BY a.org_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_OrgLstsTblrTtl($searchWord, $searchIn) {
+    $whereCls = "1=1";
+    if ($searchIn == "Organization Name") {
+        $whereCls = "(a.org_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Parent Organisation Name") {
+        $whereCls = "((select b.org_name FROM org.org_details b where b.org_id = a.parent_org_id) ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT count(1) FROM org.org_details a 
+    WHERE ($whereCls)";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_OrgStpsDet($pkID) {
+    $strSql = "SELECT a.org_id mt, a.org_name \"organisation's name\", org_logo, a.parent_org_id mt,
+       (select b.org_name FROM 
+    org.org_details b where b.org_id = a.parent_org_id) parent_organisation, 
+    res_addrs residential_address, pstl_addrs postal_address, 
+    email_addrsses email_addresses, websites, cntct_nos contact_nos, org_typ_id mt, 
+    (select c.pssbl_value from gst.gen_stp_lov_values 
+    c where c.pssbl_value_id = a.org_typ_id) organisation_type, 
+    CASE WHEN is_enabled='1' THEN 'Yes' ELSE 'No' END \"is_enabled?\", oprtnl_crncy_id mt, 
+    (select d.pssbl_value from gst.gen_stp_lov_values 
+    d where d.pssbl_value_id = a.oprtnl_crncy_id) currency_code, org_desc \"organisation's_description\"
+    , org_slogan \"organisation's slogan\" 
+    FROM org.org_details a 
+    WHERE (a.org_id=$pkID) ORDER BY a.org_name";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_DivsGrps($pkID, $searchWord, $searchIn, $offset, $limit_size) {
+    $whereCls = "";
+    if ($searchIn == "Division Name") {
+        $whereCls = " and (a.div_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Parent Division Name") {
+        $whereCls = " and ((select b.div_code_name FROM org.org_divs_groups b where b.div_id = a.prnt_div_id) ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT a.div_id mt, a.div_code_name \"group_code/name\", a.prnt_div_id mt, (select b.div_code_name FROM 
+        org.org_divs_groups b where b.div_id = a.prnt_div_id) \"parent group\", div_typ_id mt, 
+        (select c.pssbl_value from gst.gen_stp_lov_values 
+        c where c.pssbl_value_id = a.div_typ_id) group_type, 
+        div_logo,          
+        div_desc \"description/comments\",
+        CASE WHEN is_enabled='1' THEN 'Yes' ELSE 'No' END \"is_enabled?\"
+        FROM org.org_divs_groups a 
+    WHERE ((a.org_id = $pkID)$whereCls) ORDER BY a.div_code_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_SitesLocs($pkID, $searchWord, $searchIn, $offset, $limit_size) {
+    $whereCls = "";
+    if ($searchIn == "Site Name") {
+        $whereCls = " and (a.location_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Site Description") {
+        $whereCls = " and (a.site_desc ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT a.location_id mt, a.location_code_name \"location_code/name\", a.site_desc \"description/comments\", 
+        CASE WHEN a.is_enabled='1' THEN 'Yes' ELSE 'No' END \"is_enabled?\" 
+        FROM org.org_sites_locations a
+        WHERE ((a.org_id = $pkID)$whereCls) 
+        ORDER BY a.location_code_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Jobs($pkID, $searchWord, $searchIn, $offset, $limit_size) {
+    $whereCls = "";
+    if ($searchIn == "Job Name") {
+        $whereCls = " and (a.job_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Parent Job Name") {
+        $whereCls = " and ((select b.job_code_name FROM 
+        org.org_jobs b where b.job_id = a.parnt_job_id) ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT a.job_id mt, a.job_code_name \"job code/description\", a.parnt_job_id mt, 
+        (select b.job_code_name FROM 
+         org.org_jobs b where b.job_id = a.parnt_job_id) parent_job, job_comments, 
+         CASE WHEN a.is_enabled='1' THEN 'Yes' ELSE 'No' END \"is_enabled?\" 
+         FROM org.org_jobs a
+        WHERE ((a.org_id = $pkID)$whereCls) 
+        ORDER BY a.job_code_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Grades($pkID, $searchWord, $searchIn, $offset, $limit_size) {
+    $whereCls = "";
+    if ($searchIn == "Grade Name") {
+        $whereCls = " and (a.grade_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Grade Description") {
+        $whereCls = " and (a.grade_comments ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT a.grade_id mt, a.grade_code_name \"grade code/name\", 
+         a.parnt_grade_id mt, (select b.grade_code_name FROM 
+         org.org_grades b where b.grade_id = a.parnt_grade_id) parent_grade
+         , a.grade_comments, 
+         CASE WHEN a.is_enabled='1' THEN 'Yes' ELSE 'No' END \"is_enabled?\" 
+         FROM org.org_grades a
+         WHERE ((a.org_id = $pkID)$whereCls) 
+         ORDER BY a.grade_code_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Pos($pkID, $searchWord, $searchIn, $offset, $limit_size) {
+    $whereCls = "";
+    if ($searchIn == "Position Name") {
+        $whereCls = " and (a.position_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Position Description") {
+        $whereCls = " and (position_comments ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT a.position_id mt, a.position_code_name \"position code/name\"
+        , a.prnt_position_id mt, (select b.position_code_name FROM 
+         org.org_positions b where b.position_id = a.prnt_position_id) parent_position  
+        , a.position_comments, 
+        CASE WHEN a.is_enabled='1' THEN 'Yes' ELSE 'No' END \"is_enabled?\" 
+        FROM org.org_positions a
+        WHERE ((a.org_id = $pkID)$whereCls) 
+        ORDER BY a.position_code_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
 ?>

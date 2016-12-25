@@ -10,7 +10,7 @@ $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 15 */ "Edit Server Settings", "Set manual password for users",
     /* 17 */ "Send System Generated Passwords to User Mails",
     /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
-    /* 22 */ "Add Articles", "Edit Articles", "Delete Articles");
+    /* 22 */ "Add Notices", "Edit Notices", "Delete Notices", "View Notices Admin");
 
 $qstr = "";
 $dsply = "";
@@ -81,13 +81,13 @@ $cntent = "<div>
 						<span style=\"text-decoration:none;\">Home</span>
                                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>
-					<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=0');\">
-						<span style=\"text-decoration:none;\">All Articles</span>
+					<li onclick=\"openATab('#allnotices', 'grp=40&typ=3&vtyp=0');\">
+						<span style=\"text-decoration:none;\">All Notices</span>
 					</li>";
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || (($vwtyp <= 1 || $vwtyp >= 4) && test_prmssns("View Self-Service", "Self Service"));
-$canAddArticles = test_prmssns($dfltPrvldgs[22], $mdlNm);
-$canEdtArticles = test_prmssns($dfltPrvldgs[23], $mdlNm);
-$canDelArticles = test_prmssns($dfltPrvldgs[24], $mdlNm);
+$canAddNotices = test_prmssns($dfltPrvldgs[22], $mdlNm);
+$canEdtNotices = test_prmssns($dfltPrvldgs[23], $mdlNm);
+$canDelNotices = test_prmssns($dfltPrvldgs[24], $mdlNm);
 
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
@@ -97,7 +97,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                //Articles
+                //Notices
                 //var_dump($_POST);
                 header("content-type:application/json");
                 //categoryCombo
@@ -116,18 +116,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $datePublished = cnvrtDMYTmToYMDTm($datePublished);
                 }
                 //echo $datePublished;
-                $oldArticleID = getGnrlRecID2("self.self_articles", "article_header", "article_id", $artTitle);
+                $oldNoticeID = getGnrlRecID2("self.self_articles", "article_header", "article_id", $artTitle);
 
-                if ($artclCatgry != "" && $artTitle != "" && ($oldArticleID <= 0 || $oldArticleID == $articleID)) {
+                if ($artclCatgry != "" && $artTitle != "" && ($oldNoticeID <= 0 || $oldNoticeID == $articleID)) {
                     if ($articleID <= 0) {
-                        createArticle($artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $AuthorName, $AuthorEmail, $authorPrsnID);
+                        createNotice($artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $AuthorName, $AuthorEmail, $authorPrsnID);
                     } else {
-                        updateArticle($articleID, $artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $AuthorName, $AuthorEmail, $authorPrsnID);
+                        updateNotice($articleID, $artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $AuthorName, $AuthorEmail, $authorPrsnID);
                     }
                     echo json_encode(array(
                         'success' => true,
                         'message' => 'Saved Successfully',
-                        'data' => array('src' => 'Article Successfully Saved!'),
+                        'data' => array('src' => 'Notice Successfully Saved!'),
                         'total' => '1',
                         'errors' => ''
                     ));
@@ -136,7 +136,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     echo json_encode(array(
                         'success' => false,
                         'message' => 'Error Occured',
-                        'data' => array('src' => 'Failed to Save Article!'),
+                        'data' => array('src' => 'Failed to Save Notice!'),
                         'total' => '0',
                         'errors' => 'Incomplete Data'
                     ));
@@ -151,11 +151,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $isMaster = "0";
                     echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Articles Home</span>
+                                                <span style=\"text-decoration:none;\">Notices Home</span>
 					</li>
                                        </ul>
                                      </div>";
-                    $total = get_ArticleTtls($srchFor, $srchIn);
+                    $total = get_NoticeTtls($srchFor, $srchIn);
                     if ($pageNo > ceil($total / $lmtSze)) {
                         $pageNo = 1;
                     } else if ($pageNo < 1) {
@@ -163,23 +163,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
 
                     $curIdx = $pageNo - 1;
-                    $result = get_Articles($srchFor, $srchIn, $curIdx, $lmtSze);
+                    $result = get_Notices($srchFor, $srchIn, $curIdx, $lmtSze);
                     $cntr = 0;
                     $colClassType1 = "col-lg-2";
                     $colClassType2 = "col-lg-4";
                     $colClassType3 = "col-lg-1";
                     $colClassType4 = "col-lg-3";
                     ?> 
-                    <form id='allArticlesForm' action='' method='post' accept-charset='UTF-8'>
+                    <form id='allnoticesForm' action='' method='post' accept-charset='UTF-8'>
                         <div class="row" style="margin-bottom:10px;">
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="allArticlesSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncArticles(event, '', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
-                                    <input id="allArticlesPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllArticles('clear', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
+                                    <input class="form-control" id="allnoticesSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncNotices(event, '', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
+                                    <input id="allnoticesPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllNotices('clear', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </label>
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllArticles('', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllNotices('', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
                                         <span class="glyphicon glyphicon-search"></span>
                                     </label> 
                                 </div>
@@ -187,7 +187,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="<?php echo $colClassType1; ?>">
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
-                                    <!--<select data-placeholder="Select..." class="form-control chosen-select" id="allArticlesSrchIn">
+                                    <!--<select data-placeholder="Select..." class="form-control chosen-select" id="allnoticesSrchIn">
                                     <?php
                                     $valslctdArry = array("", "", "");
                                     $srchInsArrys = array("Category", "Title", "Content");
@@ -201,7 +201,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <?php } ?>
                                     </select>-->
                                     <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                    <select data-placeholder="Select..." class="form-control chosen-select" id="allArticlesDsplySze" style="min-width:70px !important;">                            
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="allnoticesDsplySze" style="min-width:70px !important;">                            
                                         <?php
                                         $valslctdArry = array("", "", "", "", "", "", "", "");
                                         $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
@@ -222,7 +222,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="<?php echo $colClassType2; ?>">
                                 <div class="input-group">                        
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
-                                    <select data-placeholder="Select..." class="form-control chosen-select" id="allArticlesSortBy">
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="allnoticesSortBy">
                                         <?php
                                         $valslctdArry = array("", "", "", "");
                                         $srchInsArrys = array("Date Published", "No. of Hits", "Category", "Title");
@@ -234,7 +234,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                         <?php } ?>
                                     </select>                                    
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllArticles('', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllNotices('', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
                                         <span class="glyphicon glyphicon-th-list"></span>
                                     </label> 
                                 </div>
@@ -243,12 +243,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllArticles('previous', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>');" aria-label="Previous">
+                                            <a href="javascript:getAllNotices('previous', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllArticles('next', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>');" aria-label="Next">
+                                            <a href="javascript:getAllNotices('next', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -297,11 +297,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $isMaster = "0";
                     echo $cntent . "<li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Articles List</span>
+                                                <span style=\"text-decoration:none;\">Notices List</span>
 					</li>
                                        </ul>
                                      </div>";
-                    $total = get_ArticleTtls($srchFor, $srchIn);
+                    $total = get_NoticeTtls($srchFor, $srchIn);
                     if ($pageNo > ceil($total / $lmtSze)) {
                         $pageNo = 1;
                     } else if ($pageNo < 1) {
@@ -309,23 +309,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
 
                     $curIdx = $pageNo - 1;
-                    $result = get_Articles($srchFor, $srchIn, $curIdx, $lmtSze);
+                    $result = get_Notices($srchFor, $srchIn, $curIdx, $lmtSze);
                     $cntr = 0;
                     $colClassType1 = "col-lg-2";
                     $colClassType2 = "col-lg-3";
                     $colClassType3 = "col-lg-1";
                     $colClassType4 = "col-lg-3";
                     ?>
-                    <form id='allArticlesForm' action='' method='post' accept-charset='UTF-8'>
+                    <form id='allnoticesForm' action='' method='post' accept-charset='UTF-8'>
                         <div class="row" style="margin-bottom:10px;">
                             <?php
-                            if ($canAddArticles === true) {
+                            if ($canAddNotices === true) {
                                 $isMaster = "1";
                                 ?> 
                                 <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">                    
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneArticleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allArticlesForm', 'Add New Article', -1, 2, 0)">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneNoticeForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allnoticesForm', 'Add New Notice', -1, 2, 0)">
                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
-                                        New Article
+                                        New Notice
                                     </button>
                                 </div>
                                 <?php
@@ -339,12 +339,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             ?>
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="allArticlesSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncArticles(event, '', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
-                                    <input id="allArticlesPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllArticles('clear', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
+                                    <input class="form-control" id="allnoticesSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncNotices(event, '', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
+                                    <input id="allnoticesPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllNotices('clear', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </label>
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllArticles('', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllNotices('', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>')">
                                         <span class="glyphicon glyphicon-search"></span>
                                     </label> 
                                 </div>
@@ -352,7 +352,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="<?php echo $colClassType1; ?>">
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
-                                    <!--<select data-placeholder="Select..." class="form-control chosen-select" id="allArticlesSrchIn">
+                                    <!--<select data-placeholder="Select..." class="form-control chosen-select" id="allnoticesSrchIn">
                                     <?php
                                     $valslctdArry = array("", "", "");
                                     $srchInsArrys = array("Category", "Title", "Content");
@@ -366,7 +366,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <?php } ?>
                                     </select>-->
                                     <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
-                                    <select data-placeholder="Select..." class="form-control chosen-select" id="allArticlesDsplySze" style="min-width:70px !important;">                            
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="allnoticesDsplySze" style="min-width:70px !important;">                            
                                         <?php
                                         $valslctdArry = array("", "", "", "", "", "", "", "");
                                         $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
@@ -387,7 +387,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="<?php echo $colClassType2; ?>">
                                 <div class="input-group">                        
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
-                                    <select data-placeholder="Select..." class="form-control chosen-select" id="allArticlesSortBy">
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="allnoticesSortBy">
                                         <?php
                                         $valslctdArry = array("", "", "", "");
                                         $srchInsArrys = array("Date Published", "No. of Hits", "Category", "Title");
@@ -399,7 +399,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                                         <?php } ?>
                                     </select>                                    
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllArticles('', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllNotices('', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
                                         <span class="glyphicon glyphicon-th-large"></span>
                                     </label> 
                                 </div>
@@ -408,12 +408,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllArticles('previous', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>');" aria-label="Previous">
+                                            <a href="javascript:getAllNotices('previous', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllArticles('next', '#allarticles', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>');" aria-label="Next">
+                                            <a href="javascript:getAllNotices('next', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -423,19 +423,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                         <div class="row"> 
                             <div  class="col-md-12">
-                                <table class="table table-striped table-bordered table-responsive" id="allArticlesTable" cellspacing="0" width="100%" style="width:100%;">
+                                <table class="table table-striped table-bordered table-responsive" id="allnoticesTable" cellspacing="0" width="100%" style="width:100%;">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <?php if ($canEdtArticles === true) { ?>
+                                            <?php if ($canEdtNotices === true) { ?>
                                                 <th>...</th>
                                             <?php } ?>
-                                            <th>Article Category</th>
+                                            <th>Notice Category</th>
                                             <th>Title</th>
                                             <th>Author Email</th>
                                             <th>No. of Hits</th>
                                             <th>...</th>
-                                            <?php if ($canEdtArticles === true) { ?>
+                                            <?php if ($canEdtNotices === true) { ?>
                                                 <th>Published?</th>
                                             <?php } ?>
                                         </tr>
@@ -445,12 +445,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         while ($row = loc_db_fetch_array($result)) {
                                             $cntr += 1;
                                             ?>
-                                            <tr id="allArticlesRow<?php echo $cntr; ?>">                                    
+                                            <tr id="allnoticesRow<?php echo $cntr; ?>">                                    
                                                 <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                <?php if ($canEdtArticles === true) { ?>                                    
+                                                <?php if ($canEdtNotices === true) { ?>                                    
                                                     <td>
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Article" 
-                                                                onclick="getOneArticleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allArticlesForm', 'View/Edit Article', <?php echo $row[0]; ?>, 3, 0)" style="padding:2px !important;" style="padding:2px !important;">
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Notice" 
+                                                                onclick="getOneNoticeForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allnoticesForm', 'View/Edit Notice', <?php echo $row[0]; ?>, 3, 0)" style="padding:2px !important;" style="padding:2px !important;">
                                                             <img src="cmn_images/edit32.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
@@ -460,13 +460,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td><?php echo $row[8]; ?></td>
                                                 <td><?php echo $row[10]; ?></td>
                                                 <td>
-                                                    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Article" onclick="openATab('#allarticles', 'grp=40&typ=3&pg=0&vtyp=4&sbmtdArticleID=<?php echo $row[0]; ?>');" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Notice" onclick="openATab('#allnotices', 'grp=40&typ=3&pg=0&vtyp=4&sbmtdNoticeID=<?php echo $row[0]; ?>');" style="padding:2px !important;" style="padding:2px !important;">
                                                         <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                         <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                     </button>
                                                 </td>
                                                 <?php
-                                                if ($canEdtArticles === true) {
+                                                if ($canEdtNotices === true) {
                                                     if ($row[5] == 1) {
                                                         ?>
                                                         <td>
@@ -498,7 +498,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </form>
                     <?php
                 } else if ($vwtyp == 2) {
-                    /* New Article Form */
+                    /* New Notice Form */
                     ?>
                     <div class="">
                         <div class="row">                  
@@ -509,7 +509,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <fieldset class="basic_person_fs1" style="min-height:240px !important;">
-                                                        <legend class="basic_person_lg">Topic/Article Attributes</legend>
+                                                        <legend class="basic_person_lg">Topic/Notice Attributes</legend>
                                                         <div class="row" style="padding:0px 15px 0px 15px !important;">
                                                             <div class="col-md-12" style="padding:0px 15px 0px 15px !important;">
                                                                 <div class="row"> 
@@ -521,7 +521,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 $valslctdArry = array("", "", "", "", "", "", "", "", "", "", "");
                                                                                 $valuesArry = array("Notices/Announcements", "Welcome Message", "Latest News", "Useful Links",
                                                                                     "System Help", "Write-Ups/Research Papers", "Operational Manuals", "About Organisation",
-                                                                                    "Other Articles", "Forum Topic", "Chat Room");
+                                                                                    "Other Notices", "Forum Topic", "Chat Room");
                                                                                 for ($y = 0; $y < count($valuesArry); $y++) {
                                                                                     /* if ($lmtSze == $valuesArry[$y]) {
                                                                                       $valslctdArry[$y] = "selected";
@@ -543,7 +543,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <div  class="col-md-9">
                                                                             <div class="input-group">
                                                                                 <input type="text" class="form-control" aria-label="..." id="articleLoclClsfctn" value="">
-                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Article Classifications', 'gnrlOrgID', '', '', 'radio', true, '', 'articleLoclClsfctn', 'articleLoclClsfctn', 'clear', 1, '');">
+                                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Notice Classifications', 'gnrlOrgID', '', '', 'radio', true, '', 'articleLoclClsfctn', 'articleLoclClsfctn', 'clear', 1, '');">
                                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                                 </label>
                                                                             </div>
@@ -635,7 +635,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </div> 
                                         </div>                                         
                                         <div class="col-md-8">
-                                            <fieldset class="basic_person_fs"><legend class="basic_person_lg">Article/Forum Intro Message</legend>
+                                            <fieldset class="basic_person_fs"><legend class="basic_person_lg">Notice/Forum Intro Message</legend>
                                                 <div class="row" style="margin: 1px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
                                                     <div class="form-group form-group-sm">
                                                         <label for="articleTitle" class="control-label col-md-2">Topic/Title:</label>
@@ -653,7 +653,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </div> 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Article/Forum Full Message Text</legend>                                                
+                                            <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Notice/Forum Full Message Text</legend>                                                
                                                 <div class="row" style="padding:0px 15px 0px 15px !important;">
                                                     <div id="articleBodyText"></div> 
                                                 </div> 
@@ -674,9 +674,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div> 
                     <?php
                 } else if ($vwtyp == 3) {
-                    /* Edit Article Form */
-                    $sbmtdArticleID = isset($_POST['sbmtdArticleID']) ? cleanInputData($_POST['sbmtdArticleID']) : -1;
-                    $result = get_OneArticle($sbmtdArticleID);
+                    /* Edit Notice Form */
+                    $sbmtdNoticeID = isset($_POST['sbmtdNoticeID']) ? cleanInputData($_POST['sbmtdNoticeID']) : -1;
+                    $result = get_OneNotice($sbmtdNoticeID);
                     while ($row = loc_db_fetch_array($result)) {
                         ?>
                         <div class="">
@@ -688,7 +688,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <fieldset class="basic_person_fs1" style="min-height:240px !important;">
-                                                            <legend class="basic_person_lg">Topic/Article Attributes</legend>
+                                                            <legend class="basic_person_lg">Topic/Notice Attributes</legend>
                                                             <div class="row" style="padding:0px 15px 0px 15px !important;">
                                                                 <div class="col-md-12" style="padding:0px 15px 0px 15px !important;">
                                                                     <div class="row"> 
@@ -700,7 +700,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     $valslctdArry = array("", "", "", "", "", "", "", "", "", "", "");
                                                                                     $valuesArry = array("Notices/Announcements", "Welcome Message", "Latest News", "Useful Links",
                                                                                         "System Help", "Write-Ups/Research Papers", "Operational Manuals", "About Organisation",
-                                                                                        "Other Articles", "Forum Topic", "Chat Room");
+                                                                                        "Other Notices", "Forum Topic", "Chat Room");
                                                                                     for ($y = 0; $y < count($valuesArry); $y++) {
                                                                                         if ($row[1] == $valuesArry[$y]) {
                                                                                             $valslctdArry[$y] = "selected";
@@ -722,7 +722,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             <div  class="col-md-9">
                                                                                 <div class="input-group">
                                                                                     <input type="text" class="form-control" aria-label="..." id="articleLoclClsfctn" value="">
-                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Article Classifications', 'gnrlOrgID', '', '', 'radio', true, '', 'articleLoclClsfctn', 'articleLoclClsfctn', 'clear', 1, '');">
+                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Notice Classifications', 'gnrlOrgID', '', '', 'radio', true, '', 'articleLoclClsfctn', 'articleLoclClsfctn', 'clear', 1, '');">
                                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                                     </label>
                                                                                 </div>
@@ -814,7 +814,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div> 
                                             </div>                                         
                                             <div class="col-md-8">
-                                                <fieldset class="basic_person_fs"><legend class="basic_person_lg">Article/Forum Intro Message</legend>
+                                                <fieldset class="basic_person_fs"><legend class="basic_person_lg">Notice/Forum Intro Message</legend>
                                                     <div class="row" style="margin: 1px 0px 0px 0px !important;padding:0px 15px 0px 15px !important;"> 
                                                         <div class="form-group form-group-sm">
                                                             <label for="articleTitle" class="control-label col-md-2">Topic/Title:</label>
@@ -832,7 +832,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </div> 
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Article/Forum Full Message Text</legend>                                                
+                                                <fieldset class="basic_person_fs2"><legend class="basic_person_lg">Notice/Forum Full Message Text</legend>                                                
                                                     <div class="row" style="padding:0px 15px 0px 15px !important;">
                                                         <div id="articleBodyText"></div> 
                                                     </div> 
@@ -871,13 +871,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <?php
                     }
                 } else if ($vwtyp == 4) {
-                    /* Display one Full Article ReadOnly */
-                    $sbmtdArticleID = isset($_POST['sbmtdArticleID']) ? cleanInputData($_POST['sbmtdArticleID']) : -1;
-                    $result = get_OneArticle($sbmtdArticleID);
+                    /* Display one Full Notice ReadOnly */
+                    $sbmtdNoticeID = isset($_POST['sbmtdNoticeID']) ? cleanInputData($_POST['sbmtdNoticeID']) : -1;
+                    $result = get_OneNotice($sbmtdNoticeID);
                     while ($row = loc_db_fetch_array($result)) {
-                        echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+                        echo $cntent . "<li onclick=\"openATab('#allnotices', 'grp=40&typ=3&vtyp=1');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Articles List</span>
+                                                <span style=\"text-decoration:none;\">Notices List</span>
 					</li>
                                         <li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
@@ -913,9 +913,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
                 } else if ($vwtyp == 5) {
                     //Comments/Feedback Email Form
-                    echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+                    echo $cntent . "<li onclick=\"openATab('#allnotices', 'grp=40&typ=3&vtyp=1');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Articles List</span>
+                                                <span style=\"text-decoration:none;\">Notices List</span>
 					</li>
                                         <li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
@@ -973,18 +973,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <?php
                 } else if ($vwtyp == 6) {
                     //Forums/Chat Rooms
-                    echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+                    echo $cntent . "<li onclick=\"openATab('#allnotices', 'grp=40&typ=3&vtyp=1');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Articles List</span>
+                                                <span style=\"text-decoration:none;\">Notices List</span>
 					</li>
                                         <li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Forums and Chart Rooms</span>
+                                                <span style=\"text-decoration:none;\">Forums and Chat Rooms</span>
 					</li>
                                        </ul>
                                      </div>";
                     ?>
-                    <button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="openATab('#allarticles', 'grp=40&typ=3&vtyp=7');"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SAMPLE CHAT</button>
+                    <button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="openATab('#allnotices', 'grp=40&typ=3&vtyp=7');"><img src="cmn_images/Emailcon.png" style="left: 0.05%; padding-right: 2px; height:20px; width:auto; position: relative; vertical-align: middle;">SAMPLE CHAT</button>
                     <div class="container-fluid">
                         <div class="row">   
                             <div class="col-md-12">
@@ -1051,17 +1051,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <?php
                 } else if ($vwtyp == 7) {
                     //Forums / Chats Messages Posted
-                    echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+                    echo $cntent . "<li onclick=\"openATab('#allnotices', 'grp=40&typ=3&vtyp=1');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Articles List</span>
+                                                <span style=\"text-decoration:none;\">Notices List</span>
 					</li>
-                                        <li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=6');\">
+                                        <li onclick=\"openATab('#allnotices', 'grp=40&typ=3&vtyp=6');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Forums and Chart Rooms</span>
+                                                <span style=\"text-decoration:none;\">Forums and Chat Rooms</span>
 					</li>
                                         <li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">One Chart Room</span>
+                                                <span style=\"text-decoration:none;\">One Chat Room</span>
 					</li>
                                        </ul>
                                      </div>";
@@ -1105,8 +1105,107 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             Vivamus diam elit diam, consectetur fconsectetur dapibus adipiscing elit.
                                             <div class="clearfix"></div>
                                         </div>
-                                    </li>   
+                                    </li>
+                                    <li class="by-me">
+                                        <div class="avatar pull-left">
+                                            <img src="cmn_images/user.jpg" alt="">
+                                        </div>
 
+                                        <div class="chat-content">
+                                            <div class="chat-meta">John Smith <span class="pull-right">4 hours ago</span></div>
+                                            Vivamus diam elit diam, consectetur fermentum sed dapibus eget, Vivamus consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li>
+                                    <li class="by-other">
+                                        <!-- Use the class "pull-right" in avatar -->
+                                        <div class="avatar pull-right">
+                                            <img src="cmn_images/user22.png" alt="">
+                                        </div>
+
+                                        <div class="chat-content">
+                                            <!-- In the chat meta, first include "time" then "name" -->
+                                            <div class="chat-meta">3 hours ago <span class="pull-right">Jenifer Smith</span></div>
+                                            Vivamus diam elit diam, consectetur fermentum sed dapibus eget, Vivamus consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li> <!-- Chat by us. Use the class "by-me". -->
+                                    <li class="by-me">
+                                        <!-- Use the class "pull-left" in avatar -->
+                                        <div class="avatar pull-left">
+                                            <img src="cmn_images/user.jpg" alt="">
+                                        </div>
+                                        <div class="chat-content">
+                                            <!-- In meta area, first include "name" and then "time" -->
+                                            <div class="chat-meta">John Smith <span class="pull-right">3 hours ago</span></div>
+                                            Vivamus diam elit diam, consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li> 
+                                    <!-- Chat by other. Use the class "by-other". -->
+                                    <li class="by-other">
+                                        <!-- Use the class "pull-right" in avatar -->
+                                        <div class="avatar pull-right">
+                                            <img src="cmn_images/user22.png" alt="">
+                                        </div>
+
+                                        <div class="chat-content">
+                                            <!-- In the chat meta, first include "time" then "name" -->
+                                            <div class="chat-meta">3 hours ago <span class="pull-right">Jenifer Smith</span></div>
+                                            Vivamus diam elit diam, consectetur fconsectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li>
+                                    <li class="by-me">
+                                        <div class="avatar pull-left">
+                                            <img src="cmn_images/user.jpg" alt="">
+                                        </div>
+
+                                        <div class="chat-content">
+                                            <div class="chat-meta">John Smith <span class="pull-right">4 hours ago</span></div>
+                                            Vivamus diam elit diam, consectetur fermentum sed dapibus eget, Vivamus consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li>
+                                    <li class="by-other">
+                                        <!-- Use the class "pull-right" in avatar -->
+                                        <div class="avatar pull-right">
+                                            <img src="cmn_images/user22.png" alt="">
+                                        </div>
+
+                                        <div class="chat-content">
+                                            <!-- In the chat meta, first include "time" then "name" -->
+                                            <div class="chat-meta">3 hours ago <span class="pull-right">Jenifer Smith</span></div>
+                                            Vivamus diam elit diam, consectetur fermentum sed dapibus eget, Vivamus consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li> <!-- Chat by us. Use the class "by-me". -->
+                                    <li class="by-me">
+                                        <!-- Use the class "pull-left" in avatar -->
+                                        <div class="avatar pull-left">
+                                            <img src="cmn_images/user.jpg" alt="">
+                                        </div>
+                                        <div class="chat-content">
+                                            <!-- In meta area, first include "name" and then "time" -->
+                                            <div class="chat-meta">John Smith <span class="pull-right">3 hours ago</span></div>
+                                            Vivamus diam elit diam, consectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li> 
+                                    <!-- Chat by other. Use the class "by-other". -->
+                                    <li class="by-other">
+                                        <!-- Use the class "pull-right" in avatar -->
+                                        <div class="avatar pull-right">
+                                            <img src="cmn_images/user22.png" alt="">
+                                        </div>
+
+                                        <div class="chat-content">
+                                            <!-- In the chat meta, first include "time" then "name" -->
+                                            <div class="chat-meta">3 hours ago <span class="pull-right">Jenifer Smith</span></div>
+                                            Vivamus diam elit diam, consectetur fconsectetur dapibus adipiscing elit.
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </li>
                                     <li class="by-me">
                                         <div class="avatar pull-left">
                                             <img src="cmn_images/user.jpg" alt="">
@@ -1134,7 +1233,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </ul>
                             </div>
                             <!-- Widget footer -->
-                            <div class="widget-foot">
+                            <div class="widget-foot" style="margin-top:10px;">
                                 <form class="form-inline">
                                     <div class="form-group col-md-12" style="padding:0px 1px 0px 25px !important;">
                                         <div class="col-md-11" style="padding:0px 1px 0px 15px !important;">
@@ -1148,12 +1247,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        $(function ()
+                        {
+                            $('.sscroll').jScrollPane({showArrows: false});
+                        });
+                    </script>
                     <?php
                 } else if ($vwtyp == 20) {
-                    //Help Articles Tabular
-                    echo $cntent . "<li onclick=\"openATab('#allarticles', 'grp=40&typ=3&vtyp=1');\">
+                    //Help Notices Tabular
+                    echo $cntent . "<li onclick=\"openATab('#allnotices', 'grp=40&typ=3&vtyp=1');\">
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
-                                                <span style=\"text-decoration:none;\">Articles List</span>
+                                                <span style=\"text-decoration:none;\">Notices List</span>
 					</li>
                                         <li>
 						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
@@ -1165,7 +1270,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="container-fluid">
                         <div class="row">   
                             <div class="col-md-12">
-                                Help Articles Tabular
+                                Help Notices Tabular
                             </div>
                         </div>
                     </div>
@@ -1176,7 +1281,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     }
 }
 
-function get_Articles($searchFor, $searchIn, $offset, $limit_size) {
+function get_Notices($searchFor, $searchIn, $offset, $limit_size) {
     global $qStrtDte;
     global $qEndDte;
     global $artCategory;
@@ -1222,7 +1327,7 @@ WHERE (1=1" . $extrWhr . "$wherecls) ORDER BY a.article_id DESC LIMIT " . $limit
     return $result;
 }
 
-function get_OneArticle($articleID) {
+function get_OneNotice($articleID) {
     $sqlStr = "SELECT a.article_id, 
         a.article_category, 
         a.article_header, 
@@ -1244,7 +1349,7 @@ function get_OneArticle($articleID) {
     return $result;
 }
 
-function deleteArticle($articleID) {
+function deleteNotice($articleID) {
     $affctd1 = 0;
 
     $insSQL = "DELETE FROM self.self_articles WHERE article_id = " . $articleID;
@@ -1252,7 +1357,7 @@ function deleteArticle($articleID) {
 
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
-        $dsply .= "<br/>$affctd1 Article(s)!";
+        $dsply .= "<br/>$affctd1 Notice(s)!";
         return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
     } else {
         $dsply = "No Record Deleted";
@@ -1260,7 +1365,7 @@ function deleteArticle($articleID) {
     }
 }
 
-function createArticle($artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $authorNm, $authorEmail, $authorID) {
+function createNotice($artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $authorNm, $authorEmail, $authorID) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "INSERT INTO self.self_articles(
@@ -1280,7 +1385,7 @@ function createArticle($artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $
     execUpdtInsSQL($insSQL);
 }
 
-function updateArticle($articleID, $artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $authorNm, $authorEmail, $authorID) {
+function updateNotice($articleID, $artclCatgry, $artTitle, $hdrURL, $artBody, $isPblshed, $datePublished, $authorNm, $authorEmail, $authorID) {
     global $usrID;
     $dateStr = getDB_Date_time();
     $insSQL = "UPDATE self.self_articles SET 
@@ -1299,7 +1404,7 @@ function updateArticle($articleID, $artclCatgry, $artTitle, $hdrURL, $artBody, $
     execUpdtInsSQL($insSQL);
 }
 
-function get_ArticleTtls($searchFor, $searchIn) {
+function get_NoticeTtls($searchFor, $searchIn) {
     //global $usrID;
     global $qStrtDte;
     global $qEndDte;
@@ -1344,7 +1449,7 @@ WHERE (1=1" . $extrWhr . "$wherecls)";
     return 0;
 }
 
-function getLtstArticleID($articleCtgry) {
+function getLtstNoticeID($articleCtgry) {
     $sqlStr = "select article_id from self.self_articles "
             . "where is_published='1' and (now() >= to_timestamp(publishing_date,'YYYY-MM-DD HH24:MI:SS')) "
             . "and article_category = '" . loc_db_escape_string($articleCtgry)
@@ -1357,7 +1462,7 @@ function getLtstArticleID($articleCtgry) {
     return -1;
 }
 
-function getArticleBody($articleID) {
+function getNoticeBody($articleID) {
     $sqlStr = "select article_body from self.self_articles where article_id = " . $articleID;
 //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
@@ -1368,7 +1473,7 @@ function getArticleBody($articleID) {
     return "";
 }
 
-function getArticleHeaderUrl($articleID) {
+function getNoticeHeaderUrl($articleID) {
     $sqlStr = "select header_url from self.self_articles where article_id = " . $articleID;
 //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
@@ -1378,12 +1483,12 @@ function getArticleHeaderUrl($articleID) {
     return "";
 }
 
-function getArticleHeader($articleID) {
+function getNoticeHeader($articleID) {
     $sqlStr = "select article_header from self.self_articles where article_id = " . $articleID;
 //echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
-        $hdrUrl = str_replace("{:articleID}", $articleID, getArticleHeaderUrl($articleID));
+        $hdrUrl = str_replace("{:articleID}", $articleID, getNoticeHeaderUrl($articleID));
         if ($hdrUrl == "") {
             return "$row[0]";
         } else {
@@ -1393,7 +1498,7 @@ function getArticleHeader($articleID) {
     return "";
 }
 
-function getArticleHitID($artclID) {
+function getNoticeHitID($artclID) {
     global $usrID;
     $sqlStr = "select article_hit_id from self.self_articles_hits "
             . "where created_by = " . $usrID . " and article_id = " . $artclID;
@@ -1404,7 +1509,7 @@ function getArticleHitID($artclID) {
     return -1;
 }
 
-function createArticleHit($artclID) {
+function createNoticeHit($artclID) {
     global $usrID;
     global $lgn_num;
 

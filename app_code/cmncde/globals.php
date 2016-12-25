@@ -1715,12 +1715,12 @@ function getShapes() {
     global $org_name;
     global $app_image;
     global $orgID;
-    global $database;
+    global $db_folder;
     global $orgID;
     GLOBAL $ftp_base_db_fldr;
 
     if ($orgID > 0) {
-        $img_src = "app_data/$database/Org/$orgID.png";
+        $img_src = "dwnlds/$db_folder/Org/$orgID.png";
         $ftp_src = $ftp_base_db_fldr . "/Org/$orgID.png";
         if (file_exists($ftp_src)) {
             copy("$ftp_src", "$img_src");

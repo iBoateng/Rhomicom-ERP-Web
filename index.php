@@ -350,9 +350,9 @@ if ($group > 0 && $type > 0) {
         if ($type == 1) {
             require 'app_code/cmncde/home.php';
         } else if ($type == 2) {
-            require 'app_code/cmncde/inbox_html.php';
+            require 'app_code/cmncde/myInbx.php';
         } else if ($type == 3) {
-            require 'app_code/cmncde/all_articles.php';
+            require 'app_code/cmncde/all_notices.php';
         } else if ($type == 4) {
             require 'app_code/cmncde/dashboard_data.php';
         } else if ($type == 5) {

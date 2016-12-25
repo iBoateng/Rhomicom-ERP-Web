@@ -9,7 +9,7 @@ $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 15 */ "Edit Server Settings", "Set manual password for users",
     /* 17 */ "Send System Generated Passwords to User Mails",
     /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
-    /* 22 */ "Add Articles", "Edit Articles", "Delete Articles", "View Articles Admin");
+    /* 22 */ "Add Notices", "Edit Notices", "Delete Notices", "View Notices Admin");
 
 $sysLovs = array("Benefits Types", "Relationship Types"
     , "Person Types-Further Details", "Countries", "Currencies", "Organisation Types"
@@ -1507,7 +1507,7 @@ function loadSysAdminMdl() {
         /* 15 */ "Edit Server Settings", "Set manual password for users",
         /* 17 */ "Send System Generated Passwords to User Mails",
         /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
-        /* 22 */ "Add Articles", "Edit Articles", "Delete Articles", "View Articles Admin");
+        /* 22 */ "Add Notices", "Edit Notices", "Delete Notices", "View Notices Admin");
 
     $subGrpNames = ""; //, "Accounting Transactions"
     $mainTableNames = ""; //, "accb.accb_trnsctn_details"
@@ -1616,16 +1616,15 @@ function loadGenStpMdl() {
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
 
-function loadProjsMdl()
-{ 
+function loadProjsMdl() {
     $DefaultPrvldgs = array(
-       "View Projects Management", 
-      /*1*/"View Projects", "View Accounts Setup", 
-      /*3*/"View Resources Setup", "View SQL", "View Record History",
-      /*6*/"Add Projects","Edit Projects","Delete Projects",
-      /*9*/"Add Accounts","Edit Accounts","Delete Accounts",
-      /*12*/"Add Resource","Edit Resource","Delete Resource",
-      /*15*/"View Project Costs","Edit Project Costs");
+        "View Projects Management",
+        /* 1 */ "View Projects", "View Accounts Setup",
+        /* 3 */ "View Resources Setup", "View SQL", "View Record History",
+        /* 6 */ "Add Projects", "Edit Projects", "Delete Projects",
+        /* 9 */ "Add Accounts", "Edit Accounts", "Delete Accounts",
+        /* 12 */ "Add Resource", "Edit Resource", "Delete Resource",
+        /* 15 */ "View Project Costs", "Edit Project Costs");
 
     $subGrpNames = "";
     $mainTableNames = "";
@@ -1637,7 +1636,6 @@ function loadProjsMdl()
     $smplRoleName = "Projects Management Administrator";
 
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
-   
 }
 
 function loadGenericMdl() {
@@ -1936,12 +1934,13 @@ function loadSelfMdl() {
         /* 14 */ "View SQL", "View Record History",
         /* 16 */ "Administer Elections",
         /* 17 */ "Administer Leave",
-        /* 18 */ "Administer Self-Service", "Make Requests for Others", "Administer Other's Inbox");
+        /* 18 */ "Administer Self-Service", "Make Requests for Others", "Administer Other's Inbox",
+        /* 21 */ "View Comments", "Add Comments", "Edit Comments", "Delete Comments");
 
     $DefaultPrvldgs1 = array("View Self-Service",
         /* 1 */ "View Internal Payments", "View Payables Invoices", "View Receivables Invoices",
         /* 4 */ "View Leave of Absence", "View Events/Attendances", "View Elections",
-        /* 7 */ "View Forums", "View E-Library", "View E-Learning");
+        /* 7 */ "View Forums", "View E-Library", "View Comments", "Add Comments");
 
     $subGrpNames = "";
     $mainTableNames = "";

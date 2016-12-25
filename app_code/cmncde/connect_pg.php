@@ -17,17 +17,18 @@ $smplTokenWord1 = "xewe19fs58rte21This is a General Key for Rhomi|com Systems "
         . "Tech. !Ltd Web/Mobile Portal @7612364kjebdfjwegyr78236429orbjkasdbhi";
 $ModuleName = "";
 $database = "test_database";
+$db_folder = "test_database";
 $script_folder = "scripts7";
 $base_folder = "";
 $fldrPrfx = '/var/www/html/rho_erp/';
-//$tmpDest = 'C:\\wamp\\www\\portal\\app_data\\ghie_test\\Person\\Request\\';
-$tmpDest = 'app_data/' . $database . '/Person/Request/'; ///var/www/html/portal/
-//$prsnDocDest = 'app_data/' . $database . '/PrsnDoc/';      
-$pemDest = 'app_data/' . $database . '/Person/'; ///var/www/html/portal/
-//$dest = "app_data/$database/Person/";
+//$tmpDest = 'C:\\wamp\\www\\portal\\dwnlds\\ghie_test\\Person\\Request\\';
+$tmpDest = 'dwnlds/' . $db_folder . '/Person/Request/'; ///var/www/html/portal/
+//$prsnDocDest = 'dwnlds/' . $db_folder . '/PrsnDoc/';      
+$pemDest = 'dwnlds/' . $db_folder . '/Person/'; ///var/www/html/portal/
+//$dest = "dwnlds/$db_folder/Person/";
 //$base_dir = "C:/xampp/htdocs/rems_pg/app_code/cmncde/";
 //$ftp_base_db_fldr = "/home/oracle/Databases/test_database";
-$ftp_base_db_fldr = "/home/portaladmin/" . $database; //"/home/rhoportal/ghie_ftp/" . $database;
+$ftp_base_db_fldr = "/home/portaladmin/" . $db_folder; //"/home/rhoportal/ghie_ftp/" . $db_folder;
 $db_pwd = 'Password1';
 $db_usr = "postgres";
 $port = "5432";
@@ -76,7 +77,7 @@ $showAboutRho = "0";
 $introWdth = 1050;
 $subArtWdth = 524;
 $introToPrtlArtBody = "<div class=\"rho_form1\" style=\"max-width:{:introWdth}px;font-family:Arial !important; padding-left:20px\">
-                    <h3><a href=\"javascript: showArticleDetails({:articleID},'Notices/Announcements');\" style=\"font-weight:bold;text-decoration:underline;\">INTRODUCTION TO THE PORTAL</a></h3>
+                    <h3><a href=\"javascript: showNoticeDetails({:articleID},'Notices/Announcements');\" style=\"font-weight:bold;text-decoration:underline;\">INTRODUCTION TO THE PORTAL</a></h3>
                                 <p style=\"line-height: 162%;\">
                                 <a href=\"$app_cstmr_url\" target=\"_blank\">
                                 <img style=\"float:right; height:125px; margin-top:-5px; margin-left:10px;\" alt=\"MEMBERS\" src=\"cmn_images/members.png\" >
@@ -85,15 +86,15 @@ $introToPrtlArtBody = "<div class=\"rho_form1\" style=\"max-width:{:introWdth}px
                                 <img style=\"float:left; height:125px;  margin-top:-5px;margin-right:1px;\" alt=\"ORG LOGO\" src=\"cmn_images/3.png\" />
                                 </a>
                                 This is the Information Resource Centre for all Members of the " . $app_cstmr . ". 
-                                It is the central depot for all Notices, Announcements, Articles and Research Papers. A member who logs in can view all directly Related Records held by the Institution.
+                                It is the central depot for all Notices, Announcements, Notices and Research Papers. A member who logs in can view all directly Related Records held by the Institution.
                                 Course Bills and Dues Payments can be checked from here.
                                 CPD Points, Examination Scores as well as all other Information on Seminars and Workshops attended are available here. 
                                 Annual dues subscriptions can be paid to designated banks and the pay-in-slip submitted on this platform. 
                                 Voting and Checking of Election Results can all be done from here...{:RMS} <br/>There is also a live and vibrant forum here where members can share knowledge
-            and expertise on areas of importance. Articles and research papers can be
+            and expertise on areas of importance. Notices and research papers can be
             submitted to the Institution via this platform as well.{:RME}</p></div>";
 $ltstNewArtBody = "<div class=\"rho_form1\" style=\"float:left;padding-left:20px;margin:5px;max-width:{:subArtWdth}px;min-height:170px;line-height: 162%;font-family:Arial !important;font-size:13px !important;\">
-                                <h3><a href=\"javascript: showArticleDetails({:articleID},'Latest News');\" style=\"font-weight:bold;text-decoration:underline;\">LATEST NEWS AND HIGHLIGHTS</a></h3>
+                                <h3><a href=\"javascript: showNoticeDetails({:articleID},'Latest News');\" style=\"font-weight:bold;text-decoration:underline;\">LATEST NEWS AND HIGHLIGHTS</a></h3>
                                 <ul style=\"list-style-image: url(cmn_images/rho_arrow2.png);list-style-position:outside;padding-left:40px;\">
                                 <li style=\"list-style-image: url(cmn_images/new.gif) !important;\"><a href=\"#\">User friendly Interface.</a></li>
                                 <li>It can run on a variety of computer hardware and network configuration.</li>
@@ -103,7 +104,7 @@ $ltstNewArtBody = "<div class=\"rho_form1\" style=\"float:left;padding-left:20px
                                 </ul>
                                 </div>";
 $usefulLnksArtBody = "<div class=\"rho_form1\" style=\"float:left;padding-left:20px;margin:5px;max-width:{:subArtWdth}px;min-height:170px;line-height: 162%;font-family:Arial !important;font-size:13px !important;\">
-                                <h3><a href=\"javascript: showArticleDetails({:articleID},'Useful Links');\" style=\"font-weight:bold;text-decoration:underline;\">USEFUL QUICK LINKS & RESOURCES</a></h3>
+                                <h3><a href=\"javascript: showNoticeDetails({:articleID},'Useful Links');\" style=\"font-weight:bold;text-decoration:underline;\">USEFUL QUICK LINKS & RESOURCES</a></h3>
                                 <ul style=\"list-style-image: url(cmn_images/rho_arrow2.png);list-style-position:outside;list-style-type:circle;padding-left:40px;\">
                                 <li style=\"list-style-image: url(cmn_images/new.gif) !important;\">Database backup and restore from application.</li>
                                 <li>Robust application and information security management system.</li>

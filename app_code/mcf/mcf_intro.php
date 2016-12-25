@@ -874,7 +874,7 @@ function updatePrsnBasic($prsnid, $frstnm, $surname, $othnm, $title
 }
 
 function uploadDaImage($prsnid, &$nwImgLoc) {
-    global $database;
+    global $db_folder;
     global $ftp_base_db_fldr;
     global $usrID;
     global $fldrPrfx;
@@ -904,7 +904,7 @@ function uploadDaImage($prsnid, &$nwImgLoc) {
                     in_array($extension, $allowedExts)) &&
                     ($_FILES["daPrsnPicture"]["size"] < 6000000)) {
                 $nwFileName = encrypt1($prsnid . "." . $extension, $smplTokenWord1) . ".png";
-                $img_src = $fldrPrfx . "app_data/$database/Person/$nwFileName";
+                $img_src = $fldrPrfx . "dwnlds/$db_folder/Person/$nwFileName";
                 move_uploaded_file($_FILES["daPrsnPicture"]["tmp_name"], $img_src);
                 $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . "." . $extension;
                 if (file_exists($img_src)) {

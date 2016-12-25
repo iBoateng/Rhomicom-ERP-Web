@@ -2,7 +2,7 @@
 
 $menuItems = array("Users & their Roles", "Roles & Priviledges",
     "Modules & Priviledges", "Extra Info Labels", "Security Policies", "Server Settings",
-    "Track User Logins", "Audit Trail Tables", /* "News Items/Articles", */ "Load all Modules Requirements");
+    "Track User Logins", "Audit Trail Tables", /* "News Items/Notices", */ "Load all Modules Requirements");
 $menuImages = array("reassign_users.png", "groupings.png", "Folder.png", "info_ico2.gif",
     "login.jpg", "antenna1.png", "user-mapping.ico", "safe-icon.png", /* "notes06.gif", */ "98.png");
 
@@ -18,7 +18,7 @@ $dfltPrvldgs = array("View System Administration", "View Users & their Roles",
     /* 15 */ "Edit Server Settings", "Set manual password for users",
     /* 17 */ "Send System Generated Passwords to User Mails",
     /* 18 */ "View SQL", "View Record History", "Add/Edit Extra Info Labels", "Delete Extra Info Labels",
-    /* 22 */ "Add Articles", "Edit Articles", "Delete Articles", "View Articles Admin");
+    /* 22 */ "Add Notices", "Edit Notices", "Delete Notices", "View Notices Admin");
 $vwtyp = "0";
 $qstr = "";
 $dsply = "";
@@ -336,7 +336,7 @@ function getUsrIDHvThsRoleID($user_ID, $role_ID) {
     return -1;
 }
 
-function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy) {
+function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy, $extrWhere="") {
     $wherecls = "";
     $strSql = "";
     $ordrBy = "";
@@ -361,13 +361,13 @@ function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sor
     a.dflt_row_id " .
             "FROM sec.sec_users_n_roles a, sec.sec_roles b "
             . "WHERE ((a.role_id = b.role_id) AND (a.user_id = " . $pkID .
-            ")$wherecls) " . $ordrBy . " LIMIT " . $limit_size .
+            ")$wherecls"."$extrWhere) " . $ordrBy . " LIMIT " . $limit_size .
             " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_TtlUsersRoles($searchFor, $searchIn, $pkID) {
+function get_TtlUsersRoles($searchFor, $searchIn, $pkID, $extrWhere="") {
     $wherecls = "";
     $strSql = "";
     if ($searchIn == "Role Name") {

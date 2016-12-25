@@ -72,7 +72,7 @@ if ($lgn_num > 0 && $canview === true) {
 
 
     $menuItemsAdmn = array("System Administration", "Organization Setup",
-        "Value Lists Setup", "Workflow Administration", "Articles & Content Management", "Reports / Processes");
+        "Value Lists Setup", "Workflow Administration", "Notices & Content Management", "Reports / Processes");
     $menuImagesAdmn = array("ma-logo.png", "Home.png",
         "viewIcon.png", "bb_flow.gif",
         "Notebook.png", "settings.png");
@@ -85,14 +85,14 @@ if ($lgn_num > 0 && $canview === true) {
 
     $dfltPrvldgsAdmn = array("View System Administration",
         "View Organization Setup", "View General Setup",
-        "View Workflow Manager", "View Articles Admin",
+        "View Workflow Manager", "View Notices Admin",
         "View Reports And Processes");
 
     $canViewSysAdmin = test_prmssns("View System Administration", "System Administration");
     $canViewOrgStp = test_prmssns("View Organization Setup", "Organization Setup");
     $canViewLov = test_prmssns("View General Setup", "General Setup");
     $canViewWkf = test_prmssns("View Workflow Manager", "Workflow Manager");
-    $canViewArtclAdmn = test_prmssns("View Articles Admin", "System Administration");
+    $canViewArtclAdmn = test_prmssns("View Notices Admin", "System Administration");
     $canViewRpts = test_prmssns("View Reports And Processes", "Reports And Processes");
 
     if ($canViewSysAdmin || $canViewOrgStp || $canViewLov || $canViewWkf || $canViewArtclAdmn || $canViewRpts) {
@@ -119,7 +119,7 @@ if ($lgn_num > 0 && $canview === true) {
             }
             if ($i == 4) {
                 $cntentAdmn .= "<div class=\"col-md-3 colmd3special2\">
-        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allarticles', '$menuLinksAdmn[$i]');\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allnotices', '$menuLinksAdmn[$i]');\">
             <img src=\"cmn_images/$menuImagesAdmn[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItemsAdmn[$i]) . "</span>
         </button>

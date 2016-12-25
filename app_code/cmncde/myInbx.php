@@ -1,38 +1,18 @@
 <?php
-
 $mdlNm = "Self Service";
 $ModuleName = $mdlNm;
 
-$dfltPrvldgs = array("View Self-Service",
-    /* 1 */ "View Internal Payments", "View Payables Invoices", "View Receivables Invoices",
-    /* 4 */ "View Leave of Absence", "View Events/Attendances", "View Elections",
-    /* 7 */ "View Forums", "View E-Library", "View E-Learning",
-    /* 10 */ "View Elections Administration", "View Personal Records Administration", "View Forum Administration",
-    /* 13 */ "View Self-Service Administration",
-    /* 14 */ "View SQL", "View Record History",
-    /* 16 */ "Administer Elections",
-    /* 17 */ "Administer Leave",
-    /* 18 */ "Administer Self-Service", "Make Requests for Others", "Administer Other's Inbox");
+$dfltPrvldgs = array("View Self-Service", "Administer Other's Inbox");
 
 $vwtyp = "0";
 $qstr = "";
 $dsply = "";
 $actyp = "";
-$qActvOnly = "true";
+$qActvOnly = "false";
 $srchFor = "";
 $srchIn = "";
 $RoutingID = -1;
-$qNonLgn = "true";
-if (isset($formArray)) {
-    if (count($formArray) > 0) {
-        $vwtyp = isset($formArray['vtyp']) ? cleanInputData($formArray['vtyp']) : "0";
-        $qstr = isset($formArray['q']) ? cleanInputData($formArray['q']) : '';
-    } else {
-        $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-    }
-} else {
-    $vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
-}
+$qNonLgn = "false";
 
 if (isset($_POST['qNonLgn'])) {
     $qNonLgn = cleanInputData($_POST['qNonLgn']);
@@ -45,8 +25,8 @@ if (isset($_POST['RoutingID'])) {
 }
 if (isset($_POST['qStrtDte'])) {
     $qStrtDte = cleanInputData($_POST['qStrtDte']);
-    if (strlen($qStrtDte) == 19) {
-        $qStrtDte = substr($qStrtDte, 0, 10) . " 00:00:00";
+    if (strlen($qStrtDte) == 11) {
+        $qStrtDte = substr($qStrtDte, 0, 11) . " 00:00:00";
     } else {
         $qStrtDte = "";
     }
@@ -54,25 +34,25 @@ if (isset($_POST['qStrtDte'])) {
 
 if (isset($_POST['qEndDte'])) {
     $qEndDte = cleanInputData($_POST['qEndDte']);
-    if (strlen($qEndDte) == 19) {
-        $qEndDte = substr($qEndDte, 0, 10) . " 23:59:59";
+    if (strlen($qEndDte) == 11) {
+        $qEndDte = substr($qEndDte, 0, 11) . " 23:59:59";
     } else {
         $qEndDte = "";
     }
 }
 
-if (isset($_POST['query'])) {
-    $srchFor = cleanInputData($_POST['query']);
+if (isset($_POST['searchfor'])) {
+    $srchFor = cleanInputData($_POST['searchfor']);
 }
 
+if (isset($_POST['searchIn'])) {
+    $srchIn = cleanInputData($_POST['searchIn']);
+}
 if (strpos($srchFor, "%") === FALSE) {
     $srchFor = " " . $srchFor . " ";
     $srchFor = str_replace(" ", "%", $srchFor);
 }
 
-if (isset($_POST['queryIn'])) {
-    $srchIn = cleanInputData($_POST['queryIn']);
-}
 
 if (isset($_POST['q'])) {
     $qstr = cleanInputData($_POST['q']);
@@ -92,90 +72,456 @@ if (isset($_POST['qMaster'])) {
 }
 
 if ($isMaster == 1) {
-    if (test_prmssns($dfltPrvldgs[20], $mdlNm) == FALSE) {
+    if (test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
         restricted();
         exit();
     }
 }
+$pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
+$lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
+$sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "";
+if (strpos($srchFor, "%") === FALSE) {
+    $srchFor = " " . $srchFor . " ";
+    $srchFor = str_replace(" ", "%", $srchFor);
+}
 
-function createInbxRecsDtl($result, $startIdx, $srchIn, $srchFor, $lmtSze) {
-    global $isMaster;
-    $cmpID = 'myInboxGridPnl';
-    if ($isMaster == 1) {
-        $cmpID = 'wkfInboxGridPnl';
-    }
-    $output = "";
-    $output .= "<div class='container222'><table id=\"rhotable222\" class=\"rhotableClass222\" width=\"100%\" cellspacing=\"2\" cellpadding=\"2\">";
-
-    $i = $startIdx;
-    $b = 0;
-    $colsCnt = loc_db_num_fields($result);
-    while ($row = loc_db_fetch_array($result)) {
-        $style = "";
-
-        for ($d = 0; $d < $colsCnt; $d++) {
-            $style = "";
-            $style2 = "";
-            if (trim(loc_db_field_name($result, $d)) == "mt") {
-                $style = "style=\"display:none;\"";
+$cntent = "<div>
+				<ul class=\"breadcrumb\" style=\"$breadCrmbBckclr\">
+					<li onclick=\"openATab('#home', 'grp=40&typ=1');\">
+                                                <i class=\"fa fa-home\" aria-hidden=\"true\"></i>
+						<span style=\"text-decoration:none;\">Home</span>
+                                                <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>";
+if (array_key_exists('lgn_num', get_defined_vars())) {
+    if ($lgn_num > 0) {
+        if ($qstr == "DELETE") {
+            if ($actyp == 1) {
+                
             }
-            if ($row[$d] == 'No') {
-                $style2 = "style=\"color:red;font-weight:bold;\"";
-            } else if ($row[$d] == 'Yes') {
-                $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
-            }
-            $indx = $i - 1;
-            $hrf1 = "";
-            $hrf2 = "";
-            $labl = ucwords(str_replace("_", " ", loc_db_field_name($result, $d)));
-            $output.="<tr $style>";
-            $output.= "<td width=\"20%\" style=\"font-weight:bold;vertical-align:top;\">" . $labl . ":</td>";
-
-            if ($d == 14 && $row[15] == '0') {
-//                $hrf1 = "<a class=\"rho-button\" href=\"index1.php?ajx=1&grp=1&typ=10&searchin=$srchIn&searchfor=$srchFor&dsplySze=$lmtSze&q=act&vtyp=1&idx=$indx&id=$row[0]\">";
-//                $hrf2 = "</a>";
-                $arry1 = explode(";", $row[$d]);
-                $output.= "<td $style>";
+        } else if ($qstr == "UPDATE") {
+            if ($actyp == 1) {
+                $usrID = $_SESSION['USRID'];
+                $arry1 = explode(";", $actyp);
                 for ($r = 0; $r < count($arry1); $r++) {
-                    if ($arry1[$r] !== "" && $arry1[$r] != "None") {
-                        $isadmnonly = getActionAdminOnly($row[0], $arry1[$r]);
-                        if ($isadmnonly == '0' || $isMaster == 1) {
-                            $webUrlDsply = getActionUrlDsplyTyp($row[0], $arry1[$r]);
-                            $hrf1 = "<div style=\"padding:2px;float:left;\">"
-                                    . "<a class=\"x-btn-default-small\" style=\"color:#fff;text-decoration:none;\" "
-                                    . "href=\"javascript: actionProcess('$cmpID', '$row[0]','$arry1[$r]','$webUrlDsply','$row[24]','$row[5]','$row[8]','$row[7]');\">";
-                            $hrf2 = "</a></div>";
-                            $output.="$hrf1" . $arry1[$r] . "$hrf2";
-                        }
-                    }
-
-                    if ($r == count($arry1) - 1) {
-                        $webUrlDsply="";
-                        $hrf1 = "<div style=\"padding:2px;float:left;\">"
-                                . "<a class=\"x-btn-default-small\" style=\"color:#fff;text-decoration:none;\" "
-                                . "href=\"javascript: actionProcess('$cmpID', '$row[0]','View Attachments','$webUrlDsply','$row[24]','$row[5]','$row[8]','$row[7]');\">";
-                        $hrf2 = "</a></div>";
-                        $output.="$hrf1" . 'View Attachments' . "$hrf2";
+                    if ($arry1[$r] !== "") {
+                        actOnMsgSQL($RoutingID, $usrID, $arry1[$r]);
                     }
                 }
-
-                $output.="</td>";
-            } else {
-                $output.= "<td width=\"70%\" $style2>$hrf1" . $row[$d] . "$hrf2</td>";
+            } else if ($actyp == 2) {
+                
             }
-            $output.="</tr>";
+        } else {
+            if ($vwtyp == "0") {
+                $cntent .= "
+					<li>
+						<span style=\"text-decoration:none;\">My Inbox</span>
+					</li>
+                                       </ul>
+                                     </div>";
+                echo $cntent;
+                $total = get_MyInbxTtls($srchFor, $srchIn);
+                if ($pageNo > ceil($total / $lmtSze)) {
+                    $pageNo = 1;
+                } else if ($pageNo < 1) {
+                    $pageNo = ceil($total / $lmtSze);
+                }
+
+                $curIdx = $pageNo - 1;
+                $result = get_MyInbx($srchFor, $srchIn, $curIdx, $lmtSze);
+                ?>
+                <form id='myInbxForm' action='' method='post' accept-charset='UTF-8'>
+                    <div class="row " style="margin-bottom:5px;padding:0px 15px 0px 15px !important;">
+                        <div class="col-md-2" style="padding:0px 1px 0px 1px !important;">
+                            <div class="input-group">
+                                <input class="form-control" id="myInbxSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncMyInbx(event, '', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input id="myInbxPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                <label class="btn btn-primary btn-file input-group-addon" onclick="getMyInbx('clear', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </label>
+                                <label class="btn btn-primary btn-file input-group-addon" onclick="getMyInbx('', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </label> 
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="padding:0px 1px 0px 1px !important;">
+                            <div class="input-group">
+                                <span class="input-group-addon">In</span>
+                                <select data-placeholder="Select..." class="form-control chosen-select" id="myInbxSrchIn">
+                                    <?php
+                                    $valslctdArry = array("", "", "", "", "");
+                                    $srchInsArrys = array("Status", "Source App", "Subject", "Person From", "Message Type");
+
+                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                        if ($srchIn == $srchInsArrys[$z]) {
+                                            $valslctdArry[$z] = "selected";
+                                        }
+                                        ?>
+                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                <select data-placeholder="Select..." class="form-control chosen-select" id="myInbxDsplySze" style="min-width:65px !important;">                            
+                                    <?php
+                                    $valslctdArry = array("", "", "", "", "", "", "", "");
+                                    $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                    for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                        if ($lmtSze == $dsplySzeArry[$y]) {
+                                            $valslctdArry[$y] = "selected";
+                                        } else {
+                                            $valslctdArry[$y] = "";
+                                        }
+                                        ?>
+                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5" style="padding:0px 1px 0px 1px !important;">
+                            <div class="col-xs-6" style="padding:0px 1px 0px 0px !important;">
+                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                    <input class="form-control" size="16" type="text" id="myInbxStrtDate" name="myInbxStrtDate" value="<?php echo substr($qStrtDte, 0, 11); ?>" placeholder="Start Date">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div></div>
+                            <div class="col-xs-6" style="padding:0px 1px 0px 0px !important;">
+                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                    <input class="form-control" size="16" type="text"  id="myInbxEndDate" name="myInbxEndDate" value="<?php echo substr($qEndDte, 0, 11); ?>" placeholder="End Date">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div></div>                            
+                        </div>
+                        <div class="col-md-2" style="padding:0px 1px 0px 1px !important;">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" style="margin: 0px !important;">
+                                    <li>
+                                        <a  style="padding: 8px 20px 7px 20px !important;" href="javascript:getMyInbx('previous', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a  style="padding: 8px 20px 7px 20px !important;" href="javascript:getMyInbx('next', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">   
+                        <div class="col-md-12" style="padding:2px 1px 2px 1px !important;border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
+                            <div class="col-md-6" style="padding:0px 1px 0px 1px !important;">
+                                <button type="button" class="btn btn-default btn-sm" onclick="checkAllBtns('myInbxTblForm');">
+                                    <img src="cmn_images/check_all.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    Check All
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="unCheckAllBtns('myInbxTblForm');">
+                                    <img src="cmn_images/selection_delete.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    UnCheck All
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="">
+                                    <img src="cmn_images/reassign_users.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    RE-ASSIGN SELECTED LINES
+                                </button>
+                            </div>
+                            <div class="col-md-2" style="padding:5px 1px 0px 1px !important;">
+                                <div class="form-check" style="font-size: 12px !important;">
+                                    <label class="form-check-label">
+                                        <?php
+                                        $actvChekd = "";
+                                        if ($qActvOnly == "true") {
+                                            $actvChekd = "checked=\"true\"";
+                                        }
+                                        $noLgnChekd = "";
+                                        if ($qNonLgn == "true") {
+                                            $noLgnChekd = "checked=\"true\"";
+                                        }
+                                        ?>
+                                        <input type="checkbox" class="form-check-input" id="myInbxShwActvNtfs" name="myInbxShwActvNtfs" <?php echo $actvChekd; ?>>
+                                        Active Notifications
+                                    </label>
+                                </div>                            
+                            </div>
+                            <div class="col-md-2" style="padding:5px 1px 0px 1px !important;">
+                                <div class="form-check" style="font-size: 12px !important;">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" id="myInbxShwNonLgnNtfs" name="myInbxShwNonLgnNtfs"  <?php echo $noLgnChekd; ?>>
+                                        Non-Logon Notifications
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">&nbsp;</div>
+                        </div>
+                    </div>
+                </form>
+                <form id='myInbxTblForm' action='' method='post' accept-charset='UTF-8'>
+                    <div class="row"> 
+                        <div  class="col-md-12">
+                            <table class="table table-striped table-bordered table-responsive" id="myInbxTable" cellspacing="0" width="100%" style="width:100%;min-width: 800px;">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>No.</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>Subject</th>
+                                        <th>Source App</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Date Sent</th>
+                                        <th>Status</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $cntr = 0;
+                                    while ($row = loc_db_fetch_array($result)) {
+                                        $cntr += 1;
+                                        ?>
+                                        <tr id="myInbxRow<?php echo $cntr; ?>">
+                                            <td><input type="checkbox" name="myInbxChkbx<?php echo $cntr; ?>" value="<?php echo $row[0] . ";" . $row[1]; ?>"></td>
+                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Approve" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/thumbsUp28.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Reject" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/thumbsDown28.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Request for Information" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/info.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                            <?php if ($row[10] == "1") { ?>
+                                                <td><a href="javascript:getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:normal;color:#0000FF;"><?php echo $row[2]; ?></a></td>
+                                            <?php } else { ?>                                                
+                                                <td><a href="javascript:getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:bold;"><?php echo $row[2]; ?></a></td>
+                                            <?php } ?>
+                                            <td><?php echo $row[11]; ?></td>
+                                            <td><?php echo $row[3]; ?></td>
+                                            <td><?php echo $row[13]; ?></td>
+                                            <td><?php echo $row[5]; ?></td>
+                                            <td><?php echo $row[8]; ?></td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Attachments" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/adjunto.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>                     
+                    </div>
+                </form>
+                <?php
+            } else if ($vwtyp == "1") {
+                //Get My Inbox Detail
+                $result = get_MyInbxDetl($RoutingID);
+                ?>
+                <form id='myInbxDetForm' action='' method='post' accept-charset='UTF-8'>
+                    <div class="row"> 
+                        <div  class="col-md-12">
+                            <table class="gridtable" id="myInbxDetTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px;">
+                                <?php
+                                $output = "";
+                                $cmpID="";
+                                $i = 0;
+                                $b = 0;
+                                $colsCnt = loc_db_num_fields($result);
+                                $msgID = -1;
+                                while ($row = loc_db_fetch_array($result)) {
+                                    $style = "";
+                                    $msgID = $row[1];
+                                    for ($d = 0; $d < $colsCnt; $d++) {
+                                        $style = "";
+                                        $style2 = "";
+                                        if (trim(loc_db_field_name($result, $d)) == "mt") {
+                                            $style = "style=\"display:none;\"";
+                                        }
+                                        if ($row[$d] == 'No') {
+                                            $style2 = "style=\"color:red;font-weight:bold;\"";
+                                        } else if ($row[$d] == 'Yes') {
+                                            $style2 = "style=\"color:#32CD32;font-weight:bold;\"";
+                                        }
+                                        $indx = $i - 1;
+                                        $hrf1 = "";
+                                        $hrf2 = "";
+                                        $labl = ucwords(str_replace("_", " ", loc_db_field_name($result, $d)));
+                                        if ($d == 2 || $d == 3 || $d == 4) {
+                                            continue;
+                                        } else {
+                                            $output .= "<tr $style>";
+                                            $output .= "<td width=\"20%\" class=\"likeheader\" style=\"font-weight:bold;vertical-align:top;background-color:#dedede !important;\">" . $labl . ":</td>";
+                                        }
+                                        if ($d == 14 && $row[15] == '0') {
+                                            $arry1 = explode(";", $row[$d]);
+                                            $output .= "<td $style>";
+                                            for ($r = 0; $r < count($arry1); $r++) {
+                                                if ($arry1[$r] !== "" && $arry1[$r] != "None") {
+                                                    $isadmnonly = getActionAdminOnly($row[0], $arry1[$r]);
+                                                    if ($isadmnonly == '0' || $isMaster == 1) {
+                                                        $webUrlDsply = getActionUrlDsplyTyp($row[0], $arry1[$r]);
+                                                        $hrf1 = "<div style=\"padding:2px;float:left;\">"
+                                                                . "<button type=\"button\" class=\"btn btn-primary\""  
+                                                                . " onclick=\"actionProcess('$cmpID', '$row[0]','$arry1[$r]','$webUrlDsply','$row[24]','$row[5]','$row[8]','$row[7]');\">";
+                                                        $hrf2 = "</button></div>";
+                                                        $output .= "$hrf1" . $arry1[$r] . "$hrf2";
+                                                    }
+                                                }
+
+                                                if ($r == count($arry1) - 1) {
+                                                    $webUrlDsply = "";
+                                                    $hrf1 = "<div style=\"padding:2px;float:left;\">"
+                                                            . "<button type=\"button\" class=\"btn btn-primary\" "
+                                                            . "onclick=\"actionProcess('$cmpID', '$row[0]','View Attachments','$webUrlDsply','$row[24]','$row[5]','$row[8]','$row[7]');\">";
+                                                    $hrf2 = "</button></div>";
+                                                    $output .= "$hrf1" . 'View Attachments' . "$hrf2";
+                                                }
+                                            }
+
+                                            $output .= "</td>";
+                                        } else if ($d == 14 && $row[15] != '0') {
+                                            $output .= "<td width=\"70%\" $style2>$hrf1<span style=\"font-weight:bold;font-size:12px;color:green;\">NONE</span>$hrf2</td>";
+                                        } else if ($d == 8) {
+                                            $output .= "<td width=\"70%\" $style2>$hrf1<span style=\"font-weight:bold;font-size:12px;color:blue;\">" . strtoupper($row[$d]) . "</span>$hrf2</td>";
+                                        } else {
+                                            $output .= "<td width=\"70%\" $style2>$hrf1" . $row[$d] . "$hrf2</td>";
+                                        }
+                                        $output .= "</tr>";
+                                    }
+
+                                    $i++;
+                                    $b++;
+                                }
+                                echo $output;
+                                ?>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div  class="col-md-12">
+                            <table class="gridtable" id="myInbxActionsTable" cellspacing="0" cellpadding="0" width="100%" style="width:100%;min-width: 400px;">   
+                                <?php
+                                $result1 = get_ActionHistory($msgID);
+                                $colsCnt1 = loc_db_num_fields($result1);
+                                $output = "
+            <caption>ACTION HISTORY</caption>";
+                                $output .= "<thead><tr>";
+                                $output .= "<th width=\"170px\" style=\"font-weight:bold;\">No.</th>";
+                                $output .= "<th width=\"250px\" style=\"font-weight:bold;\">Approvers/Reviewers</th>";
+                                $output .= "<th width=\"250px\" style=\"font-weight:bold;\">Action Date</th>";
+                                $output .= "<th width=\"250px\" style=\"font-weight:bold;\">Action Performed</th>";
+                                $output .= "</tr></thead>";
+                                $output .= "<tbody>";
+                                while ($row = loc_db_fetch_array($result1)) {
+                                    $style = "";
+                                    $style2 = "";
+                                    $hrf1 = "";
+                                    $hrf2 = "";
+                                    $output .= "<tr>";
+                                    for ($d = 0; $d < $colsCnt1; $d++) {
+                                        if (trim(loc_db_field_name($result1, $d)) == "mt") {
+                                            continue;
+                                        }
+                                        $output .= "<td $style>$hrf1" . $row[$d] . "$hrf2</td>";
+                                    }
+                                    $output .= "</tr>";
+                                }
+                                $output .= "</tbody>";
+                                echo $output;
+                                ?>                                
+                            </table>
+                        </div>
+                    </div>
+                </form>
+
+                <?php
+            } else if ($vwtyp == "2") {
+                
+            }
         }
-
-        $i++;
-        $b++;
+    } else {
+        sessionInvalid();
     }
+}
 
-    $output.=" </table></div>";
-    return $output;
+function get_ActionHistory($msgID) {
+    $selSQL = "SELECT row_number() OVER (ORDER BY (CASE WHEN TBL2.date_action_ws_prfmd='' or tbl1.level=-999 THEN 
+       TBL2.date_sent
+       ELSE 
+       TBL2.date_action_ws_prfmd
+       END) DESC) AS \"No.  \", 
+tbl1.apprvrs AS \"Approvers/Reviewers\",
+ (CASE WHEN TBL2.date_action_ws_prfmd='' or tbl1.level=-999 THEN 
+       TBL2.date_sent
+       ELSE 
+       TBL2.date_action_ws_prfmd
+       END) mt,
+ CASE WHEN TBL2.date_action_ws_prfmd='' or tbl1.level=-999 THEN 
+       to_char(to_timestamp(TBL2.date_sent,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS')
+       ELSE 
+       to_char(to_timestamp(TBL2.date_action_ws_prfmd,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS')
+       END Action_Date,
+tbl1.action_performed
+ FROM (SELECT a.msg_id, 
+string_agg(prs.get_prsn_name(a.to_prsn_id)||' ('||prs.get_prsn_loc_id(a.to_prsn_id)||')', ', ') apprvrs, 
+       MAX(a.routing_id) routing_id, 
+       CASE WHEN a.status_aftr_action='' THEN
+       'Pending'
+       ELSE
+       a.status_aftr_action
+       END action_performed, 
+       a.to_prsns_hrchy_level AS \"level\"
+  FROM wkf.wkf_actual_msgs_routng a, 
+  wkf.wkf_actual_msgs_hdr b
+  where a.msg_id=b.msg_id and b.msg_id=" . $msgID . "
+  and (a.who_prfmd_action=a.to_prsn_id or a.who_prfmd_action<=0)   
+  GROUP BY 1,4,5
+  UNION
+  SELECT a.msg_id, 
+string_agg(prs.get_prsn_name(a.from_prsn_id)||' ('||prs.get_prsn_loc_id(a.from_prsn_id)||')', ', ') apprvrs, 
+       MIN(a.routing_id) routing_id, 
+       'Initiated' action_performed, 
+       -999 AS \"level\"
+  FROM wkf.wkf_actual_msgs_routng a, 
+  wkf.wkf_actual_msgs_hdr b
+  where a.msg_id=b.msg_id and b.msg_id=" . $msgID . "
+  and a.routing_id=(SELECT MIN(z.routing_id) FROM wkf.wkf_actual_msgs_routng z WHERE z.msg_id=" . $msgID . ")  
+  GROUP BY 1,4,5) tbl1,
+  wkf.wkf_actual_msgs_routng tbl2
+  WHERE TBL1.routing_id=TBL2.routing_id
+  ORDER BY (CASE WHEN TBL2.date_action_ws_prfmd='' or tbl1.level=-999 THEN 
+       TBL2.date_sent
+       ELSE 
+       TBL2.date_action_ws_prfmd
+       END) DESC";
+    $result = executeSQLNoParams($selSQL);
+    return $result;
 }
 
 function get_MyInbx($searchFor, $searchIn, $offset, $limit_size) {
-//global $usrID;
+
     global $user_Name;
     global $qStrtDte;
     global $qEndDte;
@@ -201,12 +547,10 @@ function get_MyInbx($searchFor, $searchIn, $offset, $limit_size) {
     }
 
     if ($qStrtDte != "") {
-//$qStrtDte = cnvrtDMYTmToYMDTm($qStrtDte);
-        $wherecls .= " AND (a.date_sent >= '" . loc_db_escape_string($qStrtDte) . "')";
+        $wherecls .= " AND (a.date_sent >= '" . loc_db_escape_string(cnvrtDMYTmToYMDTm($qStrtDte)) . "')";
     }
     if ($qEndDte != "") {
-//$qEndDte = cnvrtDMYTmToYMDTm($qEndDte);
-        $wherecls .= " AND (a.date_sent <= '" . loc_db_escape_string($qEndDte) . "')";
+        $wherecls .= " AND (a.date_sent <= '" . loc_db_escape_string(cnvrtDMYTmToYMDTm($qEndDte)) . "')";
     }
     if ($qActvOnly == "true") {
         $wherecls .= " AND (a.is_action_done = '0')";
@@ -233,16 +577,12 @@ function get_MyInbx($searchFor, $searchIn, $offset, $limit_size) {
         END \"to\", b.msg_typ message_type, prs.get_prsn_loc_id(a.from_prsn_id) locid 
   FROM wkf.wkf_actual_msgs_routng a, wkf.wkf_actual_msgs_hdr b, wkf.wkf_apps c
 WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)" . $extrWhr . "$wherecls) ORDER BY a.date_sent DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
-//echo $sqlStr;
+
     $result = executeSQLNoParams($sqlStr);
-    if (loc_db_num_rows($result) <= 0) {
-//echo $sqlStr;'<a href=\"\">'|| ||'</a>'
-    }
     return $result;
 }
 
 function get_MyInbxTtls($searchFor, $searchIn) {
-//global $usrID;
     global $user_Name;
     global $qStrtDte;
     global $qEndDte;
@@ -269,12 +609,10 @@ function get_MyInbxTtls($searchFor, $searchIn) {
     }
 
     if ($qStrtDte != "") {
-//$qStrtDte = cnvrtDMYTmToYMDTm($qStrtDte);
-        $wherecls .= " AND (a.date_sent >= '" . loc_db_escape_string($qStrtDte) . "')";
+        $wherecls .= " AND (a.date_sent >= '" . loc_db_escape_string(cnvrtDMYTmToYMDTm($qStrtDte)) . "')";
     }
     if ($qEndDte != "") {
-//$qEndDte = cnvrtDMYTmToYMDTm($qEndDte);
-        $wherecls .= " AND (a.date_sent <= '" . loc_db_escape_string($qEndDte) . "')";
+        $wherecls .= " AND (a.date_sent <= '" . loc_db_escape_string(cnvrtDMYTmToYMDTm($qEndDte)) . "')";
     }
     if ($qActvOnly == "true") {
         $wherecls .= " AND (a.is_action_done = '0')";
@@ -291,7 +629,6 @@ function get_MyInbxTtls($searchFor, $searchIn) {
     $sqlStr = "SELECT count(1) 
   FROM wkf.wkf_actual_msgs_routng a, wkf.wkf_actual_msgs_hdr b, wkf.wkf_apps c
 WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)" . $extrWhr . "$wherecls)";
-//echo $sqlStr;
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
         return $row[0];
@@ -299,7 +636,7 @@ WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)" . $extrWhr . "$wherecls)";
     return 0;
 }
 
-function get_MyInbxDetl($routingID, $searchFor, $searchIn, $offset, $limit_size) {
+function get_MyInbxDetl($routingID) {
     $wherecls = "";
     $wherecls = " AND (a.routing_id = " . loc_db_escape_string($routingID) . ")";
 
@@ -322,181 +659,10 @@ function get_MyInbxDetl($routingID, $searchFor, $searchIn, $offset, $limit_size)
        a.last_update_by mt, a.last_update_date mt,
        prs.get_prsn_loc_id(a.from_prsn_id) mt
   FROM wkf.wkf_actual_msgs_routng a, wkf.wkf_actual_msgs_hdr b, wkf.wkf_apps c
-WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)$wherecls) ORDER BY a.date_sent DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
-//echo $sqlStr;
+WHERE ((c.app_id=b.app_id) AND (a.msg_id=b.msg_id)$wherecls)";
+
     $result = executeSQLNoParams($sqlStr);
     return $result;
-}
-
-function advncSrchForm() {
-    global $srcApp;
-    global $srcMdl;
-    global $prsnFrmLocID;
-    global $prsnToLocID;
-    global $prsnFrm;
-    global $prsnTo;
-    global $msgTyp;
-    global $qStrtDte;
-    global $qEndDte;
-    global $msgHdr;
-    global $rtngSts;
-    global $vwtyp;
-
-    $prsnFrmNm = getPrsnFullNm($prsnFrm);
-    $prsnToNm = getPrsnFullNm($prsnTo);
-//echo $qStrtDte;
-//echo $qEndDte;
-    $dte1 = cnvrtYMDTmToDMYTm($qStrtDte); // cnvrtYMDTmToDMYTm(add_date(getDB_Date_time(), -1));
-    $dte2 = cnvrtYMDTmToDMYTm($qEndDte); //getFrmtdDB_Date_time();
-    $todDte1 = substr($dte1, 0, 11);
-    $todDte2 = substr($dte2, 0, 11);
-//echo $qStrtDte;
-//echo $qEndDte;
-    $res = "<div class='container' id=\"advancedSearch\">
-                <fieldset style=\"max-width:900px;\">
-                    <legend>Advanced Search</legend>
-
-                    <table style=\"margin-top:5px;\">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td width=\"120px\" style=\"font-weight:bold;vertical-align:middle;\">Source App:</td>
-                                                <td width=\"180px\">
-                                                    <input type=\"hidden\" id=\"inptsrch11\" name=\"inptsrch11\"  value=\"\" />
-                                                    <input style=\"width:180px;\" type=\"text\" id=\"inptsrch12\" name=\"inptsrch12\"  value=\"$srcApp\" readonly=\"readonly\" />
-                                                </td>
-                                                <td width=\"50px\"><span class=\"rho-button-wrapper\"><span class=\"rho-button-l\"> </span><span class=\"rho-button-r\"> </span><a name=\"srcAppBtn\" id=\"srcAppBtn\" class=\"rho-button\" onclick=\"getLovsPage('nav_lovs',
-                                                                'first', 'Workflow Apps', 'mydialog', '-1', '', '', 'radio', '0', '', '-1|', 'inptsrch11', 'inptsrch12');\">...</a></span>
-                                                </td>
-                                            </tr>                                            
-                                            <tr>
-                                                <td width=\"120px\" style=\"font-weight:bold;vertical-align:middle;\">Person From:</td>
-                                                <td width=\"180px\">
-                                                    <input type=\"hidden\" id=\"inptsrch31\" name=\"inptsrch31\"  value=\"$prsnFrmLocID\" />
-                                                    <input style=\"width:180px;\" type=\"text\" id=\"inptsrch32\" name=\"inptsrch32\"  value=\"$prsnFrmNm\" readonly=\"readonly\" />
-                                                </td>
-                                                <td width=\"50px\"><span class=\"rho-button-wrapper\"><span class=\"rho-button-l\"> </span><span class=\"rho-button-r\"> </span><a name=\"fromPrsn\" id=\"fromPrsn\" class=\"rho-button\" onclick=\"getLovsPage('nav_lovs',
-                                                                'first', 'Active Persons', 'mydialog', '-1', '', '', 'radio', '0', '', '-1|', 'inptsrch31', 'inptsrch32');\">...</a></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width=\"120px\" style=\"font-weight:bold;vertical-align:middle;\">Person To:</td>
-                                                <td width=\"180px\">
-                                                    <input type=\"hidden\" id=\"inptsrch41\" name=\"inptsrch41\"  value=\"$prsnToLocID\" />
-                                                    <input style=\"width:180px;\" type=\"text\" id=\"inptsrch42\" name=\"inptsrch42\"  value=\"$prsnToNm\" readonly=\"readonly\" />
-                                                </td>
-                                                <td width=\"50px\"><span class=\"rho-button-wrapper\"><span class=\"rho-button-l\"> </span><span class=\"rho-button-r\"> </span><a name=\"toPrsn\" id=\"toPrsn\" class=\"rho-button\" onclick=\"getLovsPage('nav_lovs',
-                                                                'first', 'Active Persons', 'mydialog', '-1', '', '', 'radio', '0', '', '-1|', 'inptsrch41', 'inptsrch42');\">...</a></span>
-                                                </td>
-                                            </tr>                                            
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table>
-                                        <tbody>                
-                                            <tr>
-                                                <td width=\"120px\" style=\"font-weight:bold;vertical-align:middle;\">From Date:</td>
-                                                <td width=\"180px\">
-                                                    <input style=\"width:180px;\" type=\"text\" id=\"inptsrch61\" name=\"inptsrch61\" onchange=\"inputValidator('inptsrch61', 'Date', '$todDte1 00:00:00');\"  value=\"$todDte1 00:00:00\" />
-                                                </td>
-                                                <td width=\"50px\">
-                                                    <a onclick=\"displayDatePicker('inptsrch61', this, 'ymd', '-', '00:00:00');\">
-                                                        <img src=\"cmn_images/date.png\" style=\"height:23px; width:25px; float:left;\"/>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width=\"120px\" style=\"font-weight:bold;vertical-align:middle;\">To Date:</td>
-                                                <td width=\"180px\">
-                                                    <input style=\"width:180px;\" type=\"text\" id=\"inptsrch71\" name=\"inptsrch71\" onchange=\"inputValidator('inptsrch71', 'Date', '$todDte2 23:59:59');\"  value=\"$todDte2 23:59:59\" />
-                                                </td>
-                                                <td width=\"50px\">
-                                                    <a onclick=\"displayDatePicker('inptsrch71', this, 'ymd', '-', '23:59:59');\">
-                                                        <img src=\"cmn_images/date.png\" style=\"height:23px; width:25px; float:left;\" />
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width=\"120px\" style=\"font-weight:bold;vertical-align:middle;\">Message Header:</td>
-                                                <td width=\"180px\">
-                                                    <input style=\"width:180px;\" type=\"text\" id=\"inptsrch81\" name=\"inptsrch81\"  value=\"$msgHdr\" />
-                                                </td>
-                                                <td width=\"50px\"></td>
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table>
-                                        <tbody>                
-                                            <tr>
-                                                <td width=\"120px\" style=\"font-weight:bold;vertical-align:middle;\">Message Type:</td>
-                                                <td width=\"180px\">
-                                                    <select id=\"inptsrch51\" name=\"inptsrch51\" >";
-    $msgtyp1 = "";
-    $msgtyp2 = "";
-    $msgtyp3 = "";
-    $msgtyp4 = "";
-    if ($msgTyp == "None") {
-        $msgtyp1 = "selected=\"selected\"";
-    } else if ($msgTyp == "Informational") {
-        $msgtyp2 = "selected=\"selected\"";
-    } else if ($msgTyp == "Work Document") {
-        $msgtyp3 = "selected=\"selected\"";
-    } else if ($msgTyp == "Approval Document") {
-        $msgtyp4 = "selected=\"selected\"";
-    }
-    $res.="<option value=\"None\" $msgtyp1 >--Select--</option>
-                                                        <option value=\"Informational\" $msgtyp2 >Informational</option>
-                                                        <option value=\"Work Document\" $msgtyp3 >Work Document</option>
-                                                        <option value=\"Approval Document\" $msgtyp4 >Approval Document</option>
-                                                    </select>
-                                                </td>
-                                                <td width=\"50px\"></td>
-                                            </tr>
-
-<tr>
-                                                <td width=\"120px\" style=\"font-weight:bold;vertical-align:middle;\">Status:</td>
-                                                <td width=\"180px\">";
-    $sts1 = "";
-    $sts2 = "";
-    $sts3 = "";
-    if ($rtngSts == "None") {
-        $sts1 = "selected=\"selected\"";
-    } else if ($rtngSts == "0") {
-        $sts2 = "selected=\"selected\"";
-    } else if ($rtngSts == "1") {
-        $sts3 = "selected=\"selected\"";
-    }
-    $res.="
-                                                    <select id=\"inptsrch91\" name=\"inptsrch91\" >
-                                                        <option value=\"None\" $sts1 >--Select--</option>
-                                                        <option value=\"0\" $sts2 >Open</option>
-                                                        <option value=\"1\" $sts3 >Closed</option>
-                                                    </select>
-                                                </td>
-                                                <td width=\"50px\"></td>
-                                            </tr>
-                                            <tr>
-                                                <td width=\"120px\" colspan=\"3\" style=\"text-align: center;\">
-                                                    <a name=\"clearSrchBtn\" id=\"clearSrchBtn\" class=\"rho-button\" href=\"index1.php?ajx=1&amp;grp=1&amp;typ=10&amp;q=view&vtyp=$vwtyp\">Clear</a>
-                                                    <a name=\"searchWkfBtn\" id=\"searchWkfBtn\" class=\"rho-button\" onclick=\"getMyInbxPage('nav_inbx', 'first',$vwtyp,'refresh');\">Search</a>
-                                                </td>                    
-                                            </tr>                                            
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </fieldset>           
-        </div>";
-    return $res;
 }
 
 function saveReassignForm() {
@@ -527,11 +693,11 @@ function saveReassignForm() {
         $isActionDone = getGnrlRecNm("wkf.wkf_actual_msgs_routng", "routing_id", "is_action_done", $slctRtngID);
 
         if ($isActionDone == '0') {
-            $affctd+=updtWkfMsgReasgnRtng($slctRtngID, $fromPrsnID, $nwPrsnID, $usrID);
+            $affctd += updtWkfMsgReasgnRtng($slctRtngID, $fromPrsnID, $nwPrsnID, $usrID);
             $msgbodyAddOn = "";
-            $msgbodyAddOn.="RE-ASSIGNMENT ON $datestr:- This document has been re-assigned from " . $orgPrsnNm . "'s Inbox to $nwPrsnFullNm" . "'s Inbox by $usrFullNm with the ff Message:<br/>";
-            $msgbodyAddOn.=$raCmmnts . "<br/><br/>";
-            $affctd1+=updtWkfMsgRtngCmnts($slctRtngID, $msgbodyAddOn, $usrID);
+            $msgbodyAddOn .= "RE-ASSIGNMENT ON $datestr:- This document has been re-assigned from " . $orgPrsnNm . "'s Inbox to $nwPrsnFullNm" . "'s Inbox by $usrFullNm with the ff Message:<br/>";
+            $msgbodyAddOn .= $raCmmnts . "<br/><br/>";
+            $affctd1 += updtWkfMsgRtngCmnts($slctRtngID, $msgbodyAddOn, $usrID);
         }
     }
 
@@ -607,126 +773,10 @@ function downloadForm() {
                     . "<a class=\"x-btn-default-small\" style=\"color:#fff;text-decoration:none;\" "
                     . "href=\"javascript: dwnldAjxCall('grp=1&typ=11&q=Download&fnm=$arry1[$r]','FileNo$r');\">" . "File No." . ($r + 1) . "-" . $arry2[$r] . " ";
             $hrf2 = "</a></div></td><td><div id=\"FileNo$r\"></div></td></tr>";
-            $output.="$hrf1" . "" . "$hrf2";
+            $output .= "$hrf1" . "" . "$hrf2";
         }
     }
     $output .= "</tbody></table>";
     echo $output;
-}
-
-function inbxFormDetl($dsply) {
-    global $RoutingID;
-    $srchFor = "%";
-    $srchIn = "Message Status";
-    $lmtSze = "1";
-    $navPos = "first";
-    $curIdx = "0";
-    $result1 = get_MyInbxDetl($RoutingID, $srchFor, $srchIn, $curIdx, $lmtSze);
-
-    $recCnt = loc_db_num_rows($result1);
-    $startIdx = 0;
-    $endIdx = 0;
-    if ($recCnt > 0) {
-        $startIdx = ($curIdx * $lmtSze) + 1;
-        $endIdx = $startIdx + $recCnt - 1;
-    }
-    $output = "<!-- Form Code Start -->
-<div id='rho_form222'>
-<form id='myInbxForm' action='' method='post' accept-charset='UTF-8'>
-
-<span>$dsply</span>
-<input type='hidden' name='submitted' id='submitted' value='1'/>
-";
-    $output .= createInbxRecsDtl($result1, $startIdx, $srchIn, $srchFor, $lmtSze);
-    $output.="<div id=\"mydialog\" title=\"Basic dialog\" style=\"display:none;\">
-</div>";
-    echo $output;
-}
-
-if (array_key_exists('lgn_num', get_defined_vars())) {
-    if ($lgn_num > 0) {
-        if ($qstr == "view") {
-            $in_org_id = getUserOrgID($user_Name);
-            if ($_SESSION['ROLE_SET_IDS'] == "" && $in_org_id > 0 && $srctyp == "lgn") {
-
-                $result1 = get_Users_Roles("%", "Role Name", 0, 10000000);
-                $selectedRoles = "";
-                while ($row = loc_db_fetch_array($result1)) {
-                    $selectedRoles.= $row[0] . ";";
-                }
-                $in_org_nm = getOrgName($in_org_id);
-                $_SESSION['ROLE_SET_IDS'] = rtrim($selectedRoles, ";");
-                $_SESSION['ORG_NAME'] = $in_org_nm;
-                $_SESSION['ORG_ID'] = $in_org_id;
-//echo "Load Inbox";
-            }
-//var_dump($_POST);
-            if ($vwtyp == "0") {
-//inbxFormTblr($dsply);
-                $total = get_MyInbxTtls($srchFor, $srchIn);
-
-                $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                $start = isset($_POST['start']) ? $_POST['start'] : 0;
-                if ($pageNo > ceil($total / $lmtSze)) {
-                    $pageNo = 1;
-                }
-
-                $curIdx = $pageNo - 1;
-                $result = get_MyInbx($srchFor, $srchIn, $curIdx, $lmtSze);
-                $ntfctns = array();
-                while ($row = loc_db_fetch_array($result)) {
-                    $chckd = FALSE;
-                    $ntfctn = array(
-                        'checked' => var_export($chckd, TRUE),
-                        'RoutingID' => $row[0],
-                        'MsgID' => $row[1],
-                        'MsgSubject' => $row[2],
-                        'MsgSource' => $row[11],
-                        'fromPerson' => $row[3],
-                        'DateSent' => $row[5],
-                        'MsgStatus' => $row[8],
-                        'ActionsToPerform' => $row[9],
-                        'isActionDone' => $row[10],
-                        'toPersonName' => $row[13],
-                        'MsgType' => $row[14],
-                        'fromPersonLocID' => $row[15]);
-                    $ntfctns[] = $ntfctn;
-                }
-
-                echo json_encode(array('success' => true,
-                    'total' => $total,
-                    'rows' => $ntfctns));
-            } else if ($vwtyp == "1") {
-                inbxFormDetl($dsply);
-            } else if ($vwtyp == "2") {
-                downloadForm();
-            } else if ($vwtyp == "101") {
-                //echo reassignForm();
-            } else if ($vwtyp == "102") {
-                //var_dump($formArray);
-                echo saveReassignForm();
-            } else {
-                //echo "Please Login First!"; 
-                //restricted();
-            }
-        } else if ($qstr == "act" && $RoutingID > 0) {
-            /* 1. Get web url behind this action
-             * 2. if Web url is direct use header location
-             * 3. else if dialog use ajax call into 
-             */
-            $usrID = $_SESSION['USRID'];
-            $arry1 = explode(";", $actyp);
-            for ($r = 0; $r < count($arry1); $r++) {
-                if ($arry1[$r] !== "") {
-                    actOnMsgSQL($RoutingID, $usrID, $arry1[$r]);
-                }
-            }
-        } else {
-            //var_dump($_POST);
-        }
-    } else {
-        sessionInvalid();
-    }
 }
 ?>

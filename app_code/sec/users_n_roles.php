@@ -872,8 +872,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                             <?php
                         }
-
-                        $total = get_TtlUsersRoles($srchFor, $srchIn, $pkID);
+                        $extrWhere = " and (now() between to_timestamp(a.valid_start_date, 'YYYY-MM-DD HH24:MI:SS') and to_timestamp(a.valid_end_date, 'YYYY-MM-DD HH24:MI:SS'))";
+                        $total = get_TtlUsersRoles($srchFor, $srchIn, $pkID, $extrWhere);
                         if ($pageNo > ceil($total / $lmtSze)) {
                             $pageNo = 1;
                         } else if ($pageNo < 1) {
@@ -881,7 +881,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         }
 
                         $curIdx = $pageNo - 1;
-                        $result1 = get_UsersRoles($srchFor, $srchIn, $curIdx, $lmtSze, $pkID, $sortBy);
+                        $result1 = get_UsersRoles($srchFor, $srchIn, $curIdx, $lmtSze, $pkID, $sortBy, $extrWhere);
                         $colClassType1 = "col-lg-2";
                         $colClassType2 = "col-lg-3";
                         $colClassType3 = "col-lg-4";
@@ -904,8 +904,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="checkAllBtns('usrPrflForm');">Check All</button></div>
-                                    <div class="col-lg-2"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="unCheckAllBtns('usrPrflForm');">UnCheck All</button></div>
+                                    <div class="col-lg-2">
+                                        <button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="checkAllBtns('usrPrflForm');">
+                                            <img src="cmn_images/check_all.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
+                                            Check All
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="unCheckAllBtns('usrPrflForm');">
+                                            <img src="cmn_images/selection_delete.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
+                                            UnCheck All
+                                        </button>
+                                    </div>
                                     <div class="col-lg-3"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE</button></div>
 
                                     <!--<div class="col-lg-3">&nbsp;</div>

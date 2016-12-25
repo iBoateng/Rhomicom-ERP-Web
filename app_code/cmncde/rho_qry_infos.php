@@ -439,7 +439,7 @@ if ($usrID > 0) {
             $in_val = isset($_POST['appID']) ? $_POST['appID'] : "";
             $delSQL = "DELETE FROM self.self_articles WHERE article_id = " . $in_val;
             $affctd = execUpdtInsSQL($delSQL);
-            echo "<span style=\"color:green;\">" . $affctd . " Article(s) Deleted Successfully!</span>";
+            echo "<span style=\"color:green;\">" . $affctd . " Notice(s) Deleted Successfully!</span>";
         } else {
             echo "<span style=\"color:red;\">Sorry you don't have Permission to do this!</span>";
         }
@@ -510,24 +510,24 @@ if ($usrID > 0) {
             $rpt_dest1 = "";
             if ($outptUsd == "HTML" || $outptUsd == "COLUMN CHART" || $outptUsd == "SIMPLE COLUMN CHART" || $outptUsd == "BAR CHART" || $outptUsd == "PIE CHART" || $outptUsd == "LINE CHART") {
                 $rpt_src1 .= "/amcharts_2100/images/";
-                $rpt_dest1 = "app_data/$database/Rpts/amcharts_2100/images/";
+                $rpt_dest1 = "dwnlds/$db_folder/Rpts/amcharts_2100/images/";
                 $rpt_src .= "/amcharts_2100/samples/$in_val.html";
-                $rpt_dest = "app_data/$database/Rpts/amcharts_2100/samples/$in_val.html";
+                $rpt_dest = "dwnlds/$db_folder/Rpts/amcharts_2100/samples/$in_val.html";
             } else if ($outptUsd == "STANDARD") {
                 $rpt_src .= "/$in_val.txt";
-                $rpt_dest = "app_data/$database/Rpts/$in_val.txt";
+                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.txt";
             } else if ($outptUsd == "PDF") {
                 $rpt_src .= "/$in_val.pdf";
-                $rpt_dest = "app_data/$database/Rpts/$in_val.pdf";
+                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.pdf";
             } else if ($outptUsd == "MICROSOFT WORD") {
                 $rpt_src .= "/$in_val.doc";
-                $rpt_dest = "app_data/$database/Rpts/$in_val.doc";
+                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.doc";
             } else if ($outptUsd == "MICROSOFT EXCEL") {
                 $rpt_src .= "/$in_val.xls";
-                $rpt_dest = "app_data/$database/Rpts/$in_val.xls";
+                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.xls";
             } else if ($outptUsd == "CHARACTER SEPARATED FILE (CSV)") {
                 $rpt_src .= "/$in_val.csv";
-                $rpt_dest = "app_data/$database/Rpts/$in_val.csv";
+                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.csv";
             }
             if ($rpt_dest1 != "") {
                 recurse_copy($rpt_src1, $rpt_dest1);
