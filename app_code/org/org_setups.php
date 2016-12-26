@@ -426,11 +426,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="orgDivsGrpsPage" class="tab-pane fade" style="border:none !important;"></div>
-                                                            <div id="orgSitesLocsPage" class="tab-pane fade" style="border:none !important;"></div>    
-                                                            <div id="orgJobsPage" class="tab-pane fade" style="border:none !important;"></div>    
-                                                            <div id="orgGradesPage" class="tab-pane fade" style="border:none !important;"></div>      
-                                                            <div id="orgPositionsPage" class="tab-pane fade" style="border:none !important;"></div> 
+                                                            <div id="orgDivsGrpsPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>
+                                                            <div id="orgSitesLocsPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>    
+                                                            <div id="orgJobsPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>    
+                                                            <div id="orgGradesPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>      
+                                                            <div id="orgPositionsPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div> 
                                                         </div>                        
                                                     </div>                         
                                                 </div>                
@@ -711,11 +711,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="orgDivsGrpsPage" class="tab-pane fade" style="border:none !important;"></div>
-                                        <div id="orgSitesLocsPage" class="tab-pane fade" style="border:none !important;"></div>    
-                                        <div id="orgJobsPage" class="tab-pane fade" style="border:none !important;"></div>    
-                                        <div id="orgGradesPage" class="tab-pane fade" style="border:none !important;"></div>      
-                                        <div id="orgPositionsPage" class="tab-pane fade" style="border:none !important;"></div> 
+                                        <div id="orgDivsGrpsPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>
+                                        <div id="orgSitesLocsPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>    
+                                        <div id="orgJobsPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>    
+                                        <div id="orgGradesPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div>      
+                                        <div id="orgPositionsPage" class="tab-pane fade" style="border:none !important;padding:1px !important;"></div> 
                                     </div>                        
                                 </div>                         
                             </div>                
@@ -882,9 +882,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <?php
             } else if ($vwtyp == 3) {
                 //echo "Divs/Grps";
+                //$lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 5;
                 $curIdx = 0;
                 $pkID = isset($_POST['sbmtdOrgID']) ? $_POST['sbmtdOrgID'] : -1;
                 if ($pkID > 0) {
+                    $sbmtdOrgID = $pkID;
                     $total = get_DivsGrpsTtl($pkID, $srchFor, $srchIn);
                     if ($pageNo > ceil($total / $lmtSze)) {
                         $pageNo = 1;
@@ -903,39 +905,55 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php
                             if ($canEdtOrg === true) {
                                 $nwRowHtml = urlencode("<tr id=\"divsGrpsRow__WWW123WWW\">"
-                                        . "<td>New</td>"
-                                        . "<td><div class=\"form-group form-group-sm col-md-12\">"
-                                        . "<div class=\"input-group\"  style=\"width:100%\">"
-                                        . "<input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"usrPrflEdtRow_WWW123WWW_RoleNm\" value=\"\">"
-                                        . "<input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"usrPrflEdtRow_WWW123WWW_RoleID\" value=\"-1\">"
-                                        . "<input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"usrPrflEdtRow_WWW123WWW_DfltRowID\" value=\"-1\">"
-                                        . "<label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'User Roles', '', '', '', 'radio', true, '', 'usrPrflEdtRow_WWW123WWW_RoleID', 'usrPrflEdtRow_WWW123WWW_RoleNm', 'clear', 1, '');\">"
-                                        . "<span class=\"glyphicon glyphicon-th-list\"></span>"
-                                        . "</label>"
-                                        . "</div>"
-                                        . "</div>"
-                                        . "</td>"
-                                        . "<td><div class=\"form-group form-group-sm col-md-12\">
-                                                                <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
-                                                                    <input class=\"form-control\" size=\"16\" type=\"text\" id=\"usrPrflEdtRow_WWW123WWW_StrtDte\" value=\"\" readonly=\"\">
-                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
-                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
-                                                                </div>                                                                
-                                                            </div></td>"
-                                        . "<td><div class=\"form-group form-group-sm col-md-12\">
-                                                                <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
-                                                                    <input class=\"form-control\" size=\"16\" type=\"text\" id=\"usrPrflEdtRow_WWW123WWW_EndDte\" value=\"\" readonly=\"\">
-                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
-                                                                    <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
-                                                                </div>                                                                
-                                                            </div></td>"
-                                        . "</tr>");
+                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                        . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"divsGrpsRow_WWW123WWW_GroupNm\" value=\"\" style=\"width:100% !important;\">
+                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"divsGrpsRow_WWW123WWW_GroupID\" value=\"\">
+                                              </div>
+                                          </td>"
+                                        . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <div class=\"input-group\"  style=\"width:100%;\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"divsGrpsRow_WWW123WWW_PrntNm\" value=\"\">
+                                                                <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"divsGrpsRow_WWW123WWW_PrntID\" value=\"\">
+                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions/Groups', '', '', '', 'radio', true, '', 'divsGrpsRow_WWW123WWW_PrntID', 'divsGrpsRow_WWW123WWW_PrntNm', 'clear', 0, '');\">
+                                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                </label>
+                                                            </div>
+                                              </div>
+                                          </td>"
+                                        . "<td class=\"lovtd\">
+                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <div class=\"input-group\"  style=\"width:100%;\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"divsGrpsRow_WWW123WWW_DivTypNm\" value=\"\">
+                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions or Group Types', '', '', '', 'radio', true, '', 'divsGrpsRow_WWW123WWW_DivTypNm', '', 'clear', 0, '');\">
+                                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                </label>
+                                                            </div>
+                                            </div>
+                                          </td>
+                                          <td class=\"lovtd\">                                          
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                   <textarea class=\"form-control\" aria-label=\"...\" id=\"divsGrpsRow_WWW123WWW_GroupDesc\" name=\"divsGrpsRow_WWW123WWW_GroupDesc\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                              </div>
+                                          </td>
+                                          <td class=\"lovtd\"> 
+                                          <div class=\"form-group form-group-sm normaltd\">
+                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                <label class=\"form-check-label\">
+                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"divsGrpsRow_WWW123WWW_IsEnabled\" name=\"divsGrpsRow_WWW123WWW_IsEnabled\">
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                           </td>
+                                        </tr>");
                                 ?> 
                                 <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">     
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('userRolesTable', 0, '<?php echo $nwRowHtml; ?>');">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('divsGrpsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Division/Group">
                                         <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                     </button>
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveUserNRoleForm();">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveDivsGrpsForm();" data-toggle="tooltip" data-placement="bottom" title="Save Division/Group">
                                         <img src="cmn_images/FloppyDisk.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                     </button>
                                 </div>
@@ -948,12 +966,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             ?>
                             <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
-                                    <input class="form-control" id="divsGrpsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllSecPlcys(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <input class="form-control" id="divsGrpsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncDivsGrps(event, '', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
                                     <input id="divsGrpsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllSecPlcys('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllDivsGrps('clear', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </label>
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllSecPlcys('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllDivsGrps('', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
                                         <span class="glyphicon glyphicon-search"></span>
                                     </label> 
                                 </div>
@@ -997,12 +1015,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1,'previous');" aria-label="Previous">
+                                            <a href="javascript:getAllDivsGrps('previous', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1,'next');" aria-label="Next">
+                                            <a href="javascript:getAllDivsGrps('next', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -1034,7 +1052,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <input type="text" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_GroupNm" value="<?php echo $row1[1]; ?>">
+                                                            <input type="text" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_GroupNm" value="<?php echo $row1[1]; ?>" style="width:100% !important;">
                                                             <input type="hidden" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_GroupID" value="<?php echo $row1[0]; ?>">
                                                         </div>
                                                     <?php } else { ?>
@@ -1047,7 +1065,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <div class="input-group"  style="width:100%">
                                                                 <input type="text" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_PrntNm" value="<?php echo $row1[3]; ?>">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_PrntID" value="<?php echo $row1[2]; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions/Groups', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'divsGrpsRow<?php echo $cntr; ?>_PrntID', 'divsGrpsRow<?php echo $cntr; ?>_PrntNm', 'clear', 1, '');">
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions/Groups', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'divsGrpsRow<?php echo $cntr; ?>_PrntID', 'divsGrpsRow<?php echo $cntr; ?>_PrntNm', 'clear', 0, '');">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -1061,8 +1079,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
                                                             <div class="input-group"  style="width:100%">
                                                                 <input type="text" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_DivTypNm" value="<?php echo $row1[5]; ?>">
-                                                                <input type="hidden" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_DivTypID" value="<?php echo $row1[4]; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions/Group Types', '', '', '', 'radio', true, '<?php echo $row1[4]; ?>', 'divsGrpsRow<?php echo $cntr; ?>_DivTypID', 'divsGrpsRow<?php echo $cntr; ?>_DivTypNm', 'clear', 1, '');">
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions or Group Types', '', '', '', 'radio', true, '<?php echo $row1[5]; ?>', 'divsGrpsRow<?php echo $cntr; ?>_DivTypNm', '', 'clear', 0, '');">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
@@ -1091,7 +1108,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <div class="form-group form-group-sm normaltd">
                                                             <div class="form-check" style="font-size: 12px !important;">
                                                                 <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input" id="divsGrpsRow<?php echo $cntr; ?>_IsEnabled" <?php echo $isChkd ?>>
+                                                                    <input type="checkbox" class="form-check-input" id="divsGrpsRow<?php echo $cntr; ?>_IsEnabled" name="divsGrpsRow<?php echo $cntr; ?>_IsEnabled" <?php echo $isChkd ?>>
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -1111,9 +1128,421 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <?php
                 }
             } else if ($vwtyp == 4) {
-                echo "Sites/Locs";
+                //echo "Sites/Locs";
+                //$lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 5;
+                $curIdx = 0;
+                $pkID = isset($_POST['sbmtdOrgID']) ? $_POST['sbmtdOrgID'] : -1;
+                if ($pkID > 0) {
+                    $sbmtdOrgID = $pkID;
+                    $total = get_SitesLocsTtl($pkID, $srchFor, $srchIn);
+                    if ($pageNo > ceil($total / $lmtSze)) {
+                        $pageNo = 1;
+                    } else if ($pageNo < 1) {
+                        $pageNo = ceil($total / $lmtSze);
+                    }
+                    $curIdx = $pageNo - 1;
+                    $result1 = get_SitesLocs($pkID, $srchFor, $srchIn, $curIdx, $lmtSze);
+                    $colClassType1 = "col-lg-2";
+                    $colClassType2 = "col-lg-3";
+                    $colClassType3 = "col-lg-4";
+                    ?>
+                    <form id='sitesLocsForm' action='' method='post' accept-charset='UTF-8'> 
+                        <div class="row">
+                            <?php
+                            if ($canEdtOrg === true) {
+                                $nwRowHtml = urlencode("<tr id=\"sitesLocsRow__WWW123WWW\">"
+                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                        . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"sitesLocsRow_WWW123WWW_SiteNm\" value=\"\" style=\"width:100% !important;\">
+                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"sitesLocsRow_WWW123WWW_SiteID\" value=\"\">
+                                              </div>
+                                          </td>
+                                          <td class=\"lovtd\">                                          
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                   <textarea class=\"form-control\" aria-label=\"...\" id=\"sitesLocsRow_WWW123WWW_SiteDesc\" name=\"sitesLocsRow_WWW123WWW_SiteDesc\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                              </div>
+                                          </td>
+                                          <td class=\"lovtd\"> 
+                                          <div class=\"form-group form-group-sm normaltd\">
+                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                <label class=\"form-check-label\">
+                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"sitesLocsRow_WWW123WWW_IsEnabled\" name=\"sitesLocsRow_WWW123WWW_IsEnabled\">
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                           </td>
+                                        </tr>");
+                                ?> 
+                                <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">     
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('sitesLocsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Site/Location">
+                                        <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    </button>
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveSitesLocsForm();" data-toggle="tooltip" data-placement="bottom" title="Save Sites/Locations">
+                                        <img src="cmn_images/FloppyDisk.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    </button>
+                                </div>
+                                <?php
+                            } else {
+                                $colClassType1 = "col-lg-4";
+                                $colClassType2 = "col-lg-4";
+                                $colClassType3 = "col-lg-4";
+                            }
+                            ?>
+                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
+                                <div class="input-group">
+                                    <input class="form-control" id="sitesLocsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncSitesLocs(event, '', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
+                                    <input id="sitesLocsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllSitesLocs('clear', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </label>
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllSitesLocs('', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </label> 
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType3; ?>">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="sitesLocsSrchIn">
+                                        <?php
+                                        $valslctdArry = array("", "");
+                                        $srchInsArrys = array("Site Name", "Site Description");
+
+                                        for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                            if ($srchIn == $srchInsArrys[$z]) {
+                                                $valslctdArry[$z] = "selected";
+                                            }
+                                            ?>
+                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="sitesLocsDsplySze" style="min-width:70px !important;">                            
+                                        <?php
+                                        $valslctdArry = array("", "", "", "", "", "", "", "");
+                                        $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                        for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                            if ($lmtSze == $dsplySzeArry[$y]) {
+                                                $valslctdArry[$y] = "selected";
+                                            } else {
+                                                $valslctdArry[$y] = "";
+                                            }
+                                            ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType1; ?>">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" style="margin: 0px !important;">
+                                        <li>
+                                            <a href="javascript:getAllSitesLocs('previous', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:getAllSitesLocs('next', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="row"> 
+                            <div  class="col-md-12">
+                                <table class="table table-striped table-bordered table-responsive" id="sitesLocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 600px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Location Code/Name</th>
+                                            <th style="min-width: 300px !important;width: 300px !important;">Site Description</th>
+                                            <th>Enabled?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $cntr = 0;
+                                        while ($row1 = loc_db_fetch_array($result1)) {
+                                            $cntr += 1;
+                                            ?>
+                                            <tr id="sitesLocsRow_<?php echo $cntr; ?>">                                    
+                                                <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                <td class="lovtd">
+                                                    <?php if ($canEdtOrg === true) { ?>
+                                                        <div class="form-group form-group-sm" style="width:100% !important;">
+                                                            <input type="text" class="form-control" aria-label="..." id="sitesLocsRow<?php echo $cntr; ?>_SiteNm" value="<?php echo $row1[1]; ?>" style="width:100% !important;">
+                                                            <input type="hidden" class="form-control" aria-label="..." id="sitesLocsRow<?php echo $cntr; ?>_SiteID" value="<?php echo $row1[0]; ?>">
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <span class="normaltd"><?php echo $row1[1]; ?></span>
+                                                    <?php } ?>                                                         
+                                                </td>                                                
+                                                <td class="lovtd">
+                                                    <?php if ($canEdtOrg === true) { ?>
+                                                        <div class="form-group form-group-sm" style="width:100% !important;">
+                                                            <textarea class="form-control" aria-label="..." id="sitesLocsRow<?php echo $cntr; ?>_SiteDesc" name="sitesLocsRow<?php echo $cntr; ?>_SiteDesc" style="width:100%" cols="7" rows="2"><?php echo $row1[2]; ?></textarea>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <span class="normaltd"><?php echo $row1[2]; ?></span>
+                                                    <?php } ?>                                                         
+                                                </td>
+                                                <td class="lovtd">
+                                                    <?php
+                                                    $isChkd = "";
+                                                    if ($row1[3] == "Yes") {
+                                                        $isChkd = "checked=\"true\"";
+                                                    }
+                                                    if ($canEdtOrg === true) {
+                                                        ?>
+                                                        <div class="form-group form-group-sm normaltd">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" id="sitesLocsRow<?php echo $cntr; ?>_IsEnabled" name="sitesLocsRow<?php echo $cntr; ?>_IsEnabled" <?php echo $isChkd ?>>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <span class="normaltd"><?php echo $row1[3]; ?></span>
+                                                    <?php } ?>                                                         
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>                     
+                        </div>     
+                    </form>
+                    <?php
+                }            
             } else if ($vwtyp == 5) {
-                echo "Jobs";
+                //echo "Jobs";
+                $curIdx = 0;
+                $pkID = isset($_POST['sbmtdOrgID']) ? $_POST['sbmtdOrgID'] : -1;
+                if ($pkID > 0) {
+                    $sbmtdOrgID = $pkID;
+                    $total = get_JobsTtl($pkID, $srchFor, $srchIn);
+                    if ($pageNo > ceil($total / $lmtSze)) {
+                        $pageNo = 1;
+                    } else if ($pageNo < 1) {
+                        $pageNo = ceil($total / $lmtSze);
+                    }
+
+                    $curIdx = $pageNo - 1;
+                    $result1 = get_Jobs($pkID, $srchFor, $srchIn, $curIdx, $lmtSze);
+                    $colClassType1 = "col-lg-2";
+                    $colClassType2 = "col-lg-3";
+                    $colClassType3 = "col-lg-4";
+                    ?>
+                    <form id='orgJobsForm' action='' method='post' accept-charset='UTF-8'> 
+                        <div class="row">
+                            <?php
+                            if ($canEdtOrg === true) {
+                                $nwRowHtml = urlencode("<tr id=\"orgJobsRow__WWW123WWW\">"
+                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                        . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"orgJobsRow_WWW123WWW_JobNm\" value=\"\" style=\"width:100% !important;\">
+                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"orgJobsRow_WWW123WWW_JobID\" value=\"\">
+                                              </div>
+                                          </td>"
+                                        . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <div class=\"input-group\"  style=\"width:100%;\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"orgJobsRow_WWW123WWW_PrntNm\" value=\"\">
+                                                                <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"orgJobsRow_WWW123WWW_PrntID\" value=\"\">
+                                                                <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Jobs', '', '', '', 'radio', true, '', 'orgJobsRow_WWW123WWW_PrntID', 'orgJobsRow_WWW123WWW_PrntNm', 'clear', 0, '');\">
+                                                                    <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                </label>
+                                                            </div>
+                                              </div>
+                                          </td>
+                                          <td class=\"lovtd\">                                          
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                   <textarea class=\"form-control\" aria-label=\"...\" id=\"orgJobsRow_WWW123WWW_JobDesc\" name=\"orgJobsRow_WWW123WWW_JobDesc\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                              </div>
+                                          </td>
+                                          <td class=\"lovtd\"> 
+                                          <div class=\"form-group form-group-sm normaltd\">
+                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                <label class=\"form-check-label\">
+                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"orgJobsRow_WWW123WWW_IsEnabled\" name=\"orgJobsRow_WWW123WWW_IsEnabled\">
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                           </td>
+                                        </tr>");
+                                ?> 
+                                <div class="<?php echo $colClassType1; ?>" style="padding:0px 1px 0px 15px !important;">     
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('orgJobsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Job">
+                                        <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    </button>
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveOrgJobsForm();" data-toggle="tooltip" data-placement="bottom" title="Save Jobs">
+                                        <img src="cmn_images/FloppyDisk.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    </button>
+                                </div>
+                                <?php
+                            } else {
+                                $colClassType1 = "col-lg-4";
+                                $colClassType2 = "col-lg-4";
+                                $colClassType3 = "col-lg-4";
+                            }
+                            ?>
+                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 15px 0px 15px !important;">
+                                <div class="input-group">
+                                    <input class="form-control" id="orgJobsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncOrgJobs(event, '', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
+                                    <input id="orgJobsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllOrgJobs('clear', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </label>
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getAllOrgJobs('', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </label> 
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType3; ?>">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="orgJobsSrchIn">
+                                        <?php
+                                        $valslctdArry = array("", "");
+                                        $srchInsArrys = array("Job Name", "Parent Job Name");
+
+                                        for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                            if ($srchIn == $srchInsArrys[$z]) {
+                                                $valslctdArry[$z] = "selected";
+                                            }
+                                            ?>
+                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                    <select data-placeholder="Select..." class="form-control chosen-select" id="orgJobsDsplySze" style="min-width:70px !important;">                            
+                                        <?php
+                                        $valslctdArry = array("", "", "", "", "", "", "", "");
+                                        $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                        for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                            if ($lmtSze == $dsplySzeArry[$y]) {
+                                                $valslctdArry[$y] = "selected";
+                                            } else {
+                                                $valslctdArry[$y] = "";
+                                            }
+                                            ?>
+                                            <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="<?php echo $colClassType1; ?>">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" style="margin: 0px !important;">
+                                        <li>
+                                            <a href="javascript:getAllOrgJobs('previous', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:getAllOrgJobs('next', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="row"> 
+                            <div  class="col-md-12">
+                                <table class="table table-striped table-bordered table-responsive" id="orgJobsTable" cellspacing="0" width="100%" style="width:100%;min-width: 900px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Job Code/Name</th>
+                                            <th>Parent Job</th>
+                                            <th style="min-width: 300px !important;width: 300px !important;">Job Description</th>
+                                            <th>Enabled?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $cntr = 0;
+                                        while ($row1 = loc_db_fetch_array($result1)) {
+                                            $cntr += 1;
+                                            ?>
+                                            <tr id="orgJobsRow_<?php echo $cntr; ?>">                                    
+                                                <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                <td class="lovtd">
+                                                    <?php if ($canEdtOrg === true) { ?>
+                                                        <div class="form-group form-group-sm" style="width:100% !important;">
+                                                            <input type="text" class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_JobNm" value="<?php echo $row1[1]; ?>" style="width:100% !important;">
+                                                            <input type="hidden" class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_JobID" value="<?php echo $row1[0]; ?>">
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <span class="normaltd"><?php echo $row1[1]; ?></span>
+                                                    <?php } ?>                                                         
+                                                </td>
+                                                <td class="lovtd">
+                                                    <?php if ($canEdtOrg === true) { ?>
+                                                        <div class="form-group form-group-sm" style="width:100% !important;">
+                                                            <div class="input-group"  style="width:100%">
+                                                                <input type="text" class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_PrntNm" value="<?php echo $row1[3]; ?>">
+                                                                <input type="hidden" class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_PrntID" value="<?php echo $row1[2]; ?>">
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Jobs', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'orgJobsRow<?php echo $cntr; ?>_PrntID', 'orgJobsRow<?php echo $cntr; ?>_PrntNm', 'clear', 0, '');">
+                                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <span class="normaltd"><?php echo $row1[3]; ?></span>
+                                                    <?php } ?>                                                         
+                                                </td>
+                                                <td class="lovtd">
+                                                    <?php if ($canEdtOrg === true) { ?>
+                                                        <div class="form-group form-group-sm" style="width:100% !important;">
+                                                            <textarea class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_JobDesc" name="orgJobsRow<?php echo $cntr; ?>_JobDesc" style="width:100%" cols="7" rows="2"><?php echo $row1[4]; ?></textarea>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <span class="normaltd"><?php echo $row1[4]; ?></span>
+                                                    <?php } ?>                                                         
+                                                </td>
+                                                <td class="lovtd">
+                                                    <?php
+                                                    $isChkd = "";
+                                                    if ($row1[5] == "Yes") {
+                                                        $isChkd = "checked=\"true\"";
+                                                    }
+                                                    if ($canEdtOrg === true) {
+                                                        ?>
+                                                        <div class="form-group form-group-sm normaltd">
+                                                            <div class="form-check" style="font-size: 12px !important;">
+                                                                <label class="form-check-label">
+                                                                    <input type="checkbox" class="form-check-input" id="orgJobsRow<?php echo $cntr; ?>_IsEnabled" name="orgJobsRow<?php echo $cntr; ?>_IsEnabled" <?php echo $isChkd ?>>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <span class="normaltd"><?php echo $row1[5]; ?></span>
+                                                    <?php } ?>                                                         
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>                     
+                        </div>     
+                    </form>
+                    <?php
+                }
+            
             } else if ($vwtyp == 6) {
                 echo "Grades";
             } else if ($vwtyp == 7) {

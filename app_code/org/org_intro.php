@@ -69,7 +69,22 @@ if ($lgn_num > 0 && $canview === true) {
         
     } else if ($qstr == "UPDATE") {
         if ($actyp == 1) {
-            
+            //Org Details
+        }else if ($actyp == 2) {
+            //Div Details
+            var_dump($_POST);
+        }else if ($actyp == 3) {
+            //Site Details
+            var_dump($_POST);
+        }else if ($actyp == 4) {
+            //Jobs Details
+            var_dump($_POST);
+        }else if ($actyp == 5) {
+            //Grades Details
+            var_dump($_POST);
+        }else if ($actyp == 6) {
+            //Position Details
+            var_dump($_POST);
         }
     } else {
         if ($pgNo == 0) {
@@ -198,13 +213,7 @@ function get_DivsGrpsTtl($pkID, $searchWord, $searchIn) {
     } else if ($searchIn == "Parent Division Name") {
         $whereCls = " and ((select b.div_code_name FROM org.org_divs_groups b where b.div_id = a.prnt_div_id) ilike '" . loc_db_escape_string($searchWord) . "')";
     }
-    $strSql = "SELECT a.div_id mt, a.div_code_name \"group_code/name\", a.prnt_div_id mt, (select b.div_code_name FROM 
-        org.org_divs_groups b where b.div_id = a.prnt_div_id) \"parent group\", div_typ_id mt, 
-        (select c.pssbl_value from gst.gen_stp_lov_values 
-        c where c.pssbl_value_id = a.div_typ_id) group_type, 
-        div_logo,          
-        div_desc \"description/comments\",
-        CASE WHEN is_enabled='1' THEN 'Yes' ELSE 'No' END \"is_enabled?\"
+    $strSql = "SELECT count(1) 
         FROM org.org_divs_groups a 
     WHERE ((a.org_id = $pkID)$whereCls)";
     $result = executeSQLNoParams($strSql);
@@ -231,6 +240,24 @@ function get_SitesLocs($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     return $result;
 }
 
+function get_SitesLocsTtl($pkID, $searchWord, $searchIn) {
+    $whereCls = "";
+    if ($searchIn == "Site Name") {
+        $whereCls = " and (a.location_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Site Description") {
+        $whereCls = " and (a.site_desc ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT count(1)  
+        FROM org.org_sites_locations a
+        WHERE ((a.org_id = $pkID)$whereCls)";
+    $result = executeSQLNoParams($strSql);
+     while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
 function get_Jobs($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     $whereCls = "";
     if ($searchIn == "Job Name") {
@@ -249,6 +276,25 @@ function get_Jobs($pkID, $searchWord, $searchIn, $offset, $limit_size) {
         ORDER BY a.job_code_name LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     return $result;
+}
+
+function get_JobsTtl($pkID, $searchWord, $searchIn) {
+    $whereCls = "";
+    if ($searchIn == "Job Name") {
+        $whereCls = " and (a.job_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Parent Job Name") {
+        $whereCls = " and ((select b.job_code_name FROM 
+        org.org_jobs b where b.job_id = a.parnt_job_id) ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT count(1) 
+         FROM org.org_jobs a
+        WHERE ((a.org_id = $pkID)$whereCls)";
+    $result = executeSQLNoParams($strSql);
+   while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
 }
 
 function get_Grades($pkID, $searchWord, $searchIn, $offset, $limit_size) {

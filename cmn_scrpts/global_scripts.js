@@ -98,10 +98,14 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
         var criteriaID3Val = typeof $("#" + criteriaID3).val() === 'undefined' ? '' : $("#" + criteriaID3).val();
         if (colNoForChkBxCmprsn == 1)
         {
+            /*Match by Description:Set both Value and Desc Element IDs*/
             selVals = typeof $("#" + descElemntID).val() === 'undefined' ? selVals : $("#" + descElemntID).val();
-        } else if (colNoForChkBxCmprsn == 0)
+        } 
         {
-            selVals = typeof $("#" + valueElmntID).val() === 'undefined' ? selVals : $("#" + valueElmntID).val();
+            /* Match using Possible Value itself*/
+            /* For Dynamic LOVs use 0 and set both value and descElement IDs */
+            /* For Static LOVs use 0 and set only valueElement ID */
+            selVals = typeof $("#" + valueElmntID).val() === 'undefined' ? selVals : $("#" + valueElmntID).val();            
         }
         if (actionText == 'clear')
         {
