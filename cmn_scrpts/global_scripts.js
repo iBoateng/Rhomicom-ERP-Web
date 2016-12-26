@@ -337,6 +337,21 @@ function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, moda
                 {
                     document.getElementById(elementID).innerHTML = xmlhttp.responseText;
                     $body.removeClass("mdlloading");
+                    if (linkArgs.indexOf("grp=5&typ=1&pg=1&vtyp=1") !== -1)
+                    {
+                        $(document).ready(function () {
+                            $('[data-toggle="tooltip"]').tooltip();
+                            $(function () {
+                                $('[data-toggle="tabajxorg"]').click(function (e) {
+                                    var $this = $(this);
+                                    var targ = $this.attr('href');
+                                    var dttrgt = $this.attr('data-rhodata');
+                                    var linkArgs = 'grp=5&typ=1' + dttrgt;
+                                    return openATab(targ, linkArgs);
+                                });
+                            });
+                        });
+                    }
                 }
             }
         };
@@ -405,10 +420,10 @@ function openATab(slctr, linkArgs)
                         }
                     } else if (linkArgs.indexOf("grp=5&typ=1") !== -1)
                     {
-                            loadScript("app/org/org_admin.js?v=110", function () {
-                                $this.tab('show');
-                                prepareOrgAdmin(linkArgs, $body, targ, xmlhttp.responseText);
-                            });
+                        loadScript("app/org/org_admin.js?v=110", function () {
+                            $this.tab('show');
+                            prepareOrgAdmin(linkArgs, $body, targ, xmlhttp.responseText);
+                        });
                     } else
                     {
                         $(targ).html(xmlhttp.responseText);
@@ -562,7 +577,7 @@ function prepareNotices(lnkArgs, htBody, targ, rspns)
                 e.preventDefault();
                 return false;
             });
-        }else if (lnkArgs.indexOf("&vtyp=5") !== -1)
+        } else if (lnkArgs.indexOf("&vtyp=5") !== -1)
         {
             $('#fdbckMsgBody').summernote({
                 minHeight: 375,
@@ -573,8 +588,7 @@ function prepareNotices(lnkArgs, htBody, targ, rspns)
                 e.preventDefault();
                 return false;
             });
-        }
-        else if (lnkArgs.indexOf("&vtyp=6") !== -1)
+        } else if (lnkArgs.indexOf("&vtyp=6") !== -1)
         {
             var table1 = $('#allForumsTable').DataTable({
                 "paging": false,

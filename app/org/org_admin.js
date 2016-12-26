@@ -52,6 +52,20 @@ function prepareOrgAdmin(lnkArgs, htBody, targ, rspns)
                             $(this).addClass('highlight');
                         }
                     });
+        }else if (lnkArgs.indexOf("&pg=1&vtyp=3") !== -1)
+        {
+            var table1 = $('#divsGrpsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#divsGrpsTable').wrap('<div class="dataTables_scroll"/>');
+            $('#divsGrpsForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
         }
         htBody.removeClass("mdlloading");
     });
@@ -59,8 +73,8 @@ function prepareOrgAdmin(lnkArgs, htBody, targ, rspns)
 
 function getOneOrgStpForm(orgID, vwtype)
 {
-    var lnkArgs = 'grp=5&typ=1&pg=5&vtyp=' + vwtype + '&sbmtdOrgID=' + orgID;
-    doAjax(lnkArgs, 'orgStpsDetailInfo', 'PasteDirect', '', '', '');
+    var lnkArgs = 'grp=5&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdOrgID=' + orgID;
+    doAjax(lnkArgs, 'orgStpsDetailInfo', 'PasteDirect', '', '', '');   
 }
 
 function getAllOrgStps(actionText, slctr, linkArgs)

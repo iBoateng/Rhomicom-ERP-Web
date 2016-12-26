@@ -372,7 +372,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             continue;
                                         } else {
                                             $output .= "<tr $style>";
-                                            $output .= "<td width=\"20%\" class=\"likeheader\" style=\"font-weight:bold;vertical-align:top;background-color:#dedede !important;\">" . $labl . ":</td>";
+                                            $output .= "<td width=\"20%\" class=\"likeheader\">" . $labl . ":</td>";
                                         }
                                         if ($d == 14 && $row[15] == '0') {
                                             $arry1 = explode(";", $row[$d]);

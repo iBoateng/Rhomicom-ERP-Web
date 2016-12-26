@@ -191,6 +191,29 @@ function get_DivsGrps($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     return $result;
 }
 
+function get_DivsGrpsTtl($pkID, $searchWord, $searchIn) {
+    $whereCls = "";
+    if ($searchIn == "Division Name") {
+        $whereCls = " and (a.div_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Parent Division Name") {
+        $whereCls = " and ((select b.div_code_name FROM org.org_divs_groups b where b.div_id = a.prnt_div_id) ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+    $strSql = "SELECT a.div_id mt, a.div_code_name \"group_code/name\", a.prnt_div_id mt, (select b.div_code_name FROM 
+        org.org_divs_groups b where b.div_id = a.prnt_div_id) \"parent group\", div_typ_id mt, 
+        (select c.pssbl_value from gst.gen_stp_lov_values 
+        c where c.pssbl_value_id = a.div_typ_id) group_type, 
+        div_logo,          
+        div_desc \"description/comments\",
+        CASE WHEN is_enabled='1' THEN 'Yes' ELSE 'No' END \"is_enabled?\"
+        FROM org.org_divs_groups a 
+    WHERE ((a.org_id = $pkID)$whereCls)";
+    $result = executeSQLNoParams($strSql);
+     while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
 function get_SitesLocs($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     $whereCls = "";
     if ($searchIn == "Site Name") {

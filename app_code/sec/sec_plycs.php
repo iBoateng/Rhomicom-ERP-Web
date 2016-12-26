@@ -488,7 +488,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>                                    
                                             </div>
                                             <div class="row">
-                                                <div  class="col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                <div class="col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <fieldset class="basic_person_fs">                                       
                                                         <table class="table table-striped table-bordered table-responsive" id="secPlcyAdtTblsTable" cellspacing="0" width="100%" style="width:100%;min-width: 700px;">
                                                             <thead>
