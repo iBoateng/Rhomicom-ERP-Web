@@ -48,7 +48,7 @@ $app_favicon = "Icon.ico";
 $about_app = "About Rhomicom";
 $about_url = "http://www.rhomicom.com";
 $bckcolors = "background-repeat: repeat;background-color: #336578 !important;background-image:url('cmn_images/bkg5.jpeg'); background-size:100% 100%;";
-$bckcolorsChngPwd = "background-color: #336578 !important;background: url('cmn_images/bkg5.jpeg') no-repeat center center fixed; 
+$bckcolorsChngPwd = "background-color: #FFFFFF !important;background: url('cmn_images/bkg5.jpeg') no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

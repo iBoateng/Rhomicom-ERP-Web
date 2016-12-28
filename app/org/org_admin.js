@@ -80,7 +80,7 @@ function prepareOrgAdmin(lnkArgs, htBody, targ, rspns)
                 e.preventDefault();
                 return false;
             });
-        }else if (lnkArgs.indexOf("&pg=1&vtyp=5") !== -1)
+        } else if (lnkArgs.indexOf("&pg=1&vtyp=5") !== -1)
         {
             var table1 = $('#orgJobsTable').DataTable({
                 "paging": false,
@@ -94,6 +94,34 @@ function prepareOrgAdmin(lnkArgs, htBody, targ, rspns)
                 e.preventDefault();
                 return false;
             });
+        } else if (lnkArgs.indexOf("&pg=1&vtyp=6") !== -1)
+        {
+            var table1 = $('#orgGradesTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#orgGradesTable').wrap('<div class="dataTables_scroll"/>');
+            $('#orgGradesForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+        } else if (lnkArgs.indexOf("&pg=1&vtyp=7") !== -1)
+        {
+            var table1 = $('#orgPositionsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#orgPositionsTable').wrap('<div class="dataTables_scroll"/>');
+            $('#orgPositionsForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
         }
         htBody.removeClass("mdlloading");
     });
@@ -102,9 +130,77 @@ function prepareOrgAdmin(lnkArgs, htBody, targ, rspns)
 function getOneOrgStpForm(orgID, vwtype)
 {
     var lnkArgs = 'grp=5&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdOrgID=' + orgID;
-    doAjax(lnkArgs, 'orgStpsDetailInfo', 'PasteDirect', '', '', '');
+    doAjaxWthCallBck(lnkArgs, 'orgStpsDetailInfo', 'PasteDirect', '', '', '', function () {
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $(function () {
+                $('[data-toggle="tabajxorg"]').click(function (e) {
+                    var $this = $(this);
+                    var targ = $this.attr('href');
+                    var dttrgt = $this.attr('data-rhodata');
+                    var linkArgs = 'grp=5&typ=1' + dttrgt;
+                    return openATab(targ, linkArgs);
+                });
+            });
+        });
+    });
 }
 
+function saveOrgStpForm()
+{
+    var lnkArgs = "";
+    var scPlcysPlcyNm = typeof $("#scPlcysPlcyNm").val() === 'undefined' ? '' : $("#scPlcysPlcyNm").val();
+    var scPlcysPlcyID = typeof $("#scPlcysPlcyID").val() === 'undefined' ? -1 : $("#scPlcysPlcyID").val();
+    var scPlcysIsDflt = typeof $("input[name='scPlcysIsDflt']:checked").val() === 'undefined' ? '' : $("input[name='scPlcysIsDflt']:checked").val();
+    var scPlcysPwdExpryDys = typeof $("#scPlcysPwdExpryDys").val() === 'undefined' ? '' : $("#scPlcysPwdExpryDys").val();
+    var scPlcysNoOfRecs = typeof $("#scPlcysNoOfRecs").val() === 'undefined' ? '' : $("#scPlcysNoOfRecs").val();
+    var scPlcysPwdMinLen = typeof $("#scPlcysPwdMinLen").val() === 'undefined' ? '' : $("#scPlcysPwdMinLen").val();
+    var scPlcysPwdMaxLen = typeof $("#scPlcysPwdMaxLen").val() === 'undefined' ? '' : $("#scPlcysPwdMaxLen").val();
+    var scPlcysPwdOldAlwd = typeof $("#scPlcysPwdOldAlwd").val() === 'undefined' ? '' : $("#scPlcysPwdOldAlwd").val();
+    var scPlcysPwdUnmAlwd = typeof $("input[name='scPlcysPwdUnmAlwd']:checked").val() === 'undefined' ? '' : $("input[name='scPlcysPwdUnmAlwd']:checked").val();
+    var scPlcysPwdRptngChars = typeof $("input[name='scPlcysPwdRptngChars']:checked").val() === 'undefined' ? '' : $("input[name='scPlcysPwdRptngChars']:checked").val();
+    var scPlcysAlwdFailedLgs = typeof $("#scPlcysAlwdFailedLgs").val() === 'undefined' ? '' : $("#scPlcysAlwdFailedLgs").val();
+    var scPlcysAutoUnlkTme = typeof $("#scPlcysAutoUnlkTme").val() === 'undefined' ? '' : $("#scPlcysAutoUnlkTme").val();
+    var scPlcysChckBlkLtrs = typeof $("input[name='scPlcysChckBlkLtrs']:checked").val() === 'undefined' ? '' : $("input[name='scPlcysChckBlkLtrs']:checked").val();
+    var scPlcysChkSmllLtrs = typeof $("input[name='scPlcysChkSmllLtrs']:checked").val() === 'undefined' ? '' : $("input[name='scPlcysChkSmllLtrs']:checked").val();
+    var scPlcysChkDgts = typeof $("input[name='scPlcysChkDgts']:checked").val() === 'undefined' ? '' : $("input[name='scPlcysChkDgts']:checked").val();
+    var scPlcysChkWild = typeof $("input[name='scPlcysChkWild']:checked").val() === 'undefined' ? '' : $("input[name='scPlcysChkWild']:checked").val();
+    var scPlcysCombinations = typeof $("#scPlcysCombinations").val() === 'undefined' ? '' : $("#scPlcysCombinations").val();
+    var scPlcysSesnTmeOut = typeof $("#scPlcysSesnTmeOut").val() === 'undefined' ? '' : $("#scPlcysSesnTmeOut").val();
+
+    if (scPlcysPlcyNm === "" || scPlcysPlcyNm === null)
+    {
+        $('#modal-7 .modal-body').html('Policy Name cannot be empty!');
+        $('#modal-7').modal('show', {backdrop: 'static'});
+        return false;
+    }
+    if (scPlcysCombinations === "" || scPlcysCombinations === null)
+    {
+        $('#modal-7 .modal-body').html('Combinations cannot be empty!');
+        $('#modal-7').modal('show', {backdrop: 'static'});
+        return false;
+    }
+    lnkArgs = "grp=3&typ=1&q=UPDATE&actyp=2" +
+            "&scPlcysPlcyID=" + scPlcysPlcyID +
+            "&scPlcysPlcyNm=" + scPlcysPlcyNm +
+            "&scPlcysIsDflt=" + scPlcysIsDflt +
+            "&scPlcysPwdExpryDys=" + scPlcysPwdExpryDys +
+            "&scPlcysNoOfRecs=" + scPlcysNoOfRecs +
+            "&scPlcysPwdMinLen=" + scPlcysPwdMinLen +
+            "&scPlcysPwdMaxLen=" + scPlcysPwdMaxLen +
+            "&scPlcysPwdOldAlwd=" + scPlcysPwdOldAlwd +
+            "&scPlcysPwdUnmAlwd=" + scPlcysPwdUnmAlwd +
+            "&scPlcysPwdRptngChars=" + scPlcysPwdRptngChars +
+            "&scPlcysAlwdFailedLgs=" + scPlcysAlwdFailedLgs +
+            "&scPlcysAutoUnlkTme=" + scPlcysAutoUnlkTme +
+            "&scPlcysChckBlkLtrs=" + scPlcysChckBlkLtrs +
+            "&scPlcysChkSmllLtrs=" + scPlcysChkSmllLtrs +
+            "&scPlcysChkDgts=" + scPlcysChkDgts +
+            "&scPlcysChkWild=" + scPlcysChkWild +
+            "&scPlcysCombinations=" + scPlcysCombinations +
+            "&scPlcysSesnTmeOut=" + scPlcysSesnTmeOut;
+    doAjax(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody');
+}
 function getAllOrgStps(actionText, slctr, linkArgs)
 {
     var srchFor = typeof $("#allOrgStpsSrchFor").val() === 'undefined' ? '%' : $("#allOrgStpsSrchFor").val();
@@ -242,7 +338,6 @@ function saveSitesLocsForm()
     doAjax(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody');
 }
 
-
 function getAllOrgJobs(actionText, slctr, linkArgs)
 {
     var srchFor = typeof $("#orgJobsSrchFor").val() === 'undefined' ? '%' : $("#orgJobsSrchFor").val();
@@ -293,5 +388,111 @@ function saveOrgJobsForm()
         }
     });
     lnkArgs = lnkArgs + "&slctdOrgJobs=" + slctdOrgJobs.slice(0, -1);
+    doAjax(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody');
+}
+
+function getAllOrgGrades(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#orgGradesSrchFor").val() === 'undefined' ? '%' : $("#orgGradesSrchFor").val();
+    var srchIn = typeof $("#orgGradesSrchIn").val() === 'undefined' ? 'Both' : $("#orgGradesSrchIn").val();
+    var pageNo = typeof $("#orgGradesPageNo").val() === 'undefined' ? 1 : $("#orgGradesPageNo").val();
+    var limitSze = typeof $("#orgGradesDsplySze").val() === 'undefined' ? 10 : $("#orgGradesDsplySze").val();
+    var sortBy = typeof $("#orgGradesSortBy").val() === 'undefined' ? '' : $("#orgGradesSortBy").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncOrgGrades(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAllOrgGrades(actionText, slctr, linkArgs);
+    }
+}
+
+function saveOrgGradesForm()
+{
+    var lnkArgs = "grp=5&typ=1&q=UPDATE&actyp=5";
+    var slctdOrgGrades = "";
+    $('#orgGradesTable').find('tr').each(function (i, el) {
+        if (i > 0)
+        {
+            var rndmNum = $(el).attr('id').split("_")[1];
+            /*var $tds1 = $(this).find('td');*/
+            var isEnabled = typeof $("input[name='orgGradesRow" + rndmNum + "_IsEnabled']:checked").val() === 'undefined' ? 'No' : 'Yes';
+            slctdOrgGrades = slctdOrgGrades + $('#orgGradesRow' + rndmNum + '_GradeID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
+                    + $('#orgGradesRow' + rndmNum + '_GradeNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
+                    + $('#orgGradesRow' + rndmNum + '_PrntID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
+                    + $('#orgGradesRow' + rndmNum + '_GradeDesc').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
+                    + isEnabled.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+        }
+    });
+    lnkArgs = lnkArgs + "&slctdOrgGrades=" + slctdOrgGrades.slice(0, -1);
+    doAjax(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody');
+}
+
+function getAllOrgPositions(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#orgPositionsSrchFor").val() === 'undefined' ? '%' : $("#orgPositionsSrchFor").val();
+    var srchIn = typeof $("#orgPositionsSrchIn").val() === 'undefined' ? 'Both' : $("#orgPositionsSrchIn").val();
+    var pageNo = typeof $("#orgPositionsPageNo").val() === 'undefined' ? 1 : $("#orgPositionsPageNo").val();
+    var limitSze = typeof $("#orgPositionsDsplySze").val() === 'undefined' ? 10 : $("#orgPositionsDsplySze").val();
+    var sortBy = typeof $("#orgPositionsSortBy").val() === 'undefined' ? '' : $("#orgPositionsSortBy").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn +
+            "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncOrgPositions(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAllOrgPositions(actionText, slctr, linkArgs);
+    }
+}
+
+function saveOrgPositionsForm()
+{
+    var lnkArgs = "grp=5&typ=1&q=UPDATE&actyp=6";
+    var slctdOrgPositions = "";
+    $('#orgPositionsTable').find('tr').each(function (i, el) {
+        if (i > 0)
+        {
+            var rndmNum = $(el).attr('id').split("_")[1];
+            /*var $tds1 = $(this).find('td');*/
+            var isEnabled = typeof $("input[name='orgPositionsRow" + rndmNum + "_IsEnabled']:checked").val() === 'undefined' ? 'No' : 'Yes';
+            slctdOrgPositions = slctdOrgPositions + $('#orgPositionsRow' + rndmNum + '_PosID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
+                    + $('#orgPositionsRow' + rndmNum + '_PosNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
+                    + $('#orgPositionsRow' + rndmNum + '_PrntID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
+                    + $('#orgPositionsRow' + rndmNum + '_PosDesc').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
+                    + isEnabled.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+        }
+    });
+    lnkArgs = lnkArgs + "&slctdOrgPositions=" + slctdOrgPositions.slice(0, -1);
     doAjax(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody');
 }

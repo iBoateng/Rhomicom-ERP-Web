@@ -1305,15 +1305,19 @@ function loadInvMdl() {
 }
 
 function loadWkflMdl() {
-    //For Accounting
+    //For Workfl0w
     $DefaultPrvldgs = array("View Workflow Manager", "View Workflow Apps",
-        /* 2 */ "View Workflow Hierarchies", "View Workflow Notifications",
-        "View Record History", "View SQL", "Load Worflow Requirements");
+        /* 2 */ "View Workflow Hierarchies", "View Approver Groups",
+        /* 4 */ "View Workflow Notifications", "View Record History", "View SQL",
+        /* 7 */ "Add Workflow Apps", "Edit Workflow Apps", "Delete Workflow Apps",
+        /* 10 */ "Add Workflow Hierarchies", "Edit Workflow Hierarchies", "Delete Workflow Hierarchies",
+        /* 13 */ "Add Approver Groups", "Edit Approver Groups", "Delete Approver Groups",
+        /* 16 */ "Administer Notifications", "Administer Workflow Setups");
 
 
-    $subGrpNames = ""; //, "Accounting Transactions"
-    $mainTableNames = ""; //, "accb.accb_trnsctn_details"
-    $keyColumnNames = ""; //, "transctn_id" 
+    $subGrpNames = ""; 
+    $mainTableNames = ""; 
+    $keyColumnNames = ""; 
     $myName = "Workflow Manager";
     $myDesc = "This module helps you to configure the application's workflow system!";
     $audit_tbl_name = "wkf.wkf_audit_trail_tbl";

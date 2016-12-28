@@ -7,8 +7,8 @@ $mdlNm = "General Setup";
 $ModuleName = $mdlNm;
 
 $dfltPrvldgs = array("View General Setup", "View Value List Names"
-    , "View possible values", /* 3 */ "Add Value List Names", "Edit Value List Names"
-    , "Delete Value List Names", /* 6 */ "Add Possible Values", "Edit Possible Values"
+    /* 2 */, "View possible values", "Add Value List Names", "Edit Value List Names"
+    /* 5 */ , "Delete Value List Names", "Add Possible Values", "Edit Possible Values"
     , "Delete Possible Values", "View Record History", "View SQL");
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
@@ -68,8 +68,8 @@ if ($lgn_num > 0 && $canview === true) {
     } else if ($qstr == "UPDATE") {
         if ($actyp == 1) {
             //LOVs
-            //var_dump($_POST);
-            //exit();
+            var_dump($_POST);
+            exit();
             header("content-type:application/json");
             //categoryCombo
             $inptValListID = isset($_POST['valListID']) ? cleanInputData($_POST['valListID']) : -1;
@@ -108,8 +108,8 @@ if ($lgn_num > 0 && $canview === true) {
             }
         } else if ($actyp == 2) {
             //Possible Values
-            //var_dump($_POST);
-            //exit();
+            var_dump($_POST);
+            exit();
             header("content-type:application/json");
             //categoryCombo
             $inptPssblLovValID = isset($_POST['pssblLovValID']) ? cleanInputData($_POST['pssblLovValID']) : -1;

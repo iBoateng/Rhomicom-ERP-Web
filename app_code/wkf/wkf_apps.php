@@ -1,76 +1,885 @@
 <?php
+$canAddWkfAp = test_prmssns($dfltPrvldgs[7], $mdlNm);
+$canEdtWkfAp = test_prmssns($dfltPrvldgs[8], $mdlNm);
+$canDelWkfAp = test_prmssns($dfltPrvldgs[9], $mdlNm);
 
-                if ($vwtyp == 0) {
-                    $total = get_WkfAppsTtl($srchFor, $srchIn);
+$pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
+$lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
+$sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "";
 
-                    $pageNo = isset($_POST['page']) ? $_POST['page'] : 1;
-                    $lmtSze = isset($_POST['limit']) ? $_POST['limit'] : 1;
-                    $start = isset($_POST['start']) ? $_POST['start'] : 0;
-                    if ($pageNo > ceil($total / $lmtSze)) {
-                        $pageNo = 1;
+if (array_key_exists('lgn_num', get_defined_vars())) {
+    if ($lgn_num > 0 && $canview === true) {
+        if ($qstr == "DELETE") {
+            if ($actyp == 1) {
+                
+            }
+        } else if ($qstr == "UPDATE") {
+            if ($actyp == 1) {
+                
+            } else if ($actyp == 2) {
+                
+            }
+        } else {
+            if ($vwtyp == 0) {
+                $pkID = isset($_POST['sbmtdAppID']) ? $_POST['sbmtdAppID'] : -1;
+                echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
+						<span style=\"text-decoration:none;\">Workflow Manager Menu</span>
+				</li>
+                                <li>
+                                    <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                    <span style=\"text-decoration:none;\">Workflow Apps</span>
+				</li>
+                               </ul>
+                              </div>";
+                $total = get_WkfAppsTtl($srchFor, $srchIn);
+                if ($pageNo > ceil($total / $lmtSze)) {
+                    $pageNo = 1;
+                } else if ($pageNo < 1) {
+                    $pageNo = ceil($total / $lmtSze);
+                }
+
+                $curIdx = $pageNo - 1;
+                $result = get_WkfAppsTblr($srchFor, $srchIn, $curIdx, $lmtSze);
+                $cntr = 0;
+                $colClassType1 = "col-lg-2";
+                $colClassType2 = "col-lg-3";
+                $colClassType3 = "col-lg-4";
+                ?>
+                <form id='allWkfAppsForm' action='' method='post' accept-charset='UTF-8'>
+                    <div class="row" style="margin-bottom:5px;">
+                        <?php
+                        if ($canAddWkfAp === true) {
+                            ?> 
+                            <div class="<?php echo $colClassType3; ?>" style="padding:0px 1px 0px 1px !important;"> 
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneWkfAppForm(-1, 2);" style="width:100% !important;">
+                                        <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        New Workflow App
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveWkfAppForm();" style="width:100% !important;">
+                                        <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                            <?php
+                        } else {
+                            $colClassType1 = "col-lg-2";
+                            $colClassType2 = "col-lg-5";
+                        }
+                        ?>
+                        <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
+                            <div class="input-group">
+                                <input class="form-control" id="allWkfAppsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncWkfApps(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input id="allWkfAppsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllWkfApps('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </label>
+                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllWkfApps('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </label> 
+                            </div>
+                        </div>
+                        <div class="<?php echo $colClassType2; ?>">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+                                <select data-placeholder="Select..." class="form-control chosen-select" id="allWkfAppsSrchIn">
+                                    <?php
+                                    $valslctdArry = array("", "");
+                                    $srchInsArrys = array("Name", "Description");
+
+                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                        if ($srchIn == $srchInsArrys[$z]) {
+                                            $valslctdArry[$z] = "selected";
+                                        }
+                                        ?>
+                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                <select data-placeholder="Select..." class="form-control chosen-select" id="allWkfAppsDsplySze" style="min-width:70px !important;">                            
+                                    <?php
+                                    $valslctdArry = array("", "", "", "", "", "", "", "");
+                                    $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                    for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                        if ($lmtSze == $dsplySzeArry[$y]) {
+                                            $valslctdArry[$y] = "selected";
+                                        } else {
+                                            $valslctdArry[$y] = "";
+                                        }
+                                        ?>
+                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="<?php echo $colClassType1; ?>">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" style="margin: 0px !important;">
+                                    <li>
+                                        <a href="javascript:getAllWkfApps('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:getAllWkfApps('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="row"  style="padding:1px 15px 1px 15px !important;"><hr style="margin:1px 0px 3px 0px;"></div>
+                    <div class="row" style="padding:0px 15px 0px 15px !important"> 
+                        <div  class="col-lg-3" style="padding:0px 1px 0px 1px !important">
+                            <fieldset class="basic_person_fs">                                        
+                                <table class="table table-striped table-bordered table-responsive" id="allWkfAppsTable" cellspacing="0" width="100%" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Workflow App Name</th>
+                                            <?php
+                                            if ($canDelWkfAp === true) {
+                                                ?>
+                                                <th>&nbsp;</th>
+                                            <?php } ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        while ($row = loc_db_fetch_array($result)) {
+                                            if ($pkID <= 0 && $cntr <= 0) {
+                                                $pkID = $row[0];
+                                            }
+                                            $cntr += 1;
+                                            ?>
+                                            <tr id="allWkfAppsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
+                                                <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                <td><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allWkfAppsRow<?php echo $cntr; ?>_AppID" value="<?php echo $row[0]; ?>"></td>                                                
+                                                <?php
+                                                if ($canDelWkfAp === true) {
+                                                    ?>
+                                                    <td>
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Workflow App">
+                                                            <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                        </button>
+                                                    </td>
+                                                <?php } ?>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>                        
+                            </fieldset>
+                        </div>                        
+                        <div  class="col-lg-9" style="padding:0px 1px 0px 1px !important">
+                            <fieldset class="basic_person_fs" style="padding-top:10px !important;">
+                                <div class="container-fluid" id="wkfAppsDetailInfo" style="padding:0px 15px 0px 15px !important;">
+                                    <?php
+                                    if ($pkID > 0) {
+                                        $result1 = get_WkfAppsDet($pkID);
+                                        $sbmtdAppID = $pkID;
+                                        while ($row1 = loc_db_fetch_array($result1)) {
+                                            ?>
+                                            <div class="row">
+                                                <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                                                    <fieldset class="basic_person_fs" style="padding:10px 3px 0px 3px !important;"> 
+                                                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                            <label for="wkfDetAppNm" class="control-label col-lg-4">Application Name:</label>
+                                                            <div  class="col-lg-8">
+                                                                <?php if ($canEdtWkfAp === true) { ?>
+                                                                    <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                                    <input type="hidden" class="form-control" aria-label="..." id="wkfDetAppID" name="wkfDetAppID" value="<?php echo $row1[0]; ?>">
+                                                                <?php } else {
+                                                                    ?>
+                                                                    <span><?php echo $row1[1]; ?></span>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                                                    <fieldset class = "basic_person_fs">
+                                                        <div class="form-group form-group-sm">
+                                                            <label for="wkfDetSrcMdl" class="control-label col-md-4">Source Module:</label>
+                                                            <div  class="col-md-8">
+                                                                <?php if ($canEdtWkfAp === true) { ?>
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control" aria-label="..." id="wkfDetSrcMdl" value="<?php echo $row1[2]; ?>">
+                                                                        <input type="hidden" id="wkfDetSrcMdlID" value="-1">
+                                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'System Modules', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'wkfDetSrcMdlID', 'wkfDetSrcMdl', 'clear', 1, '');">
+                                                                            <span class="glyphicon glyphicon-th-list"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                <?php } else {
+                                                                    ?>
+                                                                    <span><?php echo $row1[2]; ?></span>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div  class="col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                    <fieldset class="basic_person_fs" style="padding:10px 3px 0px 3px !important;">                                                         
+                                                        <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                            <label for="wkfDetAppDesc" class="control-label col-lg-2">Description:</label>
+                                                            <div  class="col-lg-10">
+                                                                <?php if ($canEdtWkfAp === true) { ?>
+                                                                    <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%" cols="9" rows="2"><?php echo $row1[3]; ?></textarea>
+                                                                <?php } else {
+                                                                    ?>
+                                                                    <span><?php echo $row1[3]; ?></span>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                                    <fieldset class="basic_person_fs"> 
+                                                        <?php
+                                                        if ($canEdtWkfAp === true) {
+                                                            $nwRowHtml = "<tr id=\"wkfAppActnsRow__WWW123WWW\">"
+                                                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                                                    . "<td class=\"lovtd\">                                            
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnNm\" value=\"\" style=\"width:100% !important;\">
+                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnID\" value=\"\">
+                                              </div>
+                                          </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnDesc\" name=\"wkfAppActnsRow_WWW123WWW_ActnDesc\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnSQL\" name=\"wkfAppActnsRow_WWW123WWW_ActnSQL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnURL\" name=\"wkfAppActnsRow_WWW123WWW_ActnURL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                          <td>
+							<select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\" name=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\">";
+
+                                                            $valslctdArry = array("", "");
+                                                            $srchInsArrys = array("Dialog", "Direct");
+                                                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                                $nwRowHtml .= "<option value=\"$srchInsArrys[$z]\" $valslctdArry[$z]>$srchInsArrys[$z]</option>";
+                                                            }
+                                                            $nwRowHtml .= "</select>
+                                                    </td>
+                                          <td class=\"lovtd\"> 
+                                              <div class=\"form-group form-group-sm normaltd\">
+                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                <label class=\"form-check-label\">
+                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
+                                                                </label>
+                                                            </div>
+                                              </div>
+                                           </td>
+                                           <td class=\"lovtd\">&nbsp;</td>
+                                        </tr>";
+                                                            $nwRowHtml = urlencode($nwRowHtml);
+                                                            ?>
+                                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('wkfAppActnsTable', 0, '<?php echo $nwRowHtml; ?>');">
+                                                                <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                                Add Workflow App Action
+                                                            </button>
+                                                        <?php } ?>
+                                                        <table class="table table-striped table-bordered table-responsive" id="wkfAppActnsTable" cellspacing="0" width="100%" style="width:100%;min-width: 800px;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>No.</th>
+                                                                    <th>Name of Action Performed</th>
+                                                                    <th style="min-width: 150px;width:160px;">Description</th>
+                                                                    <th style="min-width: 150px;width:160px;">SQL Statement</th>
+                                                                    <th style="min-width: 150px;width:160px;">Action Url</th>
+                                                                    <th>Web Display Type</th>
+                                                                    <th>For Admins Only?</th> 
+                                                                    <?php
+                                                                    if ($canDelWkfAp === true) {
+                                                                        ?>
+                                                                        <th>&nbsp;</th>
+                                                                    <?php } ?>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
+                                                                $result2 = get_WkfAppsActns($pkID);
+                                                                $cntr = 0;
+                                                                while ($row2 = loc_db_fetch_array($result2)) {
+                                                                    $cntr += 1;
+                                                                    ?>
+                                                                    <tr id="wkfAppActnsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
+                                                                        <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                                        <td class="lovtd">
+                                                                            <?php if ($canEdtWkfAp === true) { ?>
+                                                                                <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                                    <input type="text" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnNm" value="<?php echo $row2[1]; ?>" style="width:100% !important;">
+                                                                                    <input type="hidden" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnID" value="<?php echo $row2[0]; ?>">
+                                                                                </div>
+                                                                            <?php } else { ?>
+                                                                                <span class="normaltd"><?php echo $row2[1]; ?></span>
+                                                                            <?php } ?>                                                         
+                                                                        </td>
+                                                                        <td class="lovtd">
+                                                                            <?php if ($canEdtWkfAp === true) { ?>
+                                                                                <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%" cols="7" rows="2"><?php echo $row2[2]; ?></textarea>
+                                                                                </div>
+                                                                            <?php } else { ?>
+                                                                                <span class="normaltd"><?php echo $row2[2]; ?></span>
+                                                                            <?php } ?>                                                         
+                                                                        </td>
+                                                                        <td class="lovtd">
+                                                                            <?php if ($canEdtWkfAp === true) { ?>
+                                                                                <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%" cols="7" rows="2"><?php echo $row2[3]; ?></textarea>
+                                                                                </div>
+                                                                            <?php } else { ?>
+                                                                                <span class="normaltd"><?php echo $row2[3]; ?></span>
+                                                                            <?php } ?>                                                         
+                                                                        </td>
+                                                                        <td class="lovtd">
+                                                                            <?php if ($canEdtWkfAp === true) { ?>
+                                                                                <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%" cols="7" rows="2"><?php echo $row2[10]; ?></textarea>
+                                                                                </div>
+                                                                            <?php } else { ?>
+                                                                                <span class="normaltd"><?php echo $row2[10]; ?></span>
+                                                                            <?php } ?>                                                         
+                                                                        </td>
+                                                                        <td>
+                                                                            <?php if ($canEdtWkfAp === true) { ?>
+                                                                                <select data-placeholder="Select..." class="form-control chosen-select" id="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp" name="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp">
+                                                                                    <?php
+                                                                                    $valslctdArry = array("", "");
+                                                                                    $srchInsArrys = array("Dialog", "Direct");
+                                                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                                                        if ($row2[11] == $srchInsArrys[$z]) {
+                                                                                            $valslctdArry[$z] = "selected";
+                                                                                        }
+                                                                                        ?>
+                                                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                                    <?php } ?>
+                                                                                </select>
+                                                                            <?php } else {
+                                                                                ?>
+                                                                                <span><?php echo $row2[11]; ?></span>
+                                                                                <?php
+                                                                            }
+                                                                            ?>
+                                                                        </td>
+                                                                        <td class="lovtd">
+                                                                            <?php
+                                                                            $isChkd = "";
+                                                                            if ($row2[12] == "Yes") {
+                                                                                $isChkd = "checked=\"true\"";
+                                                                            }
+                                                                            if ($canEdtWkfAp === true) {
+                                                                                ?>
+                                                                                <div class="form-group form-group-sm normaltd">
+                                                                                    <div class="form-check" style="font-size: 12px !important;">
+                                                                                        <label class="form-check-label">
+                                                                                            <input type="checkbox" class="form-check-input" id="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" name="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" <?php echo $isChkd ?>>
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            <?php } else { ?>
+                                                                                <span class="normaltd"><?php echo $row2[12]; ?></span>
+                                                                            <?php } ?>                                                         
+                                                                        </td>
+                                                                        <?php
+                                                                        if ($canDelWkfAp === true) {
+                                                                            ?>
+                                                                            <td>
+                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
+                                                                                    <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                                                </button>
+                                                                            </td>
+                                                                        <?php } ?>
+                                                                    </tr>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <?php
+                                        }
+                                    } else {
+                                        ?>
+                                        <span>No Results Found</span>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </form>
+                <?php
+            } else if ($vwtyp == 1) {
+                //lov detail on tr click
+                $curIdx = 0;
+                $pkID = isset($_POST['sbmtdAppID']) ? $_POST['sbmtdAppID'] : -1;
+                if ($pkID > 0) {
+                    $result1 = get_WkfAppsDet($pkID);
+                    $sbmtdAppID = $pkID;
+                    while ($row1 = loc_db_fetch_array($result1)) {
+                        ?>
+                        <div class="row">
+                            <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                                <fieldset class="basic_person_fs" style="padding:10px 3px 0px 3px !important;"> 
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="wkfDetAppNm" class="control-label col-lg-4">Application Name:</label>
+                                        <div  class="col-lg-8">
+                                            <?php if ($canEdtWkfAp === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                <input type="hidden" class="form-control" aria-label="..." id="wkfDetAppID" name="wkfDetAppID" value="<?php echo $row1[0]; ?>">
+                                            <?php } else {
+                                                ?>
+                                                <span><?php echo $row1[1]; ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                                <fieldset class = "basic_person_fs">
+                                    <div class="form-group form-group-sm">
+                                        <label for="wkfDetSrcMdl" class="control-label col-md-4">Source Module:</label>
+                                        <div  class="col-md-8">
+                                            <?php if ($canEdtWkfAp === true) { ?>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" aria-label="..." id="wkfDetSrcMdl" value="<?php echo $row1[2]; ?>">
+                                                    <input type="hidden" id="wkfDetSrcMdlID" value="-1">
+                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'System Modules', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'wkfDetSrcMdlID', 'wkfDetSrcMdl', 'clear', 1, '');">
+                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                    </label>
+                                                </div>
+                                            <?php } else {
+                                                ?>
+                                                <span><?php echo $row1[2]; ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div  class="col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                <fieldset class="basic_person_fs" style="padding:10px 3px 0px 3px !important;">                                                         
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="wkfDetAppDesc" class="control-label col-lg-2">Description:</label>
+                                        <div  class="col-lg-10">
+                                            <?php if ($canEdtWkfAp === true) { ?>
+                                                <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%" cols="9" rows="2"><?php echo $row1[3]; ?></textarea>
+                                            <?php } else {
+                                                ?>
+                                                <span><?php echo $row1[3]; ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                <fieldset class="basic_person_fs"> 
+                                    <?php
+                                    if ($canEdtWkfAp === true) {
+                                        $nwRowHtml = "<tr id=\"wkfAppActnsRow__WWW123WWW\">"
+                                                . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                                . "<td class=\"lovtd\">                                            
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnNm\" value=\"\" style=\"width:100% !important;\">
+                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnID\" value=\"\">
+                                              </div>
+                                          </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnDesc\" name=\"wkfAppActnsRow_WWW123WWW_ActnDesc\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnSQL\" name=\"wkfAppActnsRow_WWW123WWW_ActnSQL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnURL\" name=\"wkfAppActnsRow_WWW123WWW_ActnURL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                          <td>
+							<select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\" name=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\">";
+
+                                        $valslctdArry = array("", "");
+                                        $srchInsArrys = array("Dialog", "Direct");
+                                        for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                            $nwRowHtml .= "<option value=\"$srchInsArrys[$z]\" $valslctdArry[$z]>$srchInsArrys[$z]</option>";
+                                        }
+                                        $nwRowHtml .= "</select>
+                                                    </td>
+                                          <td class=\"lovtd\"> 
+                                              <div class=\"form-group form-group-sm normaltd\">
+                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                <label class=\"form-check-label\">
+                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
+                                                                </label>
+                                                            </div>
+                                              </div>
+                                           </td>
+                                           <td class=\"lovtd\">&nbsp;</td>
+                                        </tr>";
+                                        $nwRowHtml = urlencode($nwRowHtml);
+                                        ?>
+                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('wkfAppActnsTable', 0, '<?php echo $nwRowHtml; ?>');">
+                                            <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                            Add Workflow App Action
+                                        </button>
+                                    <?php } ?>
+                                    <table class="table table-striped table-bordered table-responsive" id="wkfAppActnsTable" cellspacing="0" width="100%" style="width:100%;min-width: 800px;">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Name of Action Performed</th>
+                                                <th style="min-width: 150px;width:160px;">Description</th>
+                                                <th style="min-width: 150px;width:160px;">SQL Statement</th>
+                                                <th style="min-width: 150px;width:160px;">Action Url</th>
+                                                <th>Web Display Type</th>
+                                                <th>For Admins Only?</th> 
+                                                <?php
+                                                if ($canDelWkfAp === true) {
+                                                    ?>
+                                                    <th>&nbsp;</th>
+                                                <?php } ?>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $result2 = get_WkfAppsActns($pkID);
+                                            $cntr = 0;
+                                            while ($row2 = loc_db_fetch_array($result2)) {
+                                                $cntr += 1;
+                                                ?>
+                                                <tr id="wkfAppActnsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
+                                                    <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                    <td class="lovtd">
+                                                        <?php if ($canEdtWkfAp === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                <input type="text" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnNm" value="<?php echo $row2[1]; ?>" style="width:100% !important;">
+                                                                <input type="hidden" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnID" value="<?php echo $row2[0]; ?>">
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span class="normaltd"><?php echo $row2[1]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>
+                                                    <td class="lovtd">
+                                                        <?php if ($canEdtWkfAp === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%" cols="7" rows="2"><?php echo $row2[2]; ?></textarea>
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span class="normaltd"><?php echo $row2[2]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>
+                                                    <td class="lovtd">
+                                                        <?php if ($canEdtWkfAp === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%" cols="7" rows="2"><?php echo $row2[3]; ?></textarea>
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span class="normaltd"><?php echo $row2[3]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>
+                                                    <td class="lovtd">
+                                                        <?php if ($canEdtWkfAp === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%" cols="7" rows="2"><?php echo $row2[10]; ?></textarea>
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span class="normaltd"><?php echo $row2[10]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>
+                                                    <td>
+                                                        <?php if ($canEdtWkfAp === true) { ?>
+                                                            <select data-placeholder="Select..." class="form-control chosen-select" id="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp" name="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp">
+                                                                <?php
+                                                                $valslctdArry = array("", "");
+                                                                $srchInsArrys = array("Dialog", "Direct");
+                                                                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                                    if ($row2[11] == $srchInsArrys[$z]) {
+                                                                        $valslctdArry[$z] = "selected";
+                                                                    }
+                                                                    ?>
+                                                                    <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        <?php } else {
+                                                            ?>
+                                                            <span><?php echo $row2[11]; ?></span>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td class="lovtd">
+                                                        <?php
+                                                        $isChkd = "";
+                                                        if ($row2[12] == "Yes") {
+                                                            $isChkd = "checked=\"true\"";
+                                                        }
+                                                        if ($canEdtWkfAp === true) {
+                                                            ?>
+                                                            <div class="form-group form-group-sm normaltd">
+                                                                <div class="form-check" style="font-size: 12px !important;">
+                                                                    <label class="form-check-label">
+                                                                        <input type="checkbox" class="form-check-input" id="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" name="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" <?php echo $isChkd ?>>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span class="normaltd"><?php echo $row2[12]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>
+                                                    <?php
+                                                    if ($canDelWkfAp === true) {
+                                                        ?>
+                                                        <td>
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
+                                                                <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </td>
+                                                    <?php } ?>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <?php
                     }
-
-                    $curIdx = $pageNo - 1;
-                    $result = get_WkfAppsTblr($srchFor, $srchIn, $curIdx, $lmtSze);
-                    $wkfapps = array();
-                    $cntr = 0;
-                    while ($row = loc_db_fetch_array($result)) {
-                        $chckd = ($cntr == 0) ? TRUE : FALSE;
-                        $wkfapp = array(
-                            'checked' => var_export($chckd, TRUE),
-                            'AppID' => $row[0],
-                            'AppName' => $row[1],
-                            'SourceModule' => $row[2],
-                            'Description' => $row[3]);
-                        $wkfapps[] = $wkfapp;
-                        $cntr++;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfapps));
-                } else if ($vwtyp == 1) {
-                    $total = 500;
-
-                    $pkID = isset($_POST['appID']) ? $_POST['appID'] : -1;
-                    $result = get_WkfAppsActns($pkID);
-                    $wkfapps = array();
-                    while ($row = loc_db_fetch_array($result)) {
-                        //$chckd = FALSE;
-                        $wkfapp = array(
-                            'ActionID' => $row[0],
-                            'ActionName' => $row[1],
-                            'SQLAction' => $row[3],
-                            'Description' => $row[2],
-                            'ExecFileName' => $row[9],
-                            'WebURLParams' => $row[10],
-                            'WebDisplayType' => var_export(($row[11] == 'Dialog' ? TRUE : FALSE), TRUE),
-                            'AdminOnly' => var_export(($row[12] == 'YES' ? TRUE : FALSE), TRUE));
-                        $wkfapps[] = $wkfapp;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfapps));
-                } else if ($vwtyp == 2) {
-                    $total = 500;
-
-                    $pkID = isset($_POST['appID']) ? $_POST['appID'] : -1;
-                    $result = get_WkfAppsHrchies($pkID);
-                    $wkfapps = array();
-                    while ($row = loc_db_fetch_array($result)) {
-                        //$chckd = FALSE;
-                        $wkfapp = array(
-                            'AppHrchyID' => $row[0],
-                            'HrchyName' => $row[1],
-                            'HrchyType' => $row[2],
-                            'HrchyEnabled' => var_export(($row[3] == '1' ? TRUE : FALSE), TRUE),
-                            'LinkageEnabled' => var_export(($row[4] == '1' ? TRUE : FALSE), TRUE));
-                        $wkfapps[] = $wkfapp;
-                    }
-
-                    echo json_encode(array('success' => true,
-                        'total' => $total,
-                        'rows' => $wkfapps));
+                } else {
+                    ?>
+                    <span>No Results Found</span>
+                    <?php
+                }
+            } else if ($vwtyp == 2) {
+                //New Org Form
+                $curIdx = 0;
+                $pkID = -1;
+                if ($canAddWkfAp === true) {
+                    
+                } else {
+                    exit();
                 }
                 ?>
+                <div class="row">
+                    <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                        <fieldset class="basic_person_fs" style="padding:10px 3px 0px 3px !important;"> 
+                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                <label for="wkfDetAppNm" class="control-label col-lg-4">Application Name:</label>
+                                <div  class="col-lg-8">
+                                    <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="" style="width:100%">
+                                    <input type="hidden" class="form-control" aria-label="..." id="wkfDetAppID" name="wkfDetAppID" value="-1">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                        <fieldset class = "basic_person_fs">
+                            <div class="form-group form-group-sm">
+                                <label for="wkfDetSrcMdl" class="control-label col-md-4">Source Module:</label>
+                                <div  class="col-md-8">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" aria-label="..." id="wkfDetSrcMdl" value="">
+                                        <input type="hidden" id="wkfDetSrcMdlID" value="-1">
+                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'System Modules', '', '', '', 'radio', true, '', 'wkfDetSrcMdlID', 'wkfDetSrcMdl', 'clear', 1, '');">
+                                            <span class="glyphicon glyphicon-th-list"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div  class="col-md-12" style="padding:0px 3px 0px 3px !important;">
+                        <fieldset class="basic_person_fs" style="padding:10px 3px 0px 3px !important;">                                                         
+                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                <label for="wkfDetAppDesc" class="control-label col-lg-2">Description:</label>
+                                <div  class="col-lg-10">
+                                    <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%" cols="9" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="padding:0px 3px 0px 3px !important;">
+                        <fieldset class="basic_person_fs"> 
+                            <?php
+                            $nwRowHtml = "<tr id=\"wkfAppActnsRow__WWW123WWW\">"
+                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                    . "<td class=\"lovtd\">                                            
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnNm\" value=\"\" style=\"width:100% !important;\">
+                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnID\" value=\"\">
+                                              </div>
+                                          </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnDesc\" name=\"wkfAppActnsRow_WWW123WWW_ActnDesc\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnSQL\" name=\"wkfAppActnsRow_WWW123WWW_ActnSQL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                           <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnURL\" name=\"wkfAppActnsRow_WWW123WWW_ActnURL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
+                                                            </div>                                                       
+                                                    </td>
+                                          <td>
+							<select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\" name=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\">";
+
+                            $valslctdArry = array("", "");
+                            $srchInsArrys = array("Dialog", "Direct");
+                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                $nwRowHtml .= "<option value=\"$srchInsArrys[$z]\" $valslctdArry[$z]>$srchInsArrys[$z]</option>";
+                            }
+                            $nwRowHtml .= "</select>
+                                                    </td>
+                                          <td class=\"lovtd\"> 
+                                              <div class=\"form-group form-group-sm normaltd\">
+                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                <label class=\"form-check-label\">
+                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
+                                                                </label>
+                                                            </div>
+                                              </div>
+                                           </td>
+                                           <td class=\"lovtd\">&nbsp;</td>
+                                        </tr>";
+                            $nwRowHtml = urlencode($nwRowHtml);
+                            ?>
+                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('wkfAppActnsTable', 0, '<?php echo $nwRowHtml; ?>');">
+                                <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                Add Workflow App Action
+                            </button>
+                            <table class="table table-striped table-bordered table-responsive" id="wkfAppActnsTable" cellspacing="0" width="100%" style="width:100%;min-width: 800px;">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Name of Action Performed</th>
+                                        <th style="min-width: 150px;width:160px;">Description</th>
+                                        <th style="min-width: 150px;width:160px;">SQL Statement</th>
+                                        <th style="min-width: 150px;width:160px;">Action Url</th>
+                                        <th>Web Display Type</th>
+                                        <th>For Admins Only?</th> 
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $cntr = 1;
+                                    ?>
+                                    <tr id="wkfAppActnsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
+                                        <td class="lovtd"><span class="normaltd">New</span></td>
+                                        <td class="lovtd">
+                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                <input type="text" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnNm" value="" style="width:100% !important;">
+                                                <input type="hidden" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnID" value="">
+                                            </div>
+                                        </td>
+                                        <td class="lovtd">
+                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%" cols="7" rows="2"></textarea>
+                                            </div>
+                                        </td>
+                                        <td class="lovtd">
+                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%" cols="7" rows="2"></textarea>
+                                            </div>
+                                        </td>
+                                        <td class="lovtd">
+                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%" cols="7" rows="2"></textarea>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select data-placeholder="Select..." class="form-control chosen-select" id="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp" name="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp">
+                                                <?php
+                                                $valslctdArry = array("", "");
+                                                $srchInsArrys = array("Dialog", "Direct");
+                                                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                    ?>
+                                                    <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </td>
+                                        <td class="lovtd">
+                                            <?php
+                                            $isChkd = "";
+                                            ?>
+                                            <div class="form-group form-group-sm normaltd">
+                                                <div class="form-check" style="font-size: 12px !important;">
+                                                    <label class="form-check-label">
+                                                        <input type="checkbox" class="form-check-input" id="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" name="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" <?php echo $isChkd ?>>
+                                                    </label>
+                                                </div>
+                                            </div>                                                       
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
+                                                <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                            </button>
+                                        </td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+            </div>
+            <?php
+        } else if ($vwtyp == 3) {
+            
+        } else if ($vwtyp == 4) {
+            
+        }
+    }
+}
+}    

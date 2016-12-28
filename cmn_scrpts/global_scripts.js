@@ -100,12 +100,12 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
         {
             /*Match by Description:Set both Value and Desc Element IDs*/
             selVals = typeof $("#" + descElemntID).val() === 'undefined' ? selVals : $("#" + descElemntID).val();
-        } 
+        }
         {
             /* Match using Possible Value itself*/
             /* For Dynamic LOVs use 0 and set both value and descElement IDs */
             /* For Static LOVs use 0 and set only valueElement ID */
-            selVals = typeof $("#" + valueElmntID).val() === 'undefined' ? selVals : $("#" + valueElmntID).val();            
+            selVals = typeof $("#" + valueElmntID).val() === 'undefined' ? selVals : $("#" + valueElmntID).val();
         }
         if (actionText == 'clear')
         {
@@ -341,21 +341,55 @@ function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, moda
                 {
                     document.getElementById(elementID).innerHTML = xmlhttp.responseText;
                     $body.removeClass("mdlloading");
-                    if (linkArgs.indexOf("grp=5&typ=1&pg=1&vtyp=1") !== -1)
-                    {
-                        $(document).ready(function () {
-                            $('[data-toggle="tooltip"]').tooltip();
-                            $(function () {
-                                $('[data-toggle="tabajxorg"]').click(function (e) {
-                                    var $this = $(this);
-                                    var targ = $this.attr('href');
-                                    var dttrgt = $this.attr('data-rhodata');
-                                    var linkArgs = 'grp=5&typ=1' + dttrgt;
-                                    return openATab(targ, linkArgs);
-                                });
-                            });
-                        });
-                    }
+                }
+            }
+        };
+        xmlhttp.open("POST", "index.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(linkArgs.trim());
+    });
+}
+
+
+function doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleElementID, modalBodyID, rqstdCallBack)
+{
+    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+
+        $body.addClass("mdlloading");
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            xmlhttp = new XMLHttpRequest();
+        } else
+        {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                if (actionAfter == 'Redirect')
+                {
+                    $body.removeClass("mdlloading");
+                    window.open(xmlhttp.responseText, '_blank');
+                    rqstdCallBack();
+                } else if (actionAfter == 'ShowDialog')
+                {
+                    $body.removeClass("mdlloading");
+                    $('#' + titleElementID).html(titleMsg);
+                    $('#' + modalBodyID).html(xmlhttp.responseText);
+                    $('#' + elementID).on('show.bs.modal', function (e) {
+                        console.debug('modal shown!');
+                    });
+                    $('#' + elementID).modal('show');
+                    rqstdCallBack();
+                } else
+                {
+                    document.getElementById(elementID).innerHTML = xmlhttp.responseText;
+                    $body.removeClass("mdlloading");
+                    rqstdCallBack();
                 }
             }
         };
@@ -422,11 +456,23 @@ function openATab(slctr, linkArgs)
                                 prepareSysAdmin(linkArgs, $body, targ, xmlhttp.responseText);
                             });
                         }
+                    } else if (linkArgs.indexOf("grp=4&typ=1") !== -1)
+                    {
+                        loadScript("app/gst/gst_admin.js?v=110", function () {
+                            $this.tab('show');
+                            prepareGstAdmin(linkArgs, $body, targ, xmlhttp.responseText);
+                        });
                     } else if (linkArgs.indexOf("grp=5&typ=1") !== -1)
                     {
                         loadScript("app/org/org_admin.js?v=110", function () {
                             $this.tab('show');
                             prepareOrgAdmin(linkArgs, $body, targ, xmlhttp.responseText);
+                        });
+                    } else if (linkArgs.indexOf("grp=11&typ=1") !== -1)
+                    {
+                        loadScript("app/wkf/wkf_admin.js?v=110", function () {
+                            $this.tab('show');
+                            prepareWkfAdmin(linkArgs, $body, targ, xmlhttp.responseText);
                         });
                     } else
                     {

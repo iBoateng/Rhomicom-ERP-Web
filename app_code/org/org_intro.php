@@ -1,7 +1,7 @@
 <?php
 
 $menuItems = array("Organization Setup");
-$menuImages = array("rho_arrow1.png");
+$menuImages = array("BuildingManagement.png");
 
 $mdlNm = "Organization Setup";
 $ModuleName = $mdlNm;
@@ -317,6 +317,24 @@ function get_Grades($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     return $result;
 }
 
+function get_GradesTtl($pkID, $searchWord, $searchIn) {
+    $whereCls = "";
+    if ($searchIn == "Grade Name") {
+        $whereCls = " and (a.grade_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Grade Description") {
+        $whereCls = " and (a.grade_comments ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT count(1) 
+         FROM org.org_grades a
+         WHERE ((a.org_id = $pkID)$whereCls)";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
 function get_Pos($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     $whereCls = "";
     if ($searchIn == "Position Name") {
@@ -337,4 +355,21 @@ function get_Pos($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     return $result;
 }
 
+function get_PosTtl($pkID, $searchWord, $searchIn) {
+    $whereCls = "";
+    if ($searchIn == "Position Name") {
+        $whereCls = " and (a.position_code_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Position Description") {
+        $whereCls = " and (position_comments ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT count(1) 
+        FROM org.org_positions a
+        WHERE ((a.org_id = $pkID)$whereCls)";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
 ?>

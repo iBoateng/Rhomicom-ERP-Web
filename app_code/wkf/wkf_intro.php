@@ -1,14 +1,18 @@
 <?php
 
-$menuItems = array("Workflow Apps", "Workflow Hierarchies", "Workflow Notifications");
-$menuImages = array("chcklst4.png", "bb_flow.gif", "openfileicon.png", "98.png");
+$menuItems = array("Workflow Apps", "Workflow Hierarchies", "Approver Groups", "Workflow Notifications");
+$menuImages = array("modules.png", "bb_flow.gif", "chng_prvdr.ico", "openfileicon.png");
 
 $mdlNm = "Workflow Manager";
 $ModuleName = $mdlNm;
 
 $dfltPrvldgs = array("View Workflow Manager", "View Workflow Apps",
-    /* 2 */ "View Workflow Hierarchies", "View Workflow Notifications",
-    "View Record History", "View SQL");
+    /* 2 */ "View Workflow Hierarchies", "View Approver Groups",
+    /* 4 */ "View Workflow Notifications", "View Record History", "View SQL",
+    /* 7 */ "Add Workflow Apps", "Edit Workflow Apps", "Delete Workflow Apps",
+    /* 10 */ "Add Workflow Hierarchies", "Edit Workflow Hierarchies", "Delete Workflow Hierarchies",
+    /* 13 */ "Add Approver Groups", "Edit Approver Groups", "Delete Approver Groups",
+    /* 16 */ "Administer Notifications", "Administer Workflow Setups");
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
 
@@ -399,6 +403,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         continue;
                     } else if ($i == 2 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
                         continue;
+                    } else if ($i == 3 && test_prmssns($dfltPrvldgs[4], $mdlNm) == FALSE) {
+                        continue;
                     }
                     if ($grpcntr == 0) {
                         $cntent .= "<div class=\"row\">";
@@ -418,7 +424,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         $grpcntr = $grpcntr + 1;
                     }
                 }
-
                 $cntent .= "
       </p>
     </div>";
@@ -428,6 +433,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             } else if ($pgNo == 2) {
                 require "wkf_hrchy.php";
             } else if ($pgNo == 3) {
+                require "wkf_aprvr_grps.php";
+            } else if ($pgNo == 4) {
                 require "wkf_msgs.php";
             } else {
                 restricted();
@@ -458,7 +465,14 @@ function get_WkfAppsTblr($searchFor, $searchIn, $offset, $limit_size) {
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
-
+function get_WkfAppsDet($pkID) {
+    $sqlStr = "SELECT app_id mt, app_name, source_module, app_desc application_description, 
+        created_by mt, creation_date mt " .
+            "FROM wkf.wkf_apps " .
+            "WHERE (app_id= $pkID)";
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
 function get_WkfAppsTtl($searchFor, $searchIn) {
 
     $wherecls = "";

@@ -217,11 +217,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </span>
                                 </a>
                                 <!-- /input-group -->
-                            </li>
+                            </li>  
                             <li class="nav-item  ">
                                 <a href="index.php" style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-home fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Home Page</span>
+                                </a>
+                            </li>                          
+                            <li class="nav-item  ">
+                                <a href="javascript: logOutFunc();" style="<?php echo $forecolors; ?>">
+                                    <i class="fa fa-sign-out fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                    <span class="title">Logout (<?php echo $usrName; ?>)</span>
                                 </a>
                             </li>
                             <li class="nav-item  ">
@@ -248,20 +254,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </li>
                                 </ul>
                                 <!-- /.nav-second-level -->
-                            </li>
-                            <li class="nav-item  ">
-                                <a href="javascript: logOutFunc();" style="<?php echo $forecolors; ?>">
-                                    <i class="fa fa-sign-out fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                    <span class="title">Logout (<?php echo $usrName; ?>)</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:openATab('#myinbox', 'grp=40&typ=2');" class="nav-link " style="<?php echo $forecolors; ?>">
-                                    <i class="fa fa-envelope fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                    <span class="title">Inbox/Worklist</span>
-                                    <span class="badge bg-success" style="background-color: lime;float:right;">7</span>
-                                </a>
-                            </li>
+                            </li>                            
                             <?php if ($canViewSelfsrvc) { ?>
                                 <li class="nav-item  ">
                                     <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
@@ -270,6 +263,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
                                     </a>
                                     <ul class="sub-menu">
+                                        <li class="nav-item  ">
+                                            <a href="javascript:openATab('#myinbox', 'grp=40&typ=2');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                                <i class="fa fa-envelope fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                                <span class="title">Inbox/Worklist</span>
+                                                <span class="badge bg-success" style="background-color: lime;float:right;">7</span>
+                                            </a>
+                                        </li>
                                         <li class="nav-item  ">
                                             <a href="javascript:openATab('#allmodules', 'grp=8&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
                                                 <span class="title">Personal Records</span>
@@ -284,21 +284,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <a href="javascript:openATab('#allmodules', 'grp=16&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
                                                 <span class="title">Events/Attendances</span>
                                             </a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.nav-second-level -->
-                                </li>
-                            <?php } ?>
-                            <?php
-                            if ($canViewEvote || $canViewELbry) {
-                                ?>
-                                <li class="nav-item  ">
-                                    <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
-                                        <i class="fa fa-files-o fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                        <span class="title">e-Systems</span>
-                                        <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
-                                    </a>
-                                    <ul class="sub-menu">
+                                        </li>                                 
                                         <?php if ($canViewEvote) { ?>
                                             <li class="nav-item  ">
                                                 <a href="javascript:openATab('#allmodules', 'grp=19&typ=10');" class="nav-link " style="<?php echo $forecolors; ?>">
@@ -314,6 +300,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </li>
                                         <?php } ?>
                                     </ul>
+                                    <!-- /.nav-second-level -->
                                 </li>
                             <?php } ?>
                             <!--<li class="nav-item  ">
@@ -456,7 +443,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <?php } ?>
                                         <?php if ($canViewLov) { ?>
                                             <li class="nav-item  ">
-                                                <a href="javascript:openATab('#allmodules', 'grp=4&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">  
+                                                <a href="javascript:openATab('#allmodules', 'grp=4&typ=1&pg=1&vtyp=0');" class="nav-link " style="<?php echo $forecolors; ?>">  
                                                     <i class="fa fa-list-ul fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                                     <span class="title">Value Lists Setup</span>
                                                 </a>
