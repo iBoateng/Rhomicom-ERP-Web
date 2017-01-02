@@ -8,7 +8,8 @@ function prepareProfile(lnkArgs, htBody, targ, rspns)
     {
         prepareProfileEDT(lnkArgs, htBody, targ, rspns);
     } else if (lnkArgs.indexOf("&pg=5") !== -1
-            || lnkArgs.indexOf("&pg=6") !== -1)
+            || lnkArgs.indexOf("&pg=6") !== -1
+            || lnkArgs.indexOf("&pg=8") !== -1)
     {
         loadScript("app/prs/prsn_admin.js?v=110", function () {
             prepareDataAdmin(lnkArgs, htBody, targ, rspns);

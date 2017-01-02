@@ -4,7 +4,8 @@ function prepareDataAdmin(lnkArgs, htBody, targ, rspns)
     $(targ).html(rspns);
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
-        if (lnkArgs.indexOf("&vtyp=0") !== -1)
+        if (lnkArgs.indexOf("&pg=5&vtyp=0") !== -1
+            || lnkArgs.indexOf("&pg=6&vtyp=0") !== -1)
         {
             var table1 = $('#dataAdminTable').DataTable({
                 "paging": false,
@@ -15,6 +16,20 @@ function prepareDataAdmin(lnkArgs, htBody, targ, rspns)
             });
             $('#dataAdminTable').wrap('<div class="dataTables_scroll"/>');
             $('#dataAdminForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+        }else if (lnkArgs.indexOf("&pg=8&vtyp=0") !== -1)
+        {
+            var table1 = $('#extrDtColsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#extrDtColsTable').wrap('<div class="dataTables_scroll"/>');
+            $('#extrDtColsForm').submit(function (e) {
                 e.preventDefault();
                 return false;
             });

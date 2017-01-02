@@ -262,7 +262,6 @@ if ($lgn_num > 0 && $canview === true) {
             if ($grpcntr == 0) {
                 $cntent .= "<div class=\"row\">";
             }
-            //showPageDetails('$pageHtmlID', $No);
             if ($i == 5) {
                 $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$No&vtyp=1');\">
@@ -285,7 +284,6 @@ if ($lgn_num > 0 && $canview === true) {
                 $grpcntr = $grpcntr + 1;
             }
         }
-
         $cntent .= "
       </p>
     </div>";
@@ -327,11 +325,6 @@ if ($lgn_num > 0 && $canview === true) {
                                        </ul>
                                      </div>" . "Send Bulk Messages";
         } else if ($pgNo == 8) {
-            echo $cntent . "<li onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\">
-						<span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span><span style=\"text-decoration:none;\">Additional Data Setup</span>
-					</li>
-                                       </ul>
-                                     </div>";
             require 'addtnl_data_stps.php';
         } else {
             restricted();
@@ -1012,6 +1005,17 @@ function get_PrsExtrDataGrpCols($grpnm, $org_ID) {
         FROM prs.prsn_extra_data_cols 
         WHERE column_data_category= '" . loc_db_escape_string($grpnm) .
             "' and org_id = " . $org_ID . " and column_label !='' ORDER BY col_order, column_no, extra_data_cols_id";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_AllPrsExtrDataCols($org_ID) {
+    $strSql = "SELECT extra_data_cols_id, column_no, column_label, attchd_lov_name, 
+       column_data_type, column_data_category, data_length, 
+       CASE WHEN data_dsply_type='T' THEN 'Tabular' ELSE 'Detail' END, 
+       org_id, no_cols_tblr_dsply, col_order, csv_tblr_col_nms, is_required 
+        FROM prs.prsn_extra_data_cols 
+        WHERE org_id = " . $org_ID . " ORDER BY column_no, extra_data_cols_id";
     $result = executeSQLNoParams($strSql);
     return $result;
 }

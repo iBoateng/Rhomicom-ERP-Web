@@ -409,13 +409,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     if ($grpcntr == 0) {
                         $cntent .= "<div class=\"row\">";
                     }
-
-                    $cntent .= "<div class=\"col-md-3 colmd3special2\">
+                    if ($i == 3) {
+                        $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=40&typ=2&pg=$No&vtyp=2&qMaster=1');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+            </div>";
+                    } else {
+                        $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$No&vtyp=0');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
             </div>";
+                    }
+
 
                     if ($grpcntr == 3) {
                         $cntent .= "</div>";
@@ -435,7 +444,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             } else if ($pgNo == 3) {
                 require "wkf_aprvr_grps.php";
             } else if ($pgNo == 4) {
-                require "wkf_msgs.php";
+                require $fldrPrfx . "app_code/cmncde/myinbx.php";
             } else {
                 restricted();
             }
@@ -465,6 +474,7 @@ function get_WkfAppsTblr($searchFor, $searchIn, $offset, $limit_size) {
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
+
 function get_WkfAppsDet($pkID) {
     $sqlStr = "SELECT app_id mt, app_name, source_module, app_desc application_description, 
         created_by mt, creation_date mt " .
@@ -473,6 +483,7 @@ function get_WkfAppsDet($pkID) {
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
+
 function get_WkfAppsTtl($searchFor, $searchIn) {
 
     $wherecls = "";
@@ -747,9 +758,22 @@ function get_PosHrchyDetID($pkID, $postnID, $hrchyLvl) {
 
 function get_HrchyCntntMnl($pkID) {
     $sqlStr = "SELECT mnl_hrchy_det_id mt, 
-        prs.get_prsn_loc_id(person_id) \"ID No.\", 
-        prs.get_prsn_name(person_id) full_name, 
-        hrchy_level,is_enabled
+        CASE WHEN a.apprvr_group_id > 0 THEN 'Group' 
+             WHEN a.position_id>0 THEN 'Position Holder' 
+             ELSE 'Individual' 
+         END apprv_typ,
+         CASE WHEN a.apprvr_group_id > 0 THEN 
+         (Select z.group_name from wkf.wkf_apprvr_groups z where z.apprvr_group_id = a.apprvr_group_id)
+              WHEN a.position_id>0 THEN 
+                org.get_pos_name(a.position_id) 
+              ELSE prs.get_prsn_name(a.person_id) || ' ('||prs.get_prsn_loc_id(a.person_id)||')' 
+          END apprvr_name,
+          CASE WHEN a.apprvr_group_id > 0 THEN a.apprvr_group_id::bigint 
+               WHEN a.position_id>0 THEN a.position_id::bigint 
+               ELSE a.person_id 
+        END apprv_id,
+            hrchy_level,
+            is_enabled
   FROM wkf.wkf_manl_hierarchy_details a
   WHERE (a.hierarchy_id = " . $pkID . ") ORDER BY a.hrchy_level";
 //echo $sqlStr;
@@ -764,7 +788,7 @@ function get_HrchyCntntPos($pkID) {
         hrchy_level, is_enabled
   FROM wkf.wkf_pstn_hierarchy_details a
   WHERE (a.hierarchy_id = " . $pkID . ") ORDER BY a.hrchy_level";
-//echo $sqlStr;
+
     $result = executeSQLNoParams($sqlStr);
     return $result;
 }
@@ -781,7 +805,7 @@ function get_WkfHrchyDet($pkID) {
 
 function get_WkfHrchyTblr($searchFor, $searchIn, $offset, $limit_size) {
 
-    $wherecls = "";
+    $wherecls = "1=1";
 //"Message Header", "Message Date", "Message Status", "Source App", "Source Module"
     if ($searchIn === "Name") {
         $wherecls = "hierarchy_name ilike '" .
@@ -800,7 +824,7 @@ function get_WkfHrchyTblr($searchFor, $searchIn, $offset, $limit_size) {
 }
 
 function get_WkfHrchyTtl($searchFor, $searchIn) {
-    $wherecls = "";
+    $wherecls = "1=1";
 //"Message Header", "Message Date", "Message Status", "Source App", "Source Module"
     if ($searchIn === "Name") {
         $wherecls = "hierarchy_name ilike '" .
@@ -818,6 +842,167 @@ function get_WkfHrchyTtl($searchFor, $searchIn) {
         return $row[0];
     }
     return 0;
+}
+
+function get_WkfGrpMembers($pkID) {
+    $sqlStr = "SELECT member_id mt, 
+        prs.get_prsn_loc_id(person_id) \"ID No.\", 
+        prs.get_prsn_name(person_id) full_name, 
+        is_enabled
+  FROM wkf.wkf_apprvr_group_members a
+  WHERE (a.apprvr_group_id = " . $pkID . ") ORDER BY a.person_id";
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_WkfApprvrGrps($searchFor, $searchIn, $offset, $limit_size) {
+    $wherecls = "";
+//"Message Header", "Message Date", "Message Status", "Source App", "Source Module"
+    if ($searchIn === "Name") {
+        $wherecls = "group_name ilike '" .
+                loc_db_escape_string($searchFor) . "'";
+    } else if ($searchIn === "Description") {
+        $wherecls = "group_description ilike '" .
+                loc_db_escape_string($searchFor) . "'";
+    }
+
+    $sqlStr = "SELECT apprvr_group_id , group_name, group_description, "
+            . "linked_firm_id, scm.get_cstmr_splr_name(linked_firm_id), is_enabled " .
+            "FROM wkf.wkf_apprvr_groups " .
+            "WHERE ($wherecls) ORDER BY group_name 
+ LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_WkfApprvrGrpDet($pkID) {
+    $sqlStr = "SELECT apprvr_group_id , group_name, group_description, "
+            . "linked_firm_id, scm.get_cstmr_splr_name(linked_firm_id), is_enabled " .
+            "FROM wkf.wkf_apprvr_groups " .
+            "WHERE (apprvr_group_id=$pkID)";
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_WkfApprvrGrpsTtl($searchFor, $searchIn) {
+    $wherecls = "";
+//"Message Header", "Message Date", "Message Status", "Source App", "Source Module"
+    if ($searchIn === "Name") {
+        $wherecls = "group_name ilike '" .
+                loc_db_escape_string($searchFor) . "'";
+    } else if ($searchIn === "Description") {
+        $wherecls = "group_description ilike '" .
+                loc_db_escape_string($searchFor) . "'";
+    }
+
+    $sqlStr = "SELECT count(1) " .
+            "FROM wkf.wkf_apprvr_groups " .
+            "WHERE ($wherecls)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function createWkfApprvrGrps($grpNm, $grpDesc, $lnkdFrmID, $isEnbld) {
+    global $usrID;
+    global $orgID;
+    $dateStr = getDB_Date_time();
+
+    $insSQL = "INSERT INTO wkf.wkf_apprvr_groups(
+            group_name, group_description, linked_firm_id, 
+            org_id, is_enabled, created_by, creation_date, last_update_by, 
+            last_update_date) " .
+            "VALUES ('" . loc_db_escape_string($grpNm)
+            . "', '" . loc_db_escape_string($grpDesc)
+            . "'," . $lnkdFrmID . "," . $orgID
+            . ", '" . loc_db_escape_string($isEnbld)
+            . "'," . $usrID . ", '" . $dateStr
+            . "', " . $usrID . ", '" . $dateStr
+            . "')";
+
+    execUpdtInsSQL($insSQL);
+}
+
+function updateWkfApprvrGrps($grpID, $grpNm, $grpDesc, $lnkdFrmID, $isEnbld) {
+    global $usrID;
+    global $orgID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "UPDATE wkf.wkf_apprvr_groups SET 
+            group_name='" . loc_db_escape_string($grpNm)
+            . "', group_description='" . loc_db_escape_string($grpDesc)
+            . "', last_update_by=$usrID, last_update_date='$dateStr', 
+                linked_firm_id=" . $lnkdFrmID
+            . ", org_id=" . $orgID . ", is_enabled='" . loc_db_escape_string($isEnbld) .
+            "' WHERE apprvr_group_id = " . $grpID;
+    execUpdtInsSQL($insSQL);
+}
+
+function deleteWkfApprvrGrps($grpID) {
+    $affctd1 = 0;
+    $affctd2 = 0;
+    $affctd3 = 0;
+
+    $insSQL = "DELETE FROM wkf.wkf_apprvr_group_members WHERE apprvr_group_id = " . $grpID;
+    $affctd1 += execUpdtInsSQL($insSQL);
+    $insSQL = "DELETE FROM wkf.wkf_apprvr_groups WHERE apprvr_group_id = " . $grpID;
+    $affctd3 += execUpdtInsSQL($insSQL);
+    if ($affctd3 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd2 Group Member(s) Deleted!";
+        $dsply .= "<br/>$affctd3 Approver Group(s) Deleted!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function createWkfGrpMembers($grpID, $prsnID, $isEnbld) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO wkf.wkf_apprvr_group_members(
+            apprvr_group_id, person_id, created_by, 
+            creation_date, last_update_by, last_update_date, is_enabled) " .
+            "VALUES ($grpID, $prsnID, " . $usrID . ", '" . $dateStr
+            . "', " . $usrID . ", '" . $dateStr
+            . "', '" . loc_db_escape_string($isEnbld) . "')";
+    execUpdtInsSQL($insSQL);
+}
+
+function updateWkfGrpMembers($memberID, $prsnID, $isEnbld) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "UPDATE wkf.wkf_apprvr_group_members SET 
+            person_id=$prsnID, "
+            . "last_update_by=$usrID, last_update_date='$dateStr', 
+            is_enabled='" . loc_db_escape_string($isEnbld) .
+            "' WHERE member_id = " . $memberID;
+    execUpdtInsSQL($insSQL);
+}
+
+function deleteWkfGrpMembers($memberID) {
+    $insSQL = "DELETE FROM wkf.wkf_apprvr_group_members WHERE member_id = " . $memberID;
+    $affctd1 += execUpdtInsSQL($insSQL);
+    if ($affctd1 > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd1 Group Member(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function getLnkdFrmApprvrGrpID($lnkdFrmID) {
+    $selSQL = "select apprvr_group_id 
+from wkf.wkf_apprvr_groups where (linked_firm_id=" . $lnkdFrmID . ")";
+    $result1 = executeSQLNoParams($selSQL);
+    while ($row = loc_db_fetch_array($result1)) {
+        return (float) $row[0];
+    }
+    return -1;
 }
 
 ?>

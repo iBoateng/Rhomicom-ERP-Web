@@ -194,7 +194,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="wkfDetAppNm" class="control-label col-lg-4">Application Name:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtWkfAp === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="wkfDetAppID" name="wkfDetAppID" value="<?php echo $row1[0]; ?>">
                                                                 <?php } else {
                                                                     ?>
@@ -237,7 +237,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="wkfDetAppDesc" class="control-label col-lg-2">Description:</label>
                                                             <div  class="col-lg-10">
                                                                 <?php if ($canEdtWkfAp === true) { ?>
-                                                                    <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%" cols="9" rows="2"><?php echo $row1[3]; ?></textarea>
+                                                                    <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%;" cols="9" rows="2"><?php echo $row1[3]; ?></textarea>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[3]; ?></span>
@@ -344,7 +344,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <td class="lovtd">
                                                                             <?php if ($canEdtWkfAp === true) { ?>
                                                                                 <div class="form-group form-group-sm" style="width:100% !important;">
-                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%" cols="7" rows="2"><?php echo $row2[2]; ?></textarea>
+                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%;" cols="7" rows="2"><?php echo $row2[2]; ?></textarea>
                                                                                 </div>
                                                                             <?php } else { ?>
                                                                                 <span class="normaltd"><?php echo $row2[2]; ?></span>
@@ -353,7 +353,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <td class="lovtd">
                                                                             <?php if ($canEdtWkfAp === true) { ?>
                                                                                 <div class="form-group form-group-sm" style="width:100% !important;">
-                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%" cols="7" rows="2"><?php echo $row2[3]; ?></textarea>
+                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%;" cols="7" rows="2"><?php echo $row2[3]; ?></textarea>
                                                                                 </div>
                                                                             <?php } else { ?>
                                                                                 <span class="normaltd"><?php echo $row2[3]; ?></span>
@@ -362,7 +362,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         <td class="lovtd">
                                                                             <?php if ($canEdtWkfAp === true) { ?>
                                                                                 <div class="form-group form-group-sm" style="width:100% !important;">
-                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%" cols="7" rows="2"><?php echo $row2[10]; ?></textarea>
+                                                                                    <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%;" cols="7" rows="2"><?php echo $row2[10]; ?></textarea>
                                                                                 </div>
                                                                             <?php } else { ?>
                                                                                 <span class="normaltd"><?php echo $row2[10]; ?></span>
@@ -456,7 +456,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="wkfDetAppNm" class="control-label col-lg-4">Application Name:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtWkfAp === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                 <input type="hidden" class="form-control" aria-label="..." id="wkfDetAppID" name="wkfDetAppID" value="<?php echo $row1[0]; ?>">
                                             <?php } else {
                                                 ?>
@@ -499,7 +499,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="wkfDetAppDesc" class="control-label col-lg-2">Description:</label>
                                         <div  class="col-lg-10">
                                             <?php if ($canEdtWkfAp === true) { ?>
-                                                <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%" cols="9" rows="2"><?php echo $row1[3]; ?></textarea>
+                                                <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%;" cols="9" rows="2"><?php echo $row1[3]; ?></textarea>
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[3]; ?></span>
@@ -606,7 +606,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd">
                                                         <?php if ($canEdtWkfAp === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;">
-                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%" cols="7" rows="2"><?php echo $row2[2]; ?></textarea>
+                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%;" cols="7" rows="2"><?php echo $row2[2]; ?></textarea>
                                                             </div>
                                                         <?php } else { ?>
                                                             <span class="normaltd"><?php echo $row2[2]; ?></span>
@@ -615,7 +615,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd">
                                                         <?php if ($canEdtWkfAp === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;">
-                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%" cols="7" rows="2"><?php echo $row2[3]; ?></textarea>
+                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%;" cols="7" rows="2"><?php echo $row2[3]; ?></textarea>
                                                             </div>
                                                         <?php } else { ?>
                                                             <span class="normaltd"><?php echo $row2[3]; ?></span>
@@ -624,7 +624,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd">
                                                         <?php if ($canEdtWkfAp === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;">
-                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%" cols="7" rows="2"><?php echo $row2[10]; ?></textarea>
+                                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%;" cols="7" rows="2"><?php echo $row2[10]; ?></textarea>
                                                             </div>
                                                         <?php } else { ?>
                                                             <span class="normaltd"><?php echo $row2[10]; ?></span>
@@ -711,7 +711,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="wkfDetAppNm" class="control-label col-lg-4">Application Name:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="" style="width:100%;">
                                     <input type="hidden" class="form-control" aria-label="..." id="wkfDetAppID" name="wkfDetAppID" value="-1">
                                 </div>
                             </div>
@@ -740,7 +740,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="wkfDetAppDesc" class="control-label col-lg-2">Description:</label>
                                 <div  class="col-lg-10">
-                                    <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%" cols="9" rows="2"></textarea>
+                                    <textarea class="form-control" aria-label="..." id="wkfDetAppDesc" name="wkfDetAppDesc" style="width:100%;" cols="9" rows="2"></textarea>
                                 </div>
                             </div>
                         </fieldset>
@@ -827,17 +827,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </td>
                                         <td class="lovtd">
                                             <div class="form-group form-group-sm" style="width:100% !important;">
-                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%" cols="7" rows="2"></textarea>
+                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%;" cols="7" rows="2"></textarea>
                                             </div>
                                         </td>
                                         <td class="lovtd">
                                             <div class="form-group form-group-sm" style="width:100% !important;">
-                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%" cols="7" rows="2"></textarea>
+                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%;" cols="7" rows="2"></textarea>
                                             </div>
                                         </td>
                                         <td class="lovtd">
                                             <div class="form-group form-group-sm" style="width:100% !important;">
-                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%" cols="7" rows="2"></textarea>
+                                                <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%;" cols="7" rows="2"></textarea>
                                             </div>
                                         </td>
                                         <td>

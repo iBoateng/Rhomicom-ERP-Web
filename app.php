@@ -248,7 +248,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </a>
                                     </li>
                                     <li class="nav-item  ">
-                                        <a href="javascript:openATab('#allmodules', 'grp=9&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                        <a href="javascript:openATab('#allmodules', 'grp=9&typ=1&pg=1&vtyp=0');" class="nav-link " style="<?php echo $forecolors; ?>">
                                             <span class="title">Reports/Processes</span>
                                         </a>
                                     </li>
@@ -555,6 +555,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <h4 class="modal-title" id="myLovModalTitle"></h4>
                             </div>
                             <div class="modal-body" id="myLovModalBody" style="min-height: 100px;border-bottom: none !important;"></div>
+                            <div class="modal-footer" style="border-top: none !important;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="myFormsModalNrml" tabindex="-1" role="dialog" aria-labelledby="myFormsModalNrmlTitle" style="z-index: 9995 !important;">
+                    <div class="modal-dialog" role="document" id="myFormsModalNrmlDiag" style="min-width:340px;max-width:90%;width:60%;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myFormsModalNrmlTitle"></h4>
+                            </div>
+                            <div class="modal-body" id="myFormsModalNrmlBody" style="min-height: 100px;border-bottom: none !important;"></div>
                             <div class="modal-footer" style="border-top: none !important;">
                             </div>
                         </div>

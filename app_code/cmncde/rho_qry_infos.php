@@ -1,5 +1,4 @@
 <?php
-
 $usrID = $_SESSION['USRID'];
 
 $rowID1 = isset($_POST['rowID']) ? $_POST['rowID'] : "-1";
@@ -494,7 +493,95 @@ if ($usrID > 0) {
         echo getDivGrpTyp($in_val);
     } else if ($qryNm == "Report Log Message") {
         $in_val = isset($_POST['run_id']) ? $_POST['run_id'] : "-1";
-        echo "<div style=\"min-width:700px;\" ><code style=\"font-weight:regular;font-size:12px;font-family:'Courier New';\" >" . str_replace("\r\n", "<br/>", getLogMsg(getLogMsgID("rpt.rpt_run_msgs", "Process Run", $in_val), "rpt.rpt_run_msgs")) . "</code></div>";
+        $rptID = getGnrlRecNm("rpt.rpt_report_runs", "rpt_run_id", "report_id", $in_val);
+        $prvRunID = $in_val;
+        $pkID = $rptID;
+        $reportName = getGnrlRecNm("rpt.rpt_reports", "report_id", "report_name", $pkID);
+        $rptOutPut = getGnrlRecNm("rpt.rpt_reports", "report_id", "output_type", $pkID);
+        $rptOrntn = getGnrlRecNm("rpt.rpt_reports", "report_id", "portrait_lndscp", $pkID);
+        $result = get_AllParams1($pkID);
+        $sysParaIDs = array("-130", "-140", "-150", "-160", "-170", "-180", "-190", "-200");
+        $sysParaNames = array("Report Title:", "Cols Nos To Group or Width & Height (Px) for Charts:",
+            "Cols Nos To Count or Use in Charts:", "Columns To Sum:", "Columns To Average:",
+            "Columns To Format Numerically:", "Report Output Formats", "Report Orientations");
+
+        $paramIDs = getGnrlRecNm("rpt.rpt_report_runs", "rpt_run_id", "rpt_rn_param_ids", $prvRunID);
+        $paramVals = getGnrlRecNm("rpt.rpt_report_runs", "rpt_run_id", "rpt_rn_param_vals", $prvRunID);
+
+        $arry1 = explode("|", $paramIDs);
+        $arry2 = explode("|", $paramVals);
+        $cntr = 0;
+        $curIdx = 0;
+        ?>
+        <div class="row">                                                             
+            <table class="table table-striped table-bordered table-responsive" id="rptParamsLogTable" cellspacing="0" width="100%" style="width:100%;min-width: 130px;">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Parameter Name</th>
+                        <th style="min-width:180px !important;">Parameter Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    while ($row = loc_db_fetch_array($result)) {
+                        $cntr += 1;
+                        $isrqrd = "";
+                        if ($row[4] == "1") {
+                            $isrqrd = "rqrdFld";
+                        }
+                        $nwval1 = $row[3];
+                        if ($prvRunID > 0) {
+                            $h1 = findArryIdx444($arry1, $row[0]);
+                            if ($h1 >= 0) {
+                                $nwval1 = $arry2[$h1];
+                            }
+                        }
+                        $lovnm = $row[6];
+                        $dataTyp = $row[7];
+                        $dtFrmt = $row[8];
+                        ?>
+                        <tr id="rptParamsLogRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
+                            <td class="lovtd"><?php echo ($cntr); ?></td>
+                            <td class="lovtd"><?php echo $row[1]; ?></td>
+                            <td class="lovtd"><?php echo $nwval1; ?></td>
+                        </tr>
+                        <?php
+                    }
+                    $result1 = get_Rpt_ColsToAct1($pkID);
+                    $colNoVals = array("", "", "", "", "", "", "", "");
+                    $colsCnt = loc_db_num_fields($result1);
+                    while ($row1 = loc_db_fetch_array($result1)) {
+                        for ($d = 0; $d < $colsCnt; $d++) {
+                            if ($prvRunID > 0) {
+                                $h1 = findArryIdx444($arry1, $sysParaIDs[$d]);
+                                if ($h1 >= 0) {
+                                    $colNoVals[$d] = $arry2[$h1];
+                                } else {
+                                    $colNoVals[$d] = $row1[$d];
+                                }
+                            } else {
+                                $colNoVals[$d] = $row1[$d];
+                            }
+                        }
+                    }
+                    for ($d = 0; $d < count($colNoVals); $d++) {
+                        $cntr ++;
+                        $isrqrd = "";
+                        ?>
+                        <tr id="rptParamsLogRow_<?php echo $cntr; ?>" class="hand_cursor">
+                            <td class="lovtd"><?php echo ($cntr); ?></td>
+                            <td class="lovtd"><?php echo $sysParaNames[$d]; ?><input type="hidden" class="form-control" aria-label="..." id="rptParamsRow<?php echo $cntr; ?>_ParamID" value="<?php echo $sysParaIDs[$d]; ?>"></td>
+                            <td class="lovtd"><?php echo $colNoVals[$d]; ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        if (test_prmssns("View Runs from Others", "Reports And Processes") && test_prmssns("Edit Report/Process", "Reports And Processes")) {
+            echo "<div class=\"row\" style=\"min-width:100px;\" ><code style=\"font-weight:regular;font-size:14px;font-family:'Courier New';color: #333;background-color: #fff;\" >" . str_replace("\r\n", "<br/>", getLogMsg(getLogMsgID("rpt.rpt_run_msgs", "Process Run", $in_val), "rpt.rpt_run_msgs")) . "</code></div>";
+        }
     } else if ($qryNm == "Report Run Output") {
         $in_val = isset($_POST['run_id']) ? $_POST['run_id'] : "-1";
         $dfltPrvldgs111 = array("View Runs from Others");
@@ -555,5 +642,29 @@ if ($usrID > 0) {
     } else {
         //restricted();
     }
+}
+
+function get_AllParams1($rptID) {
+    $strSql = "SELECT parameter_id , parameter_name, paramtr_rprstn_nm_in_query mt, default_value, 
+ is_required mt, lov_name_id, lov_name, param_data_type, date_format FROM rpt.rpt_report_parameters WHERE report_id = $rptID ORDER BY parameter_name";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_Rpt_ColsToAct1($rptID) {
+    $strSql = "SELECT report_name, cols_to_group, cols_to_count, cols_to_sum, cols_to_average, cols_to_no_frmt,
+        output_type, portrait_lndscp
+      FROM rpt.rpt_reports WHERE report_id = $rptID";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function findArryIdx444($arry1, $srch) {
+    for ($i = 0; $i < count($arry1); $i++) {
+        if ($arry1[$i] == $srch) {
+            return $i;
+        }
+    }
+    return -1;
 }
 ?>

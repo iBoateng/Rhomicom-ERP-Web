@@ -199,7 +199,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td>
                                                 <?php if ($canEdtRoles === true) { ?>
                                                     <div class="form-group form-group-sm col-md-12">
-                                                        <input type="text" class="form-control" aria-label="..." id="allRolesEdtRow<?php echo $cntr; ?>_RoleNm" name="allRolesEdtRow<?php echo $cntr; ?>_RoleNm" value="<?php echo $row[1]; ?>" style="width:100%">
+                                                        <input type="text" class="form-control" aria-label="..." id="allRolesEdtRow<?php echo $cntr; ?>_RoleNm" name="allRolesEdtRow<?php echo $cntr; ?>_RoleNm" value="<?php echo $row[1]; ?>" style="width:100%;">
                                                         <input type="hidden" class="form-control" aria-label="..." id="allRolesEdtRow<?php echo $cntr; ?>_RoleID" name="allRolesEdtRow<?php echo $cntr; ?>_RoleID" value="<?php echo $row[0]; ?>">
                                                     </div>
                                                 <?php } else { ?>
@@ -209,7 +209,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td>
                                                 <?php if ($canEdtRoles === true) { ?>
                                                     <div class="form-group form-group-sm col-md-12">
-                                                        <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
+                                                        <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                             <input class="form-control" size="16" type="text" id="allRolesEdtRow<?php echo $cntr; ?>_StrtDte" name="allRolesEdtRow<?php echo $cntr; ?>_StrtDte" value="<?php echo $row[2]; ?>" readonly="">
                                                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -222,7 +222,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td>
                                                 <?php if ($canEdtRoles === true) { ?>
                                                     <div class="form-group form-group-sm col-md-12">
-                                                        <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
+                                                        <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                             <input class="form-control" size="16" type="text" id="allRolesEdtRow<?php echo $cntr; ?>_EndDte" name="allRolesEdtRow<?php echo $cntr; ?>_EndDte" value="<?php echo $row[3]; ?>" readonly="">
                                                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -431,7 +431,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td>
                                                         <?php if ($canEdtRoles === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">                                                                
-                                                                <input type="text" class="form-control" aria-label="..." id="rolePrvldgsEdtRow<?php echo $cntr; ?>_PrvldgNm" name="rolePrvldgsEdtRow<?php echo $cntr; ?>_PrvldgNm" value="<?php echo $row1[2]; ?>" style="width:100%" readonly="">
+                                                                <input type="text" class="form-control" aria-label="..." id="rolePrvldgsEdtRow<?php echo $cntr; ?>_PrvldgNm" name="rolePrvldgsEdtRow<?php echo $cntr; ?>_PrvldgNm" value="<?php echo $row1[2]; ?>" style="width:100%;" readonly="">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="rolePrvldgsEdtRow<?php echo $cntr; ?>_PrvldgID" name="rolePrvldgsEdtRow<?php echo $cntr; ?>_PrvldgID" value="<?php echo $row1[1]; ?>">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="rolePrvldgsEdtRow<?php echo $cntr; ?>_DfltRowID" name="rolePrvldgsEdtRow<?php echo $cntr; ?>_DfltRowID" value="<?php echo $row1[0]; ?>">
                                                             </div>
@@ -443,7 +443,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td>
                                                         <?php if ($canEdtRoles === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
-                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
+                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                                     <input class="form-control" size="16" type="text" id="rolePrvldgsEdtRow<?php echo $cntr; ?>_StrtDte" value="<?php echo $row1[4]; ?>" readonly="">
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -456,7 +456,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td>
                                                         <?php if ($canEdtRoles === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
-                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
+                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                                     <input class="form-control" size="16" type="text" id="rolePrvldgsEdtRow<?php echo $cntr; ?>_EndDte" value="<?php echo $row1[5]; ?>" readonly="">
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>

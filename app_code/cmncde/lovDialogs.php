@@ -23,6 +23,7 @@ $lovModalTitle = isset($_POST['lovModalTitle']) ? cleanInputData($_POST['lovModa
 $lovModalBody = isset($_POST['lovModalBody']) ? cleanInputData($_POST['lovModalBody']) : '';
 $addtnlWhere = isset($_POST['addtnlWhere']) ? cleanInputData($_POST['addtnlWhere']) : '';
 $colNoForChkBoxCmprsn = isset($_POST['colNoForChkBxCmprsn']) ? cleanInputData($_POST['colNoForChkBxCmprsn']) : 2;
+$callBackFunc = isset($_POST['callBackFunc']) ? cleanInputData($_POST['callBackFunc']) : 'function () {var tstabcd=1;}';
 $lovID = getLovID($lovNm);
 $sqlMsg = "";
 $isDynmc = "";
@@ -55,12 +56,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <div class="row" style="margin-bottom:10px;">
                 <div class="col-md-5" style="padding:0px 1px 0px 15px !important;">
                     <div class="input-group">
-                        <input class="form-control" id="lovSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncLov(event, '<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', '',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo str_replace("'", "\'", $addtnlWhere); ?>');">
+                        <input class="form-control" id="lovSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncLov(event, '<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', '',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);">
                         <input id="lovPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
-                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', 'clear',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo str_replace("'", "\'", $addtnlWhere); ?>');">
+                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', 'clear',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);">
                             <span class="glyphicon glyphicon-remove"></span>
                         </label>
-                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', '',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo str_replace("'", "\'", $addtnlWhere); ?>');">
+                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', '',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);">
                             <span class="glyphicon glyphicon-search"></span>
                         </label> 
                     </div>
@@ -109,12 +110,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <nav aria-label="Page navigation">
                         <ul class="pagination" style="margin: 0px !important;">
                             <li>
-                                <a href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','previous',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo str_replace("'", "\'", $addtnlWhere); ?>');" aria-label="Previous">
+                                <a href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','previous',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','next',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo str_replace("'", "\'", $addtnlWhere); ?>');" aria-label="Next">
+                                <a href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','next',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
@@ -165,7 +166,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             </div>
             <div class="row" style="float:right;padding-right: 15px;">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="applySlctdLov('<?php echo $modalElementID; ?>', 'lovForm', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>');">Apply Selection</button>
+                <button type="button" class="btn btn-primary" onclick="applySlctdLov('<?php echo $modalElementID; ?>', 'lovForm', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>',<?php echo $callBackFunc ?>);">Apply Selection</button>
             </div>
         </form>
         <?php

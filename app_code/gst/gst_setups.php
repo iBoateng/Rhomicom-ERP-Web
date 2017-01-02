@@ -209,7 +209,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="lovDetLovNm" class="control-label col-lg-4">Value List Name:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtGst === true) { ?>
-                                                                                        <input type="text" class="form-control" aria-label="..." id="lovDetLovNm" name="lovDetLovNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                                                        <input type="text" class="form-control" aria-label="..." id="lovDetLovNm" name="lovDetLovNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                                                         <input type="hidden" class="form-control" aria-label="..." id="lovDetLovID" name="lovDetLovID" value="<?php echo $row1[0]; ?>">
                                                                                     <?php } else {
                                                                                         ?>
@@ -223,7 +223,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="lovDetLovDesc" class="control-label col-lg-4">Value List Description:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtGst === true) { ?>
-                                                                                        <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%" cols="3" rows="3"><?php echo $row1[2]; ?></textarea>
+                                                                                        <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="3"><?php echo $row1[2]; ?></textarea>
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[2]; ?></span>
@@ -314,7 +314,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="lovDetSqlQry" class="control-label col-lg-2">SQL Query if Dynamic:</label>
                                                                                 <div  class="col-lg-10">
                                                                                     <?php if ($canEdtGst === true) { ?>
-                                                                                        <textarea class="form-control" aria-label="..." id="lovDetSqlQry" name="lovDetSqlQry" style="width:100%" cols="9" rows="10"><?php echo $row1[3]; ?></textarea>
+                                                                                        <textarea class="form-control" aria-label="..." id="lovDetSqlQry" name="lovDetSqlQry" style="width:100%;" cols="9" rows="10"><?php echo $row1[3]; ?></textarea>
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[3]; ?></span>
@@ -377,7 +377,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="lovDetLovNm" class="control-label col-lg-4">Value List Name:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtGst === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="lovDetLovNm" name="lovDetLovNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="lovDetLovNm" name="lovDetLovNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="lovDetLovID" name="lovDetLovID" value="<?php echo $row1[0]; ?>">
                                                                 <?php } else {
                                                                     ?>
@@ -391,7 +391,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="lovDetLovDesc" class="control-label col-lg-4">Value List Description:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtGst === true) { ?>
-                                                                    <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%" cols="3" rows="3"><?php echo $row1[2]; ?></textarea>
+                                                                    <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="3"><?php echo $row1[2]; ?></textarea>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[2]; ?></span>
@@ -482,7 +482,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="lovDetSqlQry" class="control-label col-lg-2">SQL Query if Dynamic:</label>
                                                             <div  class="col-lg-10">
                                                                 <?php if ($canEdtGst === true) { ?>
-                                                                    <textarea class="form-control" aria-label="..." id="lovDetSqlQry" name="lovDetSqlQry" style="width:100%" cols="9" rows="10"><?php echo $row1[3]; ?></textarea>
+                                                                    <textarea class="form-control" aria-label="..." id="lovDetSqlQry" name="lovDetSqlQry" style="width:100%;" cols="9" rows="10"><?php echo $row1[3]; ?></textarea>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[3]; ?></span>
@@ -528,14 +528,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="lovDetLovNm" class="control-label col-lg-4">Value List Name:</label>
                                                     <div  class="col-lg-8">
-                                                        <input type="text" class="form-control" aria-label="..." id="lovDetLovNm" name="lovDetLovNm" value="" style="width:100%">
+                                                        <input type="text" class="form-control" aria-label="..." id="lovDetLovNm" name="lovDetLovNm" value="" style="width:100%;">
                                                         <input type="hidden" class="form-control" aria-label="..." id="lovDetLovID" name="lovDetLovID" value="">
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="lovDetLovDesc" class="control-label col-lg-4">Value List Description:</label>
                                                     <div  class="col-lg-8">
-                                                        <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%" cols="3" rows="3"></textarea>
+                                                        <textarea class="form-control" aria-label="..." id="lovDetLovDesc" name="lovDetLovDesc" style="width:100%;" cols="3" rows="3"></textarea>
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -588,7 +588,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="lovDetSqlQry" class="control-label col-lg-2">SQL Query if Dynamic:</label>
                                                     <div  class="col-lg-10">
-                                                        <textarea class="form-control" aria-label="..." id="lovDetSqlQry" name="lovDetSqlQry" style="width:100%" cols="9" rows="10"></textarea>
+                                                        <textarea class="form-control" aria-label="..." id="lovDetSqlQry" name="lovDetSqlQry" style="width:100%;" cols="9" rows="10"></textarea>
                                                     </div>
                                                 </div>
                                             </fieldset>

@@ -176,7 +176,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnSmtpClnt" class="control-label col-lg-4">SMTP Client:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpClnt" name="srvrStnSmtpClnt" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpClnt" name="srvrStnSmtpClnt" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="srvrStnSmtpClntID" name="srvrStnSmtpClntID" value="<?php echo $row1[0]; ?>">
                                                                 <?php } else {
                                                                     ?>
@@ -190,7 +190,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnSndrsEmail" class="control-label col-lg-4">SENDER's Email:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSndrsEmail" name="srvrStnSndrsEmail" value="<?php echo $row1[2]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSndrsEmail" name="srvrStnSndrsEmail" value="<?php echo $row1[2]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[2]; ?></span>
@@ -203,7 +203,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnSndrsPswd" class="control-label col-lg-4">Password:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="<?php echo $row1[3]; ?>" style="width:100%">
+                                                                    <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="<?php echo $row1[3]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[3]; ?></span>
@@ -216,7 +216,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnSmtPort" class="control-label col-lg-8">Smtp Port No.:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="<?php echo $row1[4]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="<?php echo $row1[4]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[4]; ?></span>
@@ -251,7 +251,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnDomainNm" class="control-label col-lg-4">Domain Name:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnDomainNm" name="srvrStnDomainNm" value="<?php echo $row1[6]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnDomainNm" name="srvrStnDomainNm" value="<?php echo $row1[6]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[6]; ?></span>
@@ -264,7 +264,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnFTPUrl" class="control-label col-lg-4">FTP Server Url:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUrl" name="srvrStnFTPUrl" value="<?php echo $row1[7]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUrl" name="srvrStnFTPUrl" value="<?php echo $row1[7]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[7]; ?></span>
@@ -281,7 +281,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnFTPUsrNm" class="control-label col-lg-4">FTP Username:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUsrNm" name="srvrStnFTPUsrNm" value="<?php echo $row1[8]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUsrNm" name="srvrStnFTPUsrNm" value="<?php echo $row1[8]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[8]; ?></span>
@@ -294,7 +294,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnFTPPswd" class="control-label col-lg-4">Password:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="<?php echo $row1[9]; ?>" style="width:100%">
+                                                                    <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="<?php echo $row1[9]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[9]; ?></span>
@@ -307,7 +307,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnFTPPort" class="control-label col-lg-8">FTP Port:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="number" min="1" max="99999" class="form-control" aria-label="..." id="srvrStnFTPPort" name="srvrStnFTPPort" value="<?php echo $row1[10]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="99999" class="form-control" aria-label="..." id="srvrStnFTPPort" name="srvrStnFTPPort" value="<?php echo $row1[10]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[10]; ?></span>
@@ -320,7 +320,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnFTPStrtDir" class="control-label col-lg-4">FTP User's Home Directory:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPStrtDir" name="srvrStnFTPStrtDir" value="<?php echo $row1[28]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPStrtDir" name="srvrStnFTPStrtDir" value="<?php echo $row1[28]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[28]; ?></span>
@@ -333,7 +333,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnFTPBaseDir" class="control-label col-lg-4">Base Subdirectory URL:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPBaseDir" name="srvrStnFTPBaseDir" value="<?php echo $row1[11]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPBaseDir" name="srvrStnFTPBaseDir" value="<?php echo $row1[11]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[11]; ?></span>
@@ -374,7 +374,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnComPort" class="control-label col-lg-8">Modem Settings COM Port:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnComPort" name="srvrStnComPort" value="<?php echo $row1[15]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnComPort" name="srvrStnComPort" value="<?php echo $row1[15]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[15]; ?></span>
@@ -387,7 +387,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnBaudRate" class="control-label col-lg-8">Modem Settings BAUD Rate:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="number" min="1" max="999999" class="form-control" aria-label="..." id="srvrStnBaudRate" name="srvrStnBaudRate" value="<?php echo $row1[16]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="999999" class="form-control" aria-label="..." id="srvrStnBaudRate" name="srvrStnBaudRate" value="<?php echo $row1[16]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[16]; ?></span>
@@ -400,7 +400,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnTimeout" class="control-label col-lg-8">Blocked Old Passwords:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="srvrStnTimeout" name="srvrStnTimeout" value="<?php echo $row1[17]; ?>" style="width:100%">
+                                                                    <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="srvrStnTimeout" name="srvrStnTimeout" value="<?php echo $row1[17]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[17]; ?></span>
@@ -417,7 +417,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnPGDumpDir" class="control-label col-lg-4">PG Dump Bin Directory:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnPGDumpDir" name="srvrStnPGDumpDir" value="<?php echo $row1[13]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnPGDumpDir" name="srvrStnPGDumpDir" value="<?php echo $row1[13]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[13]; ?></span>
@@ -430,7 +430,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="srvrStnBkpDir" class="control-label col-lg-4">Backup Directory:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtSrvrStng === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnBkpDir" name="srvrStnBkpDir" value="<?php echo $row1[14]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="srvrStnBkpDir" name="srvrStnBkpDir" value="<?php echo $row1[14]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[14]; ?></span>
@@ -526,7 +526,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnSmtpClnt" class="control-label col-lg-4">SMTP Client:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpClnt" name="srvrStnSmtpClnt" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpClnt" name="srvrStnSmtpClnt" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                 <input type="hidden" class="form-control" aria-label="..." id="srvrStnSmtpClntID" name="srvrStnSmtpClntID" value="<?php echo $row1[0]; ?>">
                                             <?php } else {
                                                 ?>
@@ -540,7 +540,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnSndrsEmail" class="control-label col-lg-4">SENDER's Email:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnSndrsEmail" name="srvrStnSndrsEmail" value="<?php echo $row1[2]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnSndrsEmail" name="srvrStnSndrsEmail" value="<?php echo $row1[2]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[2]; ?></span>
@@ -553,7 +553,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnSndrsPswd" class="control-label col-lg-4">Password:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="<?php echo $row1[3]; ?>" style="width:100%">
+                                                <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="<?php echo $row1[3]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[3]; ?></span>
@@ -566,7 +566,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnSmtPort" class="control-label col-lg-8">Smtp Port No.:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="<?php echo $row1[4]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="<?php echo $row1[4]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[4]; ?></span>
@@ -601,7 +601,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnDomainNm" class="control-label col-lg-4">Domain Name:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnDomainNm" name="srvrStnDomainNm" value="<?php echo $row1[6]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnDomainNm" name="srvrStnDomainNm" value="<?php echo $row1[6]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[6]; ?></span>
@@ -614,7 +614,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnFTPUrl" class="control-label col-lg-4">FTP Server Url:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUrl" name="srvrStnFTPUrl" value="<?php echo $row1[7]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUrl" name="srvrStnFTPUrl" value="<?php echo $row1[7]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[7]; ?></span>
@@ -631,7 +631,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnFTPUsrNm" class="control-label col-lg-4">FTP Username:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUsrNm" name="srvrStnFTPUsrNm" value="<?php echo $row1[8]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUsrNm" name="srvrStnFTPUsrNm" value="<?php echo $row1[8]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[8]; ?></span>
@@ -644,7 +644,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnFTPPswd" class="control-label col-lg-4">Password:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="<?php echo $row1[9]; ?>" style="width:100%">
+                                                <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="<?php echo $row1[9]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[9]; ?></span>
@@ -657,7 +657,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnFTPPort" class="control-label col-lg-8">FTP Port:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="number" min="1" max="99999" class="form-control" aria-label="..." id="srvrStnFTPPort" name="srvrStnFTPPort" value="<?php echo $row1[10]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="99999" class="form-control" aria-label="..." id="srvrStnFTPPort" name="srvrStnFTPPort" value="<?php echo $row1[10]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[10]; ?></span>
@@ -670,7 +670,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnFTPStrtDir" class="control-label col-lg-4">FTP User's Home Directory:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnFTPStrtDir" name="srvrStnFTPStrtDir" value="<?php echo $row1[28]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnFTPStrtDir" name="srvrStnFTPStrtDir" value="<?php echo $row1[28]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[28]; ?></span>
@@ -683,7 +683,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnFTPBaseDir" class="control-label col-lg-4">Base Subdirectory URL:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnFTPBaseDir" name="srvrStnFTPBaseDir" value="<?php echo $row1[11]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnFTPBaseDir" name="srvrStnFTPBaseDir" value="<?php echo $row1[11]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[11]; ?></span>
@@ -724,7 +724,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnComPort" class="control-label col-lg-8">Modem Settings COM Port:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnComPort" name="srvrStnComPort" value="<?php echo $row1[15]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnComPort" name="srvrStnComPort" value="<?php echo $row1[15]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[15]; ?></span>
@@ -737,7 +737,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnBaudRate" class="control-label col-lg-8">Modem Settings BAUD Rate:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="number" min="1" max="999999" class="form-control" aria-label="..." id="srvrStnBaudRate" name="srvrStnBaudRate" value="<?php echo $row1[16]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="999999" class="form-control" aria-label="..." id="srvrStnBaudRate" name="srvrStnBaudRate" value="<?php echo $row1[16]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[16]; ?></span>
@@ -750,7 +750,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnTimeout" class="control-label col-lg-8">Blocked Old Passwords:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="srvrStnTimeout" name="srvrStnTimeout" value="<?php echo $row1[17]; ?>" style="width:100%">
+                                                <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="srvrStnTimeout" name="srvrStnTimeout" value="<?php echo $row1[17]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[17]; ?></span>
@@ -767,7 +767,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnPGDumpDir" class="control-label col-lg-4">PG Dump Bin Directory:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnPGDumpDir" name="srvrStnPGDumpDir" value="<?php echo $row1[13]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnPGDumpDir" name="srvrStnPGDumpDir" value="<?php echo $row1[13]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[13]; ?></span>
@@ -780,7 +780,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="srvrStnBkpDir" class="control-label col-lg-4">Backup Directory:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtSrvrStng === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="srvrStnBkpDir" name="srvrStnBkpDir" value="<?php echo $row1[14]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="srvrStnBkpDir" name="srvrStnBkpDir" value="<?php echo $row1[14]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[14]; ?></span>
@@ -868,26 +868,26 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnSmtpClnt" class="control-label col-lg-4">SMTP Client:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpClnt" name="srvrStnSmtpClnt" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSmtpClnt" name="srvrStnSmtpClnt" value="" style="width:100%;">
                                     <input type="hidden" class="form-control" aria-label="..." id="srvrStnSmtpClntID" name="srvrStnSmtpClntID" value="-1">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnSndrsEmail" class="control-label col-lg-4">SENDER's Email:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSndrsEmail" name="srvrStnSndrsEmail" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnSndrsEmail" name="srvrStnSndrsEmail" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnSndrsPswd" class="control-label col-lg-4">Password:</label>
                                 <div  class="col-lg-8">
-                                    <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="" style="width:100%">
+                                    <input type="password" class="form-control" aria-label="..." id="srvrStnSndrsPswd" name="srvrStnSndrsPswd" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnSmtPort" class="control-label col-lg-8">Smtp Port No.:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnSmtPort" name="srvrStnSmtPort" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -904,13 +904,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnDomainNm" class="control-label col-lg-4">Domain Name:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnDomainNm" name="srvrStnDomainNm" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnDomainNm" name="srvrStnDomainNm" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnFTPUrl" class="control-label col-lg-4">FTP Server Url:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUrl" name="srvrStnFTPUrl" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUrl" name="srvrStnFTPUrl" value="" style="width:100%;">
                                 </div>
                             </div>
                         </fieldset>
@@ -920,31 +920,31 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnFTPUsrNm" class="control-label col-lg-4">FTP Username:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUsrNm" name="srvrStnFTPUsrNm" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPUsrNm" name="srvrStnFTPUsrNm" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnFTPPswd" class="control-label col-lg-4">Password:</label>
                                 <div  class="col-lg-8">
-                                    <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="" style="width:100%">
+                                    <input type="password" class="form-control" aria-label="..." id="srvrStnFTPPswd" name="srvrStnFTPPswd" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnFTPPort" class="control-label col-lg-8">FTP Port:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="1" max="99999" class="form-control" aria-label="..." id="srvrStnFTPPort" name="srvrStnFTPPort" value="" style="width:100%">
+                                    <input type="number" min="1" max="99999" class="form-control" aria-label="..." id="srvrStnFTPPort" name="srvrStnFTPPort" value="" style="width:100%;">
                                 </div>
                             </div>                                                        
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnFTPStrtDir" class="control-label col-lg-4">FTP User's Home Directory:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPStrtDir" name="srvrStnFTPStrtDir" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPStrtDir" name="srvrStnFTPStrtDir" value="" style="width:100%;">
                                 </div>
                             </div>                                                        
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnFTPBaseDir" class="control-label col-lg-4">Base Subdirectory URL:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPBaseDir" name="srvrStnFTPBaseDir" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnFTPBaseDir" name="srvrStnFTPBaseDir" value="" style="width:100%;">
                                 </div>
                             </div>                                                        
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -967,19 +967,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnComPort" class="control-label col-lg-8">Modem Settings COM Port:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnComPort" name="srvrStnComPort" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="srvrStnComPort" name="srvrStnComPort" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnBaudRate" class="control-label col-lg-8">Modem Settings BAUD Rate:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="1" max="999999" class="form-control" aria-label="..." id="srvrStnBaudRate" name="srvrStnBaudRate" value="" style="width:100%">
+                                    <input type="number" min="1" max="999999" class="form-control" aria-label="..." id="srvrStnBaudRate" name="srvrStnBaudRate" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnTimeout" class="control-label col-lg-8">Blocked Old Passwords:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="srvrStnTimeout" name="srvrStnTimeout" value="" style="width:100%">
+                                    <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="srvrStnTimeout" name="srvrStnTimeout" value="" style="width:100%;">
                                 </div>
                             </div>
                         </fieldset>
@@ -989,13 +989,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnPGDumpDir" class="control-label col-lg-4">PG Dump Bin Directory:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnPGDumpDir" name="srvrStnPGDumpDir" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnPGDumpDir" name="srvrStnPGDumpDir" value="" style="width:100%;">
                                 </div>
                             </div>                                                        
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="srvrStnBkpDir" class="control-label col-lg-4">Backup Directory:</label>
                                 <div  class="col-lg-8">
-                                    <input type="text" class="form-control" aria-label="..." id="srvrStnBkpDir" name="srvrStnBkpDir" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="srvrStnBkpDir" name="srvrStnBkpDir" value="" style="width:100%;">
                                 </div>
                             </div> 
                         </fieldset>

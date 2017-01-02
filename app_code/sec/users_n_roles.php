@@ -546,7 +546,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td>
                                                         <?php if ($canEdtUsers === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
-                                                                <div class="input-group"  style="width:100%">
+                                                                <div class="input-group"  style="width:100%;">
                                                                     <input type="text" class="form-control" aria-label="..." id="usrPrflEdtRow<?php echo $cntr; ?>_RoleNm" value="<?php echo $row1[0]; ?>">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="usrPrflEdtRow<?php echo $cntr; ?>_RoleID" value="<?php echo $row1[3]; ?>">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="usrPrflEdtRow<?php echo $cntr; ?>_DfltRowID" value="<?php echo $row1[4]; ?>">
@@ -562,7 +562,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td>
                                                         <?php if ($canEdtUsers === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
-                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
+                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                                     <input class="form-control" size="16" type="text" id="usrPrflEdtRow<?php echo $cntr; ?>_StrtDte" value="<?php echo $row1[1]; ?>" readonly="">
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -576,7 +576,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td>
                                                         <?php if ($canEdtUsers === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
-                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%">
+                                                                <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
                                                                     <input class="form-control" size="16" type="text" id="usrPrflEdtRow<?php echo $cntr; ?>_EndDte" value="<?php echo $row1[2]; ?>" readonly="">
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>

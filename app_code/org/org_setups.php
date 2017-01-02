@@ -202,7 +202,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetOrgNm" class="control-label col-lg-4">Organization's Name:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetOrgNm" name="orgDetOrgNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetOrgNm" name="orgDetOrgNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                                                         <input type="hidden" class="form-control" aria-label="..." id="orgDetOrgID" name="orgDetOrgID" value="<?php echo $row1[0]; ?>">
                                                                                     <?php } else {
                                                                                         ?>
@@ -235,7 +235,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetResAdrs" class="control-label col-lg-4">Residential Address:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <textarea class="form-control" aria-label="..." id="orgDetResAdrs" name="orgDetResAdrs" style="width:100%" cols="3" rows="3"><?php echo $row1[5]; ?></textarea>
+                                                                                        <textarea class="form-control" aria-label="..." id="orgDetResAdrs" name="orgDetResAdrs" style="width:100%;" cols="3" rows="3"><?php echo $row1[5]; ?></textarea>
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[5]; ?></span>
@@ -248,7 +248,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetPosAdrs" class="control-label col-lg-4">Postal Address:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <textarea class="form-control" aria-label="..." id="orgDetPosAdrs" name="orgDetPosAdrs" style="width:100%" cols="3" rows="3"><?php echo $row1[6]; ?></textarea>
+                                                                                        <textarea class="form-control" aria-label="..." id="orgDetPosAdrs" name="orgDetPosAdrs" style="width:100%;" cols="3" rows="3"><?php echo $row1[6]; ?></textarea>
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[6]; ?></span>
@@ -261,7 +261,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetEmail" class="control-label col-lg-4">Email Addresses:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetEmail" name="orgDetEmail" value="<?php echo $row1[8]; ?>" style="width:100%">
+                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetEmail" name="orgDetEmail" value="<?php echo $row1[8]; ?>" style="width:100%;">
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[7]; ?></span>
@@ -274,7 +274,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetWebsites" class="control-label col-lg-4">Websites:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetWebsites" name="orgDetWebsites" value="<?php echo $row1[8]; ?>" style="width:100%">
+                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetWebsites" name="orgDetWebsites" value="<?php echo $row1[8]; ?>" style="width:100%;">
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[8]; ?></span>
@@ -356,7 +356,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetLogo" class="control-label col-lg-4">Logo Filename:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetLogo" name="orgDetLogo" value="<?php echo $row1[2]; ?>" style="width:100%" readonly="true">
+                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetLogo" name="orgDetLogo" value="<?php echo $row1[2]; ?>" style="width:100%;" readonly="true">
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[2]; ?></span>
@@ -369,7 +369,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetCntctNums" class="control-label col-lg-4">Contact Numbers:</label>
                                                                                 <div  class="col-lg-8">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetCntctNums" name="orgDetCntctNums" value="<?php echo $row1[9]; ?>" style="width:100%">
+                                                                                        <input type="text" class="form-control" aria-label="..." id="orgDetCntctNums" name="orgDetCntctNums" value="<?php echo $row1[9]; ?>" style="width:100%;">
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[9]; ?></span>
@@ -410,7 +410,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetOrgDesc" class="control-label col-lg-2">Organization's Description:</label>
                                                                                 <div  class="col-lg-10">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <textarea class="form-control" aria-label="..." id="orgDetOrgDesc" name="orgDetOrgDesc" style="width:100%" cols="9" rows="4"><?php echo $row1[15]; ?></textarea>
+                                                                                        <textarea class="form-control" aria-label="..." id="orgDetOrgDesc" name="orgDetOrgDesc" style="width:100%;" cols="9" rows="4"><?php echo $row1[15]; ?></textarea>
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[15]; ?></span>
@@ -423,7 +423,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <label for="orgDetOrgSlogan" class="control-label col-lg-2">Organization's Slogan:</label>
                                                                                 <div  class="col-lg-10">
                                                                                     <?php if ($canEdtOrg === true) { ?>
-                                                                                        <textarea class="form-control" aria-label="..." id="orgDetOrgSlogan" name="orgDetOrgSlogan" style="width:100%" cols="9" rows="4"><?php echo $row1[16]; ?></textarea>
+                                                                                        <textarea class="form-control" aria-label="..." id="orgDetOrgSlogan" name="orgDetOrgSlogan" style="width:100%;" cols="9" rows="4"><?php echo $row1[16]; ?></textarea>
                                                                                     <?php } else {
                                                                                         ?>
                                                                                         <span><?php echo $row1[16]; ?></span>
@@ -497,7 +497,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetOrgNm" class="control-label col-lg-4">Organization's Name:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetOrgNm" name="orgDetOrgNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetOrgNm" name="orgDetOrgNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="orgDetOrgID" name="orgDetOrgID" value="<?php echo $row1[0]; ?>">
                                                                 <?php } else {
                                                                     ?>
@@ -530,7 +530,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetResAdrs" class="control-label col-lg-4">Residential Address:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <textarea class="form-control" aria-label="..." id="orgDetResAdrs" name="orgDetResAdrs" style="width:100%" cols="3" rows="3"><?php echo $row1[5]; ?></textarea>
+                                                                    <textarea class="form-control" aria-label="..." id="orgDetResAdrs" name="orgDetResAdrs" style="width:100%;" cols="3" rows="3"><?php echo $row1[5]; ?></textarea>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[5]; ?></span>
@@ -543,7 +543,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetPosAdrs" class="control-label col-lg-4">Postal Address:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <textarea class="form-control" aria-label="..." id="orgDetPosAdrs" name="orgDetPosAdrs" style="width:100%" cols="3" rows="3"><?php echo $row1[6]; ?></textarea>
+                                                                    <textarea class="form-control" aria-label="..." id="orgDetPosAdrs" name="orgDetPosAdrs" style="width:100%;" cols="3" rows="3"><?php echo $row1[6]; ?></textarea>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[6]; ?></span>
@@ -556,7 +556,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetEmail" class="control-label col-lg-4">Email Addresses:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetEmail" name="orgDetEmail" value="<?php echo $row1[8]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetEmail" name="orgDetEmail" value="<?php echo $row1[8]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[7]; ?></span>
@@ -569,7 +569,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetWebsites" class="control-label col-lg-4">Websites:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetWebsites" name="orgDetWebsites" value="<?php echo $row1[8]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetWebsites" name="orgDetWebsites" value="<?php echo $row1[8]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[8]; ?></span>
@@ -651,7 +651,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetLogo" class="control-label col-lg-4">Logo Filename:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetLogo" name="orgDetLogo" value="<?php echo $row1[2]; ?>" style="width:100%" readonly="true">
+                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetLogo" name="orgDetLogo" value="<?php echo $row1[2]; ?>" style="width:100%;" readonly="true">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[2]; ?></span>
@@ -664,7 +664,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetCntctNums" class="control-label col-lg-4">Contact Numbers:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetCntctNums" name="orgDetCntctNums" value="<?php echo $row1[9]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="orgDetCntctNums" name="orgDetCntctNums" value="<?php echo $row1[9]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[9]; ?></span>
@@ -705,7 +705,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetOrgDesc" class="control-label col-lg-2">Organization's Description:</label>
                                                             <div  class="col-lg-10">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <textarea class="form-control" aria-label="..." id="orgDetOrgDesc" name="orgDetOrgDesc" style="width:100%" cols="9" rows="4"><?php echo $row1[15]; ?></textarea>
+                                                                    <textarea class="form-control" aria-label="..." id="orgDetOrgDesc" name="orgDetOrgDesc" style="width:100%;" cols="9" rows="4"><?php echo $row1[15]; ?></textarea>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[15]; ?></span>
@@ -718,7 +718,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="orgDetOrgSlogan" class="control-label col-lg-2">Organization's Slogan:</label>
                                                             <div  class="col-lg-10">
                                                                 <?php if ($canEdtOrg === true) { ?>
-                                                                    <textarea class="form-control" aria-label="..." id="orgDetOrgSlogan" name="orgDetOrgSlogan" style="width:100%" cols="9" rows="4"><?php echo $row1[16]; ?></textarea>
+                                                                    <textarea class="form-control" aria-label="..." id="orgDetOrgSlogan" name="orgDetOrgSlogan" style="width:100%;" cols="9" rows="4"><?php echo $row1[16]; ?></textarea>
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[16]; ?></span>
@@ -768,7 +768,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="orgDetOrgNm" class="control-label col-lg-4">Organization's Name:</label>
                                                     <div  class="col-lg-8">
-                                                        <input type="text" class="form-control" aria-label="..." id="orgDetOrgNm" name="orgDetOrgNm" value="" style="width:100%">
+                                                        <input type="text" class="form-control" aria-label="..." id="orgDetOrgNm" name="orgDetOrgNm" value="" style="width:100%;">
                                                         <input type="hidden" class="form-control" aria-label="..." id="orgDetOrgID" name="orgDetOrgID" value="-1">                                                        
                                                     </div>
                                                 </div>
@@ -787,25 +787,25 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="orgDetResAdrs" class="control-label col-lg-4">Residential Address:</label>
                                                     <div  class="col-lg-8">
-                                                        <textarea class="form-control" aria-label="..." id="orgDetResAdrs" name="orgDetResAdrs" style="width:100%" cols="3" rows="3"></textarea>
+                                                        <textarea class="form-control" aria-label="..." id="orgDetResAdrs" name="orgDetResAdrs" style="width:100%;" cols="3" rows="3"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="orgDetPosAdrs" class="control-label col-lg-4">Postal Address:</label>
                                                     <div  class="col-lg-8">
-                                                        <textarea class="form-control" aria-label="..." id="orgDetPosAdrs" name="orgDetPosAdrs" style="width:100%" cols="3" rows="3"></textarea>
+                                                        <textarea class="form-control" aria-label="..." id="orgDetPosAdrs" name="orgDetPosAdrs" style="width:100%;" cols="3" rows="3"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="orgDetEmail" class="control-label col-lg-4">Email Addresses:</label>
                                                     <div  class="col-lg-8">
-                                                        <input type="text" class="form-control" aria-label="..." id="orgDetEmail" name="orgDetEmail" value="" style="width:100%">
+                                                        <input type="text" class="form-control" aria-label="..." id="orgDetEmail" name="orgDetEmail" value="" style="width:100%;">
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="orgDetWebsites" class="control-label col-lg-4">Websites:</label>
                                                     <div  class="col-lg-8">
-                                                        <input type="text" class="form-control" aria-label="..." id="orgDetWebsites" name="orgDetWebsites" value="" style="width:100%">
+                                                        <input type="text" class="form-control" aria-label="..." id="orgDetWebsites" name="orgDetWebsites" value="" style="width:100%;">
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -853,13 +853,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="form-group form-group-sm col-md-12" style="padding:3px 3px 0px 3px !important;">
                                                     <label for="orgDetLogo" class="control-label col-lg-4">Logo Filename:</label>
                                                     <div  class="col-lg-8">
-                                                        <input type="text" class="form-control" aria-label="..." id="orgDetLogo" name="orgDetLogo" value="" style="width:100%" readonly="true">
+                                                        <input type="text" class="form-control" aria-label="..." id="orgDetLogo" name="orgDetLogo" value="" style="width:100%;" readonly="true">
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="orgDetCntctNums" class="control-label col-lg-4">Contact Numbers:</label>
                                                     <div  class="col-lg-8">
-                                                        <input type="text" class="form-control" aria-label="..." id="orgDetCntctNums" name="orgDetCntctNums" value="" style="width:100%">
+                                                        <input type="text" class="form-control" aria-label="..." id="orgDetCntctNums" name="orgDetCntctNums" value="" style="width:100%;">
                                                     </div>
                                                 </div>                                                       
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -882,13 +882,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="orgDetOrgDesc" class="control-label col-lg-2">Organization's Description:</label>
                                                     <div  class="col-lg-10">
-                                                        <textarea class="form-control" aria-label="..." id="orgDetOrgDesc" name="orgDetOrgDesc" style="width:100%" cols="9" rows="4"></textarea>
+                                                        <textarea class="form-control" aria-label="..." id="orgDetOrgDesc" name="orgDetOrgDesc" style="width:100%;" cols="9" rows="4"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                     <label for="orgDetOrgSlogan" class="control-label col-lg-2">Organization's Slogan:</label>
                                                     <div  class="col-lg-10">
-                                                        <textarea class="form-control" aria-label="..." id="orgDetOrgSlogan" name="orgDetOrgSlogan" style="width:100%" cols="9" rows="4"></textarea>
+                                                        <textarea class="form-control" aria-label="..." id="orgDetOrgSlogan" name="orgDetOrgSlogan" style="width:100%;" cols="9" rows="4"></textarea>
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -1082,7 +1082,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <div class="input-group"  style="width:100%">
+                                                            <div class="input-group"  style="width:100%;">
                                                                 <input type="text" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_PrntNm" value="<?php echo $row1[3]; ?>">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_PrntID" value="<?php echo $row1[2]; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions/Groups', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'divsGrpsRow<?php echo $cntr; ?>_PrntID', 'divsGrpsRow<?php echo $cntr; ?>_PrntNm', 'clear', 0, '');">
@@ -1097,7 +1097,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <div class="input-group"  style="width:100%">
+                                                            <div class="input-group"  style="width:100%;">
                                                                 <input type="text" class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_DivTypNm" value="<?php echo $row1[5]; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Divisions or Group Types', '', '', '', 'radio', true, '<?php echo $row1[5]; ?>', 'divsGrpsRow<?php echo $cntr; ?>_DivTypNm', '', 'clear', 0, '');">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
@@ -1111,7 +1111,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <textarea class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_GroupDesc" name="divsGrpsRow<?php echo $cntr; ?>_GroupDesc" style="width:100%" cols="7" rows="2"><?php echo $row1[7]; ?></textarea>
+                                                            <textarea class="form-control" aria-label="..." id="divsGrpsRow<?php echo $cntr; ?>_GroupDesc" name="divsGrpsRow<?php echo $cntr; ?>_GroupDesc" style="width:100%;" cols="7" rows="2"><?php echo $row1[7]; ?></textarea>
                                                         </div>
                                                     <?php } else { ?>
                                                         <span class="normaltd"><?php echo $row1[7]; ?></span>
@@ -1305,7 +1305,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <textarea class="form-control" aria-label="..." id="sitesLocsRow<?php echo $cntr; ?>_SiteDesc" name="sitesLocsRow<?php echo $cntr; ?>_SiteDesc" style="width:100%" cols="7" rows="2"><?php echo $row1[2]; ?></textarea>
+                                                            <textarea class="form-control" aria-label="..." id="sitesLocsRow<?php echo $cntr; ?>_SiteDesc" name="sitesLocsRow<?php echo $cntr; ?>_SiteDesc" style="width:100%;" cols="7" rows="2"><?php echo $row1[2]; ?></textarea>
                                                         </div>
                                                     <?php } else { ?>
                                                         <span class="normaltd"><?php echo $row1[2]; ?></span>
@@ -1511,7 +1511,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <div class="input-group"  style="width:100%">
+                                                            <div class="input-group"  style="width:100%;">
                                                                 <input type="text" class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_PrntNm" value="<?php echo $row1[3]; ?>">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_PrntID" value="<?php echo $row1[2]; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Jobs', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'orgJobsRow<?php echo $cntr; ?>_PrntID', 'orgJobsRow<?php echo $cntr; ?>_PrntNm', 'clear', 0, '');">
@@ -1526,7 +1526,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <textarea class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_JobDesc" name="orgJobsRow<?php echo $cntr; ?>_JobDesc" style="width:100%" cols="7" rows="2"><?php echo $row1[4]; ?></textarea>
+                                                            <textarea class="form-control" aria-label="..." id="orgJobsRow<?php echo $cntr; ?>_JobDesc" name="orgJobsRow<?php echo $cntr; ?>_JobDesc" style="width:100%;" cols="7" rows="2"><?php echo $row1[4]; ?></textarea>
                                                         </div>
                                                     <?php } else { ?>
                                                         <span class="normaltd"><?php echo $row1[4]; ?></span>
@@ -1732,7 +1732,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <div class="input-group"  style="width:100%">
+                                                            <div class="input-group"  style="width:100%;">
                                                                 <input type="text" class="form-control" aria-label="..." id="orgGradesRow<?php echo $cntr; ?>_PrntNm" value="<?php echo $row1[3]; ?>">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="orgGradesRow<?php echo $cntr; ?>_PrntID" value="<?php echo $row1[2]; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Grades', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'orgGradesRow<?php echo $cntr; ?>_PrntID', 'orgGradesRow<?php echo $cntr; ?>_PrntNm', 'clear', 0, '');">
@@ -1747,7 +1747,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <textarea class="form-control" aria-label="..." id="orgGradesRow<?php echo $cntr; ?>_GradeDesc" name="orgGradesRow<?php echo $cntr; ?>_GradeDesc" style="width:100%" cols="7" rows="2"><?php echo $row1[4]; ?></textarea>
+                                                            <textarea class="form-control" aria-label="..." id="orgGradesRow<?php echo $cntr; ?>_GradeDesc" name="orgGradesRow<?php echo $cntr; ?>_GradeDesc" style="width:100%;" cols="7" rows="2"><?php echo $row1[4]; ?></textarea>
                                                         </div>
                                                     <?php } else { ?>
                                                         <span class="normaltd"><?php echo $row1[4]; ?></span>
@@ -1953,7 +1953,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <div class="input-group"  style="width:100%">
+                                                            <div class="input-group"  style="width:100%;">
                                                                 <input type="text" class="form-control" aria-label="..." id="orgPositionsRow<?php echo $cntr; ?>_PrntNm" value="<?php echo $row1[3]; ?>">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="orgPositionsRow<?php echo $cntr; ?>_PrntID" value="<?php echo $row1[2]; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Positions', '', '', '', 'radio', true, '<?php echo $row1[2]; ?>', 'orgPositionsRow<?php echo $cntr; ?>_PrntID', 'orgPositionsRow<?php echo $cntr; ?>_PrntNm', 'clear', 0, '');">
@@ -1968,7 +1968,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd">
                                                     <?php if ($canEdtOrg === true) { ?>
                                                         <div class="form-group form-group-sm" style="width:100% !important;">
-                                                            <textarea class="form-control" aria-label="..." id="orgPositionsRow<?php echo $cntr; ?>_PosDesc" name="orgPositionsRow<?php echo $cntr; ?>_PosDesc" style="width:100%" cols="7" rows="2"><?php echo $row1[4]; ?></textarea>
+                                                            <textarea class="form-control" aria-label="..." id="orgPositionsRow<?php echo $cntr; ?>_PosDesc" name="orgPositionsRow<?php echo $cntr; ?>_PosDesc" style="width:100%;" cols="7" rows="2"><?php echo $row1[4]; ?></textarea>
                                                         </div>
                                                     <?php } else { ?>
                                                         <span class="normaltd"><?php echo $row1[4]; ?></span>

@@ -73,6 +73,7 @@ if (isset($_POST['qMaster'])) {
 
 if ($isMaster == 1) {
     if (test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
+        $isMaster = 0;
         restricted();
         exit();
     }
@@ -112,6 +113,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             }
         } else {
             if ($vwtyp == "0") {
+                $isMaster = 0;
                 $cntent .= "
 					<li>
 						<span style=\"text-decoration:none;\">My Inbox</span>
@@ -283,43 +285,43 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $cntr += 1;
                                         ?>
                                         <tr id="myInbxRow<?php echo $cntr; ?>">
-                                            <td><input type="checkbox" name="myInbxChkbx<?php echo $cntr; ?>" value="<?php echo $row[0] . ";" . $row[1]; ?>"></td>
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                            <td>
+                                            <td class="lovtd"><input type="checkbox" name="myInbxChkbx<?php echo $cntr; ?>" value="<?php echo $row[0] . ";" . $row[1]; ?>"></td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Approve" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/thumbsUp28.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Reject" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/thumbsDown28.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Request for Information" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/info.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
-                                            </td>
+                                            </td class="lovtd">
                                             <?php if ($row[10] == "1") { ?>
-                                                <td><a href="javascript:getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:normal;color:#0000FF;"><?php echo $row[2]; ?></a></td>
+                                                <td class="lovtd"><a href="javascript:getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:normal;color:#0000FF;"><?php echo $row[2]; ?></a></td>
                                             <?php } else { ?>                                                
-                                                <td><a href="javascript:getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:bold;"><?php echo $row[2]; ?></a></td>
+                                                <td class="lovtd"><a href="javascript:getOneMyInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'myInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:bold;color:#0000FF;"><?php echo $row[2]; ?></a></td>
                                             <?php } ?>
-                                            <td><?php echo $row[11]; ?></td>
-                                            <td><?php echo $row[3]; ?></td>
-                                            <td><?php echo $row[13]; ?></td>
-                                            <td><?php echo $row[5]; ?></td>
-                                            <td><?php echo $row[8]; ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo $row[11]; ?></td>
+                                            <td class="lovtd"><?php echo $row[3]; ?></td>
+                                            <td class="lovtd"><?php echo $row[13]; ?></td>
+                                            <td class="lovtd"><?php echo $row[5]; ?></td>
+                                            <td class="lovtd"><?php echo $row[8]; ?></td>
+                                            <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Attachments" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/adjunto.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -345,7 +347,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <table class="gridtable" id="myInbxDetTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px;">
                                 <?php
                                 $output = "";
-                                $cmpID="";
+                                $cmpID = "";
                                 $i = 0;
                                 $b = 0;
                                 $colsCnt = loc_db_num_fields($result);
@@ -383,7 +385,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     if ($isadmnonly == '0' || $isMaster == 1) {
                                                         $webUrlDsply = getActionUrlDsplyTyp($row[0], $arry1[$r]);
                                                         $hrf1 = "<div style=\"padding:2px;float:left;\">"
-                                                                . "<button type=\"button\" class=\"btn btn-primary\""  
+                                                                . "<button type=\"button\" class=\"btn btn-primary\""
                                                                 . " onclick=\"actionProcess('$cmpID', '$row[0]','$arry1[$r]','$webUrlDsply','$row[24]','$row[5]','$row[8]','$row[7]');\">";
                                                         $hrf2 = "</button></div>";
                                                         $output .= "$hrf1" . $arry1[$r] . "$hrf2";
@@ -458,7 +460,235 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                 <?php
             } else if ($vwtyp == "2") {
-                
+                //All Inboxes
+                $cntent .= "<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
+						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>
+                                        <li onclick=\"openATab('#allmodules', 'grp=11&typ=1');\">
+						<span style=\"text-decoration:none;\">Workflow Manager Menu</span>
+				</li>
+                                <li>
+                                    <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+                                    <span style=\"text-decoration:none;\">All Inboxes</span>
+				</li>
+                           </ul></div>";
+                echo $cntent;
+                $total = get_MyInbxTtls($srchFor, $srchIn);
+                if ($pageNo > ceil($total / $lmtSze)) {
+                    $pageNo = 1;
+                } else if ($pageNo < 1) {
+                    $pageNo = ceil($total / $lmtSze);
+                }
+
+                $curIdx = $pageNo - 1;
+                $result = get_MyInbx($srchFor, $srchIn, $curIdx, $lmtSze);
+                ?>
+                <form id='allInbxForm' action='' method='post' accept-charset='UTF-8'>
+                    <div class="row " style="margin-bottom:5px;padding:0px 15px 0px 15px !important;">
+                        <div class="col-md-2" style="padding:0px 1px 0px 1px !important;">
+                            <div class="input-group">
+                                <input class="form-control" id="allInbxSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllInbx(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                <input id="allInbxPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllInbx('clear', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </label>
+                                <label class="btn btn-primary btn-file input-group-addon" onclick="getAllInbx('', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </label> 
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="padding:0px 1px 0px 1px !important;">
+                            <div class="input-group">
+                                <span class="input-group-addon">In</span>
+                                <select data-placeholder="Select..." class="form-control chosen-select" id="allInbxSrchIn">
+                                    <?php
+                                    $valslctdArry = array("", "", "", "", "");
+                                    $srchInsArrys = array("Status", "Source App", "Subject", "Person From", "Message Type");
+
+                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                        if ($srchIn == $srchInsArrys[$z]) {
+                                            $valslctdArry[$z] = "selected";
+                                        }
+                                        ?>
+                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                <select data-placeholder="Select..." class="form-control chosen-select" id="allInbxDsplySze" style="min-width:65px !important;">                            
+                                    <?php
+                                    $valslctdArry = array("", "", "", "", "", "", "", "");
+                                    $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                    for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                        if ($lmtSze == $dsplySzeArry[$y]) {
+                                            $valslctdArry[$y] = "selected";
+                                        } else {
+                                            $valslctdArry[$y] = "";
+                                        }
+                                        ?>
+                                        <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5" style="padding:0px 1px 0px 1px !important;">
+                            <div class="col-xs-6" style="padding:0px 1px 0px 0px !important;">
+                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                    <input class="form-control" size="16" type="text" id="allInbxStrtDate" name="allInbxStrtDate" value="<?php echo substr($qStrtDte, 0, 11); ?>" placeholder="Start Date">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div></div>
+                            <div class="col-xs-6" style="padding:0px 1px 0px 0px !important;">
+                                <div class="input-group date form_date" data-date="" data-date-format="dd-M-yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                    <input class="form-control" size="16" type="text"  id="allInbxEndDate" name="allInbxEndDate" value="<?php echo substr($qEndDte, 0, 11); ?>" placeholder="End Date">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div></div>                            
+                        </div>
+                        <div class="col-md-2" style="padding:0px 1px 0px 1px !important;">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" style="margin: 0px !important;">
+                                    <li>
+                                        <a  style="padding: 8px 20px 7px 20px !important;" href="javascript:getAllInbx('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a  style="padding: 8px 20px 7px 20px !important;" href="javascript:getAllInbx('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="row " style="margin-bottom:2px;padding:2px 15px 2px 15px !important">   
+                        <div class="col-md-12" style="padding:2px 1px 2px 1px !important;border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
+                            <div class="col-md-6" style="padding:0px 1px 0px 1px !important;">
+                                <button type="button" class="btn btn-default btn-sm" onclick="checkAllBtns('allInbxTblForm');">
+                                    <img src="cmn_images/check_all.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    Check All
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="unCheckAllBtns('allInbxTblForm');">
+                                    <img src="cmn_images/selection_delete.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    UnCheck All
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="">
+                                    <img src="cmn_images/reassign_users.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    RE-ASSIGN SELECTED LINES
+                                </button>
+                            </div>
+                            <div class="col-md-2" style="padding:5px 1px 0px 1px !important;">
+                                <div class="form-check" style="font-size: 12px !important;">
+                                    <label class="form-check-label">
+                                        <?php
+                                        $actvChekd = "";
+                                        if ($qActvOnly == "true") {
+                                            $actvChekd = "checked=\"true\"";
+                                        }
+                                        $noLgnChekd = "";
+                                        if ($qNonLgn == "true") {
+                                            $noLgnChekd = "checked=\"true\"";
+                                        }
+                                        ?>
+                                        <input type="checkbox" class="form-check-input" id="allInbxShwActvNtfs" name="allInbxShwActvNtfs" <?php echo $actvChekd; ?>>
+                                        Active Notifications
+                                    </label>
+                                </div>                            
+                            </div>
+                            <div class="col-md-2" style="padding:5px 1px 0px 1px !important;">
+                                <div class="form-check" style="font-size: 12px !important;">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" id="allInbxShwNonLgnNtfs" name="allInbxShwNonLgnNtfs"  <?php echo $noLgnChekd; ?>>
+                                        Non-Logon Notifications
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">&nbsp;</div>
+                        </div>
+                    </div>
+                </form>
+                <form id='allInbxTblForm' action='' method='post' accept-charset='UTF-8'>
+                    <div class="row"> 
+                        <div  class="col-md-12">
+                            <table class="table table-striped table-bordered table-responsive" id="allInbxTable" cellspacing="0" width="100%" style="width:100%;min-width: 800px;">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>No.</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>Subject</th>
+                                        <th>Source App</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Date Sent</th>
+                                        <th>Status</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $cntr = 0;
+                                    while ($row = loc_db_fetch_array($result)) {
+                                        $cntr += 1;
+                                        ?>
+                                        <tr id="allInbxRow<?php echo $cntr; ?>">
+                                            <td class="lovtd"><input type="checkbox" name="allInbxChkbx<?php echo $cntr; ?>" value="<?php echo $row[0] . ";" . $row[1]; ?>"></td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneAllInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Approve" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/thumbsUp28.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Reject" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/thumbsDown28.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Request for Information" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/info.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td class="lovtd">
+                                            <?php if ($row[10] == "1") { ?>
+                                                <td class="lovtd"><a href="javascript:getOneAllInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:normal;color:#0000FF;"><?php echo $row[2]; ?></a></td>
+                                            <?php } else { ?>                                                
+                                                <td class="lovtd"><a href="javascript:getOneAllInbxForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'allInbxDetForm', 'View Message (ID: <?php echo $row[0]; ?> - <?php echo $row[2]; ?>)', <?php echo $row[0]; ?>, 1, <?php echo $pgNo ?>);" style="font-weight:bold;color:#0000FF;"><?php echo $row[2]; ?></a></td>
+                                            <?php } ?>
+                                            <td class="lovtd"><?php echo $row[11]; ?></td>
+                                            <td class="lovtd"><?php echo $row[3]; ?></td>
+                                            <td class="lovtd"><?php echo $row[13]; ?></td>
+                                            <td class="lovtd"><?php echo $row[5]; ?></td>
+                                            <td class="lovtd"><?php echo $row[8]; ?></td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Attachments" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
+                                                    <img src="cmn_images/adjunto.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>                     
+                    </div>
+                </form>
+                <?php
             }
         }
     } else {

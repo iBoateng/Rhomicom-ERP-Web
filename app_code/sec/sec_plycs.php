@@ -176,7 +176,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysPlcyNm" class="control-label col-lg-4">Policy Name:</label>
                                                             <div  class="col-lg-8">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="text" class="form-control" aria-label="..." id="scPlcysPlcyNm" name="scPlcysPlcyNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                                    <input type="text" class="form-control" aria-label="..." id="scPlcysPlcyNm" name="scPlcysPlcyNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="scPlcysPlcyID" name="scPlcysPlcyID" value="<?php echo $row1[0]; ?>">
                                                                 <?php } else {
                                                                     ?>
@@ -216,7 +216,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysPwdExpryDys" class="control-label col-lg-8">Password Expiry Days:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdExpryDys" name="scPlcysPwdExpryDys" value="<?php echo $row1[3]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdExpryDys" name="scPlcysPwdExpryDys" value="<?php echo $row1[3]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[3]; ?></span>
@@ -229,7 +229,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysNoOfRecs" class="control-label col-lg-8">No. of Displayed Records:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysNoOfRecs" name="scPlcysNoOfRecs" value="<?php echo $row1[14]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysNoOfRecs" name="scPlcysNoOfRecs" value="<?php echo $row1[14]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[14]; ?></span>
@@ -248,7 +248,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysPwdMinLen" class="control-label col-lg-8">Minimum Length of Passwords:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMinLen" name="scPlcysPwdMinLen" value="<?php echo $row1[12]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMinLen" name="scPlcysPwdMinLen" value="<?php echo $row1[12]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[12]; ?></span>
@@ -261,7 +261,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysPwdMaxLen" class="control-label col-lg-8">Maximum Length of Passwords:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMaxLen" name="scPlcysPwdMaxLen" value="<?php echo $row1[13]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMaxLen" name="scPlcysPwdMaxLen" value="<?php echo $row1[13]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[13]; ?></span>
@@ -275,7 +275,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysPwdOldAlwd" class="control-label col-lg-8">Blocked Old Passwords:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="scPlcysPwdOldAlwd" name="scPlcysPwdOldAlwd" value="<?php echo $row1[11]; ?>" style="width:100%">
+                                                                    <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="scPlcysPwdOldAlwd" name="scPlcysPwdOldAlwd" value="<?php echo $row1[11]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[11]; ?></span>
@@ -332,7 +332,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysAlwdFailedLgs" class="control-label col-lg-8">Max. Failed Login Attempts:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAlwdFailedLgs" name="scPlcysAlwdFailedLgs" value="<?php echo $row1[2]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAlwdFailedLgs" name="scPlcysAlwdFailedLgs" value="<?php echo $row1[2]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[2]; ?></span>
@@ -345,7 +345,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysAutoUnlkTme" class="control-label col-md-8">Time (mins) to unlock a User:</label>
                                                             <div  class="col-lg-4">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAutoUnlkTme" name="scPlcysAutoUnlkTme" value="<?php echo $row1[4]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAutoUnlkTme" name="scPlcysAutoUnlkTme" value="<?php echo $row1[4]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[4]; ?></span>
@@ -474,7 +474,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <label for="scPlcysSesnTmeOut" class="control-label col-md-8">Session Timeout (Seconds):</label>
                                                             <div  class="col-md-4">
                                                                 <?php if ($canEdtScPlcy === true) { ?>
-                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysSesnTmeOut" name="scPlcysSesnTmeOut" value="<?php echo $row1[17]; ?>" style="width:100%">
+                                                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysSesnTmeOut" name="scPlcysSesnTmeOut" value="<?php echo $row1[17]; ?>" style="width:100%;">
                                                                 <?php } else {
                                                                     ?>
                                                                     <span><?php echo $row1[17]; ?></span>
@@ -536,11 +536,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             <?php if ($canEdtScPlcy === true) { ?>
                                                                                 <div class="input-group">
                                                                                     <input type="text" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" value="<?php echo $row2[4]; ?>">
+                                                                                    <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" value="<?php echo $row2[0]; ?>">
+                                                                                    <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" value="<?php echo $row2[5]; ?>">                                                                                
                                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Audit Trail Trackable Actions', '', '', '', 'check', true, '<?php echo $row2[4]; ?>', 'secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck', '', 'clear', 1, '');">
                                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                                     </label>
-                                                                                    <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" value="<?php echo $row2[0]; ?>">
-                                                                                    <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" value="<?php echo $row2[5]; ?>">
                                                                                 </div><?php } else {
                                                                                 ?>
                                                                                 <span><?php echo $row2[4]; ?></span>
@@ -587,7 +587,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysPlcyNm" class="control-label col-lg-4">Policy Name:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="scPlcysPlcyNm" name="scPlcysPlcyNm" value="<?php echo $row1[1]; ?>" style="width:100%">
+                                                <input type="text" class="form-control" aria-label="..." id="scPlcysPlcyNm" name="scPlcysPlcyNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
                                                 <input type="hidden" class="form-control" aria-label="..." id="scPlcysPlcyID" name="scPlcysPlcyID" value="<?php echo $row1[0]; ?>">
                                             <?php } else {
                                                 ?>
@@ -627,7 +627,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysPwdExpryDys" class="control-label col-lg-8">Password Expiry Days:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdExpryDys" name="scPlcysPwdExpryDys" value="<?php echo $row1[3]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdExpryDys" name="scPlcysPwdExpryDys" value="<?php echo $row1[3]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[3]; ?></span>
@@ -640,7 +640,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysNoOfRecs" class="control-label col-lg-8">No. of Displayed Records:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysNoOfRecs" name="scPlcysNoOfRecs" value="<?php echo $row1[14]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysNoOfRecs" name="scPlcysNoOfRecs" value="<?php echo $row1[14]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[14]; ?></span>
@@ -659,7 +659,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysPwdMinLen" class="control-label col-lg-8">Minimum Length of Passwords:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMinLen" name="scPlcysPwdMinLen" value="<?php echo $row1[12]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMinLen" name="scPlcysPwdMinLen" value="<?php echo $row1[12]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[12]; ?></span>
@@ -672,7 +672,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysPwdMaxLen" class="control-label col-lg-8">Maximum Length of Passwords:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMaxLen" name="scPlcysPwdMaxLen" value="<?php echo $row1[13]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMaxLen" name="scPlcysPwdMaxLen" value="<?php echo $row1[13]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[13]; ?></span>
@@ -686,7 +686,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysPwdOldAlwd" class="control-label col-lg-8">Blocked Old Passwords:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="scPlcysPwdOldAlwd" name="scPlcysPwdOldAlwd" value="<?php echo $row1[11]; ?>" style="width:100%">
+                                                <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="scPlcysPwdOldAlwd" name="scPlcysPwdOldAlwd" value="<?php echo $row1[11]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[11]; ?></span>
@@ -743,7 +743,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysAlwdFailedLgs" class="control-label col-lg-8">Max. Failed Login Attempts:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAlwdFailedLgs" name="scPlcysAlwdFailedLgs" value="<?php echo $row1[2]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAlwdFailedLgs" name="scPlcysAlwdFailedLgs" value="<?php echo $row1[2]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[2]; ?></span>
@@ -756,7 +756,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysAutoUnlkTme" class="control-label col-md-8">Time (mins) to unlock a User:</label>
                                         <div  class="col-lg-4">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAutoUnlkTme" name="scPlcysAutoUnlkTme" value="<?php echo $row1[4]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAutoUnlkTme" name="scPlcysAutoUnlkTme" value="<?php echo $row1[4]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[4]; ?></span>
@@ -885,7 +885,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="scPlcysSesnTmeOut" class="control-label col-md-8">Session Timeout (Seconds):</label>
                                         <div  class="col-md-4">
                                             <?php if ($canEdtScPlcy === true) { ?>
-                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysSesnTmeOut" name="scPlcysSesnTmeOut" value="<?php echo $row1[17]; ?>" style="width:100%">
+                                                <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysSesnTmeOut" name="scPlcysSesnTmeOut" value="<?php echo $row1[17]; ?>" style="width:100%;">
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[17]; ?></span>
@@ -948,11 +948,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <?php if ($canEdtScPlcy === true) { ?>
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" value="<?php echo $row2[4]; ?>">
+                                                                <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" value="<?php echo $row2[0]; ?>">
+                                                                <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" value="<?php echo $row2[5]; ?>">                                                            
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Audit Trail Trackable Actions', '', '', '', 'check', true, '<?php echo $row2[4]; ?>', 'secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck', '', 'clear', 1, '');">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
-                                                                <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" value="<?php echo $row2[0]; ?>">
-                                                                <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" value="<?php echo $row2[5]; ?>">
                                                             </div><?php } else {
                                                             ?>
                                                             <span><?php echo $row2[4]; ?></span>
@@ -990,7 +990,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysPlcyNm" class="control-label col-lg-4">Policy Name:</label>
                                 <div  class="col-lg-8">                                    
-                                    <input type="text" class="form-control" aria-label="..." id="scPlcysPlcyNm" name="scPlcysPlcyNm" value="" style="width:100%">
+                                    <input type="text" class="form-control" aria-label="..." id="scPlcysPlcyNm" name="scPlcysPlcyNm" value="" style="width:100%;">
                                     <input type="hidden" class="form-control" aria-label="..." id="scPlcysPlcyID" name="scPlcysPlcyID" value="">
                                 </div>
                             </div>
@@ -1012,13 +1012,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysPwdExpryDys" class="control-label col-lg-8">Password Expiry Days:</label>
                                 <div  class="col-lg-4">                                    
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdExpryDys" name="scPlcysPwdExpryDys" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdExpryDys" name="scPlcysPwdExpryDys" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysNoOfRecs" class="control-label col-lg-8">No. of Displayed Records:</label>
                                 <div  class="col-lg-4">                                    
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysNoOfRecs" name="scPlcysNoOfRecs" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysNoOfRecs" name="scPlcysNoOfRecs" value="" style="width:100%;">
                                 </div>
                             </div>
                         </fieldset>
@@ -1030,20 +1030,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysPwdMinLen" class="control-label col-lg-8">Minimum Length of Passwords:</label>
                                 <div  class="col-lg-4">                                    
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMinLen" name="scPlcysPwdMinLen" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMinLen" name="scPlcysPwdMinLen" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysPwdMaxLen" class="control-label col-lg-8">Maximum Length of Passwords:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMaxLen" name="scPlcysPwdMaxLen" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysPwdMaxLen" name="scPlcysPwdMaxLen" value="" style="width:100%;">
                                 </div>
                             </div>
 
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysPwdOldAlwd" class="control-label col-lg-8">Blocked Old Passwords:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="scPlcysPwdOldAlwd" name="scPlcysPwdOldAlwd" value="" style="width:100%">
+                                    <input type="number" min="0" max="9999" class="form-control" aria-label="..." id="scPlcysPwdOldAlwd" name="scPlcysPwdOldAlwd" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -1071,13 +1071,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysAlwdFailedLgs" class="control-label col-lg-8">Max. Failed Login Attempts:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAlwdFailedLgs" name="scPlcysAlwdFailedLgs" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAlwdFailedLgs" name="scPlcysAlwdFailedLgs" value="" style="width:100%;">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysAutoUnlkTme" class="control-label col-md-8">Time (mins) to unlock a User:</label>
                                 <div  class="col-lg-4">
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAutoUnlkTme" name="scPlcysAutoUnlkTme" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysAutoUnlkTme" name="scPlcysAutoUnlkTme" value="" style="width:100%;">
                                 </div>
                             </div>
                         </fieldset>
@@ -1145,7 +1145,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                 <label for="scPlcysSesnTmeOut" class="control-label col-md-8">Session Timeout (Seconds):</label>
                                 <div  class="col-md-4">
-                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysSesnTmeOut" name="scPlcysSesnTmeOut" value="" style="width:100%">
+                                    <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="scPlcysSesnTmeOut" name="scPlcysSesnTmeOut" value="" style="width:100%;">
                                 </div>
                             </div>                                                
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;"><br/></div>
@@ -1194,11 +1194,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <td>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck" value="<?php echo $row2[4]; ?>">
+                                                    <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" value="<?php echo $row2[0]; ?>">
+                                                    <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" value="<?php echo $row2[5]; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Audit Trail Trackable Actions', '', '', '', 'check', true, '<?php echo $row2[4]; ?>', 'secPlcyAdtTblsRow<?php echo $cntr; ?>_ActnsToTrck', '', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
-                                                    <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_MdlID" value="<?php echo $row2[0]; ?>">
-                                                    <input type="hidden" class="form-control" aria-label="..." id="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" name="secPlcyAdtTblsRow<?php echo $cntr; ?>_DfltRwID" value="<?php echo $row2[5]; ?>">
                                                 </div
                                             </td>
                                         </tr>

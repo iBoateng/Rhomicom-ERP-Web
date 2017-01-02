@@ -71,8 +71,12 @@ function showRoles()
 
 function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
         criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere)
+        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
 {
+    if (typeof callBackFunc === 'undefined' || callBackFunc === null)
+    {
+        callBackFunc = function () {var tstabcd=1;};
+    }
     getMsgAsync('grp=1&typ=11&q=Check Session', function () {
         $body = $("body");
         $body.addClass("mdlloadingDiag");
@@ -174,7 +178,7 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                         $radioBoxes.each(function (i, radio) {
                             radio.checked = true;
                         });
-                        applySlctdLov(elementID, 'lovForm', valueElmntID, descElemntID);
+                        applySlctdLov(elementID, 'lovForm', valueElmntID, descElemntID, callBackFunc);
                     });
 
                     $('#lovTblRO tbody').on('click', 'tr', function () {
@@ -225,24 +229,34 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                 "&valElmntID=" + valueElmntID + "&descElmntID=" + descElemntID +
                 "&modalElementID=" + elementID + "&lovModalBody=" + modalBodyID +
                 "&lovModalTitle=" + titleElementID + "&searchfor=" + srchFor + "&searchin=" + srchIn +
-                "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&colNoForChkBxCmprsn=" + colNoForChkBxCmprsn + "&addtnlWhere=" + addtnlWhere + "");
+                "&pageNo=" + pageNo + "&limitSze=" + limitSze + 
+                "&colNoForChkBxCmprsn=" + colNoForChkBxCmprsn + 
+                "&addtnlWhere=" + addtnlWhere + "&callBackFunc="+callBackFunc);
     });
 
 }
 
 function enterKeyFuncLov(e, elementID, titleElementID, modalBodyID, lovNm, criteriaID,
         criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere)
+        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
 {
+    if (typeof callBackFunc === 'undefined' || callBackFunc === null)
+    {
+        callBackFunc = function () {var tstabcd=1;};
+    }
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
         getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                 criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
-                selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere);
+                selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc);
     }
 }
 
-function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID) {
+function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID, callBackFunc) {
+    if (typeof callBackFunc === 'undefined' || callBackFunc === null)
+    {
+        callBackFunc = function () {var tstabcd=1;};
+    }
     var form = document.getElementById(formElmntID);
     var cbResults = '';
     var radioResults = '';
@@ -303,6 +317,7 @@ function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID) 
         document.getElementById(valueElmntID).value = valValue;
     }
     $('#' + modalElementID).modal('hide');
+    callBackFunc();
 }
 
 function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, modalBodyID)
@@ -473,6 +488,12 @@ function openATab(slctr, linkArgs)
                         loadScript("app/wkf/wkf_admin.js?v=110", function () {
                             $this.tab('show');
                             prepareWkfAdmin(linkArgs, $body, targ, xmlhttp.responseText);
+                        });
+                    } else if (linkArgs.indexOf("grp=9&typ=1") !== -1)
+                    {
+                        loadScript("app/rpt/rpt.js?v=110", function () {
+                            $this.tab('show');
+                            prepareRpts(linkArgs, $body, targ, xmlhttp.responseText);
                         });
                     } else
                     {

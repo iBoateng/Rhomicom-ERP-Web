@@ -637,14 +637,17 @@ body.mdlloading .modalLdng {
     min-width: 100% !important;
 }
 .lovtd{
-    padding: 2px !important;
-    line-height: 1.22857143 !important; 
+    padding: 2px 5px 2px 5px !important;
+    line-height: 1.42857143 !important; 
      vertical-align: middle !important; 
 }
 .normaltd{
     padding: 8px !important;
-    line-height: 1.22857143 !important; 
+    line-height: 1.42857143 !important; 
      vertical-align: middle !important; 
+}
+.rqrdFld{
+    background-color:#ffff99 !important; 
 }
 #lovTblRO > tbody > tr{    
     cursor: pointer; cursor: hand;
@@ -675,7 +678,7 @@ select option[disabled]:first-child {
 body {
     font-family: Tahoma, georgia, Calibri, Helvetica,"Helvetica Neue","Open Sans",Arial,sans-serif !important;
     font-size: 12px;/*14px*/
-    line-height: 1.22857143;/*1.42857143*/
+    line-height: 1.42857143;/*1.42857143*/
     color: #333;
     background-color: #fff;
 }
@@ -808,6 +811,7 @@ body {
 /* Let's get this party started */
 ::-webkit-scrollbar {
     width: 6px;
+    height:6px;
 }
  
 /* Track */

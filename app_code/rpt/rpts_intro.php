@@ -1,7 +1,7 @@
 <?php
 
-$menuItems = array("Run Reports / Processes", "Create Reports / Processes");
-$menuImages = array("rho_arrow1.png", "javasp.gif", "alert.png");
+$menuItems = array("Run Reports / Processes", "Create Reports / Processes", "Run Alerts");
+$menuImages = array("rho_arrow1.png", "openfileicon.png", "alert.png");
 
 $mdlNm = "Reports And Processes";
 $ModuleName = $mdlNm;
@@ -15,7 +15,6 @@ $canview = test_prmssns($dfltPrvldgs[0], $ModuleName) || test_prmssns("View Self
 $caneditRpts = test_prmssns($dfltPrvldgs[6], $ModuleName);
 $canaddRpts = test_prmssns($dfltPrvldgs[5], $ModuleName);
 $candelRpts = test_prmssns($dfltPrvldgs[7], $ModuleName);
-
 $vwtyp = "0";
 $qstr = "";
 $dsply = "";
@@ -71,7 +70,7 @@ if ($lgn_num > 0 && $canview === true) {
     } else if ($pgNo == 0) {
         $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
-						<span style=\"text-decoration:none;\">Organization Setup Menu</span>
+						<span style=\"text-decoration:none;\">Reports Menu</span>
 					</li>
                                        </ul>
                                      </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
@@ -84,11 +83,11 @@ if ($lgn_num > 0 && $canview === true) {
         $grpcntr = 0;
         for ($i = 0; $i < count($menuItems); $i++) {
             $No = $i + 1;
-            if ($i == 0 && test_prmssns($dfltPrvldgs[2], $mdlNm) == FALSE && test_prmssns("View Self-Service", "Self Service") == FALSE) {
+            if (($i == 0 || $i == 2) && test_prmssns($dfltPrvldgs[2], $mdlNm) == FALSE && test_prmssns("View Self-Service", "Self Service") == FALSE) {
                 continue;
             } else if ($i == 1 && $canaddRpts == FALSE) {
                 continue;
-            } 
+            }
             if ($grpcntr == 0) {
                 $cntent .= "<div class=\"row\">";
             }
@@ -116,9 +115,9 @@ if ($lgn_num > 0 && $canview === true) {
         //Report Runner   
         require 'rpt_rnnr.php';
     } else if ($pgNo == 2) {
-        //require "rpts_crtr.php";
+        require "rpts_crtr.php";
     } else if ($pgNo == 3) {
-        //require "rpts_crtr.php";
+        require "rpts_alrts.php";
     } else if ($pgNo == 4) {
         //require "rpts_crtr.php";
     } else {
@@ -126,6 +125,143 @@ if ($lgn_num > 0 && $canview === true) {
     }
 } else {
     restricted();
+}
+
+function generateReportRun($rptID, $slctdParams) {
+    global $usrID;
+    global $ftp_base_db_fldr;
+    global $host;
+    global $port;
+    global $db_usr;
+    global $db_pwd;
+    global $database;
+
+    $rptRunID = -1;
+    $rptRnnrNm = "";
+    $rnnrPrcsFile = "";
+    $slctdParamsRows = explode("|", $slctdParams);
+    $paramIDs = "";
+    $paramVals = "";
+    $outputUsd = "";
+    $orntn = "";
+
+    for ($i = 0; $i < count($slctdParamsRows); $i++) {
+        $slctdParamsCols = explode("~", $slctdParamsRows[$i]);
+        $paramIDs = $paramIDs . cleanInputData($slctdParamsCols[0]) . "|";
+        $paramVals = $paramVals . cleanInputData($slctdParamsCols[1]) . "|";
+        if (cleanInputData($slctdParamsCols[0]) == "-190") {
+            $outputUsd = cleanInputData($slctdParamsCols[1]);
+        } else if (cleanInputData($slctdParamsCols[0]) == "-200") {
+            $orntn = cleanInputData($slctdParamsCols[1]);
+        }
+    }
+
+    $paramIDs = trim($paramIDs, "| ");
+    $paramVals = trim($paramVals, "| ");
+    if ($paramIDs != "" && $paramVals != "" && $outputUsd != "") {
+        $datestr = getDB_Date_time();
+        createRptRn($usrID, $datestr, $rptID, "", "", "", "");
+
+        $rptRunID = getRptRnID($rptID, $usrID, $datestr);
+        $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+        if ($msg_id <= 0) {
+            createLogMsg($datestr .
+                    " .... Report/Process Run is about to Start...(Being run by " .
+                    getUserName($usrID) . ")", "rpt.rpt_run_msgs", "Process Run", $rptRunID, $datestr);
+            $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+        }
+        updateLogMsg($msg_id, "\r\n\r\n" . $paramIDs . "\r\n" . $paramVals .
+                "\r\n\r\nOUTPUT FORMAT: " . $outputUsd . "\r\nORIENTATION: " . $orntn, "rpt.rpt_run_msgs", $datestr);
+        updateRptRnParams($rptRunID, $paramIDs, $paramVals, $outputUsd, $orntn);
+
+        //Launch appropriate process runner
+        $rptRnnrNm = getGnrlRecNm("rpt.rpt_reports", "report_id", "process_runner", $rptID);
+        $rnnrPrcsFile = $ftp_base_db_fldr . "/bin/REMSProcessRunner.jar";
+        updatePrcsRnnrCmd($rptRnnrNm, "0");
+        updateRptRnStopCmd($rptRunID, "0");
+        //PHP Command to start jar file
+        $strArgs = "\"" . $host . "\" " .
+                "\"" . $port . "\" " .
+                "\"" . $db_usr . "\" " .
+                "\"" . $db_pwd . "\" " .
+                "\"" . $database . "\" " .
+                "\"" . $rptRnnrNm . "\" " .
+                "\"" . $rptRunID . "\" " .
+                "\"" . $ftp_base_db_fldr . "/bin" . "\" " .
+                "WEB" . " " .
+                "\"" . $ftp_base_db_fldr . "\"";
+        //$strArgs = implode(" ", $args);
+        $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
+        execInBackground($cmd, $msg_id, $rptRunID);
+    } else {
+        echo "Invalid Parameters";
+    }
+    return $rptRunID;
+}
+
+function reRunReport($rptID, $rptRunID) {
+    global $usrID;
+    global $ftp_base_db_fldr;
+    global $host;
+    global $port;
+    global $db_usr;
+    global $db_pwd;
+    global $database;
+    $outputUsd = "";
+    $orntn = "";
+    $rptRnnrNm = getGnrlRecNm("rpt.rpt_reports", "report_id", "process_runner", $rptID);
+    $rnnrPrcsFile = $ftp_base_db_fldr . "/bin/REMSProcessRunner.jar";
+    $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+    $datestr = getDB_Date_time();
+    if ($msg_id <= 0) {
+        createLogMsg($datestr .
+                " .... Report/Process Run is about to Start...(Being run by " .
+                getUserName($usrID) . ")", "rpt.rpt_run_msgs", "Process Run", $rptRunID, $datestr);
+        $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+    }
+    updateLogMsg($msg_id, "\r\n\r\nRe-run of program about to start...", "rpt.rpt_run_msgs", $datestr);
+    updatePrcsRnnrCmd($rptRnnrNm, "0");
+    updateRptRnStopCmd($rptRunID, "0");
+    updateRptRnActvTme($rptRunID, $datestr);
+    //PHP Command to start jar file
+    $strArgs = "\"" . $host . "\" " .
+            "\"" . $port . "\" " .
+            "\"" . $db_usr . "\" " .
+            "\"" . $db_pwd . "\" " .
+            "\"" . $database . "\" " .
+            "\"" . $rptRnnrNm . "\" " .
+            "\"" . $rptRunID . "\" " .
+            "\"" . $ftp_base_db_fldr . "/bin" . "\" " .
+            "WEB" . " " .
+            "\"" . $ftp_base_db_fldr . "\"";
+    //$strArgs = implode(" ", $args);
+    $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
+    execInBackground($cmd, $msg_id, $rptRunID);
+    return $rptRunID;
+}
+
+function execInBackground($cmd, $msg_id, $rptRunID) {
+    global $ftp_base_db_fldr;
+    $output = array("");
+    $retval = 0;
+    if (substr(php_uname(), 0, 7) == "Windows") {
+        pclose(popen("start /B " . $cmd, "r"));
+    } else {
+        exec($cmd . " > /dev/null &");
+        //echo $cmd;
+        //" >> " . $ftp_base_db_fldr . "/Rpts/" . $rptRunID . "_" . $msg_id . ".log"
+    }
+    return "Success";
+    /*
+      $domain_bad = "google.com";
+      $output = array("");
+      $return_var = -1;
+      exec("ping -c 1 $domain_bad >> file_list.txt", $output, $return_var); //2>&1  /dev/null &
+      var_dump($return_var);
+      echo "return_var is: $return_var" . "\n";
+      var_dump($output);
+      exit();
+      // */
 }
 
 function deleteReportRun($hdrid) {
@@ -370,61 +506,12 @@ function updateRptRnStopCmd($rptrnid, $cmdStr) {
     execUpdtInsSQL($updtSQL);
 }
 
-function insertRec() {
-    //print_r($_REQUEST);
-    //return;
-    global $usrID;
-    global $rptRunID;
-    global $rptRnnrNm;
-    global $rnnrPrcsFile;
-
-    $datestr = getDB_Date_time();
-    $paramIDs = isset($_POST['slctdParamIDs']) ? $_POST['slctdParamIDs'] : "";
-    $paramVals = isset($_POST['slctdParamVals']) ? $_POST['slctdParamVals'] : "";
-    $outputUsd = isset($_POST['outputUsd']) ? $_POST['outputUsd'] : "";
-    $orntn = isset($_POST['orntn']) ? $_POST['orntn'] : "";
-    $rptID = isset($_POST['id']) ? $_POST['id'] : "";
-
-
-    createRptRn($usrID, $datestr, $rptID, "", "", "", "");
-
-    $rptRunID = getRptRnID($rptID, $usrID, $datestr);
-    $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
-    if ($msg_id <= 0) {
-        createLogMsg($datestr .
-                " .... Report/Process Run is about to Start...(Being run by " .
-                getUserName($usrID) . ")", "rpt.rpt_run_msgs", "Process Run", $rptRunID, $datestr);
-    }
-    $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
-
-
-    updateLogMsg($msg_id, "\r\n\r\n" . $paramIDs . "\r\n" . $paramVals .
-            "\r\n\r\nOUTPUT FORMAT: " . $outputUsd . "\r\nORIENTATION: " . $orntn, "rpt.rpt_run_msgs", $datestr);
-    updateRptRnParams($rptRunID, $paramIDs, $paramVals, $outputUsd, $orntn);
-
-
-//Launch appropriate process runner
-    $rptRnnrNm = getGnrlRecNm("rpt.rpt_reports", "report_id", "process_runner", $rptID);
-    $rnnrPrcsFile = getGnrlRecNm2("rpt.rpt_prcss_rnnrs", "rnnr_name", "executbl_file_nm", "$rptRnnrNm");
-    if ($rptRnnrNm == "") {
-        $rptRnnrNm = "Standard Process Runner";
-    }
-    if ($rnnrPrcsFile == "") {
-        $rnnrPrcsFile = "\\bin\\ProcessRunner.exe";
-    }
-    updatePrcsRnnrCmd($rptRnnrNm, "0");
-    updateRptRnStopCmd($rptRunID, "0");
-    if (isset($_REQUEST['id'])) {
-        $_REQUEST['id'] = $rptRunID;
-    }
-}
-
-function updateRec() {
-    
-}
-
-function deleteRec() {
-    
+function get_RptsDet($pkeyID) {
+    $strSql = "SELECT distinct a.report_id mt, a.report_name, a.report_desc mt
+    FROM rpt.rpt_reports a
+    WHERE (a.report_id = $pkeyID)";
+    $result = executeSQLNoParams($strSql);
+    return $result;
 }
 
 function get_RptsTblr($searchWord, $searchIn, $offset, $limit_size) {
@@ -494,17 +581,66 @@ function get_RptsTtl($searchWord, $searchIn) {
     return 0;
 }
 
-function get_ASchdlRuns($USER_ID) {
+function get_ASchdlRuns($searchWord, $searchIn, $offset, $limit_size) {
+    global $dfltPrvldgs;
+    global $usrID;
+    global $mdlNm;
+
+    $whereCls = "";
+    $extrWhrcls = "";
+    if (test_prmssns($dfltPrvldgs[10], $mdlNm) == false) {
+        $extrWhrcls = " and (a.created_by = $usrID)";
+    }
+    if ($searchIn == "Report Name") {
+        $whereCls = " and (b.report_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Start Date") {
+        $whereCls = " and (to_char(to_timestamp(a.start_dte_tme, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Repeat Interval") {
+        $whereCls = " and ('' || a.repeat_every ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Created By") {
+        $whereCls = " and (sec.get_usr_name(a.created_by) ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
     $strSql = "SELECT a.schedule_id, a.report_id mt, b.report_name,
     to_char(to_timestamp(a.start_dte_tme, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') start_date,
-    a.repeat_every, a.repeat_uom
+    a.repeat_every, a.repeat_uom, sec.get_usr_name(a.created_by) created_by
     FROM rpt.rpt_run_schdules a, rpt.rpt_reports b
-    WHERE a.report_id = b.report_id and a.created_by = $USER_ID ORDER BY a.schedule_id DESC";
+    WHERE a.report_id = b.report_id" . $whereCls . $extrWhrcls . 
+            " ORDER BY a.schedule_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     //echo $strSql;
     return $result;
 }
 
+function get_ASchdlRunsTtl($searchWord, $searchIn) {
+    global $dfltPrvldgs;
+    global $usrID;
+    global $mdlNm;
+
+    $whereCls = "";
+    $extrWhrcls = "";
+    if (test_prmssns($dfltPrvldgs[10], $mdlNm) == false) {
+        $extrWhrcls = " and (a.created_by = $usrID)";
+    }
+    if ($searchIn == "Report Name") {
+        $whereCls = " and (b.report_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Start Date") {
+        $whereCls = " and (to_char(to_timestamp(a.start_dte_tme, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Repeat Interval") {
+        $whereCls = " and ('' || a.repeat_every ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Created By") {
+        $whereCls = " and (sec.get_usr_name(a.created_by) ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "SELECT count(1) 
+    FROM rpt.rpt_run_schdules a, rpt.rpt_reports b
+    WHERE a.report_id = b.report_id" . $whereCls . $extrWhrcls;
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
 function get_RptRuns($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     global $dfltPrvldgs;
     global $usrID;
@@ -518,6 +654,8 @@ function get_RptRuns($pkID, $searchWord, $searchIn, $offset, $limit_size) {
     } else if ($searchIn == "Run By") {
         $whereCls = " and ((select b.user_name from
     sec.sec_users b where b.user_id = a.run_by) ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Run Status") {
+        $whereCls = " and (a.run_status_txt ilike '" . loc_db_escape_string($searchWord) . "')";
     }
 
     $extrWhrcls = "";
@@ -553,6 +691,8 @@ function get_RptRunsTtl($pkID, $searchWord, $searchIn) {
     } else if ($searchIn == "Run By") {
         $whereCls = " and ((select b.user_name from
     sec.sec_users b where b.user_id = a.run_by) ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Run Status") {
+        $whereCls = " and (a.run_status_txt ilike '" . loc_db_escape_string($searchWord) . "')";
     }
     $extrWhrcls = "";
     if (test_prmssns($dfltPrvldgs[10], $mdlNm) == false) {
@@ -599,7 +739,7 @@ function get_RptAlertsTtl($pkID, $searchWord, $searchIn) {
 function get_OneSchdlRun($pkID) {
     $strSql = "SELECT a.schedule_id, a.report_id mt, b.report_name,
     to_char(to_timestamp(a.start_dte_tme, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') start_date,
-    a.repeat_every, a.repeat_uom
+    a.repeat_every, a.repeat_uom, a.run_at_spcfd_hour 
     FROM rpt.rpt_run_schdules a, rpt.rpt_reports b
     WHERE a.report_id = b.report_id and a.schedule_id = $pkID ORDER BY a.schedule_id DESC";
     $result = executeSQLNoParams($strSql);
@@ -617,7 +757,7 @@ function get_OneRptRun($pkID) {
     CASE WHEN a.last_actv_date_tme='' or a.last_actv_date_tme IS NULL THEN '' 
     ELSE to_char(to_timestamp(a.last_actv_date_tme,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END last_time_active, 
     CASE WHEN is_this_from_schdler='1' THEN 'SCHEDULER' ELSE 'USER' END run_source ,
-    a.rpt_run_id \"Open Output File\", a.report_id mt
+    a.rpt_run_id \"Open Output File\", a.report_id mt, a.last_actv_date_tme 
       FROM rpt.rpt_report_runs a 
         WHERE ((a.rpt_run_id = $pkID ))";
     $result = executeSQLNoParams($strSql);
@@ -639,9 +779,20 @@ function get_AllSchdldParams($schdlID) {
     return $result;
 }
 
+function get_SchdldParamVal($schdlID, $paramID) {
+    $strSql = "SELECT a.parameter_value
+      FROM rpt.rpt_run_schdule_params a, rpt.rpt_report_parameters b  
+      WHERE a.parameter_id = $paramID and a.schedule_id=$schdlID";
+    $result = executeSQLNoParams($strSql);
+     while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
 function get_Rpt_ColsToAct($rptID) {
-    $strSql = "SELECT cols_to_group, cols_to_count, cols_to_sum, cols_to_average, cols_to_no_frmt,
-        output_type, portrait_lndscp, report_name
+    $strSql = "SELECT report_name, cols_to_group, cols_to_count, cols_to_sum, cols_to_average, cols_to_no_frmt,
+        output_type, portrait_lndscp
       FROM rpt.rpt_reports WHERE report_id = $rptID";
     $result = executeSQLNoParams($strSql);
     return $result;
