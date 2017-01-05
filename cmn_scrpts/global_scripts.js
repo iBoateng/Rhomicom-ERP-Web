@@ -1192,3 +1192,8 @@ function changeImgSrc(input, imgId, imgSrcLocID) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+function setFileLoc(input, nwSrcLocElmnt) {
+    if (input.files && input.files[0]) {
+        $(nwSrcLocElmnt).attr('value', $(input).val());
+    }
+}

@@ -630,18 +630,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $nwRowHtml = urlencode("<tr id=\"psblValsRow__WWW123WWW\">"
                                         . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
                                         . "<td class=\"lovtd\">
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
                                                             <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"psblValsRow_WWW123WWW_PValNm\" value=\"\" style=\"width:100% !important;\">
                                                             <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"psblValsRow_WWW123WWW_PValID\" value=\"\">
                                               </div>
                                           </td>
                                           <td class=\"lovtd\">                                          
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
                                                             <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"psblValsRow_WWW123WWW_PValDesc\" value=\"\" style=\"width:100% !important;\">
                                               </div>
                                           </td>
                                           <td class=\"lovtd\"> 
-                                              <div class=\"form-group form-group-sm normaltd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
                                                             <div class=\"form-check\" style=\"font-size: 12px !important;\">
                                                                 <label class=\"form-check-label\">
                                                                     <input type=\"checkbox\" class=\"form-check-input\" id=\"psblValsRow_WWW123WWW_IsEnabled\" name=\"psblValsRow_WWW123WWW_IsEnabled\">
@@ -650,7 +650,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                               </div>
                                            </td>
                                            <td class=\"lovtd\">
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
                                                             <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"psblValsRow_WWW123WWW_AlwdOrgs\" value=\"\" style=\"width:100% !important;\">
                                               </div>
                                           </td>
@@ -762,7 +762,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                 <td class="lovtd">
                                                     <?php if ($canEdtGst === true && $isdynmc != "1") { ?>
-                                                        <div class="form-group form-group-sm" style="width:100% !important;">
+                                                        <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
                                                             <input type="text" class="form-control" aria-label="..." id="psblValsRow<?php echo $cntr; ?>_PValNm" value="<?php echo $row1[2]; ?>" style="width:100% !important;">
                                                             <input type="hidden" class="form-control" aria-label="..." id="psblValsRow<?php echo $cntr; ?>_PValID" value="<?php echo $row1[0]; ?>">
                                                         </div>
@@ -772,7 +772,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </td>                                                
                                                 <td class="lovtd">
                                                     <?php if ($canEdtGst === true && $isdynmc != "1") { ?>
-                                                        <div class="form-group form-group-sm" style="width:100% !important;">
+                                                        <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
                                                             <input type="text" class="form-control" aria-label="..." id="psblValsRow<?php echo $cntr; ?>_PValDesc" value="<?php echo $row1[3]; ?>" style="width:100% !important;">
                                                         </div>
                                                     <?php } else { ?>
@@ -787,7 +787,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     }
                                                     if ($canEdtGst === true && $isdynmc != "1") {
                                                         ?>
-                                                        <div class="form-group form-group-sm">
+                                                        <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
                                                             <div class="form-check" style="font-size: 12px !important;">
                                                                 <label class="form-check-label">
                                                                     <input type="checkbox" class="form-check-input" id="psblValsRow<?php echo $cntr; ?>_IsEnabled" name="psblValsRow<?php echo $cntr; ?>_IsEnabled" <?php echo $isChkd ?>>
@@ -800,7 +800,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </td>
                                                 <td class="lovtd">
                                                     <?php if ($canEdtGst === true && $isdynmc != "1") { ?>
-                                                        <div class="form-group form-group-sm" style="width:100% !important;">
+                                                        <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
                                                             <input type="text" class="form-control" aria-label="..." id="psblValsRow<?php echo $cntr; ?>_AlwdOrgs" value="<?php echo $row1[5]; ?>" style="width:100% !important;">
                                                         </div>
                                                     <?php } else { ?>

@@ -318,8 +318,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <tr>
                                                                                         <th>No.</th>
                                                                                         <th>Report Run ID</th>
-                                                                                        <th style="min-width:90px !important;">Run Status</th>
-                                                                                        <th style="min-width:160px !important;">Last Time Active</th>
+                                                                                        <th style="min-width:110px !important;">Run Status</th>
+                                                                                        <th style="min-width:140px !important;">Last Time Active</th>
                                                                                         <th>Open Output File</th>
                                                                                         <th>Log Files</th>
                                                                                         <th>Run By</th>
@@ -346,6 +346,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                                                                                         //$chckd = FALSE; 
                                                                                         $outptUsd = $row2[8];
+                                                                                        $sbmtdAlrtID = $row2[14];
+                                                                                        $sbmtdRptID = $row2[16];
                                                                                         $rpt_src_encrpt = "";
                                                                                         if ($outptUsd == "HTML" || $outptUsd == "COLUMN CHART" || $outptUsd == "SIMPLE COLUMN CHART" || $outptUsd == "BAR CHART" || $outptUsd == "PIE CHART" || $outptUsd == "LINE CHART") {
                                                                                             $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/amcharts_2100/samples/$row2[0].html";
@@ -407,7 +409,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                         ?>
                                                                                         <tr id="alrtRunsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
                                                                                             <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                                                            <td class="lovtd"><a href="javascript:getOneRptsRnStsForm(<?php echo $pkID; ?>, <?php echo $row2[0]; ?>, 3,'0');" style="color:blue;font-weight:bold;"><?php echo $row2[0]; ?></a></td>
+                                                                                            <td class="lovtd"><a href="javascript:getOneRptsRnStsForm(<?php echo $sbmtdRptID; ?>, <?php echo $row2[0]; ?>, 3,'0', <?php echo $sbmtdAlrtID; ?>);" style="color:blue;font-weight:bold;"><?php echo $row2[0]; ?></a></td>
                                                                                             <td class="lovtd"><span <?php
                                                                                                 $style2 = "";
                                                                                                 if ($row2[4] == "Not Started!") {
@@ -418,7 +420,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                     $style2 = "style=\"background-color: lightgreen;padding:5px !important;\"";
                                                                                                 } else if ($row2[4] == "Formatting Output...") {
                                                                                                     $style2 = "style=\"background-color: lime;padding:5px !important;\"";
-                                                                                                } else if ($row2[4] == "Storing Output...") {
+                                                                                                } else if ($row2[4] == "Storing Output..." || $row2[4] == "Sending Output...") {
                                                                                                     $style2 = "style=\"background-color: cyan;padding:5px !important;\"";
                                                                                                 } else if ($row2[4] == "Completed!") {
                                                                                                     $style2 = "style=\"background-color: gainsboro;padding:5px !important;\"";
@@ -628,8 +630,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <tr>
                                                                     <th>No.</th>
                                                                     <th>Report Run ID</th>
-                                                                    <th style="min-width:90px !important;">Run Status</th>
-                                                                    <th style="min-width:160px !important;">Last Time Active</th>
+                                                                    <th style="min-width:110px !important;">Run Status</th>
+                                                                    <th style="min-width:140px !important;">Last Time Active</th>
                                                                     <th>Open Output File</th>
                                                                     <th>Log Files</th>
                                                                     <th>Run By</th>
@@ -656,6 +658,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
                                                                     //$chckd = FALSE; 
                                                                     $outptUsd = $row2[8];
+                                                                    $sbmtdAlrtID = $row2[14];
+                                                                    $sbmtdRptID = $row2[16];
                                                                     $rpt_src_encrpt = "";
                                                                     if ($outptUsd == "HTML" || $outptUsd == "COLUMN CHART" || $outptUsd == "SIMPLE COLUMN CHART" || $outptUsd == "BAR CHART" || $outptUsd == "PIE CHART" || $outptUsd == "LINE CHART") {
                                                                         $rpt_src = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/amcharts_2100/samples/$row2[0].html";
@@ -717,7 +721,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     ?>
                                                                     <tr id="alrtRunsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
                                                                         <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                                        <td class="lovtd"><a href="javascript:getOneRptsRnStsForm(<?php echo $pkID; ?>, <?php echo $row2[0]; ?>, 3,'0');" style="color:blue;font-weight:bold;"><?php echo $row2[0]; ?></a></td>
+                                                                        <td class="lovtd"><a href="javascript:getOneRptsRnStsForm(<?php echo $sbmtdRptID; ?>, <?php echo $row2[0]; ?>, 3,'0', <?php echo $sbmtdAlrtID; ?>);" style="color:blue;font-weight:bold;"><?php echo $row2[0]; ?></a></td>
                                                                         <td class="lovtd"><span <?php
                                                                             $style2 = "";
                                                                             if ($row2[4] == "Not Started!") {
@@ -728,7 +732,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 $style2 = "style=\"background-color: lightgreen;padding:5px !important;\"";
                                                                             } else if ($row2[4] == "Formatting Output...") {
                                                                                 $style2 = "style=\"background-color: lime;padding:5px !important;\"";
-                                                                            } else if ($row2[4] == "Storing Output...") {
+                                                                            } else if ($row2[4] == "Storing Output..." || $row2[4] == "Sending Output...") {
                                                                                 $style2 = "style=\"background-color: cyan;padding:5px !important;\"";
                                                                             } else if ($row2[4] == "Completed!") {
                                                                                 $style2 = "style=\"background-color: gainsboro;padding:5px !important;\"";
@@ -736,7 +740,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 $style2 = "style=\"background-color: red;padding:5px !important;\"";
                                                                             }
                                                                             echo $style2;
-                                                                            ?>><?php echo $row2[4]; ?></span></td>
+                                                                            ?>><?php echo $row2[4]; ?></span>
+                                                                        </td>
                                                                         <td class="lovtd"><span <?php
                                                                             $tst = isDteTmeWthnIntrvl(cnvrtDMYTmToYMDTm($row2[10]), '40 second');
                                                                             $style2 = "";

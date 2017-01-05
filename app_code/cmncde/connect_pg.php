@@ -17,7 +17,7 @@ $smplTokenWord1 = "xewe19fs58rte21This is a General Key for Rhomi|com Systems "
         . "Tech. !Ltd Web/Mobile Portal @7612364kjebdfjwegyr78236429orbjkasdbhi";
 $ModuleName = "";
 $database = "ecog_live";
-$db_folder = "test_database";
+$db_folder = "ecng";
 $script_folder = "scripts7";
 $base_folder = "";
 $fldrPrfx = '/var/www/html/rho_erp/';

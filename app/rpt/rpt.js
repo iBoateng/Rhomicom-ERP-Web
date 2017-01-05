@@ -371,7 +371,6 @@ function reloadParams()
 function getOneRptsRnStsForm(pKeyID, prvRunID, vwtype, mustReRun, alrtID)
 {
     var lnkArgs = 'grp=9&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdRptID=' + pKeyID + "&sbmtdRunID=" + prvRunID + "&sbmtdAlrtID=" + alrtID + "&mustReRun=" + mustReRun;
-
     var slctdParams = "";
     $('#rptParamsTable').find('tr').each(function (i, el) {
         if (i > 0)
@@ -399,15 +398,20 @@ function getOneRptsRnStsForm(pKeyID, prvRunID, vwtype, mustReRun, alrtID)
         });
         if (prvRunID <= 0)
         {
-            getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+            if (alrtID > 0)
+            {
+                getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=' + alrtID);
+            } else {
+                getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+            }
             prvRunID = typeof $("#rptParamsStsRunID").val() === 'undefined' ? -1 : $("#rptParamsStsRunID").val();
             if (prvRunID > 0)
             {
-                autoRfrshRptsRnSts(pKeyID, prvRunID, 0);
+                autoRfrshRptsRnSts(pKeyID, prvRunID, 0, alrtID);
             }
         } else if (prvRunID > 0 && mustReRun == '1')
         {
-            autoRfrshRptsRnSts(pKeyID, prvRunID, 0);
+            autoRfrshRptsRnSts(pKeyID, prvRunID, 0, alrtID);
         }
     });
 }
@@ -415,7 +419,7 @@ function getOneRptsRnStsForm(pKeyID, prvRunID, vwtype, mustReRun, alrtID)
 var globaltmer;
 var globaltmerCntr = 0;
 
-function autoRfrshRptsRnSts(pKeyID, prvRunID, mstStop)
+function autoRfrshRptsRnSts(pKeyID, prvRunID, mstStop, alrtID)
 {
     if (mstStop > 0)
     {
@@ -444,37 +448,57 @@ function autoRfrshRptsRnSts(pKeyID, prvRunID, mstStop)
             {
                 globaltmerCntr = globaltmerCntr + 1;
                 globaltmer = window.setInterval(function () {
-                    autoRfrshRptsRnSts(pKeyID, prvRunID, mstStop);
+                    autoRfrshRptsRnSts(pKeyID, prvRunID, mstStop, alrtID);
                 }, 5000);
             } else if (runPrcnt >= 100 || mstStop > 0) {
                 globaltmer = window.clearInterval(globaltmer);
                 globaltmerCntr = 0;
-                getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+                if (alrtID > 0)
+                {
+                    getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=' + alrtID);
+                } else {
+                    getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+                }
             }
         });
     } else
     {
         globaltmer = window.clearInterval(globaltmer);
         globaltmerCntr = 0;
-        getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+        if (alrtID > 0)
+        {
+            getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=' + alrtID);
+        } else {
+            getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+        }
     }
 }
 
-function cancelRptRun(pKeyID, prvRunID)
+function cancelRptRun(pKeyID, prvRunID, alrtID)
 {
     globaltmer = window.clearInterval(globaltmer);
     var lnkArgs = 'grp=9&typ=1&pg=1&vtyp=4&sbmtdRptID=' + pKeyID + "&sbmtdRunID=" + prvRunID + "";
     doAjaxWthCallBck(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody', function () {
-        getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+        if (alrtID > 0)
+        {
+            getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=' + alrtID);
+        } else {
+            getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+        }
         globaltmer = window.clearInterval(globaltmer);
         globaltmerCntr = 0;
         $('#myFormsModalNrml').modal('hide');
     });
 }
-function rfrshCncldRptRun(pKeyID)
+function rfrshCncldRptRun(pKeyID, alrtID)
 {
     $('#myFormsModal').modal('hide');
-    getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+    if (alrtID > 0)
+    {
+        getAllAlrtRuns('', '#alrtsDetailInfo', 'grp=9&typ=1&pg=2&vtyp=1&sbmtdAlrtID=' + alrtID);
+    } else {
+        getAllRptRuns('', '#rptsDetailInfo', 'grp=9&typ=1&pg=1&vtyp=1&sbmtdRptID=' + pKeyID);
+    }
 }
 
 function getAllSchdls(actionText, slctr, linkArgs)

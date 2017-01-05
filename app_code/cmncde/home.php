@@ -24,30 +24,31 @@
                         <li data-target="#myCarousel" data-slide-to="1"></li>
                         <li data-target="#myCarousel" data-slide-to="2"></li>
                     </ol>
+                    <!--data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw== <?php echo $lgn_image; ?>-->
                     <div class="carousel-inner" role="listbox">
                         <div class="item active">
-                            <img class="first-slide" src="<?php echo $lgn_image; ?>" alt="First slide" style="height: 250px !important;width: auto !important;">
+                            <img class="first-slide" src="cmn_images/bnnr6.jpg" alt="First slide" style="height: 250px !important;width: auto !important;">
                             <div class="container">
                                 <div class="carousel-caption">
-                                    <h3>Example headline.</h3>
+                                    <!--<h3>Example headline.</h3>-->
                                     <p><a class="btn btn-sm btn-primary" href="#" role="button">Sign up today</a></p>
                                 </div>
                             </div>
                         </div>
                         <div class="item">
-                            <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+                            <img class="second-slide" src="cmn_images/bnnr11.png" alt="Second slide" style="height: 250px !important;width: auto !important;">
                             <div class="container">
                                 <div class="carousel-caption">
-                                    <h3>Another example headline.</h3>
+                                    <!--<h3>Another example headline.</h3>-->
                                     <p><a class="btn btn-sm btn-primary" href="#" role="button">Learn more</a></p>
                                 </div>
                             </div>
                         </div>
                         <div class="item">
-                            <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+                            <img class="third-slide" src="cmn_images/bnnr9.jpg" alt="Third slide" style="height: 250px !important;width: auto !important;">
                             <div class="container">
                                 <div class="carousel-caption">
-                                    <h3>One more for good measure.</h3>
+                                    <!--<h3>One more for good measure.</h3>-->
                                     <p><a class="btn btn-sm btn-primary" href="#" role="button">Browse gallery</a></p>
                                 </div>
                             </div>

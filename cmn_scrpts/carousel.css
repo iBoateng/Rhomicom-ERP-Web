@@ -58,7 +58,8 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    min-width: 100%;
+    width: auto;
+    /*min-width: 100%;*/
 }
 .wordwrap1 { 
     white-space: pre-wrap;      /* CSS3 */   
@@ -89,7 +90,7 @@ body {
 }
 @media screen and (max-width: 767px) {
     .carousel .item {height: 200px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 200px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 200px !important; width: auto;}
     .carousel-caption h1 {font-size:20px !important;}
     .wordwrap1 { 
         left:30%;
@@ -100,7 +101,7 @@ body {
 }
 @media (min-width: 768px) and (max-width: 991px) {
     .carousel .item {height: 200px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 200px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 200px !important; width: auto;}
     .carousel-caption h1 {font-size:24px !important;}
     .wordwrap1 { 
         left:35%;
@@ -111,12 +112,12 @@ body {
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     .carousel .item {height: 250px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 250px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 250px !important; width: auto;}
     .carousel-caption h1 {font-size:30px !important;}
 }
 @media screen and (min-width: 1200px) {
     .carousel .item {height: 250px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 250px !important;}
+    .carousel-inner,.carousel-inner > .item > img {height: 250px !important; width: auto;}
     .carousel-caption h1 {font-size:36px !important;}
 }
 
@@ -695,7 +696,7 @@ table.dataTable {
     margin-bottom: 1px !important;
 }
 .page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
-    padding: 3px 14px 3px 50px !important;
+    padding: 3px 14px 3px 40px !important;
 }
 .page-sidebar .page-sidebar-menu>li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a {
     padding: 6px 15px 6px 15px !important;

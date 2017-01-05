@@ -500,7 +500,11 @@ function updateRptRnStopCmd($rptrnid, $cmdStr) {
 }
 
 function get_RptsDet($pkeyID) {
-    $strSql = "SELECT distinct a.report_id mt, a.report_name, a.report_desc mt
+    $strSql = "SELECT a.report_id, a.report_name, a.report_desc, a.rpt_sql_query, a.owner_module, 
+       a.rpt_or_sys_prcs, a.is_enabled, a.cols_to_group, a.cols_to_count, a.cols_to_sum, 
+       a.cols_to_average, a.cols_to_no_frmt, a.output_type, a.portrait_lndscp, 
+       a.rpt_layout, a.imgs_col_nos, a.csv_delimiter, a.process_runner, a.is_seeded_rpt, 
+       a.jrxml_file_name
     FROM rpt.rpt_reports a
     WHERE (a.report_id = $pkeyID)";
     $result = executeSQLNoParams($strSql);
@@ -509,7 +513,7 @@ function get_RptsDet($pkeyID) {
 
 function get_RptsTblr($searchWord, $searchIn, $offset, $limit_size) {
     global $caneditRpts;
-
+    
     $whereCls = "";
     if ($searchIn == "Report Name") {
         $whereCls = "(a.report_name ilike '" . loc_db_escape_string($searchWord) . "')";
@@ -742,7 +746,8 @@ function get_AlrtRuns($pkID, $searchWord, $searchIn, $offset, $limit_size) {
           a.rpt_run_id \"Open Output File\", 
           b.report_name mt, 
           a.alert_id, 
-          a.msg_sent_id
+          a.msg_sent_id,
+          a.report_id
       FROM rpt.rpt_report_runs a, rpt.rpt_reports b 
         WHERE (a.report_id = b.report_id and (a.alert_id = $pkID)$whereCls" . "$extrWhrcls) 
         ORDER BY a.rpt_run_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
@@ -872,15 +877,22 @@ function get_OneSchdlRun($pkID) {
 
 function get_OneRptRun($pkID) {
 
-    $strSql = "SELECT a.rpt_run_id \"Run ID\", a.run_by mt, (select b.user_name from 
-          sec.sec_users b where b.user_id = a.run_by) \"Run By\", 
+    $strSql = "SELECT a.rpt_run_id \"Run ID\", 
+        a.run_by mt, 
+        (select b.user_name from sec.sec_users b where b.user_id = a.run_by) \"Run By\", 
         to_char(to_timestamp(a.run_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') date_run, 
-          a.run_status_txt run_status_text, a.run_status_prct \"Progress (%)\", a.rpt_rn_param_ids mt, a.rpt_rn_param_vals mt, 
-          a.output_used , a.orntn_used orientation_used, 
-    CASE WHEN a.last_actv_date_tme='' or a.last_actv_date_tme IS NULL THEN '' 
-    ELSE to_char(to_timestamp(a.last_actv_date_tme,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END last_time_active, 
+          a.run_status_txt run_status_text, 
+          a.run_status_prct \"Progress (%)\", 
+          a.rpt_rn_param_ids mt, 
+          a.rpt_rn_param_vals mt, 
+          a.output_used , 
+          a.orntn_used orientation_used, 
+    CASE WHEN a.last_actv_date_tme='' or a.last_actv_date_tme IS NULL THEN '' ELSE to_char(to_timestamp(a.last_actv_date_tme,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS') END last_time_active, 
     CASE WHEN is_this_from_schdler='1' THEN 'SCHEDULER' ELSE 'USER' END run_source ,
-    a.rpt_run_id \"Open Output File\", a.report_id mt, a.last_actv_date_tme 
+    a.rpt_run_id \"Open Output File\", 
+    a.report_id mt, 
+    a.last_actv_date_tme, 
+    a.alert_id  
       FROM rpt.rpt_report_runs a 
         WHERE ((a.rpt_run_id = $pkID ))";
     $result = executeSQLNoParams($strSql);

@@ -163,7 +163,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                 <td class="lovtd"><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allRptsRow<?php echo $cntr; ?>_RptID" value="<?php echo $row[0]; ?>"></td>
                                                 <td class="lovtd">
-                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOneRptsParamsForm(<?php echo $row[0]; ?>, -1, '<?php echo $row[1]; ?>', 2);" data-toggle="tooltip" data-placement="bottom" title="Run Report/Process">
+                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOneRptsParamsForm(<?php echo $row[0]; ?>, -1, '<?php echo $row[1]; ?>', 2, -1);" data-toggle="tooltip" data-placement="bottom" title="Run Report/Process">
                                                         <img src="cmn_images/98.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                     </button>
                                                 </td>
@@ -320,8 +320,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <tr>
                                                                                         <th>No.</th>
                                                                                         <th>Report Run ID</th>
-                                                                                        <th style="min-width:90px !important;">Run Status</th>
-                                                                                        <th style="min-width:160px !important;">Last Time Active</th>
+                                                                                        <th style="min-width:110px !important;">Run Status</th>
+                                                                                        <th style="min-width:140px !important;">Last Time Active</th>
                                                                                         <th>Open Output File</th>
                                                                                         <th>Log Files</th>
                                                                                         <th>Run By</th>
@@ -339,7 +339,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     } else if ($pageNo < 1) {
                                                                                         $pageNo = ceil($total / $lmtSze);
                                                                                     }
-
                                                                                     $curIdx = $pageNo - 1;
                                                                                     $result2 = get_RptRuns($pkID, $srchFor, $srchIn, $curIdx, $lmtSze);
                                                                                     $cntr = 0;
@@ -420,7 +419,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                     $style2 = "style=\"background-color: lightgreen;padding:5px !important;\"";
                                                                                                 } else if ($row2[4] == "Formatting Output...") {
                                                                                                     $style2 = "style=\"background-color: lime;padding:5px !important;\"";
-                                                                                                } else if ($row2[4] == "Storing Output...") {
+                                                                                                } else if ($row2[4] == "Storing Output..." || $row2[4] == "Sending Output...") {
                                                                                                     $style2 = "style=\"background-color: cyan;padding:5px !important;\"";
                                                                                                 } else if ($row2[4] == "Completed!") {
                                                                                                     $style2 = "style=\"background-color: gainsboro;padding:5px !important;\"";
@@ -500,7 +499,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <?php
             } else if ($vwtyp == 1) {
                 $pkID = isset($_POST['sbmtdRptID']) ? $_POST['sbmtdRptID'] : -1;
-$sbmtdAlrtID = -1;
+                $sbmtdAlrtID = -1;
                 if ($pkID > 0) {
                     $sbmtdRptID = $pkID;
                     $result1 = get_RptsDet($pkID);
@@ -631,8 +630,8 @@ $sbmtdAlrtID = -1;
                                                                 <tr>
                                                                     <th>No.</th>
                                                                     <th>Report Run ID</th>
-                                                                    <th style="min-width:90px !important;">Run Status</th>
-                                                                    <th style="min-width:160px !important;">Last Time Active</th>
+                                                                    <th style="min-width:110px !important;">Run Status</th>
+                                                                    <th style="min-width:140px !important;">Last Time Active</th>
                                                                     <th>Open Output File</th>
                                                                     <th>Log Files</th>
                                                                     <th>Run By</th>
@@ -656,7 +655,7 @@ $sbmtdAlrtID = -1;
                                                                 $cntr = 0;
                                                                 while ($row2 = loc_db_fetch_array($result2)) {
                                                                     $cntr += 1;
-$sbmtdAlrtID = $row2[14];
+                                                                    $sbmtdAlrtID = $row2[14];
                                                                     //$chckd = FALSE; 
                                                                     $outptUsd = $row2[8];
                                                                     $rpt_src_encrpt = "";
@@ -731,7 +730,7 @@ $sbmtdAlrtID = $row2[14];
                                                                                 $style2 = "style=\"background-color: lightgreen;padding:5px !important;\"";
                                                                             } else if ($row2[4] == "Formatting Output...") {
                                                                                 $style2 = "style=\"background-color: lime;padding:5px !important;\"";
-                                                                            } else if ($row2[4] == "Storing Output...") {
+                                                                            } else if ($row2[4] == "Storing Output..." || $row2[4] == "Sending Output...") {
                                                                                 $style2 = "style=\"background-color: cyan;padding:5px !important;\"";
                                                                             } else if ($row2[4] == "Completed!") {
                                                                                 $style2 = "style=\"background-color: gainsboro;padding:5px !important;\"";
@@ -968,6 +967,9 @@ $sbmtdAlrtID = $row2[14];
                                     }
                                 }
                                 for ($d = 0; $d < count($colNoVals); $d++) {
+                                    if ($sysParaIDs[$d] !== "-190" && $sysParaIDs[$d] !== "-130") {
+                                        continue;
+                                    }
                                     $cntr ++;
                                     $isrqrd = "";
                                     ?>
@@ -1037,6 +1039,7 @@ $sbmtdAlrtID = $row2[14];
                 if ($prvRunID <= 0) {
                     //Create Report Run and Launch
                     $prvRunID = generateReportRun($rptID, $slctdParams, $sbmtdAlrtID);
+                    $rptRunID = $prvRunID;
                 } else if ($mustReRun == "1") {
                     $runStatus = getGnrlRecNm("rpt.rpt_report_runs", "rpt_run_id", "run_status_txt", $prvRunID);
                     $runActvTme = getGnrlRecNm("rpt.rpt_report_runs", "rpt_run_id", "last_actv_date_tme", $prvRunID);
@@ -1046,7 +1049,6 @@ $sbmtdAlrtID = $row2[14];
                     //Launch Report Run is idle
                 }
                 $pkID = $rptID;
-                $rptRunID = $prvRunID;
                 $reportName = getGnrlRecNm("rpt.rpt_reports", "report_id", "report_name", $pkID);
                 $rptOutPut = getGnrlRecNm("rpt.rpt_reports", "report_id", "output_type", $pkID);
                 $rptOrntn = getGnrlRecNm("rpt.rpt_reports", "report_id", "portrait_lndscp", $pkID);
@@ -1070,6 +1072,7 @@ $sbmtdAlrtID = $row2[14];
                 while ($row1 = loc_db_fetch_array($result1)) {
                     $runStatus = $row1[4];
                     $runActvTme = $row1[14];
+                    $alrtID = $row1[15];
                     if ((integer) $row1[5] >= 100) {
                         $autoRfrsh = "0";
                     }
@@ -1077,27 +1080,27 @@ $sbmtdAlrtID = $row2[14];
                     <form id='rptParamsStsForm' action='' method='post' accept-charset='UTF-8'>                    
                         <div class="row rhoRowMargin">
                             <?php if ($autoRfrsh == "1") { ?>
-                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;margin-right:5px;" onclick="autoRfrshRptsRnSts(<?php echo $pkID; ?>, <?php echo $prvRunID ?>, 1);" data-toggle="tooltip" data-placement="bottom" title="Stop Auto-Refresh Report/Process Status">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;margin-right:5px;" onclick="autoRfrshRptsRnSts(<?php echo $pkID; ?>, <?php echo $prvRunID ?>, 1);" data-toggle="tooltip" data-placement="bottom" title="Stop Auto-Refresh Report/Process Status">
                                     <img src="cmn_images/90.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> Stop Auto-Refresh
                                 </button>
                             <?php } else { ?>
-                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;margin-right:5px;" onclick="autoRfrshRptsRnSts(<?php echo $pkID; ?>, <?php echo $prvRunID ?>, 0);" data-toggle="tooltip" data-placement="bottom" title="Auto-Refresh Report/Process Status">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;margin-right:5px;" onclick="autoRfrshRptsRnSts(<?php echo $pkID; ?>, <?php echo $prvRunID ?>, 0);" data-toggle="tooltip" data-placement="bottom" title="Auto-Refresh Report/Process Status">
                                     <img src="cmn_images/clock.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> Auto-Refresh
                                 </button>
                             <?php } ?>
-                            <button type="button" class="btn btn-default" style="margin-bottom: 0px;margin-right:5px;" onclick="getOneRptsRnStsForm(<?php echo $pkID; ?>, <?php echo $prvRunID ?>, 3, '0', <?php echo $sbmtdAlrtID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Refresh Report/Process Status">
+                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;margin-right:5px;" onclick="getOneRptsRnStsForm(<?php echo $pkID; ?>, <?php echo $prvRunID ?>, 3, '0', <?php echo $sbmtdAlrtID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Refresh Report/Process Status">
                                 <img src="cmn_images/refresh.bmp" style="height:20px; width:auto; position: relative; vertical-align: middle;"> Refresh
                             </button>
                             <?php
                             if ($runStatus != 'Completed!' && $runStatus != 'Cancelled!' && $runStatus != 'Error!' && doesDteTmeExceedIntrvl($runActvTme, '30 second') == TRUE) {
                                 ?>                            
-                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;margin-right:5px;" onclick="getOneRptsRnStsForm(<?php echo $pkID; ?>, <?php echo $prvRunID ?>, 3, '1', <?php echo $sbmtdAlrtID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Re-run Report/Process">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;margin-right:5px;" onclick="getOneRptsRnStsForm(<?php echo $pkID; ?>, <?php echo $prvRunID ?>, 3, '1', <?php echo $sbmtdAlrtID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Re-run Report/Process">
                                     <img src="cmn_images/reload.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> RE-RUN
                                 </button>
                                 <?php
                             } else if ($runStatus != 'Completed!' && $runStatus != 'Cancelled!' && $runStatus != 'Error!' && isDteTmeWthnIntrvl($runActvTme, '30 second') == TRUE) {
                                 ?>                            
-                                <button type="button" class="btn btn-default" style="margin-bottom: 0px;margin-right:5px;" onclick="cancelRptRun(<?php echo $pkID; ?>, <?php echo $prvRunID ?>);" data-toggle="tooltip" data-placement="bottom" title="Cancel Report/Process Run">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;margin-right:5px;" onclick="cancelRptRun(<?php echo $pkID; ?>, <?php echo $prvRunID ?>,<?php echo $alrtID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Cancel Report/Process Run">
                                     <img src="cmn_images/90.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> CANCEL RUN
                                 </button>
                                 <?php
@@ -1158,7 +1161,7 @@ $sbmtdAlrtID = $row2[14];
                                                 $style2 = "style=\"background-color: lightgreen;padding:5px !important;\"";
                                             } else if ($row1[4] == "Formatting Output...") {
                                                 $style2 = "style=\"background-color: lime;padding:5px !important;\"";
-                                            } else if ($row1[4] == "Storing Output...") {
+                                            } else if ($row1[4] == "Storing Output..." || $row1[4] == "Sending Output...") {
                                                 $style2 = "style=\"background-color: cyan;padding:5px !important;\"";
                                             } else if ($row1[4] == "Completed!") {
                                                 $style2 = "style=\"background-color: gainsboro;padding:5px !important;\"";
@@ -1331,6 +1334,9 @@ $sbmtdAlrtID = $row2[14];
                                         }
                                     }
                                     for ($d = 0; $d < count($colNoVals); $d++) {
+                                        if ($sysParaIDs[$d] !== "-190" && $sysParaIDs[$d] !== "-130") {
+                                            continue;
+                                        }
                                         $cntr ++;
                                         $isrqrd = "";
                                         ?>
@@ -1357,6 +1363,7 @@ $sbmtdAlrtID = $row2[14];
                 }
                 $rptRnnrNm = getGnrlRecNm("rpt.rpt_reports", "report_id", "process_runner", $rptID);
                 $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+                $alrtID = getGnrlRecNm("rpt.rpt_report_runs", "rpt_run_id", "alert_id", $rptRunID);
                 $datestr = getDB_Date_time();
                 updateLogMsg($msg_id, "\r\n\r\nProgram Cancelled by User " . $usrName, "rpt.rpt_run_msgs", $datestr);
                 updateRptRnStopCmd($rptRunID, "1");
@@ -1369,7 +1376,7 @@ $sbmtdAlrtID = $row2[14];
                         <span style="color:green;font-weight:bold;font-size:12px;font-style: italic;font-family: Georgia;width:100%;text-align: center;">Keep refreshing till status changes!</span>
                     </div>
                     <div class="row" style="float:none;width:100%;text-align: center;">
-                        <button type="button" class="btn btn-default" style="margin-bottom: 0px;width:100%;text-align: center;" onclick="rfrshCncldRptRun(<?php echo $rptID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Refresh Report/Process Status">
+                        <button type="button" class="btn btn-default" style="margin-bottom: 0px;width:100%;text-align: center;" onclick="rfrshCncldRptRun(<?php echo $rptID; ?>,<?php echo $alrtID; ?>);" data-toggle="tooltip" data-placement="bottom" title="Refresh Report/Process Status">
                             <img src="cmn_images/refresh.bmp" style="height:20px; width:auto; position: relative; vertical-align: middle;"> Refresh Report Runs Table
                         </button>
                     </div>
@@ -1710,6 +1717,9 @@ $sbmtdAlrtID = $row2[14];
                                                             }
                                                         }
                                                         for ($d = 0; $d < count($colNoVals); $d++) {
+                                                            if ($sysParaIDs[$d] !== "-190" && $sysParaIDs[$d] !== "-130") {
+                                                                continue;
+                                                            }
                                                             $cntr ++;
                                                             $isrqrd = "";
                                                             ?>
@@ -1968,6 +1978,9 @@ $sbmtdAlrtID = $row2[14];
                                         }
                                     }
                                     for ($d = 0; $d < count($colNoVals); $d++) {
+                                        if ($sysParaIDs[$d] !== "-190" && $sysParaIDs[$d] !== "-130") {
+                                            continue;
+                                        }
                                         $cntr ++;
                                         $isrqrd = "";
                                         ?>
@@ -2204,6 +2217,9 @@ $sbmtdAlrtID = $row2[14];
                                     }
                                 }
                                 for ($d = 0; $d < count($colNoVals); $d++) {
+                                    if ($sysParaIDs[$d] !== "-190" && $sysParaIDs[$d] !== "-130") {
+                                        continue;
+                                    }
                                     $cntr ++;
                                     $isrqrd = "";
                                     ?>
@@ -2252,7 +2268,489 @@ $sbmtdAlrtID = $row2[14];
                     <?php
                 }
             } else if ($vwtyp == 8) {
-                echo "Create Reports";
+                //echo "Create Reports"
+                $pkID = isset($_POST['sbmtdRptID']) ? $_POST['sbmtdRptID'] : -1;
+                $sbmtdRptID = -1;
+                if ($pkID > 0) {
+                    $sbmtdRptID = $pkID;
+                    $result1 = get_RptsDet($pkID);
+                    while ($row1 = loc_db_fetch_array($result1)) {
+                        ?>
+                        <form id="rptsStpForm">
+                            <div class="row">
+                                <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;"> 
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsRptNm" class="control-label col-lg-4">Process Name:</label>
+                                        <div  class="col-lg-8">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="rptsRptNm" name="rptsRptNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[1]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsRptDesc" class="control-label col-lg-4">Description:</label>
+                                        <div  class="col-lg-8">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <textarea class="form-control rqrdFld" aria-label="..." id="rptsRptDesc" name="rptsRptDesc" style="width:100%;" cols="4" rows="3"><?php echo $row1[2]; ?></textarea>
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[2]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div> 
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsOwnrMdl" class="control-label col-lg-4">Owner Module:</label>
+                                        <div  class="col-lg-8">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" aria-label="..." id="rptsOwnrMdl" value="<?php echo $row1[4]; ?>">
+                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'System Modules', '', '', '', 'radio', true, '<?php echo $row1[4]; ?>', '', 'rptsOwnrMdl', 'clear', 1, '');">
+                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                    </label>
+                                                </div>
+                                            <?php } else {
+                                                ?>
+                                                <span><?php echo $row1[4]; ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsProcessTyp" class="control-label col-lg-4">Process Type:</label>
+                                        <div class="col-lg-8">
+                                            <?php if ($caneditRpts === true && $row1[5] != "System Process") { ?>
+                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsProcessTyp" name="rptsProcessTyp">
+                                                    <?php
+                                                    $valslctdArry = array("", "", "", "", "", "", "");
+                                                    $srchInsArrys = array("SQL Report", "Database Function", "Command Line Script", "Command Line Script-Linux", "Posting of GL Trns. Batches", "Journal Import", "Import/Overwrite Data from Excel");
+                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                        if ($row1[5] == $srchInsArrys[$z]) {
+                                                            $valslctdArry[$z] = "selected";
+                                                        }
+                                                        ?>
+                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            <?php } else {
+                                                ?>
+                                                <span><?php echo $row1[5]; ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsPrcsRnnr" class="control-label col-lg-4">Process Runner:</label>
+                                        <div  class="col-lg-8">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" aria-label="..." id="rptsPrcsRnnr" value="<?php echo $row1[17]; ?>">
+                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Background Process Runners', '', '', '', 'radio', true, '<?php echo $row1[17]; ?>', '', 'rptsPrcsRnnr', 'clear', 1, '');">
+                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                    </label>
+                                                </div>
+
+                                            <?php } else {
+                                                ?>
+                                                <span><?php echo $row1[17]; ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsColsToGrp" class="control-label col-lg-6">Cols Nos To Group or Width & Height (px) for Charts:</label>
+                                        <div  class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="rptsColsToGrp" name="rptsColsToGrp" value="<?php echo $row1[7]; ?>" style="width:100%;">
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[7]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsColsToCnt" class="control-label col-lg-6">Cols Nos To Count or Use in Charts:</label>
+                                        <div  class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="rptsColsToCnt" name="rptsColsToCnt" value="<?php echo $row1[8]; ?>" style="width:100%;">
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[8]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsColsToFrmt" class="control-label col-lg-6">Cols Nos To Format Numerically:</label>
+                                        <div  class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="rptsColsToFrmt" name="rptsColsToFrmt" value="<?php echo $row1[11]; ?>" style="width:100%;">
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[11]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsColsToSum" class="control-label col-lg-6">Cols Nos To Sum:</label>
+                                        <div  class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="rptsColsToSum" name="rptsColsToSum" value="<?php echo $row1[9]; ?>" style="width:100%;">
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[9]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsColsToAvrg" class="control-label col-lg-6">Cols Nos To Average:</label>
+                                        <div  class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="rptsColsToAvrg" name="rptsColsToAvrg" value="<?php echo $row1[10]; ?>" style="width:100%;">
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[10]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsOutputType" class="control-label col-lg-6">Output Type:</label>
+                                        <div class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsOutputType" name="rptsOutputType">
+                                                    <?php
+                                                    $valslctdArry = array("", "", "", "", "", "", "", "", "", "");
+                                                    $srchInsArrys = array("None", "HTML", "STANDARD", "MICROSOFT EXCEL", "PDF",
+                                                        "MICROSOFT WORD", "CHARACTER SEPARATED FILE (CSV)", "COLUMN CHART", "PIE CHART", "LINE CHART");
+                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                        if ($row1[12] == $srchInsArrys[$z]) {
+                                                            $valslctdArry[$z] = "selected";
+                                                        }
+                                                        ?>
+                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[12]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsOrntn" class="control-label col-lg-6">Orientation:</label>
+                                        <div class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsOrntn" name="rptsOrntn">
+                                                    <?php
+                                                    $valslctdArry = array("", "", "");
+                                                    $srchInsArrys = array("None", "Portrait", "Landscape");
+                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                        if ($row1[13] == $srchInsArrys[$z]) {
+                                                            $valslctdArry[$z] = "selected";
+                                                        }
+                                                        ?>
+                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[13]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsLayout" class="control-label col-lg-6">Layout:</label>
+                                        <div class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsLayout" name="rptsLayout">
+                                                    <?php
+                                                    $valslctdArry = array("", "", "");
+                                                    $srchInsArrys = array("None", "TABULAR", "DETAIL");
+                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                        if ($row1[14] == $srchInsArrys[$z]) {
+                                                            $valslctdArry[$z] = "selected";
+                                                        }
+                                                        ?>
+                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[14]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div> 
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsDelimiter" class="control-label col-lg-6">Delimiter:</label>
+                                        <div class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsDelimiter" name="rptsDelimiter">
+                                                    <?php
+                                                    $valslctdArry = array("", "", "", "", "");
+                                                    $srchInsArrys = array("None", "Semi-Colon(;)", "Pipe(|)", "Tab", "Tilde(~)");
+                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                        if ($row1[16] == $srchInsArrys[$z]) {
+                                                            $valslctdArry[$z] = "selected";
+                                                        }
+                                                        ?>
+                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[16]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>                                
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsDetImgCols" class="control-label col-lg-6">Detailed Report Images Cols:</label>
+                                        <div  class="col-lg-6">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <input type="text" class="form-control" aria-label="..." id="rptsDetImgCols" name="rptsDetImgCols" value="<?php echo $row1[15]; ?>" style="width:100%;">
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[15]; ?></span>
+                                            <?php } ?>
+                                        </div>
+                                    </div>   
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <div class="input-group">
+                                            <label class="btn btn-primary btn-file input-group-addon">
+                                                Browse... <input type="file" id="rptsJrxmlFile" name="rptsJrxmlFile" onchange="setFileLoc(this, '#rptsJrxmlFileSrc');" class="btn btn-default"  style="display: none;">
+                                            </label>
+                                            <input type="text" class="form-control" aria-label="..." id="rptsJrxmlFileSrc" value="">                                                        
+                                        </div>                                       
+                                    </div>
+                                    <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                        <label for="rptsIsEnabled" class="control-label col-lg-7">Enabled?:</label>
+                                        <div  class="col-lg-5">
+                                            <?php
+                                            $chkdYes = "";
+                                            $chkdNo = "checked=\"\"";
+                                            if ($row1[6] == "1") {
+                                                $chkdNo = "";
+                                                $chkdYes = "checked=\"\"";
+                                            }
+                                            ?>
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <label class="radio-inline"><input type="radio" name="rptsIsEnabled" value="YES" <?php echo $chkdYes; ?>>YES</label>
+                                                <label class="radio-inline"><input type="radio" name="rptsIsEnabled" value="NO" <?php echo $chkdNo; ?>>NO</label>
+                                            <?php } else {
+                                                ?>
+                                                <span><?php echo ($row1[6] == "1" ? "YES" : "NO"); ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsQuerySQL" class="control-label col-lg-2">SQL Query for Report / Process:</label>
+                                    <div  class="col-lg-10">
+                                        <?php if ($caneditRpts === true) { ?>
+                                            <textarea class="form-control rqrdFld" aria-label="..." id="rptsQuerySQL" name="rptsQuerySQL" style="width:100%;" cols="9" rows="20"><?php echo $row1[3]; ?></textarea>
+                                        <?php } else {
+                                            ?>
+                                            <span><?php echo $row1[3]; ?></span>
+                                            <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                            if ($caneditRpts === true) {
+                                $nwRowHtml = urlencode("<tr id=\"rptsStpPrmsRow__WWW123WWW\">"
+                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                        . "<td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_PValNm\" value=\"\" style=\"width:100% !important;\">
+                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_PValID\" value=\"\">
+                                              </div>
+                                          </td>
+                                          <td class=\"lovtd\">                                          
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_PValDesc\" value=\"\" style=\"width:100% !important;\">
+                                              </div>
+                                          </td>
+                                          <td class=\"lovtd\"> 
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                <label class=\"form-check-label\">
+                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"rptsStpPrmsRow_WWW123WWW_IsEnabled\" name=\"rptsStpPrmsRow_WWW123WWW_IsEnabled\">
+                                                                </label>
+                                                            </div>
+                                              </div>
+                                           </td>
+                                           <td class=\"lovtd\">
+                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_AlwdOrgs\" value=\"\" style=\"width:100% !important;\">
+                                              </div>
+                                          </td>
+                                        </tr>");
+                                ?>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('rptsStpPrmsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Parameter">
+                                            <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">New Parameter
+                                        </button> 
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?> 
+                            <div class="row"> 
+                                <div  class="col-md-12">
+                                    <table class="table table-striped table-bordered table-responsive" id="rptsStpPrmsTable" cellspacing="0" width="100%" style="width:100%;min-width: 700px !important;">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Prompt</th>
+                                                <th>SQL Representation</th>
+                                                <th>Default Value</th>
+                                                <th style="min-width:110px;">LOV Name</th>
+                                                <th style="min-width:90px;">Data Type</th>
+                                                <th style="min-width:90px;">Date Format</th>
+                                                <th>Required?</th>
+                                                <?php
+                                                if ($caneditRpts === true) {
+                                                    ?>
+                                                    <th>&nbsp;</th>
+                                                <?php } ?>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $cntr = 0;
+                                            $curIdx = 0;
+                                            $lmtSze = 0;
+                                            $result2 = get_AllParams($sbmtdRptID);
+                                            while ($row2 = loc_db_fetch_array($result2)) {
+                                                $cntr += 1;
+                                                ?>
+                                                <tr id="rptsStpPrmsRow_<?php echo $cntr; ?>">                                    
+                                                    <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                    <td class="lovtd">
+                                                        <?php if ($caneditRpts === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                                <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_ParamNm" value="<?php echo $row2[1]; ?>" style="width:100% !important;">
+                                                                <input type="hidden" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_ParamID" value="<?php echo $row2[0]; ?>">
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span><?php echo $row2[1]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>                                                
+                                                    <td class="lovtd">
+                                                        <?php if ($caneditRpts === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                                <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_SQLRep" value="<?php echo $row2[2]; ?>" style="width:100% !important;">
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span><?php echo $row2[2]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>                                               
+                                                    <td class="lovtd">
+                                                        <?php if ($caneditRpts === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                                <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_DfltVal" value="<?php echo $row2[3]; ?>" style="width:100% !important;">
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span><?php echo $row2[3]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>                                               
+                                                    <td class="lovtd">
+                                                        <?php if ($caneditRpts === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;">
+                                                                <div class="input-group"  style="width:100%;">
+                                                                    <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_LovNm" value="<?php echo $row2[6]; ?>">
+                                                                    <input type="hidden" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_LovID" value="<?php echo $row2[5]; ?>">
+                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'LOV Names', '', '', '', 'radio', true, '<?php echo $row2[6]; ?>', '', 'rptsStpPrmsRow<?php echo $cntr; ?>_LovNm', 'clear', 1, '');">
+                                                                        <span class="glyphicon glyphicon-th-list"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span><?php echo $row2[3]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>                                                                                              
+                                                    <td class="lovtd">
+                                                        <?php if ($caneditRpts === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsStpPrmsRow<?php echo $cntr; ?>_DataTyp">
+                                                                    <?php
+                                                                    $valslctdArry = array("", "", "");
+                                                                    $srchInsArrys = array("TEXT", "NUMBER", "DATE");
+
+                                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                                        if ($row2[7] == $srchInsArrys[$z]) {
+                                                                            $valslctdArry[$z] = "selected";
+                                                                        }
+                                                                        ?>
+                                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span><?php echo $row2[7]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>                                                                                              
+                                                    <td class="lovtd">
+                                                        <?php if ($caneditRpts === true) { ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsStpPrmsRow<?php echo $cntr; ?>_DateFrmt">
+                                                                    <?php
+                                                                    $valslctdArry = array("", "", "", "", "");
+                                                                    $srchInsArrys = array("None", "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "dd-MMM-yyyy", "dd-MM-yyyy HH:mm:ss");
+
+                                                                    for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                                        if ($row2[8] == $srchInsArrys[$z]) {
+                                                                            $valslctdArry[$z] = "selected";
+                                                                        }
+                                                                        ?>
+                                                                        <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span><?php echo $row2[8]; ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>
+                                                    <td class="lovtd">
+                                                        <?php
+                                                        $isChkd = "";
+                                                        if ($row1[4] == "1") {
+                                                            $isChkd = "checked=\"true\"";
+                                                        }
+                                                        if ($caneditRpts === true) {
+                                                            ?>
+                                                            <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                                <div class="form-check" style="font-size: 12px !important;">
+                                                                    <label class="form-check-label">
+                                                                        <input type="checkbox" class="form-check-input" id="rptsStpPrmsRow<?php echo $cntr; ?>_IsRqrd" name="rptsStpPrmsRow<?php echo $cntr; ?>_IsRqrd" <?php echo $isChkd ?>>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        <?php } else { ?>
+                                                            <span><?php echo ($row1[4] == "1" ? "Yes" : "No"); ?></span>
+                                                        <?php } ?>                                                         
+                                                    </td>
+                                                    <?php
+                                                    if ($caneditRpts === true) {
+                                                        ?>
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Possible Value">
+                                                                <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </td>
+                                                    <?php } ?>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>                     
+                            </div>  
+                        </form>
+                        <?php
+                    }
+                }
             }
         }
     }
