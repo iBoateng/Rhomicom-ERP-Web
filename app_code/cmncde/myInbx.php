@@ -78,9 +78,11 @@ if ($isMaster == 1) {
         exit();
     }
 }
+
 $pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
 $lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
 $sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "";
+
 if (strpos($srchFor, "%") === FALSE) {
     $srchFor = " " . $srchFor . " ";
     $srchFor = str_replace(" ", "%", $srchFor);
@@ -198,12 +200,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a  style="padding: 8px 20px 7px 20px !important;" href="javascript:getMyInbx('previous', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getMyInbx('previous', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a  style="padding: 8px 20px 7px 20px !important;" href="javascript:getMyInbx('next', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                        <a class="rhopagination" href="javascript:getMyInbx('next', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -550,12 +552,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a  style="padding: 8px 20px 7px 20px !important;" href="javascript:getAllInbx('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getAllInbx('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a  style="padding: 8px 20px 7px 20px !important;" href="javascript:getAllInbx('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                        <a class="rhopagination" href="javascript:getAllInbx('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>

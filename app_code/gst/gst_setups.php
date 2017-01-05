@@ -46,7 +46,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $colClassType3 = "col-lg-4";
                 ?>
                 <form id='allLovStpsForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:5px;">
+                    <div class="row rhoRowMargin">
                         <?php
                         if ($canAddGst === true) {
                             ?> 
@@ -121,12 +121,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getAllLovStps('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getAllLovStps('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:getAllLovStps('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                        <a class="rhopagination" href="javascript:getAllLovStps('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -159,14 +159,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $cntr += 1;
                                             ?>
                                             <tr id="allLovStpsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                <td><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allLovStpsRow<?php echo $cntr; ?>_LovID" value="<?php echo $row[0]; ?>"></td>                                                
+                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                <td class="lovtd"><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allLovStpsRow<?php echo $cntr; ?>_LovID" value="<?php echo $row[0]; ?>"></td>                                                
                                                 <?php
                                                 if ($canDelGst === true) {
                                                     ?>
-                                                    <td>
+                                                    <td class="lovtd">
                                                         <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Value List">
-                                                            <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                            <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
                                                 <?php } ?>
@@ -722,12 +722,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllPsblVals('previous', '#lovPsblValsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdLovID=<?php echo $sbmtdLovID; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getAllPsblVals('previous', '#lovPsblValsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdLovID=<?php echo $sbmtdLovID; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllPsblVals('next', '#lovPsblValsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdLovID=<?php echo $sbmtdLovID; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getAllPsblVals('next', '#lovPsblValsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdLovID=<?php echo $sbmtdLovID; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -767,7 +767,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <input type="hidden" class="form-control" aria-label="..." id="psblValsRow<?php echo $cntr; ?>_PValID" value="<?php echo $row1[0]; ?>">
                                                         </div>
                                                     <?php } else { ?>
-                                                        <span class="normaltd"><?php echo $row1[2]; ?></span>
+                                                        <span><?php echo $row1[2]; ?></span>
                                                     <?php } ?>                                                         
                                                 </td>                                                
                                                 <td class="lovtd">
@@ -776,7 +776,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <input type="text" class="form-control" aria-label="..." id="psblValsRow<?php echo $cntr; ?>_PValDesc" value="<?php echo $row1[3]; ?>" style="width:100% !important;">
                                                         </div>
                                                     <?php } else { ?>
-                                                        <span class="normaltd"><?php echo $row1[3]; ?></span>
+                                                        <span><?php echo $row1[3]; ?></span>
                                                     <?php } ?>                                                         
                                                 </td>
                                                 <td class="lovtd">
@@ -787,7 +787,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     }
                                                     if ($canEdtGst === true && $isdynmc != "1") {
                                                         ?>
-                                                        <div class="form-group form-group-sm normaltd">
+                                                        <div class="form-group form-group-sm">
                                                             <div class="form-check" style="font-size: 12px !important;">
                                                                 <label class="form-check-label">
                                                                     <input type="checkbox" class="form-check-input" id="psblValsRow<?php echo $cntr; ?>_IsEnabled" name="psblValsRow<?php echo $cntr; ?>_IsEnabled" <?php echo $isChkd ?>>
@@ -795,7 +795,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </div>
                                                         </div>
                                                     <?php } else { ?>
-                                                        <span class="normaltd"><?php echo ($row1[4] == "1" ? "Yes" : "No"); ?></span>
+                                                        <span><?php echo ($row1[4] == "1" ? "Yes" : "No"); ?></span>
                                                     <?php } ?>                                                         
                                                 </td>
                                                 <td class="lovtd">
@@ -804,7 +804,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <input type="text" class="form-control" aria-label="..." id="psblValsRow<?php echo $cntr; ?>_AlwdOrgs" value="<?php echo $row1[5]; ?>" style="width:100% !important;">
                                                         </div>
                                                     <?php } else { ?>
-                                                        <span class="normaltd"><?php echo $row1[5]; ?></span>
+                                                        <span><?php echo $row1[5]; ?></span>
                                                     <?php } ?>                                                         
                                                 </td>
                                                 <?php
@@ -812,7 +812,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     ?>
                                                     <td class="lovtd">
                                                         <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Possible Value">
-                                                            <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                            <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
                                                 <?php } ?>

@@ -40,7 +40,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $colClassType2 = "col-lg-3";
                 ?>
                 <form id='allRolesForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:10px;">
+                    <div class="row rhoRowMargin">
                         <?php
                         if ($canAddRoles === true) {
                             $nwRowHtml = urlencode("<tr id=\"allRolesEdtRow__WWW123WWW\">"
@@ -163,12 +163,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getAllRoles('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getAllRoles('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:getAllRoles('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Next">
+                                        <a class="rhopagination" href="javascript:getAllRoles('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -395,12 +395,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination" style="margin: 0px !important;">
                                             <li>
-                                                <a href="javascript:getOneRoleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'rolePrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>,'previous');" aria-label="Previous">
+                                                <a class="rhopagination" href="javascript:getOneRoleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'rolePrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>,'previous');" aria-label="Previous">
                                                     <span aria-hidden="true">&laquo;</span>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="javascript:getOneRoleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'rolePrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>,'next');" aria-label="Next">
+                                                <a class="rhopagination" href="javascript:getOneRoleForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'rolePrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>,'next');" aria-label="Next">
                                                     <span aria-hidden="true">&raquo;</span>
                                                 </a>
                                             </li>

@@ -53,7 +53,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $result = getLovValues($srchFor, $srchIn, $curIdx, $lmtSze, $sqlMsg, $lovID, $isDynmc, $criteriaIDVal, $criteriaID2Val, $criteriaID3Val, $addtnlWhere);
         ?>
         <form id='lovForm' action='' method='post' accept-charset='UTF-8'>
-            <div class="row" style="margin-bottom:10px;">
+            <div class="row rhoRowMargin">
                 <div class="col-md-5" style="padding:0px 1px 0px 15px !important;">
                     <div class="input-group">
                         <input class="form-control" id="lovSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncLov(event, '<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>', '',<?php echo $colNoForChkBoxCmprsn; ?>, '<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);">
@@ -110,12 +110,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <nav aria-label="Page navigation">
                         <ul class="pagination" style="margin: 0px !important;">
                             <li>
-                                <a href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','previous',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);" aria-label="Previous">
+                                <a class="rhopagination" href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','previous',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','next',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);" aria-label="Next">
+                                <a class="rhopagination" href="javascript:getLovsPage('<?php echo $modalElementID; ?>', '<?php echo $lovModalTitle; ?>', '<?php echo $lovModalBody; ?>', '<?php echo $lovNm; ?>', '<?php echo $criteriaID; ?>', '<?php echo $criteriaID2; ?>', '<?php echo $criteriaID3; ?>', '<?php echo $chkOrRadio; ?>', true, '<?php echo $orgnlSelvals; ?>', '<?php echo $valueElmntID; ?>', '<?php echo $descElemntID; ?>','next',<?php echo $colNoForChkBoxCmprsn; ?>,'<?php echo str_replace("'", "\'", $addtnlWhere); ?>',<?php echo $callBackFunc ?>);" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>

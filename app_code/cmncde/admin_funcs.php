@@ -1747,10 +1747,10 @@ function loadOrgStpMdl() {
 
 function loadRptMdl() {
     $DefaultPrvldgs = array("View Reports And Processes",
-        /* 1 */ "View Report Definitions", "View Report Runs", "View SQL", "View Record History",
-        /* 5 */ "Add Report/Process", "Edit Report/Process", "Delete Report/Process",
-        /* 8 */ "Run Reports/Process", "Delete Report/Process Runs", "View Runs from Others",
-        /* 11 */ "Load Reports/Process Requirements");
+    /* 1 */ "View Report Definitions", "View Report Runs", "View SQL", "View Record History",
+    /* 5 */ "Add Report/Process", "Edit Report/Process", "Delete Report/Process",
+    /* 8 */ "Run Reports/Process", "Delete Report/Process Runs", "View Runs from Others",
+    /* 11 */ "Delete Run Output File", "Add Alert", "Edit Alert", "Delete Alert");
 
     $subGrpNames = "";
     $mainTableNames = "";

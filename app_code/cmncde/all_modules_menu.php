@@ -72,7 +72,7 @@ if ($lgn_num > 0 && $canview === true) {
 
 
     $menuItemsAdmn = array("System Administration", "Organization Setup",
-        "Value Lists Setup", "Workflow Administration", "Notices & Content Management", "Reports / Processes");
+        "Value Lists Setup", "Workflow Administration", "Notices & Content Management"/*, "Reports / Processes"*/);
     $menuImagesAdmn = array("ma-logo.png", "Home.png",
         "viewIcon.png", "bb_flow.gif",
         "Notebook.png", "settings.png");
@@ -93,9 +93,9 @@ if ($lgn_num > 0 && $canview === true) {
     $canViewLov = test_prmssns("View General Setup", "General Setup");
     $canViewWkf = test_prmssns("View Workflow Manager", "Workflow Manager");
     $canViewArtclAdmn = test_prmssns("View Notices Admin", "System Administration");
-    $canViewRpts = test_prmssns("View Reports And Processes", "Reports And Processes");
+    //$canViewRpts = test_prmssns("View Reports And Processes", "Reports And Processes");
 
-    if ($canViewSysAdmin || $canViewOrgStp || $canViewLov || $canViewWkf || $canViewArtclAdmn || $canViewRpts) {
+    if ($canViewSysAdmin || $canViewOrgStp || $canViewLov || $canViewWkf || $canViewArtclAdmn) {
         $canview = test_prmssns($dfltPrvldgsAdmn[0], $mdlNmsAdmn[0]);
         $grpcntrAdmn = 0;
         $appCntrAdmn = 0;

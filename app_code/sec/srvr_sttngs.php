@@ -42,7 +42,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $colClassType3 = "col-lg-4";
                 ?>
                 <form id='allSrvrStngsForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:5px;">
+                    <div class="row rhoRowMargin">
                         <?php
                         if ($canAddSrvrStng === true) {
                             ?> 
@@ -117,7 +117,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getAllSrvrStngs('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getAllSrvrStngs('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>

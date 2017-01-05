@@ -171,7 +171,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $colClassType4 = "col-lg-3";
                     ?> 
                     <form id='allnoticesForm' action='' method='post' accept-charset='UTF-8'>
-                        <div class="row" style="margin-bottom:10px;">
+                        <div class="row rhoRowMargin">
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
                                     <input class="form-control" id="allnoticesSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncNotices(event, '', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>')">
@@ -243,12 +243,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllNotices('previous', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getAllNotices('previous', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllNotices('next', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getAllNotices('next', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=0&isMaster=<?php echo $isMaster; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -317,7 +317,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $colClassType4 = "col-lg-3";
                     ?>
                     <form id='allnoticesForm' action='' method='post' accept-charset='UTF-8'>
-                        <div class="row" style="margin-bottom:10px;">
+                        <div class="row rhoRowMargin">
                             <?php
                             if ($canAddNotices === true) {
                                 $isMaster = "1";
@@ -408,12 +408,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllNotices('previous', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getAllNotices('previous', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllNotices('next', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getAllNotices('next', '#allnotices', 'grp=40&typ=3&pg=0&vtyp=1&isMaster=<?php echo $isMaster; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>

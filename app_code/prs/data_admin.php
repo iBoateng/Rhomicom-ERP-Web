@@ -40,7 +40,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $colClassType2 = "col-lg-3";
         ?> 
         <form id='dataAdminForm' action='' method='post' accept-charset='UTF-8'>
-            <div class="row" style="margin-bottom:10px;">
+            <div class="row rhoRowMargin">
                 <?php
                 if ($canAddPrsn === true) {
                     ?>   
@@ -125,12 +125,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <nav aria-label="Page navigation">
                         <ul class="pagination" style="margin: 0px !important;">
                             <li>
-                                <a href="javascript:getDataAdmin('previous', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0');" aria-label="Previous">
+                                <a class="rhopagination" href="javascript:getDataAdmin('previous', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0');" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:getDataAdmin('next', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0');" aria-label="Next">
+                                <a class="rhopagination" href="javascript:getDataAdmin('next', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0');" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
@@ -261,7 +261,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         $cntr = 0;
         ?> 
         <form id='dataAdminForm' action='' method='post' accept-charset='UTF-8'>
-            <div class="row" style="margin-bottom:10px;">
+            <div class="row rhoRowMargin">
                 <div class="col-lg-2" style="padding:0px 1px 0px 15px !important;">                    
                     <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getBscProfile1Form('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'Add Person Basic Profile', -1, 24, 2, 'ADD')">
                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -337,12 +337,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <nav aria-label="Page navigation">
                         <ul class="pagination" style="margin: 0px !important;">
                             <li>
-                                <a href="javascript:getDataAdmin('previous', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1');" aria-label="Previous">
+                                <a class="rhopagination" href="javascript:getDataAdmin('previous', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1');" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:getDataAdmin('next', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1');" aria-label="Next">
+                                <a class="rhopagination" href="javascript:getDataAdmin('next', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1');" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>

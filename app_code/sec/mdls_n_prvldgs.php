@@ -37,7 +37,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $colClassType2 = "col-lg-3";
                 ?>
                 <form id='allMdlsForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:10px;">
+                    <div class="row rhoRowMargin">
                         <div class="col-md-5" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
                                 <input class="form-control" id="allMdlsSrchFor" name="allMdlsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllMdls(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
@@ -107,12 +107,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getAllMdls('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getAllMdls('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:getAllMdls('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Next">
+                                        <a class="rhopagination" href="javascript:getAllMdls('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -243,12 +243,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination" style="margin: 0px !important;">
                                             <li>
-                                                <a href="javascript:getOneMdlForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>,'previous');" aria-label="Previous">
+                                                <a class="rhopagination" href="javascript:getOneMdlForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>,'previous');" aria-label="Previous">
                                                     <span aria-hidden="true">&laquo;</span>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="javascript:getOneMdlForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>,'next');" aria-label="Next">
+                                                <a class="rhopagination" href="javascript:getOneMdlForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'mdlPrvldgsForm', '', <?php echo $pkID; ?>, <?php echo $vwtyp; ?>, <?php echo $pgNo; ?>,'next');" aria-label="Next">
                                                     <span aria-hidden="true">&raquo;</span>
                                                 </a>
                                             </li>

@@ -42,7 +42,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $prm = get_CurPlcy_Mx_Fld_lgns();
                 ?>
                 <form id='allUsersForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:10px;">
+                    <div class="row rhoRowMargin">
                         <?php
                         if ($canAddUsers === true) {
                             ?> 
@@ -109,7 +109,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getAllUsers('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getAllUsers('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
@@ -232,7 +232,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $result = get_OneUser($pkID);
                 ?>
                 <form id='userRolesForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:10px;">
+                    <div class="row rhoRowMargin">
                         <?php
                         while ($row = loc_db_fetch_array($result)) {
                             ?>
@@ -511,12 +511,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination" style="margin: 0px !important;">
                                             <li>
-                                                <a href="javascript:getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1,'previous');" aria-label="Previous">
+                                                <a class="rhopagination" href="javascript:getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1,'previous');" aria-label="Previous">
                                                     <span aria-hidden="true">&laquo;</span>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="javascript:getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1,'next');" aria-label="Next">
+                                                <a class="rhopagination" href="javascript:getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', <?php echo $pkID; ?>, 1, 1,'next');" aria-label="Next">
                                                     <span aria-hidden="true">&raquo;</span>
                                                 </a>
                                             </li>
@@ -734,7 +734,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 ?>
                 <div class="container-fluid">
                     <form id='usrPrflForm' action='' method='post' accept-charset='UTF-8'>
-                        <div class="row" style="margin-bottom:10px;">
+                        <div class="row rhoRowMargin">
                             <div class="col-lg-5" style="padding:0px 15px 0px 15px !important;">
                                 <div class="input-group">
                                     <input class="form-control" id="usrPrflSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncUsrPrfl(event, '', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');">
@@ -790,12 +790,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getUsrPrfl('previous', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getUsrPrfl('previous', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getUsrPrfl('next', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getUsrPrfl('next', '#profile', 'grp=3&typ=1&pg=1&vtyp=4&sbmtdUserID=<?php echo $pkID; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -803,7 +803,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </nav>
                             </div>
                         </div>
-                        <div class="row" style="margin-bottom:10px;">
+                        <div class="row rhoRowMargin">
                             <?php
                             while ($row = loc_db_fetch_array($result)) {
                                 ?>

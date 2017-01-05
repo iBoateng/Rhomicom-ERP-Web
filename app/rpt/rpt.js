@@ -4,7 +4,24 @@ function prepareRpts(lnkArgs, htBody, targ, rspns)
     $(targ).html(rspns);
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
-        if (lnkArgs.indexOf("&vtyp=0") !== -1)
+        $(function () {
+            /*var numelms=$('[data-toggle="tabajxgst"]').size();*/
+            $('[data-toggle="tabajxrpt"]').click(function (e) {
+                var $this = $(this);
+                var targ = $this.attr('href');
+                var dttrgt = $this.attr('data-rhodata');
+                var linkArgs = 'grp=9&typ=1' + dttrgt;
+                return openATab(targ, linkArgs);
+            });
+            $('[data-toggle="tabajxalrt"]').click(function (e) {
+                var $this = $(this);
+                var targ = $this.attr('href');
+                var dttrgt = $this.attr('data-rhodata');
+                var linkArgs = 'grp=9&typ=1' + dttrgt;
+                return openATab(targ, linkArgs);
+            });
+        });
+        if (lnkArgs.indexOf("&pg=1&vtyp=0") !== -1)
         {
             var table1 = $('#allRptsTable').DataTable({
                 "paging": false,
@@ -49,6 +66,105 @@ function prepareRpts(lnkArgs, htBody, targ, rspns)
                             $(this).addClass('highlight');
                         }
                     });
+        } else if (lnkArgs.indexOf("&pg=2&vtyp=0") !== -1)
+        {
+            var table1 = $('#allAlrtsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#allAlrtsTable').wrap('<div class="dataTables_scroll"/>');
+            $('#allAlrtsForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            var table2 = $('#alrtRunsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#alrtRunsTable').wrap('<div class="dataTables_scroll"/>');
+            $('#allAlrtsTable tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+
+                } else {
+                    table1.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+
+                }
+                var rndmNum = $(this).attr('id').split("_")[1];
+                var pkeyID = typeof $('#allAlrtsRow' + rndmNum + '_AlrtID').val() === 'undefined' ? '%' : $('#allAlrtsRow' + rndmNum + '_AlrtID').val();
+                //alert(curPlcyID);
+                getOneAlrtsForm(pkeyID, 1);
+            });
+            $('#allAlrtsTable tbody')
+                    .on('mouseenter', 'tr', function () {
+                        if ($(this).hasClass('highlight')) {
+                            $(this).removeClass('highlight');
+                        } else {
+                            table1.$('tr.highlight').removeClass('highlight');
+                            $(this).addClass('highlight');
+                        }
+                    });
+        } else if (lnkArgs.indexOf("&pg=2&vtyp=3") !== -1) {
+            $('.form_date_tme').datetimepicker({
+                format: "dd-M-yyyy hh:ii:ss",
+                language: 'en',
+                weekStart: 0,
+                todayBtn: true,
+                autoclose: true,
+                todayHighlight: true,
+                keyboardNavigation: true,
+                startView: 2,
+                minView: 0,
+                maxView: 4,
+                forceParse: true
+            });
+            $('.form_date_tme1').datetimepicker({
+                format: "yyyy-mm-dd hh:ii:ss",
+                language: 'en',
+                weekStart: 0,
+                todayBtn: true,
+                autoclose: true,
+                todayHighlight: true,
+                keyboardNavigation: true,
+                startView: 2,
+                minView: 0,
+                maxView: 4,
+                forceParse: true
+            });
+            $('.form_date').datetimepicker({
+                format: "dd-M-yyyy",
+                language: 'en',
+                weekStart: 0,
+                todayBtn: true,
+                autoclose: true,
+                todayHighlight: true,
+                keyboardNavigation: true,
+                startView: 2,
+                minView: 2,
+                maxView: 4,
+                forceParse: true
+            });
+
+            $('.form_date1').datetimepicker({
+                format: "yyyy-mm-dd",
+                language: 'en',
+                weekStart: 0,
+                todayBtn: true,
+                autoclose: true,
+                todayHighlight: true,
+                keyboardNavigation: true,
+                startView: 2,
+                minView: 2,
+                maxView: 4,
+                forceParse: true
+            });
         }
         htBody.removeClass("mdlloading");
     });
@@ -110,6 +226,14 @@ function getOneRptsForm(pKeyID, vwtype)
             e.preventDefault();
             return false;
         });
+
+        $('[data-toggle="tabajxrpt"]').click(function (e) {
+            var $this = $(this);
+            var targ = $this.attr('href');
+            var dttrgt = $this.attr('data-rhodata');
+            var linkArgs = 'grp=9&typ=1' + dttrgt;
+            return openATab(targ, linkArgs);
+        });
     });
 
 }
@@ -159,9 +283,11 @@ function getOneRptsLogForm(pKeyID)
     });
 }
 
-function getOneRptsParamsForm(pKeyID, prvRunID, rptName, vwtype)
+function getOneRptsParamsForm(pKeyID, prvRunID, rptName, vwtype, alertID)
 {
-    var lnkArgs = 'grp=9&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdRptID=' + pKeyID + "&sbmtdPrvRunID=" + prvRunID;
+    var lnkArgs = 'grp=9&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdRptID=' + pKeyID +
+            "&sbmtdPrvRunID=" + prvRunID +
+            "&sbmtdAlrtID=" + alertID;
     doAjaxWthCallBck(lnkArgs, 'myFormsModalNrml', 'ShowDialog', 'PARAMETERS FOR (' + rptName + ')', 'myFormsModalNrmlTitle', 'myFormsModalNrmlBody', function () {
         var table1 = $('#rptParamsTable').DataTable({
             "paging": false,
@@ -236,14 +362,15 @@ function getOneRptsParamsForm(pKeyID, prvRunID, rptName, vwtype)
 function reloadParams()
 {
     var pKeyID = typeof $("#rptParamRptID").val() === 'undefined' ? -1 : $("#rptParamRptID").val();
+    var alertID = typeof $("#rptParamAlrtID").val() === 'undefined' ? -1 : $("#rptParamAlrtID").val();
     var valValue = typeof $("#rptParamPrvRunID").val() === 'undefined' ? -1 : $("#rptParamPrvRunID").val();
     var rptName = typeof $("#rptParamRptName").val() === 'undefined' ? '' : $("#rptParamRptName").val();
-    getOneRptsParamsForm(pKeyID, valValue, rptName, 2);
+    getOneRptsParamsForm(pKeyID, valValue, rptName, 2, alertID);
 }
 
-function getOneRptsRnStsForm(pKeyID, prvRunID, vwtype, mustReRun)
+function getOneRptsRnStsForm(pKeyID, prvRunID, vwtype, mustReRun, alrtID)
 {
-    var lnkArgs = 'grp=9&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdRptID=' + pKeyID + "&sbmtdRunID=" + prvRunID + "&mustReRun=" + mustReRun;
+    var lnkArgs = 'grp=9&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdRptID=' + pKeyID + "&sbmtdRunID=" + prvRunID + "&sbmtdAlrtID=" + alrtID + "&mustReRun=" + mustReRun;
 
     var slctdParams = "";
     $('#rptParamsTable').find('tr').each(function (i, el) {
@@ -256,6 +383,7 @@ function getOneRptsRnStsForm(pKeyID, prvRunID, vwtype, mustReRun)
         }
     });
     lnkArgs = lnkArgs + "&slctdParams=" + slctdParams.slice(0, -1);
+    //alert(lnkArgs);
     doAjaxWthCallBck(lnkArgs, 'myFormsModalNrml', 'ShowDialog', 'Report Run Details FOR (' + prvRunID + ')', 'myFormsModalNrmlTitle', 'myFormsModalNrmlBody', function () {
         var table1 = $('#rptParamsStsTable').DataTable({
             "paging": false,
@@ -392,9 +520,8 @@ function getAllSchdls(actionText, slctr, linkArgs)
         $('#allSchdlsTable tbody').on('click', 'tr', function () {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
-
             } else {
-                table1.$('tr.selected').removeClass('selected');
+                table2.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
 
             }
@@ -409,7 +536,7 @@ function getAllSchdls(actionText, slctr, linkArgs)
                     if ($(this).hasClass('highlight')) {
                         $(this).removeClass('highlight');
                     } else {
-                        table1.$('tr.highlight').removeClass('highlight');
+                        table2.$('tr.highlight').removeClass('highlight');
                         $(this).addClass('highlight');
                     }
                 });
@@ -444,7 +571,7 @@ function getOneSchdlsNwForm()
 }
 
 function getOneSchdlsForm(pKeyID, pKeyID1, vwtype)
-{    
+{
     var lnkArgs = 'grp=9&typ=1&pg=1&vtyp=' + vwtype + '&sbmtdRptID=' + pKeyID + "&sbmtdSchdlID=" + pKeyID1;
     doAjaxWthCallBck(lnkArgs, 'allSchdlsDetailInfo', 'PasteDirect', '', '', '', function () {
         var table1 = $('#allSchdlPrmsTable').DataTable({
@@ -472,5 +599,113 @@ function getOneSchdlsForm(pKeyID, pKeyID1, vwtype)
             maxView: 4,
             forceParse: true
         });
+    });
+}
+
+function getAllAlrts(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#allAlrtsSrchFor").val() === 'undefined' ? '%' : $("#allAlrtsSrchFor").val();
+    var srchIn = typeof $("#allAlrtsSrchIn").val() === 'undefined' ? 'Both' : $("#allAlrtsSrchIn").val();
+    var pageNo = typeof $("#allAlrtsPageNo").val() === 'undefined' ? 1 : $("#allAlrtsPageNo").val();
+    var limitSze = typeof $("#allAlrtsDsplySze").val() === 'undefined' ? 10 : $("#allAlrtsDsplySze").val();
+    var sortBy = typeof $("#allAlrtsSortBy").val() === 'undefined' ? '' : $("#allAlrtsSortBy").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncAllAlrts(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAllAlrts(actionText, slctr, linkArgs);
+    }
+}
+
+function getOneAlrtsForm(pKeyID, vwtype)
+{
+    var lnkArgs = 'grp=9&typ=1&pg=2&vtyp=' + vwtype + '&sbmtdAlrtID=' + pKeyID;
+    var srchFor = typeof $("#rptRunsSrchFor").val() === 'undefined' ? '%' : $("#rptRunsSrchFor").val();
+    var srchIn = typeof $("#rptRunsSrchIn").val() === 'undefined' ? 'Both' : $("#rptRunsSrchIn").val();
+    var pageNo = typeof $("#rptRunsPageNo").val() === 'undefined' ? 1 : $("#rptRunsPageNo").val();
+    var limitSze = typeof $("#rptRunsDsplySze").val() === 'undefined' ? 10 : $("#rptRunsDsplySze").val();
+    var sortBy = typeof $("#rptRunsSortBy").val() === 'undefined' ? '' : $("#rptRunsSortBy").val();
+    srchFor = "%";
+    pageNo = 1;
+    lnkArgs = lnkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+
+//alert(lnkArgs);
+    doAjaxWthCallBck(lnkArgs, 'alrtsDetailInfo', 'PasteDirect', '', '', '', function () {
+        var table1 = $('#alrtRunsTable').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "bFilter": false,
+            "scrollX": false
+        });
+        $('#alrtRunsTable').wrap('<div class="dataTables_scroll"/>');
+        $('#allAlrtsForm').submit(function (e) {
+            e.preventDefault();
+            return false;
+        });
+        $(function () {
+            /*var numelms=$('[data-toggle="tabajxgst"]').size();*/
+            $('[data-toggle="tabajxalrt"]').click(function (e) {
+                var $this = $(this);
+                var targ = $this.attr('href');
+                var dttrgt = $this.attr('data-rhodata');
+                var linkArgs = 'grp=9&typ=1' + dttrgt;
+                return openATab(targ, linkArgs);
+            });
+        });
+    });
+
+}
+
+function getAllAlrtRuns(actionText, slctr, linkArgs)
+{
+    var srchFor = typeof $("#alrtRunsSrchFor").val() === 'undefined' ? '%' : $("#alrtRunsSrchFor").val();
+    var srchIn = typeof $("#alrtRunsSrchIn").val() === 'undefined' ? 'Both' : $("#alrtRunsSrchIn").val();
+    var pageNo = typeof $("#alrtRunsPageNo").val() === 'undefined' ? 1 : $("#alrtRunsPageNo").val();
+    var limitSze = typeof $("#alrtRunsDsplySze").val() === 'undefined' ? 10 : $("#alrtRunsDsplySze").val();
+    var sortBy = typeof $("#alrtRunsSortBy").val() === 'undefined' ? '' : $("#alrtRunsSortBy").val();
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    openATab(slctr, linkArgs);
+}
+
+function enterKeyFuncAlrtRuns(e, actionText, slctr, linkArgs)
+{
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+    if (charCode == 13) {
+        getAllAlrtRuns(actionText, slctr, linkArgs);
+    }
+}
+
+function getOneAlrtsDetForm(pKeyID)
+{
+    var lnkArgs = 'grp=9&typ=1&pg=2&vtyp=2&sbmtdMsgSntID=' + pKeyID;
+    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', 'ShowDialog', 'Alert Message Details for (' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {
+        $('#alertDetTable').wrap('<div class="dataTables_scroll"/>');
     });
 }

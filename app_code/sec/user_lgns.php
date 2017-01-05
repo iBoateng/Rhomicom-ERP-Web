@@ -38,7 +38,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $cntr = 0;
                 ?>
                 <form id='trckUsrLgnsForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:10px;">
+                    <div class="row rhoRowMargin">
                         <div class="col-md-3" style="padding:0px 15px 0px 15px !important;">
                             <div class="input-group">
                                 <input class="form-control" id="trckUsrLgnsSrchFor" name="trckUsrLgnsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncTrckUsrLgns(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0')">
@@ -108,7 +108,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getTrckUsrLgns('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getTrckUsrLgns('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>

@@ -45,7 +45,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $colClassType3 = "col-lg-4";
                 ?>
                 <form id='allOrgStpsForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:5px;">
+                    <div class="row rhoRowMargin">
                         <?php
                         if ($canAddOrg === true) {
                             ?> 
@@ -120,12 +120,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getAllOrgStps('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getAllOrgStps('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:getAllOrgStps('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                        <a class="rhopagination" href="javascript:getAllOrgStps('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -1035,12 +1035,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllDivsGrps('previous', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getAllDivsGrps('previous', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllDivsGrps('next', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getAllDivsGrps('next', '#orgDivsGrpsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -1260,12 +1260,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllSitesLocs('previous', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getAllSitesLocs('previous', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllSitesLocs('next', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getAllSitesLocs('next', '#orgSitesLocsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -1465,12 +1465,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllOrgJobs('previous', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getAllOrgJobs('previous', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllOrgJobs('next', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getAllOrgJobs('next', '#orgJobsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -1686,12 +1686,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllOrgGrades('previous', '#orgGradesPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getAllOrgGrades('previous', '#orgGradesPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllOrgGrades('next', '#orgGradesPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getAllOrgGrades('next', '#orgGradesPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -1907,12 +1907,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination" style="margin: 0px !important;">
                                         <li>
-                                            <a href="javascript:getAllOrgPositions('previous', '#orgPositionsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
+                                            <a class="rhopagination" href="javascript:getAllOrgPositions('previous', '#orgPositionsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:getAllOrgPositions('next', '#orgPositionsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
+                                            <a class="rhopagination" href="javascript:getAllOrgPositions('next', '#orgPositionsPage', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>&sbmtdOrgID=<?php echo $sbmtdOrgID; ?>');" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>

@@ -206,10 +206,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <a href="javascript:;" style="<?php echo $forecolors; ?>min-height:45px !important;">
                                     <i class="fa fa-search-plus fa-fw" style="<?php echo $forecolors; ?>float:left;"></i> 
                                     <span class="title" style="float:right;max-width:88%;">
-                                        <div class="input-group custom-search-form" style="float:right;margin-top:-7px;">
+                                        <div class="input-group custom-search-form" style="float:right;margin-top:0px;">
                                             <input type="text" class="form-control" placeholder="Search Notices...">
                                             <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button">
+                                                <button class="btn1 btn-default" type="button">
                                                     <i class="fa fa-search"></i>
                                                 </button>
                                             </span>
@@ -248,7 +248,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </a>
                                     </li>
                                     <li class="nav-item  ">
-                                        <a href="javascript:openATab('#allmodules', 'grp=9&typ=1&pg=1&vtyp=0');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                        <a href="javascript:openATab('#allmodules', 'grp=9&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
                                             <span class="title">Reports/Processes</span>
                                         </a>
                                     </li>

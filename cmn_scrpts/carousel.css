@@ -431,34 +431,6 @@ body {
     border-top-left-radius: 5px !important;
     border-top-right-radius: 5px !important;
 }
-.otherButton{max-width:100%;
-             padding:0px;
-             min-height:55px;
-             font-size:13px;
-             font-family: Tahoma,"Helvetica Neue",Helvetica,Arial,sans-serif;
-             font-weight:400;
-             color:#000;
-             margin-bottom:7px;
-             margin-top: 7px;
-             background:#f9f9f9;
-             border:1px solid;
-             border-color: #d0d0d0 !important;
-             border-radius:2px;
-             box-sizing:content-box;
-             background-image:-webkit-linear-gradient(top,#fefefe,#f9f9f9);
-             background-image:-moz-linear-gradient(top,#fefefe,#f9f9f9);
-             background-image: -ms-linear-gradient(top, #fefefe, #f9f9f9);
-             background-image:-o-linear-gradient(top,#fefefe,#f9f9f9);
-             background-image:linear-gradient(bottom,#fefefe,#f9f9f9);
-}
-.otherButton:active,
-.otherButton:hover,
-.otherButton:focus{
-    background:#fafafa;
-    border:1px solid;
-    border-color:#d0d0d0;
-    -webkit-box-shadow:inset 0 0 1px rgba(0,0,0,0.15);
-    box-shadow:inset 0 0 1px rgba(0,0,0,0.15)}
 tr.highlight {
     background-color: #E0FFFF !important;
 }
@@ -639,12 +611,12 @@ body.mdlloading .modalLdng {
 .lovtd{
     padding: 2px 5px 2px 5px !important;
     line-height: 1.42857143 !important; 
-     vertical-align: middle !important; 
+    vertical-align: middle !important; 
 }
 .normaltd{
     padding: 8px !important;
     line-height: 1.42857143 !important; 
-     vertical-align: middle !important; 
+    vertical-align: middle !important; 
 }
 .rqrdFld{
     background-color:#ffff99 !important; 
@@ -672,8 +644,62 @@ select.empty {
 select option[disabled]:first-child {
     display: none;
 }
+/*-----Bootstrap Customizations Begin*/
 .form-group {
     margin-bottom: 5px !important;
+}
+.rhopagination{
+    padding:6px 15px 5px 15px !important;
+}
+.form-control {
+    height: 30px !important;
+    padding: 4px 6px 4px 6px !important;
+    font-size: 12px !important;
+}
+textarea.form-control {
+    height: auto !important;
+}
+.btn {
+    padding: 4px 6px 3px 6px !important;
+}
+.btn1 {
+    display: inline-block;
+    padding: 4px 8px 4px 8px !important;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius:0px 4px 4px 0px !important;
+}
+.rhoRowMargin{
+    margin-bottom: 0px !important;
+}
+.input-group-addon {
+    padding: 4px 8px 4px 8px !important;
+    font-size: 12px !important;
+}
+table.dataTable {
+    margin-top: 1px !important;
+    margin-bottom: 1px !important;
+}
+.page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
+    padding: 3px 14px 3px 50px !important;
+}
+.page-sidebar .page-sidebar-menu>li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a {
+    padding: 6px 15px 6px 15px !important;
+    min-height: 1px !important;
 }
 body {
     font-family: Tahoma, georgia, Calibri, Helvetica,"Helvetica Neue","Open Sans",Arial,sans-serif !important;
@@ -682,130 +708,131 @@ body {
     color: #333;
     background-color: #fff;
 }
+/*-----Bootstrap Customizations End*/
 
 /* Chat Widget starts */
 
 .chats{
-	list-style-type: none;
-	margin: 0px;
+    list-style-type: none;
+    margin: 0px;
 }
 
 .chats li{
-	margin-bottom: 8px;
-	padding-bottom: 8px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
 }
 
 .chats .by-me img{
-	margin-top: 5px;
-	margin-right:10px;
-	padding: 1px;
-	background:#fff;
-	border: 1px solid #ccc;
+    margin-top: 5px;
+    margin-right:10px;
+    padding: 1px;
+    background:#fff;
+    border: 1px solid #ccc;
 }
 
 .chats .by-me .chat-meta{
-	font-size: 11px;
-	color: #999;
+    font-size: 11px;
+    color: #999;
 }
 
 .chats .by-me .chat-content{
-	margin-left: 60px;
-	position: relative; 
-	background: #fff; 
-	border: 1px solid #ddd;
-	padding: 7px 10px;
-	border-radius: 5px;
-	font-size: 13px;
+    margin-left: 60px;
+    position: relative; 
+    background: #fff; 
+    border: 1px solid #ddd;
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-size: 13px;
 }
 
 .chats .by-me .chat-content:after, .chats .by-me .chat-content:before { 
-	right: 100%; 
-	border: solid transparent; 
-	content: " "; 
-	height: 0; 
-	width: 0; 
-	position: absolute; 
-	pointer-events: none; 
+    right: 100%; 
+    border: solid transparent; 
+    content: " "; 
+    height: 0; 
+    width: 0; 
+    position: absolute; 
+    pointer-events: none; 
 } 
 
 .chats .by-me .chat-content:after { 
-	border-color: rgba(255, 255, 255, 0); 
-	border-right-color: #fff; 
-	border-width: 10px; 
-	top: 30%; 
-	margin-top: -10px; 
+    border-color: rgba(255, 255, 255, 0); 
+    border-right-color: #fff; 
+    border-width: 10px; 
+    top: 30%; 
+    margin-top: -10px; 
 } 
 
 .chats .by-me .chat-content:before { 
-	border-color: rgba(238, 238, 238, 0); 
-	border-right-color: #ccc; 
-	border-width: 11px; 
-	top: 30%; 
-	margin-top: -11px; 
+    border-color: rgba(238, 238, 238, 0); 
+    border-right-color: #ccc; 
+    border-width: 11px; 
+    top: 30%; 
+    margin-top: -11px; 
 }
 
 .chats .by-other img{
-	margin-top: 5px;
-	margin-left:10px;
-	padding: 1px;
-	background:#fff;
-	border: 1px solid #ccc;
+    margin-top: 5px;
+    margin-left:10px;
+    padding: 1px;
+    background:#fff;
+    border: 1px solid #ccc;
 }
 
 .chats .by-other .chat-meta{
-	font-size: 11px;
-	color: #999;
+    font-size: 11px;
+    color: #999;
 }
 
 .chats .by-other .chat-content{
-	margin-right: 60px;
-	position: relative; 
-	background: #fff; 
-	border: 1px solid #ddd;
-	padding: 7px 10px;
-	border-radius: 5px;
-	font-size: 13px;
+    margin-right: 60px;
+    position: relative; 
+    background: #fff; 
+    border: 1px solid #ddd;
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-size: 13px;
 }
 
 .chats .by-other .chat-content:after, .chats .by-other .chat-content:before { 
-	left: 100%; 
-	border: solid transparent; 
-	content: " "; 
-	height: 0; 
-	width: 0; 
-	position: absolute; 
-	pointer-events: none; 
+    left: 100%; 
+    border: solid transparent; 
+    content: " "; 
+    height: 0; 
+    width: 0; 
+    position: absolute; 
+    pointer-events: none; 
 } 
 
 .chats .by-other .chat-content:after { 
-	border-color: rgba(255, 255, 255, 0); 
-	border-left-color: #fff; 
-	border-width: 10px; 
-	top: 30%; 
-	margin-top: -10px; 
+    border-color: rgba(255, 255, 255, 0); 
+    border-left-color: #fff; 
+    border-width: 10px; 
+    top: 30%; 
+    margin-top: -10px; 
 } 
 
 .chats .by-other .chat-content:before { 
-	border-color: rgba(238, 238, 238, 0); 
-	border-left-color: #ccc; 
-	border-width: 11px; 
-	top: 30%; 
-	margin-top: -11px; 
+    border-color: rgba(238, 238, 238, 0); 
+    border-left-color: #ccc; 
+    border-width: 11px; 
+    top: 30%; 
+    margin-top: -11px; 
 }
 
 /* Chat widget ends */
 .portlets{
-  min-height:50px;
+    min-height:50px;
 }
 
 .portlets .widget-head{
-  cursor:move;
+    cursor:move;
 }
 .sscroll
 {    width:100%;
-    height:499px;
-    overflow-y: auto;
-    max-height:500px;
+     height:499px;
+     overflow-y: auto;
+     max-height:500px;
 }
 
 /* Let's get this party started */
@@ -813,14 +840,14 @@ body {
     width: 6px;
     height:6px;
 }
- 
+
 /* Track */
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
@@ -829,7 +856,7 @@ body {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
 ::-webkit-scrollbar-thumb:window-inactive {
-	background: rgba(221,221,221,0.4); 
+    background: rgba(221,221,221,0.4); 
 }
 
 .green-row {
@@ -863,8 +890,8 @@ table.imagetable td {
 
 table.gridtable td.likeheader {   
     padding: 8px;
-     border-width: 1px;
-     border-style: solid;
+    border-width: 1px;
+    border-style: solid;
     border-color: #ccc;
     background-color: #efefef !important;
 }
@@ -906,3 +933,32 @@ table.gridtable td {
     border-color: #ccc;
     background-color: #ffffff;
 }
+
+.otherButton{max-width:100%;
+             padding:0px !important;
+             min-height:55px;
+             font-size:13px;
+             font-family: Tahoma,"Helvetica Neue",Helvetica,Arial,sans-serif;
+             font-weight:400;
+             color:#000;
+             margin-bottom:7px;
+             margin-top: 7px;
+             background:#f9f9f9;
+             border:1px solid;
+             border-color: #d0d0d0 !important;
+             border-radius:2px;
+             box-sizing:content-box;
+             background-image:-webkit-linear-gradient(top,#fefefe,#f9f9f9);
+             background-image:-moz-linear-gradient(top,#fefefe,#f9f9f9);
+             background-image: -ms-linear-gradient(top, #fefefe, #f9f9f9);
+             background-image:-o-linear-gradient(top,#fefefe,#f9f9f9);
+             background-image:linear-gradient(bottom,#fefefe,#f9f9f9);
+}
+.otherButton:active,
+.otherButton:hover,
+.otherButton:focus{
+    background:#fafafa;
+    border:1px solid;
+    border-color:#d0d0d0;
+    -webkit-box-shadow:inset 0 0 1px rgba(0,0,0,0.15);
+    box-shadow:inset 0 0 1px rgba(0,0,0,0.15)}

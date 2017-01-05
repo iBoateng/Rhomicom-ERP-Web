@@ -26,7 +26,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                      </div>";
                 ?>
                 <form id='adtTrailsForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row" style="margin-bottom:10px;">
+                    <div class="row rhoRowMargin">
                         <div class="col-md-3" style="padding:0px 15px 0px 15px !important;">
                             <select class="form-control" id="allMdlsToSlct" style="width:100%;">
                                 <?php
@@ -116,12 +116,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <nav aria-label="Page navigation">
                                 <ul class="pagination" style="margin: 0px !important;">
                                     <li>
-                                        <a href="javascript:getAdtTrails('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Previous">
+                                        <a class="rhopagination" href="javascript:getAdtTrails('previous', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:getAdtTrails('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Next">
+                                        <a class="rhopagination" href="javascript:getAdtTrails('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=0');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
