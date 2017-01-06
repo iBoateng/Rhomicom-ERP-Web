@@ -66,6 +66,16 @@ function prepareRpts(lnkArgs, htBody, targ, rspns)
                             $(this).addClass('highlight');
                         }
                     });
+        } else if (lnkArgs.indexOf("&pg=1&vtyp=1") !== -1)
+        {
+            var table2 = $('#rptRunsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#rptRunsTable').wrap('<div class="dataTables_scroll"/>');
         } else if (lnkArgs.indexOf("&pg=2&vtyp=0") !== -1)
         {
             var table1 = $('#allAlrtsTable').DataTable({
@@ -111,6 +121,16 @@ function prepareRpts(lnkArgs, htBody, targ, rspns)
                             $(this).addClass('highlight');
                         }
                     });
+        } else if (lnkArgs.indexOf("&pg=2&vtyp=1") !== -1)
+        {
+            var table2 = $('#alrtRunsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#alrtRunsTable').wrap('<div class="dataTables_scroll"/>');
         } else if (lnkArgs.indexOf("&pg=2&vtyp=3") !== -1) {
             $('.form_date_tme').datetimepicker({
                 format: "dd-M-yyyy hh:ii:ss",
@@ -165,6 +185,30 @@ function prepareRpts(lnkArgs, htBody, targ, rspns)
                 maxView: 4,
                 forceParse: true
             });
+        } else if (lnkArgs.indexOf("&pg=1&vtyp=8") !== -1)
+        {
+            var table1 = $('#rptsStpPrmsTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#rptsStpPrmsTable').wrap('<div class="dataTables_scroll"/>');
+            $('#rptsStpForm').submit(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            
+            var table1 = $('#rptsStpRolesTable').DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "bFilter": false,
+                "scrollX": false
+            });
+            $('#rptsStpRolesTable').wrap('<div class="dataTables_scroll"/>');
         }
         htBody.removeClass("mdlloading");
     });

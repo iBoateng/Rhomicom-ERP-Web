@@ -472,12 +472,12 @@ tr.selected{background-color: #00FFFF !important;}
 
 li { cursor: pointer; cursor: hand; }
 .breadcrumb {
-    padding: 5px;
+    padding: 4px;
     color: #efefef;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    margin-bottom: 10px !important;
+    margin-bottom: 7px !important;
 }
 .breadcrumb li span:first-child:hover {
     color:#ccc !important;

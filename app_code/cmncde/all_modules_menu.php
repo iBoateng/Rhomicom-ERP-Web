@@ -3,29 +3,33 @@ $menuItems = array("Personal Records", "Bills/Payments", "Events & Attendance",
     "Elections Centre", "e-Library", "Accounting",
     "Sales & Inventory", "Hospitality Management", "Visits & Appointments",
     "Performance Management", "Projects Management", "Clinic & Hospital",
-    "Banking & Micro-finance", "Summary Dashboard");
+    "Banking & Micro-finance", "Summary Dashboard", "Notices & Content Management", "Reports / Processes");
 $menuImages = array("person.png", "invcBill.png", "calendar2.png",
     "election.png", "addresses_wbg_64x64.png", "GL-256.png",
     "Inventory.png", "rent1.png", "Calander.png",
     "education.png", "engineer.png", "medical.png",
-    "bank_256.png", "dashboard220.png");
+    "bank_256.png", "dashboard220.png",
+    "Notebook.png", "settings.png");
 $menuLinks = array("grp=8&typ=1", "grp=7&typ=1", "grp=16&typ=1",
     "grp=19&typ=10", "grp=19&typ=12", "grp=6&typ=1",
     "grp=12&typ=1", "grp=18&typ=1", "grp=14&typ=1",
     "grp=15&typ=1", "grp=13&typ=1", "grp=14&typ=1&mdl=Clinic/Hospital",
-    "grp=17&typ=1", "grp=40&typ=4");
+    "grp=17&typ=1", "grp=40&typ=4", "grp=40&typ=3&vtyp=1",
+    "grp=9&typ=1");
 $mdlNms = array("Basic Person Data", "Internal Payments", "Events And Attendance",
     "e-Voting", "e-Library", "Accounting",
     "Stores And Inventory Manager", "Hospitality Management", "Visits and Appointments",
     "Learning/Performance Management", "Projects Management", "Clinic/Hospital",
-    "Basic Person Data", "Self Service");
+    "Basic Person Data", "Self Service", "System Administration",
+    "Reports And Processes");
 
 $dfltPrvldgs = array(
     "View Person", "View Internal Payments", "View Events And Attendance",
     "View e-Voting", "View e-Library", "View Accounting",
     "View Inventory Manager", "View Hospitality Manager", "View Visits and Appointments",
     "View Learning/Performance Management", "View Projects Management", "View Clinic/Hospital",
-    "View Person", "View Self-Service");
+    "View Person", "View Self-Service", "View Notices Admin",
+    "View Reports And Processes");
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNms[0]) || test_prmssns("View Self-Service", "Self Service");
 $cntent = "<div>
@@ -53,13 +57,21 @@ if ($lgn_num > 0 && $canview === true) {
         if ($grpcntr == 0) {
             $cntent .= "<div class=\"row\">";
         }
-
-        $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        if ($i == 14) {
+            $cntent .= "<div class=\"col-md-3 colmd3special2\">
+        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allnotices', '$menuLinks[$i]');\">
+            <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
+            <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
+        </button>
+    </div>";
+        } else {
+            $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', '$menuLinks[$i]');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
     </div>";
+        }
         $appCntr += 1;
         if ($grpcntr == 3 || $i == count($menuItems) - 1) {
             $cntent .= "</div>";
@@ -72,30 +84,26 @@ if ($lgn_num > 0 && $canview === true) {
 
 
     $menuItemsAdmn = array("System Administration", "Organization Setup",
-        "Value Lists Setup", "Workflow Administration", "Notices & Content Management"/*, "Reports / Processes"*/);
+        "Value Lists Setup", "Workflow Administration");
     $menuImagesAdmn = array("ma-logo.png", "Home.png",
-        "viewIcon.png", "bb_flow.gif",
-        "Notebook.png", "settings.png");
+        "viewIcon.png", "bb_flow.gif");
     $menuLinksAdmn = array("grp=3&typ=1", "grp=5&typ=1",
-        "grp=4&typ=1", "grp=11&typ=1", "grp=40&typ=3&vtyp=1",
-        "grp=9&typ=1");
+        "grp=4&typ=1", "grp=11&typ=1");
     $mdlNmsAdmn = array("System Administration", "Organization Setup",
-        "General Setup", "Workflow Manager", "System Administration",
-        "Reports And Processes");
+        "General Setup", "Workflow Manager");
 
     $dfltPrvldgsAdmn = array("View System Administration",
         "View Organization Setup", "View General Setup",
-        "View Workflow Manager", "View Notices Admin",
-        "View Reports And Processes");
+        "View Workflow Manager");
 
     $canViewSysAdmin = test_prmssns("View System Administration", "System Administration");
     $canViewOrgStp = test_prmssns("View Organization Setup", "Organization Setup");
     $canViewLov = test_prmssns("View General Setup", "General Setup");
     $canViewWkf = test_prmssns("View Workflow Manager", "Workflow Manager");
-    $canViewArtclAdmn = test_prmssns("View Notices Admin", "System Administration");
+    //$canViewArtclAdmn = test_prmssns("View Notices Admin", "System Administration");
     //$canViewRpts = test_prmssns("View Reports And Processes", "Reports And Processes");
 
-    if ($canViewSysAdmin || $canViewOrgStp || $canViewLov || $canViewWkf || $canViewArtclAdmn) {
+    if ($canViewSysAdmin || $canViewOrgStp || $canViewLov || $canViewWkf) {
         $canview = test_prmssns($dfltPrvldgsAdmn[0], $mdlNmsAdmn[0]);
         $grpcntrAdmn = 0;
         $appCntrAdmn = 0;
@@ -117,21 +125,14 @@ if ($lgn_num > 0 && $canview === true) {
             if ($grpcntrAdmn == 0) {
                 $cntentAdmn .= "<div class=\"row\">";
             }
-            if ($i == 4) {
-                $cntentAdmn .= "<div class=\"col-md-3 colmd3special2\">
-        <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allnotices', '$menuLinksAdmn[$i]');\">
-            <img src=\"cmn_images/$menuImagesAdmn[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
-            <span class=\"wordwrap2\">" . ($menuItemsAdmn[$i]) . "</span>
-        </button>
-    </div>";
-            } else {
-                $cntentAdmn .= "<div class=\"col-md-3 colmd3special2\">
+
+            $cntentAdmn .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', '$menuLinksAdmn[$i]');\">
             <img src=\"cmn_images/$menuImagesAdmn[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItemsAdmn[$i]) . "</span>
         </button>
     </div>";
-            }
+
             $appCntrAdmn += 1;
             if ($grpcntrAdmn == 3 || $i == count($menuItemsAdmn) - 1) {
                 $cntentAdmn .= "</div>";

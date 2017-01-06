@@ -2293,7 +2293,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="rptsRptDesc" class="control-label col-lg-4">Description:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($caneditRpts === true) { ?>
-                                                <textarea class="form-control rqrdFld" aria-label="..." id="rptsRptDesc" name="rptsRptDesc" style="width:100%;" cols="4" rows="3"><?php echo $row1[2]; ?></textarea>
+                                                <textarea class="form-control rqrdFld" aria-label="..." id="rptsRptDesc" name="rptsRptDesc" style="width:100%;" cols="4" rows="5"><?php echo $row1[2]; ?></textarea>
                                             <?php } else { ?>
                                                 <span><?php echo $row1[2]; ?></span>
                                             <?php } ?>
@@ -2351,7 +2351,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
                                                 </div>
-
                                             <?php } else {
                                                 ?>
                                                 <span><?php echo $row1[17]; ?></span>
@@ -2508,12 +2507,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </div>
                                     </div>   
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                        <div class="input-group">
-                                            <label class="btn btn-primary btn-file input-group-addon">
-                                                Browse... <input type="file" id="rptsJrxmlFile" name="rptsJrxmlFile" onchange="setFileLoc(this, '#rptsJrxmlFileSrc');" class="btn btn-default"  style="display: none;">
-                                            </label>
-                                            <input type="text" class="form-control" aria-label="..." id="rptsJrxmlFileSrc" value="">                                                        
-                                        </div>                                       
+                                        <label for="rptsJrxmlFile" class="control-label col-lg-2">Jrxml File:</label>
+                                        <div  class="col-lg-10">
+                                            <?php if ($caneditRpts === true) { ?>
+                                                <div class="input-group">
+                                                    <label class="btn btn-primary btn-file input-group-addon">
+                                                        Browse... <input type="file" id="rptsJrxmlFile" name="rptsJrxmlFile" onchange="setFileLoc(this, '#rptsJrxmlFileSrc');" class="btn btn-default"  style="display: none;">
+                                                    </label>
+                                                    <input type="text" class="form-control" aria-label="..." id="rptsJrxmlFileSrc" value="<?php echo $row1[19]; ?>">                                                        
+                                                </div> 
+                                            <?php } else { ?>
+                                                <span><?php echo $row1[19]; ?></span>
+                                            <?php } ?>
+                                        </div>
                                     </div>
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="rptsIsEnabled" class="control-label col-lg-7">Enabled?:</label>
@@ -2539,10 +2545,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </div>   
                                 </div>
                             </div>
+                            <div class="row"  style="padding:1px 15px 1px 15px !important;"><hr style="margin:1px 0px 3px 0px;"></div>                    
                             <div class="row">
                                 <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
-                                    <label for="rptsQuerySQL" class="control-label col-lg-2">SQL Query for Report / Process:</label>
-                                    <div  class="col-lg-10">
+                                    <label for="rptsQuerySQL" class="control-label col-lg-12">SQL Query for Report / Process:</label>
+                                    <div  class="col-lg-12">
                                         <?php if ($caneditRpts === true) { ?>
                                             <textarea class="form-control rqrdFld" aria-label="..." id="rptsQuerySQL" name="rptsQuerySQL" style="width:100%;" cols="9" rows="20"><?php echo $row1[3]; ?></textarea>
                                         <?php } else {
@@ -2556,34 +2563,75 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                             <?php
                             if ($caneditRpts === true) {
-                                $nwRowHtml = urlencode("<tr id=\"rptsStpPrmsRow__WWW123WWW\">"
-                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
-                                        . "<td class=\"lovtd\">
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
-                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_PValNm\" value=\"\" style=\"width:100% !important;\">
-                                                            <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_PValID\" value=\"\">
-                                              </div>
-                                          </td>
-                                          <td class=\"lovtd\">                                          
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
-                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_PValDesc\" value=\"\" style=\"width:100% !important;\">
-                                              </div>
-                                          </td>
-                                          <td class=\"lovtd\"> 
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
-                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
-                                                                <label class=\"form-check-label\">
-                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"rptsStpPrmsRow_WWW123WWW_IsEnabled\" name=\"rptsStpPrmsRow_WWW123WWW_IsEnabled\">
-                                                                </label>
+                                $nwRowHtml = "<tr id=\"rptsStpPrmsRow__WWW123WWW\">
+                                    <td class=\"lovtd\"><span class=\"normaltd\">New</span></td>
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_ParamNm\" value=\"\" style=\"width:100% !important;\">
+                                                                <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_ParamID\" value=\"-1\">
                                                             </div>
-                                              </div>
-                                           </td>
-                                           <td class=\"lovtd\">
-                                              <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
-                                                            <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_AlwdOrgs\" value=\"\" style=\"width:100% !important;\">
-                                              </div>
-                                          </td>
-                                        </tr>");
+													</td>                                                
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_SQLRep\" value=\"\" style=\"width:100% !important;\">
+                                                            </div>
+													</td>                                               
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_DfltVal\" value=\"\" style=\"width:100% !important;\">
+                                                            </div>                                                        
+                                                    </td>                                               
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <div class=\"input-group\"  style=\"width:100%;\">
+                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_LovNm\" value=\"\">
+                                                                    <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_LovID\" value=\"-1\">
+                                                                    <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'LOV Names', '', '', '', 'radio', true, '', '', 'rptsStpPrmsRow_WWW123WWW_LovNm', 'clear', 1, '');\">
+                                                                        <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>                                                       
+                                                    </td>                                                                                              
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"rptsStpPrmsRow_WWW123WWW_DataTyp\">";
+                                $valslctdArry = array("", "", "");
+                                $srchInsArrys = array("TEXT", "NUMBER", "DATE");
+                                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                    $nwRowHtml .= "<option value=\"$srchInsArrys[$z]\" $valslctdArry[$z]>$srchInsArrys[$z]</option>";
+                                }
+                                $nwRowHtml .= "</select>
+                                                            </div>                                                      
+                                                    </td>                                                                                              
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"rptsStpPrmsRow_WWW123WWW_DateFrmt\">";
+
+                                $valslctdArry = array("", "", "", "", "");
+                                $srchInsArrys = array("None", "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "dd-MMM-yyyy", "dd-MM-yyyy HH:mm:ss");
+
+                                for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                    $nwRowHtml .= "<option value=\"$srchInsArrys[$z]\" $valslctdArry[$z]>$srchInsArrys[$z]</option>";
+                                }
+                                $nwRowHtml .= "</select>
+                                                            </div>                                                        
+                                                    </td>
+                                                    <td class=\"lovtd\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                    <label class=\"form-check-label\">
+                                                                        <input type=\"checkbox\" class=\"form-check-input\" id=\"rptsStpPrmsRow_WWW123WWW_IsRqrd\" name=\"rptsStpPrmsRow_WWW123WWW_IsRqrd\">
+                                                                    </label>
+                                                                </div>
+                                                            </div>                                                       
+                                                    </td>
+                                                        <td class=\"lovtd\">
+                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Parameter\">
+                                                                <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                            </button>
+                                                        </td>
+                                        </tr>";
+                                $nwRowHtml = urlencode($nwRowHtml);
                                 ?>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -2601,12 +2649,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <thead>
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Prompt</th>
+                                                <th style="min-width:90px;">Prompt</th>
                                                 <th>SQL Representation</th>
-                                                <th>Default Value</th>
-                                                <th style="min-width:110px;">LOV Name</th>
+                                                <th style="min-width:90px;">Default Value</th>
+                                                <th style="min-width:150px;">LOV Name</th>
                                                 <th style="min-width:90px;">Data Type</th>
-                                                <th style="min-width:90px;">Date Format</th>
+                                                <th>Date Format</th>
                                                 <th>Required?</th>
                                                 <?php
                                                 if ($caneditRpts === true) {
@@ -2734,7 +2782,84 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     if ($caneditRpts === true) {
                                                         ?>
                                                         <td class="lovtd">
-                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Possible Value">
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Parameter">
+                                                                <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                            </button>
+                                                        </td>
+                                                    <?php } ?>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>                     
+                            </div>  
+                            <?php
+                            if ($caneditRpts === true) {
+                                $nwRowHtml = "<tr id=\"rptsStpRolesRow__WWW123WWW\">
+                                    <td class=\"lovtd\"><span class=\"normaltd\">New</span></td>                                                                                                  
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <div class=\"input-group\"  style=\"width:100%;\">
+                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RoleNm\" value=\"\">
+                                                                    <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RoleID\" value=\"-1\">
+                                                                    <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'User Roles', '', '', '', 'radio', true, '', 'rptsStpRolesRow_WWW123WWW_RoleID', 'rptsStpRolesRow_WWW123WWW_RoleNm', 'clear', 0, '');\">
+                                                                        <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>                                                       
+                                                    </td> 
+                                                        <td class=\"lovtd\">
+                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Role\">
+                                                                <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                            </button>
+                                                        </td>
+                                        </tr>";
+                                $nwRowHtml = urlencode($nwRowHtml);
+                                ?>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;margin-top:5px;" onclick="insertNewRowBe4('rptsStpRolesTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Role">
+                                            <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">New Role
+                                        </button> 
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?> 
+                            <div class="row"> 
+                                <div  class="col-md-12">
+                                    <table class="table table-striped table-bordered table-responsive" id="rptsStpRolesTable" cellspacing="0" width="100%" style="width:100%;min-width: 700px !important;">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th style="min-width:90px;">Role Set Name</th>
+                                                <?php
+                                                if ($caneditRpts === true) {
+                                                    ?>
+                                                    <th>&nbsp;</th>
+                                                <?php } ?>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $cntr = 0;
+                                            $result3 = get_AllRptRoles($sbmtdRptID);
+                                            while ($row3 = loc_db_fetch_array($result3)) {
+                                                $cntr += 1;
+                                                ?>
+                                                <tr id="rptsStpRolesRow_<?php echo $cntr; ?>">                                    
+                                                    <td class="lovtd"><span><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                    <td class="lovtd">
+                                                        <span><?php echo $row3[1]; ?></span>
+                                                        <input type="hidden" class="form-control" aria-label="..." id="rptsStpRolesRow<?php echo $cntr; ?>_RoleID" value="<?php echo $row3[0]; ?>">                                                     
+                                                    </td>   
+                                                    <?php
+                                                    if ($caneditRpts === true) {
+                                                        ?>
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Role">
                                                                 <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>

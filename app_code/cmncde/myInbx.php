@@ -134,7 +134,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $result = get_MyInbx($srchFor, $srchIn, $curIdx, $lmtSze);
                 ?>
                 <form id='myInbxForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row " style="margin-bottom:5px;padding:0px 15px 0px 15px !important;">
+                    <div class="row " style="margin-bottom:0px;padding:0px 15px 0px 15px !important;">
                         <div class="col-md-2" style="padding:0px 1px 0px 1px !important;">
                             <div class="input-group">
                                 <input class="form-control" id="myInbxSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncMyInbx(event, '', '#myinbox', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">
@@ -486,7 +486,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $result = get_MyInbx($srchFor, $srchIn, $curIdx, $lmtSze);
                 ?>
                 <form id='allInbxForm' action='' method='post' accept-charset='UTF-8'>
-                    <div class="row " style="margin-bottom:5px;padding:0px 15px 0px 15px !important;">
+                    <div class="row " style="margin-bottom:0px;padding:0px 15px 0px 15px !important;">
                         <div class="col-md-2" style="padding:0px 1px 0px 1px !important;">
                             <div class="input-group">
                                 <input class="form-control" id="allInbxSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAllInbx(event, '', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>')">

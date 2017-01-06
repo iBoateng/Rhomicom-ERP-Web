@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="item">
-                            <img class="second-slide" src="cmn_images/bnnr11.png" alt="Second slide" style="height: 250px !important;width: auto !important;">
+                            <img class="second-slide" src="cmn_images/bnnr14.jpg" alt="Second slide" style="height: 250px !important;width: auto !important;">
                             <div class="container">
                                 <div class="carousel-caption">
                                     <!--<h3>Another example headline.</h3>-->
@@ -119,16 +119,16 @@
             </div>
             <div class="col-md-3" style="padding:0px 13px 0px 15px;">
                 <div class="panel panel-default" style="color:white;background-color:#f0ad4e;border-radius:2px;border:1px solid #f0ad4e;">
-                    <a href="javascript:openATab('#allmodules', 'grp=8&typ=1&pg=1&vtyp=0');">
+                    <a href="javascript:openATab('#allmodules', 'grp=9&typ=1');">
                         <div class="panel-heading" style="color:white;background-color:#f0ad4e;border-radius:5px;border:1px solid #f0ad4e;">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-user fa-5x"></i>
+                                    <i class="fa fa-gear fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">&nbsp;</div>
                                     <div class="huge">1</div>
-                                    <div>Personal Profile!</div>
+                                    <div>Reports & Processes!</div>
                                 </div>
                             </div>
                         </div>

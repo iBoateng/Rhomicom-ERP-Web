@@ -1,7 +1,7 @@
 <?php
 
 $menuItems = array("Run Reports / Processes", "Run Alerts");
-$menuImages = array("rho_arrow1.png", "alert.png");
+$menuImages = array("start.png", "alert.png");
 
 $mdlNm = "Reports And Processes";
 $ModuleName = $mdlNm;
@@ -905,7 +905,14 @@ function get_AllParams($rptID) {
     $result = executeSQLNoParams($strSql);
     return $result;
 }
-
+function get_AllRptRoles($rptID) {
+    $strSql = "SELECT a.user_role_id, b.role_name, a.rpt_roles_id "
+            . "FROM rpt.rpt_reports_allwd_roles a, sec.sec_roles b "
+            . "WHERE a.report_id = $rptID and a.user_role_id = b.role_id
+               ORDER BY a.rpt_roles_id";
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
 function get_AllSchdldParams($schdlID) {
     $strSql = "SELECT a.schdl_param_id mt, a.parameter_id mt, b.parameter_name, a.parameter_value, lov_name_id
       FROM rpt.rpt_run_schdule_params a, rpt.rpt_report_parameters b  
