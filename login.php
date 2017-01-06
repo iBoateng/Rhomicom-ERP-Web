@@ -72,11 +72,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             window.location = 'index.php';
                         } else
                         {
-                            document.getElementById("msgArea").innerHTML = "<span style=\"color:red;font-size:12px;text-align: center;margin-top:0px;\">&nbsp;" + rspns + "</span>";
+                            document.getElementById("msgArea").innerHTML = "<span class=\"wordwrap3\" style=\"color:red;font-size:12px;text-align: center;margin-top:0px;\">&nbsp;" + rspns + "</span>";
                         }
                     } else
                     {
-                        document.getElementById("msgArea").innerHTML = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><img style=\"width:145px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/>Loading...Please Wait...</span>";
+                        document.getElementById("msgArea").innerHTML = "<span class=\"wordwrap3\" style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><img style=\"width:145px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/>Loading...Please Wait...</span>";
                     }
                 };
 
@@ -187,7 +187,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
         <body style="<?php echo $bckcolorsChngPwd; ?>min-width:300px;min-height:400px;width:100% !important;height:100% !important;width:100% !important;">
             <div class="modalLdng"></div>
             <div class="modalLdng1"></div>
-            <div class="container-fluid" style="">
+            <div class="container-fluid">
                 <div class="row" style="min-height:65px;height: 100%;border-bottom:0px solid #bbb;padding:0px;background-color: rgba(0,0,0,0.32);">
                     <div class="col-md-6">
                         <div style="max-width:25%;float:left;"><img src="cmn_images/<?php echo $app_image1; ?>" style="left: 0.5%; margin:2px; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;"></div>

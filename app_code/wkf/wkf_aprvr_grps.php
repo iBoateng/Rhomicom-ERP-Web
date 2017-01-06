@@ -180,7 +180,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>                        
                         <div  class="col-lg-9" style="padding:0px 1px 0px 1px !important">
                             <fieldset class="basic_person_fs" style="padding-top:10px !important;">
-                                <div class="container-fluid" id="wkfGrpsDetailInfo" style="padding:0px 15px 0px 15px !important;">
+                                <div class="container-fluid" id="wkfGrpsDetailInfo">
                                     <?php
                                     if ($pkID > 0) {
                                         $result1 = get_WkfApprvrGrpDet($pkID);

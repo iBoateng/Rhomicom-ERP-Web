@@ -17,24 +17,37 @@ function is_multi($a) {
     return false;
 }
 
-function executeSQLNoParams($selSQL) {
+function executeSQLNoParams($selSQL, $extrMsg = '') {
+    global $ftp_base_db_fldr;
+    global $lgn_num;
+    global $logNxtLine;
     $conn = getConn();
     $result = loc_db_query($conn, $selSQL);
-//echo "<br/>SQL--".$selSQL;
     if (!$result) {
-        echo "An error occurred. <br/> " . loc_db_result_error($result);
+        $txt = "An error occurred. <br/> " . loc_db_result_error($result);
+        echo $txt;
+        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . PHP_EOL . $selSQL . $logNxtLine, FILE_APPEND | LOCK_EX);
+    } else if ($extrMsg != '') {
+        $txt = $extrMsg;
+        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . PHP_EOL . $selSQL . $logNxtLine, FILE_APPEND | LOCK_EX);
     }
     loc_db_close($conn);
     return $result;
-//$conn
 }
 
 function execUpdtInsSQL($inSQL, $extrMsg = '', $src = 0) {
+    global $ftp_base_db_fldr;
+    global $lgn_num;
+    global $logNxtLine;
     $conn = getConn();
     $result = loc_db_query($conn, $inSQL);
-//echo "<br/>SQL--".$selSQL;
     if (!$result) {
-        echo "An error occurred. <br/> " . loc_db_result_error($result);
+        $txt = "An error occurred. <br/> " . loc_db_result_error($result);
+        echo $txt;
+        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . PHP_EOL . $inSQL . $logNxtLine, FILE_APPEND | LOCK_EX);
+    } else if ($extrMsg != '') {
+        $txt = $extrMsg;
+        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . PHP_EOL . $inSQL . $logNxtLine, FILE_APPEND | LOCK_EX);
     }
     loc_db_close($conn);
     if ($src == 0) {
@@ -45,14 +58,17 @@ function execUpdtInsSQL($inSQL, $extrMsg = '', $src = 0) {
         }
     }
     return loc_db_affected_rows($result);
-//$conn
 }
 
 function storeAdtTrailInfo($infoStmnt, $actntype, $extrMsg) {
     global $ModuleName;
-    $ModuleAdtTbl = getGnrlRecNm('sec.sec_modules', 'module_id', 'audit_trail_tbl_name', getModuleID($ModuleName));
+    global $ftp_base_db_fldr;
     global $usrID;
     global $lgn_num;
+    global $logNxtLine;
+
+    $ModuleAdtTbl = getGnrlRecNm('sec.sec_modules', 'module_id', 'audit_trail_tbl_name', getModuleID($ModuleName));
+
     $action_types = array("UPDATE STATEMENTS", "DELETE STATEMENTS");
     if ($ModuleAdtTbl == null || $ModuleAdtTbl == "") {
         return;
@@ -61,12 +77,29 @@ function storeAdtTrailInfo($infoStmnt, $actntype, $extrMsg) {
         return;
     }
     $dateStr = getDB_Date_time();
-    $sqlStr = "INSERT INTO " . $ModuleAdtTbl . " (" .
-            "user_id, action_type, action_details, action_time, login_number) " .
-            "VALUES (" . $usrID . ", '" . $action_types[$actntype] .
-            "', '" . loc_db_escape_string($extrMsg) . "" .
-            loc_db_escape_string($infoStmnt) . "', '" . $dateStr . "', " . $lgn_num . ")";
-    execUpdtInsSQL($sqlStr, '', 1);
+    $seqName = $ModuleAdtTbl . "_dflt_row_id_seq";
+    $seqID = getNewAdtTrailID($seqName);
+    if ($seqID > 0) {
+        $sqlStr = "INSERT INTO " . $ModuleAdtTbl . " (" .
+                "user_id, action_type, action_details, action_time, login_number) " .
+                "VALUES (" . $usrID . ", '" . $action_types[$actntype] .
+                "', '" . "', '" . $dateStr . "', " . $lgn_num . ")";
+        $txt = loc_db_escape_string($extrMsg) . PHP_EOL .
+                loc_db_escape_string($infoStmnt);
+        file_put_contents($ftp_base_db_fldr . "/bin/log_files/adt_trail/$seqID" . "_" . $lgn_num . ".rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
+        execUpdtInsSQL($sqlStr, '', 1);
+    }
+}
+
+function getNewAdtTrailID($seqName) {
+    $strSql = "select nextval('$seqName')";
+    $result = executeSQLNoParams($strSql);
+
+    if (loc_db_num_rows($result) > 0) {
+        $row = loc_db_fetch_array($result);
+        return $row[0];
+    }
+    return -1;
 }
 
 function getOrgFuncCurID($orgid) {
@@ -288,11 +321,11 @@ function deleteWkfApp($appID) {
     $affctd3 = 0;
 
     $insSQL = "DELETE FROM wkf.wkf_apps_n_hrchies WHERE app_id = " . $appID;
-    $affctd1 +=execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL);
     $insSQL = "DELETE FROM wkf.wkf_apps_actions WHERE app_id = " . $appID;
-    $affctd2 +=execUpdtInsSQL($insSQL);
+    $affctd2 += execUpdtInsSQL($insSQL);
     $insSQL = "DELETE FROM wkf.wkf_apps WHERE app_id = " . $appID;
-    $affctd3 +=execUpdtInsSQL($insSQL);
+    $affctd3 += execUpdtInsSQL($insSQL);
 
     if ($affctd3 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
@@ -341,7 +374,7 @@ function updateWkfAppAction($actionID, $actionNm, $sqlStmnt, $appID, $exctbl, $w
 
 function deleteWkfAppAction($actionID) {
     $insSQL = "DELETE FROM wkf.wkf_apps_actions WHERE action_sql_id = " . $actionID;
-    $affctd1 +=execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL);
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 App Action(s)!";
@@ -403,6 +436,9 @@ function add_date($givendate, $day = 0, $mth = 0, $yr = 0) {
 
 function createWelcomeMsg($username) {
     global $app_name;
+    global $ftp_base_db_fldr;
+    global $lgn_num;
+    global $logNxtLine;
     $msg_id = getWkfMsgID();
     $appID = getAppID('Login', 'System Administration');
 
@@ -420,6 +456,7 @@ function createWelcomeMsg($username) {
     $srcdoctyp = "Login";
     $srcdocid = -1;
     $hrchyid = -1;
+    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $msgbody . $logNxtLine, FILE_APPEND | LOCK_EX);
     createWkfMsg($msg_id, $msghdr, $msgbody, $userID, $appID, $msgtyp, $msgsts, $srcdoctyp, $srcdocid, $hrchyid);
     routWkfMsg($msg_id, -1, $prsnid, $userID, 'Initiated', 'Acknowledge');
 }
@@ -1295,7 +1332,7 @@ function getNewKey($key) {
             continue;
         }
         if (strpos($newKey, $charset1[$i]) === FALSE) {
-            $newKey.= $charset1[$i];
+            $newKey .= $charset1[$i];
         }
         if (strlen($newKey) >= 62) {
             break;
@@ -1306,7 +1343,7 @@ function getNewKey($key) {
         $keyLength = count($charset2);
         for ($i = $keyLength - 1; $i >= 0; $i--) {
             if (strpos($newKey, $charset2[$i]) === FALSE) {
-                $newKey.= $charset2[$i];
+                $newKey .= $charset2[$i];
             }
             if (strlen($newKey) >= 62) {
                 break;
@@ -1934,7 +1971,7 @@ if (strpos($os, "Window") !== FALSE) {
         if (file_exists($indv_files_to_del[$i])) {
             if (strpos($os, "Window") !== FALSE) {
                 $bsdbfldr = str_replace("/", "\\", trim($_SERVER['DOCUMENT_ROOT'], " |")) . "\\$base_folder\\" . str_replace("/", "\\", trim($indv_files_to_del[$i], " |"));
-                $filepth .=" " . escapeshellarg($bsdbfldr);
+                $filepth .= " " . escapeshellarg($bsdbfldr);
             } else {
                 
             }

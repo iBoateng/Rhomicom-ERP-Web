@@ -3,25 +3,26 @@ $menuItems = array("Personal Records", "Bills/Payments", "Events & Attendance",
     "Elections Centre", "e-Library", "Accounting",
     "Sales & Inventory", "Hospitality Management", "Visits & Appointments",
     "Performance Management", "Projects Management", "Clinic & Hospital",
-    "Banking & Micro-finance", "Summary Dashboard", "Notices & Content Management", "Reports / Processes");
+    "Banking & Micro-finance", "Summary Dashboard", "Notices & Content Management", 
+    "Reports / Processes", "Help Desk");
 $menuImages = array("person.png", "invcBill.png", "calendar2.png",
     "election.png", "addresses_wbg_64x64.png", "GL-256.png",
     "Inventory.png", "rent1.png", "Calander.png",
     "education.png", "engineer.png", "medical.png",
     "bank_256.png", "dashboard220.png",
-    "Notebook.png", "settings.png");
+    "Notebook.png", "settings.png","helpdesk1.png");
 $menuLinks = array("grp=8&typ=1", "grp=7&typ=1", "grp=16&typ=1",
     "grp=19&typ=10", "grp=19&typ=12", "grp=6&typ=1",
     "grp=12&typ=1", "grp=18&typ=1", "grp=14&typ=1",
     "grp=15&typ=1", "grp=13&typ=1", "grp=14&typ=1&mdl=Clinic/Hospital",
     "grp=17&typ=1", "grp=40&typ=4", "grp=40&typ=3&vtyp=1",
-    "grp=9&typ=1");
+    "grp=9&typ=1", "grp=41&typ=1");
 $mdlNms = array("Basic Person Data", "Internal Payments", "Events And Attendance",
     "e-Voting", "e-Library", "Accounting",
     "Stores And Inventory Manager", "Hospitality Management", "Visits and Appointments",
     "Learning/Performance Management", "Projects Management", "Clinic/Hospital",
     "Basic Person Data", "Self Service", "System Administration",
-    "Reports And Processes");
+    "Reports And Processes", "Self Service");
 
 $dfltPrvldgs = array(
     "View Person", "View Internal Payments", "View Events And Attendance",
@@ -29,7 +30,7 @@ $dfltPrvldgs = array(
     "View Inventory Manager", "View Hospitality Manager", "View Visits and Appointments",
     "View Learning/Performance Management", "View Projects Management", "View Clinic/Hospital",
     "View Person", "View Self-Service", "View Notices Admin",
-    "View Reports And Processes");
+    "View Reports And Processes", "View Self-Service");
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNms[0]) || test_prmssns("View Self-Service", "Self Service");
 $cntent = "<div>

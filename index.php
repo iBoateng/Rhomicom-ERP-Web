@@ -360,6 +360,13 @@ if ($group > 0 && $type > 0) {
         } else {
             restricted();
         }
+    } else if ($group == 41) {
+        //Help Desk 
+        if ($type == 1) {
+            require 'app_code/hlpd/hlpd_intro.php';
+        } else {
+            restricted();
+        }
     } else {
         header('location: index.php');
     }

@@ -218,7 +218,7 @@
         </div> 
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 2px;">
-            <div class="container-fluid" style="padding:0px 10px 0px 20px !important;">
+            <div class="container-fluid">
                 <h2>Hello, world!</h2>
                 <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
                 <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>

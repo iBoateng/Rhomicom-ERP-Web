@@ -160,7 +160,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </table>                        
                             </fieldset>
                         </div>                        
-                        <div  class="col-md-9">
+                        <div  class="col-md-9" style="padding:0px 1px 0px 1px !important">
                             <fieldset class="basic_person_fs" style="padding-top:10px !important;">
                                 <legend class = "basic_person_lg">Policy Details</legend>
                                 <div class="container-fluid" id="secPlcsDetailInfo">

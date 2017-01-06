@@ -29,6 +29,7 @@ $pemDest = 'dwnlds/' . $db_folder . '/Person/'; ///var/www/html/portal/
 //$base_dir = "C:/xampp/htdocs/rems_pg/app_code/cmncde/";
 //$ftp_base_db_fldr = "/home/oracle/Databases/test_database";
 $ftp_base_db_fldr = "/home/portaladmin/" . $db_folder; //"/home/rhoportal/ghie_ftp/" . $db_folder;
+$logNxtLine = PHP_EOL . "-------------------------Next Msg:-------------------------" . PHP_EOL;
 $db_pwd = 'Password1';
 $db_usr = "postgres";
 $port = "5432";
@@ -43,7 +44,7 @@ $app_cstmr_url = "http://www.rhomicom.com";
 $app_slogan = "Building Dreams";
 $app_image = "3.png";
 $app_image1 = "3.png";
-$lgn_image = "data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="; /*cmn_images/bkg4.jpeg*/
+$lgn_image = "data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="; /* cmn_images/bkg4.jpeg */
 $app_favicon = "Icon.ico";
 $about_app = "About Rhomicom";
 $about_url = "http://www.rhomicom.com";
@@ -228,7 +229,6 @@ function loc_db_affected_rows($result) {
 }
 
 function loc_db_query($conn, $inSQL) {
-    //echo $inSQL;
     return pg_query($conn, $inSQL);
 }
 

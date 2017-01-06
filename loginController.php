@@ -270,6 +270,8 @@ function recordSuccflLogin($username, $machdet) {
     global $tmpDest;
     global $pemDest;
     global $ftp_base_db_fldr;
+    global $logNxtLine;
+    global $lgn_num;
     $dateStr = getDB_Date_time();
     $mach_details = $machdet;
     $sqlStr = "INSERT INTO sec.sec_track_user_logins(user_id, 
@@ -278,15 +280,15 @@ function recordSuccflLogin($username, $machdet) {
             loc_db_escape_string($mach_details) . "', TRUE, '" . $app_version . "')";
     executeSQLNoParams($sqlStr);
     updtLastLgnAttmpTme($username, $dateStr);
+    $prsnid = getUserPrsnID($username);
+    $lgn_num = get_login_number($username, $dateStr, $mach_details);
+    $fullnm = getPrsnFullNm($prsnid) . " (" . getPersonLocID($prsnid) . ")";
     $_SESSION['UNAME'] = $username;
     $_SESSION['USRID'] = getUserID($username);
-    $_SESSION['LGN_NUM'] = get_login_number($username, $dateStr, $mach_details);
+    $_SESSION['LGN_NUM'] = $lgn_num;
     $_SESSION['ORG_ID'] = getUserOrgID($username);
-
-    $prsnid = getUserPrsnID($username);
-    $lgn_num = $_SESSION['LGN_NUM'];
     $_SESSION['PRSN_ID'] = $prsnid;
-    $_SESSION['PRSN_FNAME'] = getPrsnFullNm($prsnid) . " (" . getPersonLocID($prsnid) . ")";
+    $_SESSION['PRSN_FNAME'] = $fullnm;
     $myImgFileName = encrypt1($prsnid . session_id() . $lgn_num, $smplTokenWord1);
     $_SESSION['FILES_NAME_PRFX'] = $myImgFileName;
     $nwFileName = $myImgFileName . '.png';
@@ -299,7 +301,9 @@ function recordSuccflLogin($username, $machdet) {
         $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
         copy("$ftp_src", "$fullPemDest");
     }
-    $myImgFileName=$nwFileName;
+    $myImgFileName = $nwFileName;
+    $txt = "Username:" . $username . "|Login Number:" . $lgn_num . "|Person:" . $fullnm . "";
+    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
     createWelcomeMsg($username);
 }
 

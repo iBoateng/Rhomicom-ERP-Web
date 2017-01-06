@@ -489,7 +489,13 @@ function openATab(slctr, linkArgs)
                             $this.tab('show');
                             prepareWkfAdmin(linkArgs, $body, targ, xmlhttp.responseText);
                         });
-                    } else if (linkArgs.indexOf("grp=9&typ=1") !== -1)
+                    } else if (linkArgs.indexOf("grp=7&typ=1") !== -1)
+                    {
+                        loadScript("app/pay/pay.js?v=110", function () {
+                            $this.tab('show');
+                            preparePay(linkArgs, $body, targ, xmlhttp.responseText);
+                        });
+                    }  else if (linkArgs.indexOf("grp=9&typ=1") !== -1)
                     {
                         loadScript("app/rpt/rpt.js?v=110", function () {
                             $this.tab('show');

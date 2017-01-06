@@ -475,9 +475,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </a>
                             </li>
                             <li class="nav-item  ">
+                                <a href="javascript:openATab('#allmodules', 'grp=41&typ=1');"  class="nav-link " style="<?php echo $forecolors; ?>">
+                                    <i class="fa fa-headphones fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                    <span class="title">Help Desk</span>
+                                </a>
+                            </li>
+                            <li class="nav-item  ">
                                 <a href="javascript:openATab('#allnotices', 'grp=40&typ=3&vtyp=20');"  class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-file-text-o fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                    <span class="title">Help</span>
+                                    <span class="title">System Manuals</span>
                                 </a>
                             </li>
                         </ul>
