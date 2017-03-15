@@ -143,7 +143,7 @@ function getLogMsg($msgid, $logTblNm) {
 function getQualfyngAddress($grpTyp, $grpNm, $grpID, $wrkplcID, $wrkplcSiteID, $msgTyp, &$errMsg) {
     $rsltAddresses = "";
 
-    if ($grpTyp != "Everyone" && $grpTyp != "Currently Selected Person") {
+    if ($grpTyp != "Everyone" && $grpTyp != "Single Person") {
         if ($grpID == "-1" || $grpID == "") {
             $errMsg = "Please select a Group First!";
             return "";
@@ -276,13 +276,13 @@ if ($usrID > 0) {
     } else if ($qryNm == "Get Addresses") {
         $sendIndvdl = isset($_POST['val1']) ? cleanInputData($_POST['val1']) : TRUE;
         $msgTyp = isset($_POST['val2']) ? cleanInputData($_POST['val2']) : 'Email';
-        $grpTyp = isset($_POST['val3']) ? cleanInputData($_POST['val3']) : 'Currently Selected Person';
+        $grpTyp = isset($_POST['val3']) ? cleanInputData($_POST['val3']) : 'Single Person';
         $grpID = isset($_POST['val4']) ? cleanInputData($_POST['val4']) : -1;
         $grpNm = isset($_POST['val7']) ? cleanInputData($_POST['val7']) : '';
         $wrkPlcID = isset($_POST['val5']) ? cleanInputData($_POST['val5']) : -1;
         $siteID = isset($_POST['val6']) ? cleanInputData($_POST['val6']) : -1;
         $errMsg = "";
-        if ($grpTyp == "Currently Selected Person") {
+        if ($grpTyp == "Single Person") {
             $grpID = getPersonID($grpID);
         }
         $addrs = getQualfyngAddress($grpTyp, $grpNm, $grpID, $wrkPlcID, $siteID, $msgTyp, $errMsg);
@@ -597,24 +597,24 @@ if ($usrID > 0) {
             $rpt_dest1 = "";
             if ($outptUsd == "HTML" || $outptUsd == "COLUMN CHART" || $outptUsd == "SIMPLE COLUMN CHART" || $outptUsd == "BAR CHART" || $outptUsd == "PIE CHART" || $outptUsd == "LINE CHART") {
                 $rpt_src1 .= "/amcharts_2100/images/";
-                $rpt_dest1 = "dwnlds/$db_folder/Rpts/amcharts_2100/images/";
+                $rpt_dest1 = $fldrPrfx . "dwnlds/amcharts_2100/images/";
                 $rpt_src .= "/amcharts_2100/samples/$in_val.html";
-                $rpt_dest = "dwnlds/$db_folder/Rpts/amcharts_2100/samples/$in_val.html";
+                $rpt_dest = $fldrPrfx . "dwnlds/amcharts_2100/samples/$in_val.html";
             } else if ($outptUsd == "STANDARD") {
                 $rpt_src .= "/$in_val.txt";
-                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.txt";
+                $rpt_dest = "dwnlds/tmp/$in_val.txt";
             } else if ($outptUsd == "PDF") {
                 $rpt_src .= "/$in_val.pdf";
-                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.pdf";
+                $rpt_dest = "dwnlds/tmp/$in_val.pdf";
             } else if ($outptUsd == "MICROSOFT WORD") {
                 $rpt_src .= "/$in_val.doc";
-                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.doc";
+                $rpt_dest = "dwnlds/tmp/$in_val.doc";
             } else if ($outptUsd == "MICROSOFT EXCEL") {
                 $rpt_src .= "/$in_val.xls";
-                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.xls";
+                $rpt_dest = "dwnlds/tmp/$in_val.xls";
             } else if ($outptUsd == "CHARACTER SEPARATED FILE (CSV)") {
                 $rpt_src .= "/$in_val.csv";
-                $rpt_dest = "dwnlds/$db_folder/Rpts/$in_val.csv";
+                $rpt_dest = "dwnlds/tmp/$in_val.csv";
             }
             if ($rpt_dest1 != "") {
                 recurse_copy($rpt_src1, $rpt_dest1);

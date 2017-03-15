@@ -125,7 +125,7 @@ if ($filename == "") {
 }
 
 if ($file_extension != 'html') {
-    $nwDwnldFileNm = "dwnlds/" . encrypt1(basename($filename), $smplTokenWord1) . "." . $file_extension;
+    $nwDwnldFileNm = "dwnlds/tmp/" . encrypt1(basename($filename), $smplTokenWord1) . "." . $file_extension;
 } else {
     $rpt_src1 = str_replace("\\", "/", $ftp_base_db_fldr . "/Rpts") . "/amcharts_2100/images/";
     $rpt_dest1 = $fldrPrfx . "dwnlds/amcharts_2100/images/";
@@ -138,7 +138,8 @@ if ($file_extension != 'html') {
 if (file_exists($filename)) {
     copy($filename, $fldrPrfx . $nwDwnldFileNm);
     $filename = $fldrPrfx . $nwDwnldFileNm;
-    $_SESSION['CUR_RPT_FILES'] .= "$filename" . "|";
+    $curFiles = $_SESSION['CUR_RPT_FILES'];
+    $_SESSION['CUR_RPT_FILES'] = $curFiles . "$filename" . "|";
 }
 
 if ($error == false) {

@@ -1,6 +1,10 @@
 <?php
 if (array_key_exists('lgn_num', get_defined_vars())) {
-$canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
+    $pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
+    $lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
+    $sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "";
+    $curIdx = 0;
+    $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
     $canEdtPrsn = test_prmssns($dfltPrvldgs[8], $mdlNm);
     $canDelPrsn = test_prmssns($dfltPrvldgs[9], $mdlNm);
     $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
@@ -8,12 +12,10 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
     $addOrEdit = isset($_POST['addOrEdit']) ? cleanInputData($_POST['addOrEdit']) : 'VIEW';
     $prsnid = $_SESSION['PRSN_ID'];
     $orgID = $_SESSION['ORG_ID'];
-    if (($canAddPrsn === true && $addOrEdit == "ADD") 
-            || ($canEdtPrsn === true && $addOrEdit == "EDIT")
-            || ($canview === true && $addOrEdit == "VIEW")) {
+    if (($canAddPrsn === true && $addOrEdit == "ADD") || ($canEdtPrsn === true && $addOrEdit == "EDIT") || ($canview === true && $addOrEdit == "VIEW")) {
         $dsplyMode = $addOrEdit;
     } else {
-        $sbmtdPersonID=-1;
+        $sbmtdPersonID = -1;
     }
     if ($vwtyp == "0") {
         /* onclick=\"openATab('#allmodules', 'grp=8&typ=1&pg=$pgNo');\" */
@@ -30,54 +32,57 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
         } else {
             $pkID = $sbmtdPersonID;
         }
+        $rcrdExst = prsn_Record_Exist($pkID);
+        $chngRqstExst = prsn_ChngRqst_Exist($pkID);
         if ($pkID > 0) {
             if ($sbmtdPersonID <= 0) {
-                $rcrdExst = prsn_Record_Exist($pkID);
-
-                if ($rcrdExst == true) {
-                    $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-
-                    if ($chngRqstExst > 0) {
-                        $result = get_SelfPrsnDet($pkID);
-                    } else {
-                        $result = get_PrsnDet($pkID);
-                    }
-                } else {
-                    $result = get_PrsnDet($pkID);
-                }
+                $result = get_SelfPrsnDet($pkID);
             } else {
                 $result = get_PrsnDet($pkID);
             }
             while ($row = loc_db_fetch_array($result)) {
-                $nwFileName="";
+                $nwFileName = "";
+                $temp = explode(".", $row[2]);
+                $extension = end($temp);
+                $nwFileName = encrypt1($row[2], $smplTokenWord1) . "." . $extension;
+                $ftp_src = "";
                 if ($sbmtdPersonID <= 0) {
-                    $nwFileName = $myImgFileName;
-                } else {
-                    $temp = explode(".", $row[2]);
-                    $extension = end($temp);
-                    $nwFileName = encrypt1($row[2], $smplTokenWord1) . "." . $extension;
-                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
-                    $fullPemDest = $fldrPrfx . $pemDest . $nwFileName;
-                    if (file_exists($ftp_src)) {
-                        copy("$ftp_src", "$fullPemDest");
-                        //echo $fullPemDest;
-                    } else if (!file_exists($fullPemDest)) {
-                        $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
-                        copy("$ftp_src", "$fullPemDest");
-                        //echo $ftp_src;
+                    if ($rcrdExst == true && $chngRqstExst > 0) {
+                        $ftp_src = $ftp_base_db_fldr . "/Person/Request/" . $row[2];
+                    } else {
+                        $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
                     }
+                } else {
+                    $ftp_src = $ftp_base_db_fldr . "/Person/" . $row[2];
                 }
+                $fullPemDest = $fldrPrfx . $tmpDest . $nwFileName;
+                if (file_exists($ftp_src)) {
+                    copy("$ftp_src", "$fullPemDest");
+                } else if (!file_exists($fullPemDest)) {
+                    $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
+                    copy("$ftp_src", "$fullPemDest");
+                }
+                $nwFileName = $tmpDest . $nwFileName;
                 ?>
                 <div class="row" style="margin: 0px 0px 10px 0px !important;"> 
-                    <div class="col-md-8" style="padding:0px 0px 0px 15px !important;">&nbsp;</div>
-                    <div class="col-md-4" style="padding:0px 0px 0px 0px">
-                        <?php if ($sbmtdPersonID <= 0) { ?>
-                            <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm"  style="width:100% !important;" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button></div>
-                        <?php } else { ?>
-                            <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm"  style="width:100% !important;" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View/Edit Person Basic Profile', <?php echo $sbmtdPersonID; ?>, 0, 2, 'EDIT');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> EDIT</button></div>
-                        <?php } ?>
-                        <div class="col-md-6" style="padding:0px 1px 0px 1px !important;"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 1em; height:20px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button></div>
-                    </div>
+                    <div class="col-md-12" style="padding:0px 0px 0px 15px !important;">
+                        <div class="" style="padding:0px 0px 0px 0px;float:right !important;">
+                            <?php
+                            $rqStatus = get_RqstStatus($prsnid);
+                            $rqstatusColor = "red";
+                            if ($rqStatus == "Approved") {
+                                $rqstatusColor = "green";
+                            }
+                            ?>
+                            <button type="button" class="btn btn-default btn-sm" style=""><span style="font-weight:bold;">Status: </span><span style="color:<?php echo $rqstatusColor; ?>;font-weight: bold;"><?php echo $rqStatus; ?></span></button>                            
+                            <?php if ($sbmtdPersonID <= 0) { ?>
+                                <button type="button" class="btn btn-default btn-sm"  style="" onclick="openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
+                            <?php } else { ?>
+                                <button type="button" class="btn btn-default btn-sm"  style="" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View/Edit Person Basic Profile', <?php echo $sbmtdPersonID; ?>, 0, 2, 'EDIT');"><img src="cmn_images/edit32.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> EDIT</button>
+                            <?php } ?>
+                            <button type="button" class="btn btn-default btn-sm" style=""><img src="cmn_images/pdf.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;"> GET PDF</button>
+                        </div>
+                    </div>                    
                 </div>
                 <div class="row" style="margin: 0px 0px 10px 0px !important;">
                     <div class="col-md-12" style="padding:0px 0px 0px 0px !important;">
@@ -85,7 +90,7 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflAddPrsnDataRO', 'grp=8&typ=1&pg=1&vtyp=1');">Additional Data</button>
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOrgAsgnRO', 'grp=8&typ=1&pg=1&vtyp=2');">Organisational Assignments</button>
                         <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflCVRO', 'grp=8&typ=1&pg=1&vtyp=3');">Curriculum Vitae</button>
-                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOthrInfoRO', 'grp=8&typ=1&pg=1&vtyp=4');">Other Information</button>
+                        <button type="button" class="btn btn-default btn-sm phone-only-btn" onclick="openATab('#prflOthrInfoRO', 'grp=8&typ=1&pg=1&vtyp=4');">Attached Documents</button>
                     </div>
                 </div>
                 <div class="">
@@ -94,7 +99,7 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                         <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=1&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflAddPrsnDataRO" id="prflAddPrsnDataROtab">Additional Data</a></li>
                         <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=2&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOrgAsgnRO" id="prflOrgAsgnROtab">Organisational Assignments</a></li>
                         <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=3&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflCVRO" id="prflCVROtab">CV</a></li>
-                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=4&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOthrInfoRO" id="prflOthrInfoROtab">Other Information</a></li>
+                        <li><a data-toggle="tabajxprflro" data-rhodata="&pg=1&vtyp=4&sbmtdPersonID=<?php echo $sbmtdPersonID; ?>" href="#prflOthrInfoRO" id="prflOthrInfoROtab">Attached Documents</a></li>
                     </ul>
                     <div class="row">                  
                         <div class="col-md-12">
@@ -106,7 +111,7 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                                                 <div class="col-lg-4">
                                                     <fieldset class="basic_person_fs1"><legend class="basic_person_lg">Person's Picture</legend>
                                                         <div style="margin-bottom: 10px;">
-                                                            <img src="<?php echo $pemDest . $nwFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
+                                                            <img src="<?php echo $nwFileName; ?>" alt="..." id="img1Test" class="img-rounded center-block img-responsive" style="height: 200px !important; width: auto !important;">                                            
                                                         </div>                                       
                                                     </fieldset>
                                                 </div>                                
@@ -312,29 +317,19 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                                                                 <tbody>
                                                                     <?php
                                                                     if ($sbmtdPersonID <= 0) {
-                                                                        $rcrdExst = prsn_Record_Exist($pkID);
-                                                                        if ($rcrdExst == true) {
-                                                                            $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-                                                                            if ($chngRqstExst > 0) {
-                                                                                $result1 = get_AllNtnlty_Self($pkID);
-                                                                            } else {
-                                                                                $result1 = get_AllNtnlty($pkID);
-                                                                            }
-                                                                        } else {
-                                                                            $result1 = get_AllNtnlty($pkID);
-                                                                        }
+                                                                        $result1 = get_AllNtnlty_Self($pkID);
                                                                     } else {
                                                                         $result1 = get_AllNtnlty($pkID);
                                                                     }
                                                                     while ($row1 = loc_db_fetch_array($result1)) {
                                                                         ?>
                                                                         <tr>
-                                                                            <td><?php echo $row1[1]; ?></td>
-                                                                            <td><?php echo $row1[2]; ?></td>
-                                                                            <td><?php echo $row1[3]; ?></td>
-                                                                            <td><?php echo $row1[4]; ?></td>
-                                                                            <td><?php echo $row1[5]; ?></td>
-                                                                            <td><?php echo $row1[6]; ?></td>
+                                                                            <td class="lovtd"><?php echo $row1[1]; ?></td>
+                                                                            <td class="lovtd"><?php echo $row1[2]; ?></td>
+                                                                            <td class="lovtd"><?php echo $row1[3]; ?></td>
+                                                                            <td class="lovtd"><?php echo $row1[4]; ?></td>
+                                                                            <td class="lovtd"><?php echo $row1[5]; ?></td>
+                                                                            <td class="lovtd"><?php echo $row1[6]; ?></td>
                                                                         </tr>
                                                                     <?php } ?>
                                                                 </tbody>
@@ -415,17 +410,7 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                                                     <tbody>
                                                         <?php
                                                         if ($sbmtdPersonID <= 0) {
-                                                            if ($rcrdExst === true) {
-                                                                $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-
-                                                                if ($chngRqstExst > 0) {
-                                                                    $fldVal = get_PrsExtrData_Self($pkID, $row1[1]);
-                                                                } else {
-                                                                    $fldVal = get_PrsExtrData($pkID, $row1[1]);
-                                                                }
-                                                            } else {
-                                                                $fldVal = get_PrsExtrData($pkID, $row1[1]);
-                                                            }
+                                                            $fldVal = get_PrsExtrData_Self($pkID, $row1[1]);
                                                         } else {
                                                             $fldVal = get_PrsExtrData($pkID, $row1[1]);
                                                         }
@@ -477,17 +462,7 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                                                         <span>
                                                             <?php
                                                             if ($sbmtdPersonID <= 0) {
-                                                                if ($rcrdExst == true) {
-                                                                    $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-
-                                                                    if ($chngRqstExst > 0) {
-                                                                        echo get_PrsExtrData_Self($pkID, $row1[1]);
-                                                                    } else {
-                                                                        echo get_PrsExtrData($pkID, $row1[1]);
-                                                                    }
-                                                                } else {
-                                                                    echo get_PrsExtrData($pkID, $row1[1]);
-                                                                }
+                                                                echo get_PrsExtrData_Self($pkID, $row1[1]);
                                                             } else {
                                                                 echo get_PrsExtrData($pkID, $row1[1]);
                                                             }
@@ -784,7 +759,12 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                             <tbody>
                                 <?php
                                 if ($pkID > 0) {
-                                    $result1 = get_EducBkgrd($pkID);
+                                    $result1 = null;
+                                    if ($sbmtdPersonID <= 0) {
+                                        $result1 = get_EducBkgrdSelf($pkID);
+                                    } else {
+                                        $result1 = get_EducBkgrd($pkID);
+                                    }
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
                                         ?>
@@ -827,7 +807,12 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                             <tbody>
                                 <?php
                                 if ($pkID > 0) {
-                                    $result1 = get_WrkBkgrd($pkID);
+                                    $result1 = null;
+                                    if ($sbmtdPersonID <= 0) {
+                                        $result1 = get_WrkBkgrdSelf($pkID);
+                                    } else {
+                                        $result1 = get_WrkBkgrd($pkID);
+                                    }
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
                                         ?>
@@ -869,7 +854,12 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
                             <tbody>
                                 <?php
                                 if ($pkID > 0) {
-                                    $result1 = get_SkillNature($pkID);
+                                    $result1 = null;
+                                    if ($sbmtdPersonID <= 0) {
+                                        $result1 = get_SkillNatureSelf($pkID);
+                                    } else {
+                                        $result1 = get_SkillNature($pkID);
+                                    }
                                     while ($row1 = loc_db_fetch_array($result1)) {
                                         $cntr += 1;
                                         ?>
@@ -895,49 +885,403 @@ $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
         </div>
         <?php
     } else if ($vwtyp == "4") {
-        /* Other Information */
+        /* All Attached Documents */
         if ($sbmtdPersonID <= 0) {
             $pkID = $prsnid;
         } else {
             $pkID = $sbmtdPersonID;
         }
+        $total = 0;
+        if ($sbmtdPersonID <= 0) {
+            $total = get_Total_AttachmentsSelf($srchFor, $pkID);
+        } else {
+            $total = get_Total_Attachments($srchFor, $pkID);
+        }
+        if ($pageNo > ceil($total / $lmtSze)) {
+            $pageNo = 1;
+        } else if ($pageNo < 1) {
+            $pageNo = ceil($total / $lmtSze);
+        }
+
+        $curIdx = $pageNo - 1;
+        $attchSQL = "";
+        $result2 = null;
+        if ($sbmtdPersonID <= 0) {
+            $result2 = get_AttachmentsSelf($srchFor, $curIdx, $lmtSze, $pkID, $attchSQL);
+        } else {
+            $result2 = get_Attachments($srchFor, $curIdx, $lmtSze, $pkID, $attchSQL);
+        }
+        $colClassType1 = "col-lg-2";
+        $colClassType2 = "col-lg-3";
+        $colClassType3 = "col-lg-4";
+        $vwtyp = 5;
+        ?>                    
+        <div class="row">
+            <div class="col-md-12">
+                <div  id="attchdDocsList">
+                    <fieldset class="" style="padding:10px 0px 5px 0px !important;">
+                        <form class="" id="attchdDocsTblForm">
+                            <div class="row">
+                                <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
+                                    <div class="input-group">
+                                        <input class="form-control" id="attchdDocsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                                        <input id="attchdDocsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('clear', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </label>
+                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </label> 
+                                    </div>
+                                </div>
+                                <div class="<?php echo $colClassType2; ?>">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+
+                                        <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                                        <select data-placeholder="Select..." class="form-control chosen-select" id="attchdDocsDsplySze" style="min-width:70px !important;">                            
+                                            <?php
+                                            $valslctdArry = array("", "", "", "", "", "", "", "");
+                                            $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                            for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                                if ($lmtSze == $dsplySzeArry[$y]) {
+                                                    $valslctdArry[$y] = "selected";
+                                                } else {
+                                                    $valslctdArry[$y] = "";
+                                                }
+                                                ?>
+                                                <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="<?php echo $colClassType1; ?>">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination" style="margin: 0px !important;">
+                                            <li>
+                                                <a class="rhopagination" href="javascript:getAttchdDocs('previous', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="rhopagination" href="javascript:getAttchdDocs('next', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                            <div class="row"> 
+                                <div class="col-md-12">
+                                    <table class="table table-striped table-bordered table-responsive" id="attchdDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Doc. Name/Description</th>
+                                                <th>&nbsp;</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $cntr = 0;
+                                            while ($row2 = loc_db_fetch_array($result2)) {
+                                                $cntr += 1;
+                                                $doc_src_encrpt = "";
+                                                if ($sbmtdPersonID <= 0) {
+                                                    $doc_src = $ftp_base_db_fldr . "/PrsnDocs/Request/" . $row2[3];
+                                                    $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                                    if (file_exists($doc_src)) {
+                                                        //file exists!
+                                                    } else {
+                                                        $doc_src1 = $ftp_base_db_fldr . "/PrsnDocs/" . $row2[3];
+                                                        if (file_exists($doc_src1)) {
+                                                            $temp = explode(".", $row2[3]);
+                                                            $extension = end($temp);
+                                                            $doc_src = $ftp_base_db_fldr . "/PrsnDocs/Request/" . $row2[0] . "." . $extension;
+                                                            copy($doc_src1, $doc_src);
+                                                            updatePrsnDocFlNmSelf($row2[0], $row2[0] . "." . $extension);
+                                                            $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                                            if (file_exists($doc_src)) {
+                                                                //file exists!
+                                                            } else {
+                                                                //file does not exist.
+                                                                $doc_src_encrpt = "None";
+                                                            }
+                                                        } else {
+                                                            //file does not exist.
+                                                            $doc_src_encrpt = "None";
+                                                        }
+                                                    }
+                                                } else {
+                                                    $doc_src = $ftp_base_db_fldr . "/PrsnDocs/" . $row2[3];
+                                                    $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                                    if (file_exists($doc_src)) {
+                                                        //file exists!
+                                                    } else {
+                                                        //file does not exist.
+                                                        $doc_src_encrpt = "None";
+                                                    }
+                                                }
+                                                ?>
+                                                <tr id="attchdDocsRow_<?php echo $cntr; ?>">                                    
+                                                    <td class="lovtd"><span><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                    <td class="lovtd">                                                                   
+                                                        <span><?php echo $row2[2]; ?></span>
+                                                        <input type="hidden" class="form-control" aria-label="..." id="attchdDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">                                              
+                                                    </td>
+                                                    <td class="lovtd">
+                                                        <?php
+                                                        if ($doc_src_encrpt == "None") {
+                                                            ?>
+                                                            <span style="font-weight: bold;color:#FF0000;">
+                                                                <?php
+                                                                echo "File Not Found!";
+                                                                ?>
+                                                            </span>
+                                                            <?php
+                                                        } else {
+                                                            ?>
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
+                                                                <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
+                                                            </button>
+                                                        <?php } ?>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>                     
+                            </div>
+                        </form>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <?php
+        /* Other Information */
         $cntr = 0;
         $table_id = getMdlGrpID("Person Data", $mdlNm);
         $ext_inf_tbl_name = "prs.prsn_all_other_info_table";
         $ext_inf_seq_name = "prs.prsn_all_other_info_table_dflt_row_id_seq";
         $row_pk_id = $pkID;
         ?>
-        <div  class="col-md-12">
-            <table class="table table-striped table-bordered table-responsive otherInfoTblsRO" cellspacing="0" width="100%" style="width:100%;">
-                <thead>
-                    <tr>
-                        <!--<th>No.</th>-->
-                        <th>Category</th>
-                        <th>Label</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if ($pkID > 0) {
-                        $brghtsqlStr = "";
-                        $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr, $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
-                        while ($row1 = loc_db_fetch_array($result1)) {
-                            $cntr += 1;
-                            ?>
-                            <tr>
-                                <!--<td><?php echo $cntr; ?></td>-->
-                                <td><?php echo $row1[0]; ?></td>
-                                <td><?php echo $row1[1]; ?></td>
-                                <td><?php echo $row1[2]; ?></td>
-                            </tr>
-                            <?php
-                        }
-                    }
-                    ?>
-                </tbody>
-            </table>
+        <hr style="border-top:1px dashed #ddd !important;">
+        <div class="row" style="margin-top:30px !important;">
+            <div  class="col-md-12">
+                <fieldset class="" style="padding:10px 0px 5px cccc//px !important;">
+                    <legend class="basic_person_lg">Other Information</legend>
+                    <form class="form-horizontal" id="OtherInfoTblForm">
+                        <table class="table table-striped table-bordered table-responsive otherInfoTblsEDT" cellspacing="0" width="100%" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <!--<th>No.</th>-->
+                                    <th>Category</th>
+                                    <th>Label</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($pkID > 0) {
+                                    $brghtsqlStr = "";
+                                    $result1 = getAllwdExtInfosNVals("%", "Extra Info Label", 0, 1000000000, $brghtsqlStr, $table_id, $row_pk_id, $ext_inf_tbl_name, $orgID);
+                                    while ($row1 = loc_db_fetch_array($result1)) {
+                                        $cntr += 1;
+                                        ?>
+                                        <tr>
+                                            <!--<td><?php echo $cntr; ?></td>-->
+                                            <td><?php echo $row1[0]; ?></td>
+                                            <td><?php echo $row1[1]; ?></td>
+                                            <td><?php echo $row1[2]; ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </form>
+                </fieldset>
+            </div>
         </div>
+        <?php
+    } else if ($vwtyp == "5") {
+        /* All Attached Documents */
+        if ($sbmtdPersonID <= 0) {
+            $pkID = $prsnid;
+        } else {
+            $pkID = $sbmtdPersonID;
+        }
+        $total = 0;
+        if ($sbmtdPersonID <= 0) {
+            $total = get_Total_AttachmentsSelf($srchFor, $pkID);
+        } else {
+            $total = get_Total_Attachments($srchFor, $pkID);
+        }
+        if ($pageNo > ceil($total / $lmtSze)) {
+            $pageNo = 1;
+        } else if ($pageNo < 1) {
+            $pageNo = ceil($total / $lmtSze);
+        }
+
+        $curIdx = $pageNo - 1;
+        $attchSQL = "";
+        $result2 = null;
+        if ($sbmtdPersonID <= 0) {
+            $result2 = get_AttachmentsSelf($srchFor, $curIdx, $lmtSze, $pkID, $attchSQL);
+        } else {
+            $result2 = get_Attachments($srchFor, $curIdx, $lmtSze, $pkID, $attchSQL);
+        }
+        $colClassType1 = "col-lg-2";
+        $colClassType2 = "col-lg-3";
+        $colClassType3 = "col-lg-4";
+        $vwtyp = 5;
+        ?>       
+        <fieldset class="" style="padding:10px 0px 5px 0px !important;">
+            <form class="" id="attchdDocsTblForm">
+                <div class="row">
+                    <div class="<?php echo $colClassType2; ?>" style="padding:0px 15px 0px 15px !important;">
+                        <div class="input-group">
+                            <input class="form-control" id="attchdDocsSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncAttchdDocs(event, '', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                            <input id="attchdDocsPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('clear', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </label>
+                            <label class="btn btn-primary btn-file input-group-addon" onclick="getAttchdDocs('', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </label> 
+                        </div>
+                    </div>
+                    <div class="<?php echo $colClassType2; ?>">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+
+                            <span class="input-group-addon" style="max-width: 1px !important;padding:0px !important;width:1px !important;border:none !important;"></span>
+                            <select data-placeholder="Select..." class="form-control chosen-select" id="attchdDocsDsplySze" style="min-width:70px !important;">                            
+                                <?php
+                                $valslctdArry = array("", "", "", "", "", "", "", "");
+                                $dsplySzeArry = array(1, 5, 10, 15, 30, 50, 100, 500, 1000);
+                                for ($y = 0; $y < count($dsplySzeArry); $y++) {
+                                    if ($lmtSze == $dsplySzeArry[$y]) {
+                                        $valslctdArry[$y] = "selected";
+                                    } else {
+                                        $valslctdArry[$y] = "";
+                                    }
+                                    ?>
+                                    <option value="<?php echo $dsplySzeArry[$y]; ?>" <?php echo $valslctdArry[$y]; ?>><?php echo $dsplySzeArry[$y]; ?></option>                            
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="<?php echo $colClassType1; ?>">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" style="margin: 0px !important;">
+                                <li>
+                                    <a class="rhopagination" href="javascript:getAttchdDocs('previous', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="rhopagination" href="javascript:getAttchdDocs('next', '#attchdDocsList', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="row"> 
+                    <div class="col-md-12">
+                        <table class="table table-striped table-bordered table-responsive" id="attchdDocsTable" cellspacing="0" width="100%" style="width:100%;min-width: 400px !important;">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Doc. Name/Description</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $cntr = 0;
+                                while ($row2 = loc_db_fetch_array($result2)) {
+                                    $cntr += 1;
+                                    $doc_src_encrpt = "";
+                                    if ($sbmtdPersonID <= 0) {
+                                        $doc_src = $ftp_base_db_fldr . "/PrsnDocs/Request/" . $row2[3];
+                                        $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                        if (file_exists($doc_src)) {
+                                            //file exists!
+                                        } else {
+                                            $doc_src1 = $ftp_base_db_fldr . "/PrsnDocs/" . $row2[3];
+                                            if (file_exists($doc_src1)) {
+                                                $temp = explode(".", $row2[3]);
+                                                $extension = end($temp);
+                                                $doc_src = $ftp_base_db_fldr . "/PrsnDocs/Request/" . $row2[0] . "." . $extension;
+                                                copy($doc_src1, $doc_src);
+                                                updatePrsnDocFlNmSelf($row2[0], $row2[0] . "." . $extension);
+                                                $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                                if (file_exists($doc_src)) {
+                                                    //file exists!
+                                                } else {
+                                                    //file does not exist.
+                                                    $doc_src_encrpt = "None";
+                                                }
+                                            } else {
+                                                //file does not exist.
+                                                $doc_src_encrpt = "None";
+                                            }
+                                        }
+                                    } else {
+                                        $doc_src = $ftp_base_db_fldr . "/PrsnDocs/" . $row2[3];
+                                        $doc_src_encrpt = encrypt1($doc_src, $smplTokenWord1);
+                                        if (file_exists($doc_src)) {
+                                            //file exists!
+                                        } else {
+                                            //file does not exist.
+                                            $doc_src_encrpt = "None";
+                                        }
+                                    }
+                                    ?>
+                                    <tr id="attchdDocsRow_<?php echo $cntr; ?>">                                    
+                                        <td class="lovtd"><span><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                        <td class="lovtd">                                                                   
+                                            <span><?php echo $row2[2]; ?></span>
+                                            <input type="hidden" class="form-control" aria-label="..." id="attchdDocsRow<?php echo $cntr; ?>_AttchdDocsID" value="<?php echo $row2[0]; ?>" style="width:100% !important;">                                              
+                                        </td>
+                                        <td class="lovtd">
+                                            <?php
+                                            if ($doc_src_encrpt == "None") {
+                                                ?>
+                                                <span style="font-weight: bold;color:#FF0000;">
+                                                    <?php
+                                                    echo "File Not Found!";
+                                                    ?>
+                                                </span>
+                                                <?php
+                                            } else {
+                                                ?>
+                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $doc_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="Download Document">
+                                                    <img src="cmn_images/dwldicon.png" style="height:15px; width:auto; position: relative; vertical-align: middle;"> Download
+                                                </button>
+                                            <?php } ?>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>                     
+                </div>
+            </form>
+        </fieldset>         
         <?php
     }
 }

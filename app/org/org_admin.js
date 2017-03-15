@@ -274,12 +274,12 @@ function saveDivsGrpsForm()
             var rndmNum = $(el).attr('id').split("_")[1];
             /*var $tds1 = $(this).find('td');*/
             var isEnabled = typeof $("input[name='divsGrpsRow" + rndmNum + "_IsEnabled']:checked").val() === 'undefined' ? 'No' : 'Yes';
-            slctdDivsGrps = slctdDivsGrps + $('#divsGrpsRow' + rndmNum + '_GroupID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#divsGrpsRow' + rndmNum + '_GroupNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#divsGrpsRow' + rndmNum + '_PrntID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#divsGrpsRow' + rndmNum + '_DivTypNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#divsGrpsRow' + rndmNum + '_GroupDesc').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + isEnabled.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+            slctdDivsGrps = slctdDivsGrps + $('#divsGrpsRow' + rndmNum + '_GroupID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#divsGrpsRow' + rndmNum + '_GroupNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#divsGrpsRow' + rndmNum + '_PrntID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#divsGrpsRow' + rndmNum + '_DivTypNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#divsGrpsRow' + rndmNum + '_GroupDesc').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + isEnabled.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
         }
     });
     lnkArgs = lnkArgs + "&slctdDivsGrps=" + slctdDivsGrps.slice(0, -1);
@@ -328,10 +328,10 @@ function saveSitesLocsForm()
             var rndmNum = $(el).attr('id').split("_")[1];
             /*var $tds1 = $(this).find('td');*/
             var isEnabled = typeof $("input[name='sitesLocsRow" + rndmNum + "_IsEnabled']:checked").val() === 'undefined' ? 'No' : 'Yes';
-            slctdSitesLocs = slctdSitesLocs + $('#sitesLocsRow' + rndmNum + '_SiteID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#sitesLocsRow' + rndmNum + '_SiteNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#sitesLocsRow' + rndmNum + '_SiteDesc').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + isEnabled.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+            slctdSitesLocs = slctdSitesLocs + $('#sitesLocsRow' + rndmNum + '_SiteID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#sitesLocsRow' + rndmNum + '_SiteNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#sitesLocsRow' + rndmNum + '_SiteDesc').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + isEnabled.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
         }
     });
     lnkArgs = lnkArgs + "&slctdSitesLocs=" + slctdSitesLocs.slice(0, -1);
@@ -380,11 +380,11 @@ function saveOrgJobsForm()
             var rndmNum = $(el).attr('id').split("_")[1];
             /*var $tds1 = $(this).find('td');*/
             var isEnabled = typeof $("input[name='orgJobsRow" + rndmNum + "_IsEnabled']:checked").val() === 'undefined' ? 'No' : 'Yes';
-            slctdOrgJobs = slctdOrgJobs + $('#orgJobsRow' + rndmNum + '_JobID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgJobsRow' + rndmNum + '_JobNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgJobsRow' + rndmNum + '_PrntID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgJobsRow' + rndmNum + '_JobDesc').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + isEnabled.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+            slctdOrgJobs = slctdOrgJobs + $('#orgJobsRow' + rndmNum + '_JobID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgJobsRow' + rndmNum + '_JobNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgJobsRow' + rndmNum + '_PrntID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgJobsRow' + rndmNum + '_JobDesc').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + isEnabled.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
         }
     });
     lnkArgs = lnkArgs + "&slctdOrgJobs=" + slctdOrgJobs.slice(0, -1);
@@ -433,11 +433,11 @@ function saveOrgGradesForm()
             var rndmNum = $(el).attr('id').split("_")[1];
             /*var $tds1 = $(this).find('td');*/
             var isEnabled = typeof $("input[name='orgGradesRow" + rndmNum + "_IsEnabled']:checked").val() === 'undefined' ? 'No' : 'Yes';
-            slctdOrgGrades = slctdOrgGrades + $('#orgGradesRow' + rndmNum + '_GradeID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgGradesRow' + rndmNum + '_GradeNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgGradesRow' + rndmNum + '_PrntID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgGradesRow' + rndmNum + '_GradeDesc').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + isEnabled.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+            slctdOrgGrades = slctdOrgGrades + $('#orgGradesRow' + rndmNum + '_GradeID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgGradesRow' + rndmNum + '_GradeNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgGradesRow' + rndmNum + '_PrntID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgGradesRow' + rndmNum + '_GradeDesc').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + isEnabled.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
         }
     });
     lnkArgs = lnkArgs + "&slctdOrgGrades=" + slctdOrgGrades.slice(0, -1);
@@ -486,11 +486,11 @@ function saveOrgPositionsForm()
             var rndmNum = $(el).attr('id').split("_")[1];
             /*var $tds1 = $(this).find('td');*/
             var isEnabled = typeof $("input[name='orgPositionsRow" + rndmNum + "_IsEnabled']:checked").val() === 'undefined' ? 'No' : 'Yes';
-            slctdOrgPositions = slctdOrgPositions + $('#orgPositionsRow' + rndmNum + '_PosID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgPositionsRow' + rndmNum + '_PosNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgPositionsRow' + rndmNum + '_PrntID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#orgPositionsRow' + rndmNum + '_PosDesc').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + isEnabled.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+            slctdOrgPositions = slctdOrgPositions + $('#orgPositionsRow' + rndmNum + '_PosID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgPositionsRow' + rndmNum + '_PosNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgPositionsRow' + rndmNum + '_PrntID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#orgPositionsRow' + rndmNum + '_PosDesc').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + isEnabled.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
         }
     });
     lnkArgs = lnkArgs + "&slctdOrgPositions=" + slctdOrgPositions.slice(0, -1);

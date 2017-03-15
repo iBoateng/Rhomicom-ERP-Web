@@ -70,161 +70,19 @@ $cntent = "<div>
                                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span>
+						<span style=\"text-decoration:none;\">All Modules&nbsp;</span>
 					</li>";
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNm) || ($pgNo == 1 && $vwtyp == 4 && test_prmssns("View Self-Service", "Self Service"));
 
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
-        if ($qstr == "DELETE") {
-            if ($actyp == 1) {
-                $inptUsrID = cleanInputData($_POST['pKeyID']);
-                echo deleteUser($inptUsrID);
-            } else if ($actyp == 2) {
-                //Delete Extra Info Labels
-                var_dump($_POST);
-                exit();
-            }
-        } else if ($qstr == "UPDATE") {
-            if ($actyp == 1) {
-                //New User 
-                var_dump($_POST);
-                exit();
-            } else if ($actyp == 2) {
-                //User and Roles
-                var_dump($_POST);
-                exit();
-                header("content-type:application/json");
-                //categoryCombo
-                $inptUserID = cleanInputData($_POST['userID']);
-                $prsnLocID = cleanInputData($_POST['prsnLocID']);
-                $userAccntName = cleanInputData($_POST['userAccntName']);
-                $vldtyStrtDte = cleanInputData($_POST['vldtyStrtDte']);
-                $vldtyEndDte = cleanInputData($_POST['vldtyEndDte']);
-
-                if ($vldtyStrtDte != "") {
-                    $vldtyStrtDte = cnvrtDMYTmToYMDTm($vldtyStrtDte);
-                }
-                if ($vldtyEndDte != "") {
-                    $vldtyEndDte = cnvrtDMYTmToYMDTm($vldtyEndDte);
-                }
-                $oldUserID = getGnrlRecID2("sec.sec_users", "user_name", "user_id", $userAccntName);
-                $ownrID = getPersonID($prsnLocID);
-                $cstmrID = -1;
-                if ($userAccntName != "" && $prsnLocID != "" && ($oldUserID <= 0 || $oldUserID == $inptUserID)) {
-                    if ($inptUserID <= 0) {
-                        $pwd = getRandomPswd();
-                        createUser($userAccntName, $ownrID, $vldtyStrtDte, $vldtyEndDte, $pwd, $cstmrID);
-                    } else {
-                        updateUser($inptUserID, $userAccntName, $ownrID, $vldtyStrtDte, $vldtyEndDte, $cstmrID);
-                    }
-                    exit();
-                } else {
-                    exit();
-                }
-
-                header("content-type:application/json");
-                $rowsToUpdte = json_decode($_POST['rows'], true);
-                if (is_multi($rowsToUpdte) === FALSE) {
-                    $inptUsrID = cleanInputData($rowsToUpdte['UserID']);
-                    $DefaultRowID = cleanInputData($rowsToUpdte['DefaultRowID']);
-                    $RoleID = cleanInputData($rowsToUpdte['RoleID']);
-                    $StartDate = cleanInputData($rowsToUpdte['StartDate']);
-                    $EndDate = cleanInputData($rowsToUpdte['EndDate']);
-
-                    if ($DefaultRowID <= 0) {
-                        $DefaultRowID = getUsrIDHvThsRoleID($inptUsrID, $RoleID);
-                        if ($DefaultRowID <= 0) {
-                            asgnRoleToUserWthDte($inptUsrID, $RoleID, $StartDate, $EndDate);
-                        } else {
-                            updtRoleToUserWthDte($DefaultRowID, $StartDate, $EndDate);
-                        }
-                    } else {
-                        updtRoleToUserWthDte($DefaultRowID, $StartDate, $EndDate);
-                    }
-                } else {
-                    for ($i = 0; $i < count($rowsToUpdte); $i++) {
-                        $rowToUpdte = $rowsToUpdte[$i];
-                        $inptUsrID = cleanInputData($rowToUpdte['UserID']);
-                        $DefaultRowID = cleanInputData($rowToUpdte['DefaultRowID']);
-                        $RoleID = cleanInputData($rowToUpdte['RoleID']);
-                        $StartDate = cleanInputData($rowToUpdte['StartDate']);
-                        $EndDate = cleanInputData($rowToUpdte['EndDate']);
-                        //getUsrIDHvThsRoleID
-                        if ($DefaultRowID <= 0) {
-                            $DefaultRowID = getUsrIDHvThsRoleID($inptUsrID, $RoleID);
-                            if ($DefaultRowID <= 0) {
-                                asgnRoleToUserWthDte($inptUsrID, $RoleID, $StartDate, $EndDate);
-                            } else {
-                                updtRoleToUserWthDte($DefaultRowID, $StartDate, $EndDate);
-                            }
-                        } else {
-                            updtRoleToUserWthDte($DefaultRowID, $StartDate, $EndDate);
-                        }
-                    }
-                }
-
-
-                echo json_encode(array(
-                    'success' => true, 'message' => 'Saved Successfully', 'data' => array('src' => 'Role(s) Successfully Saved!'),
-                    'total' => '1',
-                    'errors' => ''
-                ));
-            } else if ($actyp == 3) {
-                //Update User Selected Roles in Session
-            } else if ($actyp == 4) {
-                //Lock/Unlock User
-                $inptUsrID = cleanInputData($_POST['pKeyID']);
-                $status = cleanInputData($_POST['nwStatus']);
-                $fldAttmpts = 0;
-                if ($status == "LOCK") {
-                    $fldAttmpts = get_CurPlcy_Mx_Fld_lgns() + 1;
-                } else {
-                    $fldAttmpts = 0;
-                }
-                echo chngUsrLockStatus($inptUsrID, $fldAttmpts);
-            } else if ($actyp == 5) {
-                //Suspend/Unsuspend User
-                $inptUsrID = cleanInputData($_POST['pKeyID']);
-                $status = strtoupper(cleanInputData($_POST['nwStatus']));
-                if ($status == "SUSPEND") {
-                    echo chngUsrSuspensionStatus($inptUsrID, "TRUE");
-                } else {
-                    echo chngUsrSuspensionStatus($inptUsrID, "FALSE");
-                }
-            } else if ($actyp == 6) {
-                //All Roles
-                var_dump($_POST);
-                exit();
-            } else if ($actyp == 7) {
-                //All Role Priviledges
-                var_dump($_POST);
-                exit();
-            } else if ($actyp == 8) {
-                //Add Extra Info Labels
-                var_dump($_POST);
-                exit();
-            } else if ($actyp == 9) {
-                //Enable/Disable Extra Info Labels
-                var_dump($_POST);
-                exit();
-            } else if ($actyp == 10) {
-                //Insert/Update Security Policies
-                var_dump($_POST);
-                exit();
-            } else if ($actyp == 11) {
-                //Insert/Update Server Settings
-                var_dump($_POST);
-                exit();
-            }
-        } else {
-            $cntent .= "
+        $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=3&typ=1');\">
                                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 						<span style=\"text-decoration:none;\">System Administration Menu</span>
 					</li>";
-            if ($pgNo == 0) {
-                $cntent .= "</ul></div>
+        if ($pgNo == 0) {
+            $cntent .= "</ul></div>
               <div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
                     padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
       <!--<h4>WELCOME TO THE SYSTEM ADMINISTRATION</h4>-->
@@ -234,71 +92,70 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
       <p>";
 
-                $grpcntr = 0;
-                for ($i = 0; $i < count($menuItems); $i++) {
-                    $No = $i + 1;
-                    if ($i == 0 && test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 1 && test_prmssns($dfltPrvldgs[2], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 2 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 3 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 4 && test_prmssns($dfltPrvldgs[4], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 5 && test_prmssns($dfltPrvldgs[5], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 6 && test_prmssns($dfltPrvldgs[6], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 7 && test_prmssns($dfltPrvldgs[7], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 8 && test_prmssns($dfltPrvldgs[11], $mdlNm) == FALSE) {
-                        continue;
-                    }
-                    if ($grpcntr == 0) {
-                        $cntent .= "<div class=\"row\">";
-                    }
-                    $cntent .= "<div class=\"col-md-3 colmd3special2\">
+            $grpcntr = 0;
+            for ($i = 0; $i < count($menuItems); $i++) {
+                $No = $i + 1;
+                if ($i == 0 && test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 1 && test_prmssns($dfltPrvldgs[2], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 2 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 3 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 4 && test_prmssns($dfltPrvldgs[4], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 5 && test_prmssns($dfltPrvldgs[5], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 6 && test_prmssns($dfltPrvldgs[6], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 7 && test_prmssns($dfltPrvldgs[7], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 8 && test_prmssns($dfltPrvldgs[11], $mdlNm) == FALSE) {
+                    continue;
+                }
+                if ($grpcntr == 0) {
+                    $cntent .= "<div class=\"row\">";
+                }
+                $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=3&typ=1&pg=$No&vtyp=0');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
             </div>";
-                    if ($grpcntr == 3) {
-                        $cntent .= "</div>";
-                        $grpcntr = 0;
-                    } else {
-                        $grpcntr = $grpcntr + 1;
-                    }
+                if ($grpcntr == 3) {
+                    $cntent .= "</div>";
+                    $grpcntr = 0;
+                } else {
+                    $grpcntr = $grpcntr + 1;
                 }
-                $cntent .= "
+            }
+            $cntent .= "
       </p>
     </div>";
-                echo $cntent;
-            } else if ($pgNo == 1) {
-                //Get Users
-                require 'users_n_roles.php';
-            } else if ($pgNo == 2) {
-                require "roles_n_prvdgs.php";
-            } else if ($pgNo == 3) {
-                require "mdls_n_prvldgs.php";
-            } else if ($pgNo == 4) {
-                require "extr_inf_lbls.php";
-            } else if ($pgNo == 5) {
-                require "sec_plycs.php";
-            } else if ($pgNo == 6) {
-                require "srvr_sttngs.php";
-            } else if ($pgNo == 7) {
-                //Get User Logins
-                require 'user_lgns.php';
-            } else if ($pgNo == 8) {
-                require "adt_trail.php";
-            } else if ($pgNo == 9) {
-                loadMdlsNthrRolesNLovs();
-            } else {
-                restricted();
-            }
+            echo $cntent;
+        } else if ($pgNo == 1) {
+            //Get Users
+            require 'users_n_roles.php';
+        } else if ($pgNo == 2) {
+            require "roles_n_prvdgs.php";
+        } else if ($pgNo == 3) {
+            require "mdls_n_prvldgs.php";
+        } else if ($pgNo == 4) {
+            require "extr_inf_lbls.php";
+        } else if ($pgNo == 5) {
+            require "sec_plycs.php";
+        } else if ($pgNo == 6) {
+            require "srvr_sttngs.php";
+        } else if ($pgNo == 7) {
+            //Get User Logins
+            require 'user_lgns.php';
+        } else if ($pgNo == 8) {
+            require "adt_trail.php";
+        } else if ($pgNo == 9) {
+            loadMdlsNthrRolesNLovs();
+        } else {
+            restricted();
         }
     } else {
         restricted();
@@ -312,7 +169,7 @@ function asgnRoleToUserWthDte($uID, $roleID, $strtDate, $endDate) {
 creation_date, last_update_by, last_update_date) VALUES (" . $uID . ", " .
             $roleID . ", '" . $strtDate .
             "', '$endDate', " . $usrID . ", '" . $dateStr . "', " . $usrID . ", '" . $dateStr . "')";
-    executeSQLNoParams($sqlStr);
+    return execUpdtInsSQL($sqlStr);
 }
 
 function updtRoleToUserWthDte($rowID, $strtDate, $endDate) {
@@ -323,7 +180,7 @@ function updtRoleToUserWthDte($rowID, $strtDate, $endDate) {
                 valid_end_date='$endDate', 
                 last_update_by=$usrID, last_update_date='" . $dateStr . "' WHERE dflt_row_id = " . $rowID;
     //echo $sqlStr;
-    executeSQLNoParams($sqlStr);
+    execUpdtInsSQL($sqlStr);
 }
 
 function getUsrIDHvThsRoleID($user_ID, $role_ID) {
@@ -336,7 +193,7 @@ function getUsrIDHvThsRoleID($user_ID, $role_ID) {
     return -1;
 }
 
-function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy, $extrWhere="") {
+function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sortBy, $extrWhere = "") {
     $wherecls = "";
     $strSql = "";
     $ordrBy = "";
@@ -361,13 +218,13 @@ function get_UsersRoles($searchFor, $searchIn, $offset, $limit_size, $pkID, $sor
     a.dflt_row_id " .
             "FROM sec.sec_users_n_roles a, sec.sec_roles b "
             . "WHERE ((a.role_id = b.role_id) AND (a.user_id = " . $pkID .
-            ")$wherecls"."$extrWhere) " . $ordrBy . " LIMIT " . $limit_size .
+            ")$wherecls" . "$extrWhere) " . $ordrBy . " LIMIT " . $limit_size .
             " OFFSET " . abs($offset * $limit_size);
     $result = executeSQLNoParams($strSql);
     return $result;
 }
 
-function get_TtlUsersRoles($searchFor, $searchIn, $pkID, $extrWhere="") {
+function get_TtlUsersRoles($searchFor, $searchIn, $pkID, $extrWhere = "") {
     $wherecls = "";
     $strSql = "";
     if ($searchIn == "Role Name") {
@@ -391,7 +248,6 @@ function get_TtlUsersRoles($searchFor, $searchIn, $pkID, $extrWhere="") {
 }
 
 function get_UsersTblr($searchFor, $searchIn, $offset, $limit_size) {
-
     $wherecls = "";
     $strSql = "";
     if ($searchIn == "Owned By") {
@@ -415,12 +271,12 @@ function get_UsersTblr($searchFor, $searchIn, $offset, $limit_size) {
             . "and to_char(now(), 'YYYY-MM-DD HH24:MI:SS') between z.valid_start_date and z.valid_end_date) active_roles,"
             . "CASE WHEN age(now(), to_timestamp(last_pswd_chng_time, 'YYYY-MM-DD HH24:MI:SS')) " .
             ">= interval '" . get_CurPlcy_Pwd_Exp_Days() . " days' THEN '1' ELSE '0' END is_pswd_exprd , "
-            . "a.modules_needed, a.customer_id,  scm.get_cstmr_splr_name(a.customer_id) cstmr_nm  "
+            . "a.modules_needed, a.customer_id,  scm.get_cstmr_splr_name(a.customer_id) cstmr_nm,a.last_update_date  "
             . "FROM ((sec.sec_users a " .
             "LEFT OUTER JOIN prs.prsn_names_nos b ON (a.person_id = b.person_id)) LEFT OUTER JOIN " .
             "sec.sec_users_n_roles c ON a.user_id = c.user_id) LEFT OUTER JOIN sec.sec_roles d " .
             "ON d.role_id = c.role_id " .
-            "WHERE (1=1$wherecls) ORDER BY a.user_id LIMIT " . $limit_size .
+            "WHERE (1=1$wherecls) ORDER BY a.last_update_date DESC, a.user_id LIMIT " . $limit_size .
             " OFFSET " . abs($offset * $limit_size);
 
     $result = executeSQLNoParams($strSql);
@@ -610,11 +466,11 @@ function updateUser($user_id, $username, $ownrID, $in_strDte, $in_endDte, $cstmr
     execUpdtInsSQL($insSQL);
 }
 
-function chngUsrLockStatus($userID, $failedAttempts) {
+function chngUsrLockStatus($userID, $failedAttempts, $inptUsrNm = "") {
     //Set failed_login_atmpts in sec.sec_users to 0
     $insSQL = "UPDATE sec.sec_users SET failed_login_atmpts = $failedAttempts 
                             WHERE (user_id = " . $userID . ")";
-    $affctd = execUpdtInsSQL($insSQL);
+    $affctd = execUpdtInsSQL($insSQL, "User Name:" . $inptUsrNm);
     if ($affctd > 0) {
         $dsply = "Successfully Updated the ff Records-";
         $dsply .= "<br/>$affctd User Account!";
@@ -625,12 +481,12 @@ function chngUsrLockStatus($userID, $failedAttempts) {
     }
 }
 
-function chngUsrSuspensionStatus($userID, $nwStatus) {
+function chngUsrSuspensionStatus($userID, $nwStatus, $inptUsrNm="") {
     //Set failed_login_atmpts in sec.sec_users to 0
     $insSQL = "UPDATE sec.sec_users SET is_suspended = $nwStatus 
                             WHERE (user_id = " . $userID . ")";
     //echo $insSQL;
-    $affctd = execUpdtInsSQL($insSQL);
+    $affctd = execUpdtInsSQL($insSQL, "User Name:" . $inptUsrNm);
     if ($affctd > 0) {
         $dsply = "Successfully Updated the ff Records-";
         $dsply .= "<br/>$affctd User Account!";
@@ -641,7 +497,7 @@ function chngUsrSuspensionStatus($userID, $nwStatus) {
     }
 }
 
-function deleteUser($userID) {
+function deleteUser($userID, $inptUsrNm = "") {
     $selSQL = "Select count(1) from sec.sec_track_user_logins WHERE user_id = " . $userID;
     $result = executeSQLNoParams($selSQL);
     $lgnsCnt = 0;
@@ -652,9 +508,9 @@ function deleteUser($userID) {
     }
     if ($lgnsCnt <= 0) {
         $insSQL = "DELETE FROM sec.sec_users_n_roles WHERE user_id = " . $userID;
-        $affctd += execUpdtInsSQL($insSQL);
+        $affctd += execUpdtInsSQL($insSQL, "User Name:" . $inptUsrNm);
         $insSQL1 = "DELETE FROM sec.sec_users WHERE user_id = " . $userID;
-        $affctd1 += execUpdtInsSQL($insSQL1);
+        $affctd1 += execUpdtInsSQL($insSQL1, "User Name:" . $inptUsrNm);
     }
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
@@ -983,7 +839,7 @@ function get_MdlsAdtTrls($searchWord, $searchIn, $subcurIdx, $sublmtSze, $pkID) 
         "b.user_name", "a.action_details", "a.action_type",
         "to_char(to_timestamp(a.action_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS')", "c.host_mach_details");
     $ordrByClsFrmts = array("a.login_number", "b.user_name", "a.action_details", "a.action_type", "a.action_time", "c.host_mach_details");
-    $sortOrder = array("DESC", "ASC", "ASC", "ASC", "ASC", "ASC");
+    $sortOrder = array("DESC", "ASC", "ASC", "ASC", "DESC", "ASC");
     $frmt_to_use = 0;
     $optional_str = "";
     if ($searchIn == "Login Number") {
@@ -1009,12 +865,12 @@ function get_MdlsAdtTrls($searchWord, $searchIn, $subcurIdx, $sublmtSze, $pkID) 
     } else {
         $sqlStr = "SELECT b.user_name, a.action_type, a.action_details, 
       to_char(to_timestamp(a.action_time,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS')
-, c.host_mach_details, a.user_id mt, a.login_number FROM " . $ModuleAdtTbl . " a " .
+, c.host_mach_details, a.user_id mt, a.login_number, a.dflt_row_id FROM " . $ModuleAdtTbl . " a " .
                 "LEFT OUTER JOIN sec.sec_users b ON a.user_id = b.user_id " .
                 "LEFT OUTER JOIN sec.sec_track_user_logins c ON a.login_number = c.login_number " .
                 "WHERE ((" . $whereClsFrmts[$frmt_to_use] . " ilike '" . loc_db_escape_string($searchWord) .
                 "')" . $optional_str . ") ORDER BY " . $ordrByClsFrmts[$frmt_to_use] .
-                " " . $sortOrder[$frmt_to_use] . " LIMIT " . $sublmtSze . " OFFSET " . abs($subcurIdx * $sublmtSze);
+                " " . $sortOrder[$frmt_to_use] . ", a.action_time DESC LIMIT " . $sublmtSze . " OFFSET " . abs($subcurIdx * $sublmtSze);
     }
     $result = executeSQLNoParams($sqlStr);
     return $result;

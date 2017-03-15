@@ -61,328 +61,14 @@ $cntent = "<div>
                                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+						<span style=\"text-decoration:none;\">All Modules&nbsp;</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>";
 
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
-        if ($qstr == 'UPDATE') {
-            if ($actyp == 1) {
-                //Workflow Apps
-                //var_dump($_POST);
-                header("content-type:application/json");
-                $rowsToUpdte = json_decode($_POST['rows'], true);
-                if (is_multi($rowsToUpdte) == FALSE) {
-                    $appID = cleanInputData($rowsToUpdte['AppID']);
-                    $apNm = cleanInputData($rowsToUpdte['AppName']);
-                    $oldAppID = getGnrlRecID2("wkf.wkf_apps", "app_name", "app_id", $apNm);
-                    $srcMdl = cleanInputData($rowsToUpdte['SourceModule']);
-                    $desc = cleanInputData($rowsToUpdte['Description']);
-                    if ($apNm != "" && $srcMdl != "" && ($oldAppID <= 0 || $oldAppID == $appID)) {
-                        if ($appID <= 0) {
-                            createWkfApp($apNm, $srcMdl, $desc);
-                        } else {
-                            updateWkfApp($appID, $apNm, $srcMdl, $desc);
-                        }
-                    } else {
-                        echo json_encode(array('success' => false));
-                        exit();
-                    }
-                } else {
-                    for ($i = 0; $i < count($rowsToUpdte); $i++) {
-                        $rowToUpdte = $rowsToUpdte[$i];
-                        $apNm = cleanInputData($rowToUpdte['AppName']);
-                        $oldAppID = getGnrlRecID2("wkf.wkf_apps", "app_name", "app_id", $apNm);
-                        $appID = cleanInputData($rowToUpdte['AppID']);
-                        $srcMdl = cleanInputData($rowToUpdte['SourceModule']);
-                        $desc = cleanInputData($rowToUpdte['Description']);
-                        if ($apNm != "" && $srcMdl != "" && ($oldAppID <= 0 || $oldAppID == $appID)) {
-                            if ($appID <= 0) {
-                                createWkfApp($apNm, $srcMdl, $desc);
-                            } else {
-                                updateWkfApp($appID, $apNm, $srcMdl, $desc);
-                            }
-                        } else {
-                            echo json_encode(array('success' => false));
-                            exit();
-                        }
-                    }
-                }
-                //var_dump($rowsToUpdte);
-                echo json_encode(array('success' => true));
-            } else if ($actyp == 2) {
-                //var_dump($_POST);
-                //Workflow App Actions
-                header("content-type:application/json");
-                $rowsToUpdte = json_decode($_POST['rows'], true);
-                $appID = cleanInputData($_POST['appID']);
-                if (is_multi($rowsToUpdte) == FALSE) {
-                    $actnNm = cleanInputData($rowsToUpdte['ActionName']);
-                    $oldAppActionID = getGnrlRecIDExtr("wkf.wkf_apps_actions", "action_performed_nm", "app_id", "action_sql_id", $actnNm, $appID);
-                    $appActionID = cleanInputData($rowsToUpdte['ActionID']);
-                    $sqlActn = cleanInputData($rowsToUpdte['SQLAction']);
-                    $execFileNm = cleanInputData($rowsToUpdte['ExecFileName']);
-                    $webURL = cleanInputData($rowsToUpdte['WebURLParams']);
-                    $dsplyType = cnvrtBoolToBitStr(cleanInputData($rowsToUpdte['WebDisplayType']));
-                    $desc = cleanInputData($rowsToUpdte['Description']);
-                    $adminOnly = cnvrtBoolToBitStr(cleanInputData($rowsToUpdte['AdminOnly']));
-                    if ($actnNm != "" && $webURL != "" && ($oldAppActionID <= 0 || $oldAppActionID == $appActionID)) {
-                        if ($appActionID <= 0) {
-                            createWkfAppAction($actnNm, $sqlActn, $appID, $execFileNm, $webURL, $dsplyType, $desc, $adminOnly);
-                        } else {
-                            updateWkfAppAction($appActionID, $actnNm, $sqlActn, $appID, $execFileNm, $webURL, $dsplyType, $desc, $adminOnly);
-                        }
-                    } else {
-                        echo json_encode(array('success' => false));
-                        exit();
-                    }
-                } else {
-                    for ($i = 0; $i < count($rowsToUpdte); $i++) {
-                        $rowToUpdte = $rowsToUpdte[$i];
-                        $actnNm = cleanInputData($rowToUpdte['ActionName']);
-                        $oldAppActionID = getGnrlRecIDExtr("wkf.wkf_apps_actions", "action_performed_nm", "app_id", "action_sql_id", $actnNm, $appID);
-                        $appActionID = cleanInputData($rowToUpdte['ActionID']);
-                        $sqlActn = cleanInputData($rowToUpdte['SQLAction']);
-                        $execFileNm = cleanInputData($rowToUpdte['ExecFileName']);
-                        $webURL = cleanInputData($rowToUpdte['WebURLParams']);
-                        $dsplyType = cnvrtBoolToBitStr(cleanInputData($rowToUpdte['WebDisplayType']));
-                        $desc = cleanInputData($rowToUpdte['Description']);
-                        $adminOnly = cnvrtBoolToBitStr(cleanInputData($rowToUpdte['AdminOnly']));
-                        if ($actnNm != "" && $webURL != "" && ($oldAppActionID <= 0 || $oldAppActionID == $appActionID)) {
-                            if ($appActionID <= 0) {
-                                createWkfAppAction($actnNm, $sqlActn, $appID, $execFileNm, $webURL, $dsplyType, $desc, $adminOnly);
-                            } else {
-                                updateWkfAppAction($appActionID, $actnNm, $sqlActn, $appID, $execFileNm, $webURL, $dsplyType, $desc, $adminOnly);
-                            }
-                        } else {
-                            echo json_encode(array('success' => false));
-                            exit();
-                        }
-                    }
-                }
-                //var_dump($rowsToUpdte);
-                echo json_encode(array('success' => true));
-            } else if ($actyp == 3) {
-                //Workflow App Hierarchies
-                header("content-type:application/json");
-                $rowsToUpdte = json_decode($_POST['rows'], true);
-                $appID = cleanInputData($_POST['appID']);
-                if (is_multi($rowsToUpdte) == FALSE) {
-                    $hrchyNm = cleanInputData($rowsToUpdte['HrchyName']);
-                    $hrchyID = getGnrlRecID2("wkf.wkf_hierarchy_hdr", "hierarchy_name", "hierarchy_id", $hrchyNm);
-                    $appHrchyID = cleanInputData($rowsToUpdte['AppHrchyID']);
-                    $hrchyEnbld = cnvrtBoolToBitStr(cleanInputData($rowsToUpdte['HrchyEnabled']));
-                    $linkageEnbld = cnvrtBoolToBitStr(cleanInputData($rowsToUpdte['LinkageEnabled']));
-                    $oldAppHrchyID = get_WkfAppHrchyID($appID, $hrchyID);
+        if ($pgNo == 0) {
 
-                    if ($hrchyID > 0 && $appID > 0 && ($oldAppHrchyID <= 0 || $oldAppHrchyID == $appHrchyID)) {
-                        if ($appHrchyID <= 0) {
-                            createWkfAppHrchy($appID, $hrchyID, $linkageEnbld);
-                        } else {
-                            updateWkfAppHrchy($appHrchyID, $appID, $hrchyID, $linkageEnbld);
-                        }
-                    } else {
-                        echo json_encode(array('success' => false));
-                        exit();
-                    }
-                } else {
-                    for ($i = 0; $i < count($rowsToUpdte); $i++) {
-                        $rowToUpdte = $rowsToUpdte[$i];
-                        $hrchyID = cleanInputData($rowToUpdte['HrchyID']);
-                        $appHrchyID = cleanInputData($rowToUpdte['AppHrchyID']);
-                        $hrchyEnbld = cnvrtBoolToBitStr(cleanInputData($rowToUpdte['HrchyEnabled']));
-                        $linkageEnbld = cnvrtBoolToBitStr(cleanInputData($rowToUpdte['LinkageEnabled']));
-                        $oldAppHrchyID = get_WkfAppHrchyID($appID, $hrchyID);
-
-                        if ($hrchyID > 0 && $appID > 0 && ($oldAppHrchyID <= 0 || $oldAppHrchyID == $appHrchyID)) {
-                            if ($appHrchyID <= 0) {
-                                createWkfAppHrchy($appID, $hrchyID, $linkageEnbld);
-                            } else {
-                                updateWkfAppHrchy($appHrchyID, $appID, $hrchyID, $linkageEnbld);
-                            }
-                        } else {
-                            echo json_encode(array('success' => false));
-                            exit();
-                        }
-                    }
-                }
-                //var_dump($rowsToUpdte);
-                echo json_encode(array('success' => true));
-            } else if ($actyp == 4) {
-                //Workflow Hierarchies
-                //var_dump($_POST);
-                header("content-type:application/json");
-                $rowsToUpdte = json_decode($_POST['rows'], true);
-                if (is_multi($rowsToUpdte) == FALSE) {
-                    $hrchyID = cleanInputData($rowsToUpdte['HrchyID']);
-                    $hrchyNm = cleanInputData($rowsToUpdte['HrchyName']);
-                    $oldHrchyID = getGnrlRecID2("wkf.wkf_hierarchy_hdr", "hierarchy_name", "hierarchy_id", $hrchyNm);
-                    $hrchyTyp = cleanInputData($rowsToUpdte['HrchyType']);
-                    $desc = cleanInputData($rowsToUpdte['HrchyDesc']);
-                    $sqlStmnt = cleanInputData($rowsToUpdte['SQLStmnt']);
-                    $isEnbld = cnvrtBoolToBitStr(cleanInputData($rowsToUpdte['IsEnabled']));
-                    if ($hrchyNm != "" && $hrchyTyp != "" && ($oldHrchyID <= 0 || $oldHrchyID == $hrchyID)) {
-                        if ($hrchyID <= 0) {
-                            createWkfHrchy($hrchyNm, $desc, $hrchyTyp, $sqlStmnt, $isEnbld);
-                        } else {
-                            updateWkfHrchy($hrchyID, $hrchyNm, $desc, $hrchyTyp, $sqlStmnt, $isEnbld);
-                        }
-                    } else {
-                        $errMsg = "Please fill all required Fields and Make Sure New Entries don't exist already!";
-                        echo json_encode(array('success' => false,
-                            'message' => $errMsg));
-                        exit();
-                    }
-                } else {
-                    for ($i = 0; $i < count($rowsToUpdte); $i++) {
-                        $rowToUpdte = $rowsToUpdte[$i];
-                        $hrchyID = cleanInputData($rowToUpdte['HrchyID']);
-                        $hrchyNm = cleanInputData($rowToUpdte['HrchyName']);
-                        $oldHrchyID = getGnrlRecID2("wkf.wkf_hierarchy_hdr", "hierarchy_name", "hierarchy_id", $hrchyNm);
-                        $hrchyTyp = cleanInputData($rowToUpdte['HrchyType']);
-                        $desc = cleanInputData($rowToUpdte['HrchyDesc']);
-                        $sqlStmnt = cleanInputData($rowToUpdte['SQLStmnt']);
-                        $isEnbld = cnvrtBoolToBitStr(cleanInputData($rowToUpdte['IsEnabled']));
-                        if ($hrchyNm != "" && $hrchyTyp != "" && ($oldHrchyID <= 0 || $oldHrchyID == $hrchyID)) {
-                            if ($hrchyID <= 0) {
-                                createWkfHrchy($hrchyNm, $desc, $hrchyTyp, $sqlStmnt, $isEnbld);
-                            } else {
-                                updateWkfHrchy($hrchyID, $hrchyNm, $desc, $hrchyTyp, $sqlStmnt, $isEnbld);
-                            }
-                        } else {
-                            $errMsg = "Please fill all required Fields and Make Sure New Entries don't exist already!";
-                            echo json_encode(array('success' => false,
-                                'message' => $errMsg));
-                            exit();
-                        }
-                    }
-                }
-                //var_dump($rowsToUpdte);
-                echo json_encode(array('success' => true));
-            } else if ($actyp == 5) {
-                //Workflow Manual Hierarchies
-                //var_dump($_POST);
-                header("content-type:application/json");
-                $hrchyID = cleanInputData($_POST['hrchyID']);
-                $rowsToUpdte = json_decode($_POST['rows'], true);
-                if (is_multi($rowsToUpdte) == FALSE) {
-                    $hrchyDetID = cleanInputData($rowsToUpdte['MnlHrchyDetID']);
-                    $prsnID = getPersonID(cleanInputData($rowsToUpdte['PersonLocID']));
-                    $hrchyLvl = cleanInputData($rowsToUpdte['HrchyLevel']);
-                    $isEnbld = cnvrtBoolToBitStr(cleanInputData($rowsToUpdte['IsEnabled']));
-                    $oldHrchyDetID = get_MnlHrchyDetID($hrchyID, $prsnID, $hrchyLvl);
-                    if ($prsnID > 0 && is_int($hrchyLvl) && ($oldHrchyDetID <= 0 || $oldHrchyDetID == $hrchyDetID)) {
-                        if ($hrchyDetID <= 0) {
-                            createWkfMnlHrchy($hrchyID, $prsnID, $hrchyLvl, $isEnbld);
-                        } else {
-                            updateWkfMnlHrchy($hrchyDetID, $prsnID, $hrchyLvl, $isEnbld);
-                        }
-                    } else {
-                        echo json_encode(array('success' => false));
-                        exit();
-                    }
-                } else {
-                    for ($i = 0; $i < count($rowsToUpdte); $i++) {
-                        $rowToUpdte = $rowsToUpdte[$i];
-                        $hrchyDetID = cleanInputData($rowToUpdte['MnlHrchyDetID']);
-                        $prsnID = getPersonID(cleanInputData($rowToUpdte['PersonLocID']));
-                        $hrchyLvl = cleanInputData($rowToUpdte['HrchyLevel']);
-                        $isEnbld = cnvrtBoolToBitStr(cleanInputData($rowToUpdte['IsEnabled']));
-                        $oldHrchyDetID = get_MnlHrchyDetID($hrchyID, $prsnID, $hrchyLvl);
-                        if ($prsnID > 0 && is_int($hrchyLvl) && ($oldHrchyDetID <= 0 || $oldHrchyDetID == $hrchyDetID)) {
-                            if ($hrchyDetID <= 0) {
-                                createWkfMnlHrchy($hrchyID, $prsnID, $hrchyLvl, $isEnbld);
-                            } else {
-                                updateWkfMnlHrchy($hrchyDetID, $prsnID, $hrchyLvl, $isEnbld);
-                            }
-                        } else {
-                            echo json_encode(array('success' => false));
-                            exit();
-                        }
-                    }
-                }
-                //var_dump($rowsToUpdte);
-                echo json_encode(array('success' => true));
-            } else if ($actyp == 6) {
-                //Workflow Position Hierarchies
-                header("content-type:application/json");
-                $hrchyID = cleanInputData($_POST['hrchyID']);
-                $rowsToUpdte = json_decode($_POST['rows'], true);
-                if (is_multi($rowsToUpdte) == FALSE) {
-                    $hrchyDetID = cleanInputData($rowsToUpdte['PosHrchyDetID']);
-                    $postnID = cleanInputData($rowsToUpdte['PositionID']);
-                    $hrchyLvl = cleanInputData($rowsToUpdte['HrchyLevel']);
-                    $isEnbld = cnvrtBoolToBitStr(cleanInputData($rowsToUpdte['IsEnabled']));
-                    $oldHrchyDetID = get_PosHrchyDetID($hrchyID, $postnID, $hrchyLvl);
-                    if ($postnID > 0 && is_int($hrchyLvl) && ($oldHrchyDetID <= 0 || $oldHrchyDetID == $hrchyDetID)) {
-                        if ($hrchyDetID <= 0) {
-                            createWkfPosHrchy($hrchyID, $postnID, $hrchyLvl, $isEnbld);
-                        } else {
-                            updateWkfPosHrchy($hrchyDetID, $postnID, $hrchyLvl, $isEnbld);
-                        }
-                    } else {
-                        echo json_encode(array('success' => false));
-                        exit();
-                    }
-                } else {
-                    for ($i = 0; $i < count($rowsToUpdte); $i++) {
-                        $rowToUpdte = $rowsToUpdte[$i];
-                        $hrchyDetID = cleanInputData($rowToUpdte['PosHrchyDetID']);
-                        $postnID = cleanInputData($rowToUpdte['PositionID']);
-                        $hrchyLvl = cleanInputData($rowToUpdte['HrchyLevel']);
-                        $isEnbld = cnvrtBoolToBitStr(cleanInputData($rowToUpdte['IsEnabled']));
-                        $oldHrchyDetID = get_PosHrchyDetID($hrchyID, $postnID, $hrchyLvl);
-                        if ($postnID > 0 && is_int($hrchyLvl) && ($oldHrchyDetID <= 0 || $oldHrchyDetID == $hrchyDetID)) {
-                            if ($hrchyDetID <= 0) {
-                                createWkfPosHrchy($hrchyID, $postnID, $hrchyLvl, $isEnbld);
-                            } else {
-                                updateWkfPosHrchy($hrchyDetID, $postnID, $hrchyLvl, $isEnbld);
-                            }
-                        } else {
-                            echo json_encode(array('success' => false));
-                            exit();
-                        }
-                    }
-                }
-                //var_dump($rowsToUpdte);
-                echo json_encode(array('success' => true));
-            }
-        } else if ($qstr == 'DELETE') {
-            if ($actyp == 1) {
-                $PKeyID = cleanInputData($_POST['appID']);
-                if ($PKeyID > 0) {
-                    echo deleteWkfApp($PKeyID);
-                }
-            } else if ($actyp == 2) {
-                $PKeyID = cleanInputData($_POST['actionID']);
-                if ($PKeyID > 0) {
-                    echo deleteWkfAppAction($PKeyID);
-                }
-            } else if ($actyp == 3) {
-                $PKeyID = cleanInputData($_POST['appHrchyID']);
-                if ($PKeyID > 0) {
-                    echo deleteWkfAppHrchy($PKeyID);
-                }
-            } else if ($actyp == 4) {
-                $PKeyID = cleanInputData($_POST['hrchyID']);
-                if ($PKeyID > 0) {
-                    echo deleteWkfHrchy($PKeyID);
-                }
-            } else if ($actyp == 5) {
-                $PKeyID = cleanInputData($_POST['mnlHrchyDetID']);
-                if ($PKeyID > 0) {
-                    echo deleteWkfMnlHrchy($PKeyID);
-                }
-            } else if ($actyp == 6) {
-                $PKeyID = cleanInputData($_POST['posHrchyDetID']);
-                if ($PKeyID > 0) {
-                    echo deleteWkfPosHrchy($PKeyID);
-                }
-            }
-        } else {
-            if ($pgNo == 0) {
-
-                $cntent .= "
+            $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
 						<span style=\"text-decoration:none;\">Workflow Manager Menu</span>
 					</li>
@@ -394,60 +80,59 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     font-weight:normal;\">This is where the workflow behind the application is configured. The module has the ff areas:</span>
                     </div>
       <p>";
-                $grpcntr = 0;
-                for ($i = 0; $i < count($menuItems); $i++) {
-                    $No = $i + 1;
-                    if ($i == 0 && test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 1 && test_prmssns($dfltPrvldgs[2], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 2 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
-                        continue;
-                    } else if ($i == 3 && test_prmssns($dfltPrvldgs[4], $mdlNm) == FALSE) {
-                        continue;
-                    }
-                    if ($grpcntr == 0) {
-                        $cntent .= "<div class=\"row\">";
-                    }
-                    if ($i == 3) {
-                        $cntent .= "<div class=\"col-md-3 colmd3special2\">
+            $grpcntr = 0;
+            for ($i = 0; $i < count($menuItems); $i++) {
+                $No = $i + 1;
+                if ($i == 0 && test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 1 && test_prmssns($dfltPrvldgs[2], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 2 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
+                    continue;
+                } else if ($i == 3 && test_prmssns($dfltPrvldgs[4], $mdlNm) == FALSE) {
+                    continue;
+                }
+                if ($grpcntr == 0) {
+                    $cntent .= "<div class=\"row\">";
+                }
+                if ($i == 3) {
+                    $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=40&typ=2&pg=$No&vtyp=2&qMaster=1');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
             </div>";
-                    } else {
-                        $cntent .= "<div class=\"col-md-3 colmd3special2\">
+                } else {
+                    $cntent .= "<div class=\"col-md-3 colmd3special2\">
         <button type=\"button\" class=\"btn btn-default btn-lg btn-block modulesButton\" onclick=\"openATab('#allmodules', 'grp=$group&typ=$type&pg=$No&vtyp=0');\">
             <img src=\"cmn_images/$menuImages[$i]\" style=\"margin:5px; padding-right: 1em; height:58px; width:auto; position: relative; vertical-align: middle;float:left;\">
             <span class=\"wordwrap2\">" . ($menuItems[$i]) . "</span>
         </button>
             </div>";
-                    }
-
-
-                    if ($grpcntr == 3) {
-                        $cntent .= "</div>";
-                        $grpcntr = 0;
-                    } else {
-                        $grpcntr = $grpcntr + 1;
-                    }
                 }
-                $cntent .= "
+
+
+                if ($grpcntr == 3) {
+                    $cntent .= "</div>";
+                    $grpcntr = 0;
+                } else {
+                    $grpcntr = $grpcntr + 1;
+                }
+            }
+            $cntent .= "
       </p>
     </div>";
-                echo $cntent;
-            } else if ($pgNo == 1) {
-                require "wkf_apps.php";
-            } else if ($pgNo == 2) {
-                require "wkf_hrchy.php";
-            } else if ($pgNo == 3) {
-                require "wkf_aprvr_grps.php";
-            } else if ($pgNo == 4) {
-                require $fldrPrfx . "app_code/cmncde/myinbx.php";
-            } else {
-                restricted();
-            }
+            echo $cntent;
+        } else if ($pgNo == 1) {
+            require "wkf_apps.php";
+        } else if ($pgNo == 2) {
+            require "wkf_hrchy.php";
+        } else if ($pgNo == 3) {
+            require "wkf_aprvr_grps.php";
+        } else if ($pgNo == 4) {
+            require $fldrPrfx . "app_code/cmncde/myinbx.php";
+        } else {
+            restricted();
         }
     } else {
         restricted();
@@ -621,17 +306,17 @@ function updateWkfHrchy($hrchyID, $hrchyNm, $desc, $hrchyTyp, $sqlStmnt, $isEnbl
     execUpdtInsSQL($insSQL);
 }
 
-function deleteWkfHrchy($hrchyID) {
+function deleteWkfHrchy($hrchyID, $hrchyNm = "") {
     $affctd1 = 0;
     $affctd2 = 0;
     $affctd3 = 0;
 
     $insSQL = "DELETE FROM wkf.wkf_pstn_hierarchy_details WHERE hierarchy_id = " . $hrchyID;
-    $affctd1 += execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL, "Hierarchy Name:" . $hrchyNm);
     $insSQL = "DELETE FROM wkf.wkf_manl_hierarchy_details WHERE hierarchy_id = " . $hrchyID;
-    $affctd2 += execUpdtInsSQL($insSQL);
+    $affctd2 += execUpdtInsSQL($insSQL, "Hierarchy Name:" . $hrchyNm);
     $insSQL = "DELETE FROM wkf.wkf_hierarchy_hdr WHERE hierarchy_id = " . $hrchyID;
-    $affctd3 += execUpdtInsSQL($insSQL);
+    $affctd3 += execUpdtInsSQL($insSQL, "Hierarchy Name:" . $hrchyNm);
     if ($affctd3 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 Position Hierarchies Deleted!";
@@ -644,34 +329,41 @@ function deleteWkfHrchy($hrchyID) {
     }
 }
 
-function createWkfMnlHrchy($hrchyID, $prsnID, $hrchyLvl, $isEnbld) {
+function createWkfMnlHrchy($hrchyID, $prsnID, $hrchyLvl, $isEnbld, $position_id, $apprvr_group_id, $aprvrTyp = "Individual") {
     global $usrID;
     $dateStr = getDB_Date_time();
 
     $insSQL = "INSERT INTO wkf.wkf_manl_hierarchy_details(
             hierarchy_id, person_id, hrchy_level, created_by, 
-            creation_date, last_update_by, last_update_date, is_enabled) " .
+            creation_date, last_update_by, last_update_date, is_enabled, 
+            position_id, apprvr_group_id, apprvr_type) " .
             "VALUES ($hrchyID, $prsnID, $hrchyLvl," . $usrID . ", '" . $dateStr
             . "', " . $usrID . ", '" . $dateStr
-            . "', '" . loc_db_escape_string($isEnbld) . "')";
+            . "', '" . loc_db_escape_string($isEnbld) . "', " . $position_id . ", " . $apprvr_group_id .
+            ", '" . loc_db_escape_string($aprvrTyp) . "')";
 
-    execUpdtInsSQL($insSQL);
+    return execUpdtInsSQL($insSQL);
 }
 
-function updateWkfMnlHrchy($hrchyDetID, $prsnID, $hrchyLvl, $isEnbld) {
+function updateWkfMnlHrchy($hrchyDetID, $prsnID, $hrchyLvl, $isEnbld, $position_id, $apprvr_group_id, $aprvrTyp = "Individual") {
     global $usrID;
     $dateStr = getDB_Date_time();
-    $insSQL = "UPDATE wkf.wkf_manl_hierarchy_details SET 
-            person_id=$prsnID, hrchy_level=$hrchyLvl, "
-            . "last_update_by=$usrID, last_update_date='$dateStr', 
-            is_enabled='" . loc_db_escape_string($isEnbld) .
+    $insSQL = "UPDATE wkf.wkf_manl_hierarchy_details SET " .
+            "person_id=" . $prsnID .
+            ", hrchy_level=" . $hrchyLvl .
+            ", last_update_by=" . $usrID .
+            ", last_update_date='" . $dateStr .
+            "', is_enabled='" . loc_db_escape_string($isEnbld) .
+            "', position_id = " . $position_id .
+            ", apprvr_group_id = " . $apprvr_group_id .
+            ", apprvr_type='" . loc_db_escape_string($aprvrTyp) .
             "' WHERE mnl_hrchy_det_id = " . $hrchyDetID;
-    execUpdtInsSQL($insSQL);
+    return execUpdtInsSQL($insSQL);
 }
 
-function deleteWkfMnlHrchy($hrchyDetID) {
+function deleteWkfMnlHrchy($hrchyDetID, $apprvNm = "") {
     $insSQL = "DELETE FROM wkf.wkf_manl_hierarchy_details WHERE mnl_hrchy_det_id = " . $hrchyDetID;
-    $affctd1 += execUpdtInsSQL($insSQL);
+    $affctd1 = execUpdtInsSQL($insSQL, "Approver Name:" . $apprvNm);
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 Manual Hierarchy(ies)!";
@@ -732,10 +424,14 @@ function get_WkfAppHrchyID($pkID, $hrchyID) {
     return -1;
 }
 
-function get_MnlHrchyDetID($pkID, $prsnID, $hrchyLvl) {
+function get_MnlHrchyDetID($pkID, $apprvrID, $hrchyLvl) {
     $sqlStr = "SELECT mnl_hrchy_det_id 
   FROM wkf.wkf_manl_hierarchy_details a
-  WHERE (a.hierarchy_id = " . $pkID . " and person_id=" . $prsnID .
+  WHERE (a.hierarchy_id = " . $pkID .
+            " and (CASE WHEN a.apprvr_type='Position Holder' THEN position_id " .
+            " WHEN a.apprvr_type='Group' THEN apprvr_group_id " .
+            " ELSE person_id " .
+            " END)=" . $apprvrID .
             " and hrchy_level = " . $hrchyLvl . ") ORDER BY a.hrchy_level";
     $result = executeSQLNoParams($sqlStr);
     while ($row = loc_db_fetch_array($result)) {
@@ -757,14 +453,11 @@ function get_PosHrchyDetID($pkID, $postnID, $hrchyLvl) {
 }
 
 function get_HrchyCntntMnl($pkID) {
-    $sqlStr = "SELECT mnl_hrchy_det_id mt, 
-        CASE WHEN a.apprvr_group_id > 0 THEN 'Group' 
-             WHEN a.position_id>0 THEN 'Position Holder' 
-             ELSE 'Individual' 
-         END apprv_typ,
-         CASE WHEN a.apprvr_group_id > 0 THEN 
+    $sqlStr = "SELECT mnl_hrchy_det_id mt,
+         a.apprvr_type apprv_typ,
+         CASE WHEN a.apprvr_type = 'Group' THEN 
          (Select z.group_name from wkf.wkf_apprvr_groups z where z.apprvr_group_id = a.apprvr_group_id)
-              WHEN a.position_id>0 THEN 
+              WHEN a.apprvr_type = 'Position Holder' THEN 
                 org.get_pos_name(a.position_id) 
               ELSE prs.get_prsn_name(a.person_id) || ' ('||prs.get_prsn_loc_id(a.person_id)||')' 
           END apprvr_name,
@@ -939,15 +632,15 @@ function updateWkfApprvrGrps($grpID, $grpNm, $grpDesc, $lnkdFrmID, $isEnbld) {
     execUpdtInsSQL($insSQL);
 }
 
-function deleteWkfApprvrGrps($grpID) {
+function deleteWkfApprvrGrps($grpID, $grpNm = "") {
     $affctd1 = 0;
     $affctd2 = 0;
     $affctd3 = 0;
 
     $insSQL = "DELETE FROM wkf.wkf_apprvr_group_members WHERE apprvr_group_id = " . $grpID;
-    $affctd1 += execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL, "Group Name:" . $grpNm);
     $insSQL = "DELETE FROM wkf.wkf_apprvr_groups WHERE apprvr_group_id = " . $grpID;
-    $affctd3 += execUpdtInsSQL($insSQL);
+    $affctd3 += execUpdtInsSQL($insSQL, "Group Name:" . $grpNm);
     if ($affctd3 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd2 Group Member(s) Deleted!";
@@ -968,7 +661,7 @@ function createWkfGrpMembers($grpID, $prsnID, $isEnbld) {
             "VALUES ($grpID, $prsnID, " . $usrID . ", '" . $dateStr
             . "', " . $usrID . ", '" . $dateStr
             . "', '" . loc_db_escape_string($isEnbld) . "')";
-    execUpdtInsSQL($insSQL);
+    return execUpdtInsSQL($insSQL);
 }
 
 function updateWkfGrpMembers($memberID, $prsnID, $isEnbld) {
@@ -979,12 +672,12 @@ function updateWkfGrpMembers($memberID, $prsnID, $isEnbld) {
             . "last_update_by=$usrID, last_update_date='$dateStr', 
             is_enabled='" . loc_db_escape_string($isEnbld) .
             "' WHERE member_id = " . $memberID;
-    execUpdtInsSQL($insSQL);
+    return execUpdtInsSQL($insSQL);
 }
 
-function deleteWkfGrpMembers($memberID) {
+function deleteWkfGrpMembers($memberID, $memberNm = "") {
     $insSQL = "DELETE FROM wkf.wkf_apprvr_group_members WHERE member_id = " . $memberID;
-    $affctd1 += execUpdtInsSQL($insSQL);
+    $affctd1 = execUpdtInsSQL($insSQL, "Member Name:" . $memberNm);
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 Group Member(s)!";

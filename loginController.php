@@ -263,12 +263,6 @@ function get_login_number($username, $login_time, $mach_details) {
 
 function recordSuccflLogin($username, $machdet) {
     global $app_version;
-    global $smplTokenWord1;
-    global $myImgFileName;
-    global $fullTmpDest;
-    global $fldrPrfx;
-    global $tmpDest;
-    global $pemDest;
     global $ftp_base_db_fldr;
     global $logNxtLine;
     global $lgn_num;
@@ -289,22 +283,40 @@ function recordSuccflLogin($username, $machdet) {
     $_SESSION['ORG_ID'] = getUserOrgID($username);
     $_SESSION['PRSN_ID'] = $prsnid;
     $_SESSION['PRSN_FNAME'] = $fullnm;
-    $myImgFileName = encrypt1($prsnid . session_id() . $lgn_num, $smplTokenWord1);
-    $_SESSION['FILES_NAME_PRFX'] = $myImgFileName;
-    $nwFileName = $myImgFileName . '.png';
-    $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
-    $fullPemDest = $fldrPrfx . $pemDest . $nwFileName;
-    $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . '.png';
-    if (file_exists($ftp_src) && !file_exists($fullPemDest)) {
-        copy("$ftp_src", "$fullPemDest");
-    } else if (!file_exists($fullPemDest)) {
-        $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
-        copy("$ftp_src", "$fullPemDest");
-    }
-    $myImgFileName = $nwFileName;
-    $txt = "Username:" . $username . "|Login Number:" . $lgn_num . "|Person:" . $fullnm . "";
+    recopyPrflPic($username, $lgn_num);
+    $txt = "Username:" . $username . "|Login Number:" . $lgn_num . "|Person:" . $fullnm;
     file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
     createWelcomeMsg($username);
+}
+
+function recopyPrflPic($username, $lgn_num) {
+    global $ftp_base_db_fldr;
+    global $logNxtLine;
+    global $smplTokenWord1;
+    global $myImgFileName;
+    global $fullTmpDest;
+    global $fldrPrfx;
+    global $tmpDest;
+    $prsnid = getUserPrsnID($username);
+    $strlFileNm = getPersonImg($prsnid);
+    $extnsn = "png";
+    if ($strlFileNm != "") {
+        $temp = explode(".", $strlFileNm);
+        $extnsn = end($temp);
+    }
+    $nwFileName = encrypt1($prsnid . session_id() . $lgn_num, $smplTokenWord1) . '.' . $extnsn;
+    $fullTmpDest = $fldrPrfx . $tmpDest . $nwFileName;
+    $ftp_src = $ftp_base_db_fldr . "/Person/$prsnid" . '.' . $extnsn;
+    if (file_exists($ftp_src) && !file_exists($fullTmpDest)) {
+        copy("$ftp_src", "$fullTmpDest");
+    } else if (!file_exists($fullTmpDest)) {
+        $ftp_src = $fldrPrfx . 'cmn_images/image_up.png';
+        copy("$ftp_src", "$fullTmpDest");
+    }
+    $myImgFileName = $nwFileName;
+    $_SESSION['FILES_NAME_PRFX'] = $myImgFileName;
+    $txt = "Username:" . $username . "|Login Number:" . $lgn_num . "|myImgFileName:" . $myImgFileName . "|strlFileNm:" . $strlFileNm . "|extnsn:" . $extnsn;
+    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
 }
 
 function recordFailedLogin($username, $machdet) {

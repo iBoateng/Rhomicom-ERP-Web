@@ -133,6 +133,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <th>Machine Details</th>
                                         <th>Was Login Attempt Successful?</th>
                                         <th>Login Number</th>
+                                        <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -141,24 +142,29 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $cntr += 1;
                                         ?>
                                         <tr id="trckUsrLgnsEdtRow_<?php echo $cntr; ?>">                                    
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[0]; ?></span>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[1]; ?></span>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[2]; ?></span>                                                        
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[3]; ?></span>                                                       
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[4]; ?></span>                                                       
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[6]; ?></span>                                                       
+                                            </td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Activity" onclick="getOneUsrLgnDet('<?php echo $row[6]; ?>', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1');" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
                                             </td>
                                         </tr>
                                         <?php
@@ -171,7 +177,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </form>
                 <?php
             } else if ($vwtyp == 1) {
-                
+                //Get Activity File Contents
+                $sbmtdLgnNum = isset($_POST['sbmtdLgnNum']) ? cleanInputData($_POST['sbmtdLgnNum']) : -1;
+                $file = $ftp_base_db_fldr . "/bin/log_files/$sbmtdLgnNum" . ".rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo str_replace(PHP_EOL, "<br/>", $text);
+                } else {
+                    echo "File not Found!";
+                }
             } else if ($vwtyp == 2) {
                 
             } else if ($vwtyp == 3) {

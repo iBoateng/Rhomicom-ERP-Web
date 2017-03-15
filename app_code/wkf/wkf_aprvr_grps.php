@@ -11,11 +11,79 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
         if ($qstr == "DELETE") {
             if ($actyp == 1) {
-                
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $grpNm = isset($_POST['grpNm']) ? cleanInputData($_POST['grpNm']) : "";
+                if ($pKeyID > 0) {
+                    echo deleteWkfApprvrGrps($pKeyID, $grpNm);
+                }
+            } else if ($actyp == 2) {
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $apprvNm = isset($_POST['apprvNm']) ? cleanInputData($_POST['apprvNm']) : "";
+                if ($pKeyID > 0) {
+                    echo deleteWkfGrpMembers($pKeyID, $apprvNm);
+                }
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //Save Approver Group
+                header("content-type:application/json");
+                $orgid = $_SESSION['ORG_ID'];
+                $wkfGrpID = isset($_POST['wkfGrpID']) ? (int) cleanInputData($_POST['wkfGrpID']) : -1;
+                $wkfGrpNm = isset($_POST['wkfGrpNm']) ? cleanInputData($_POST['wkfGrpNm']) : "";
+                $wkfGrpLinkedFirmID = isset($_POST['wkfGrpLinkedFirmID']) ? cleanInputData($_POST['wkfGrpLinkedFirmID']) : -1;
+                $wkfGrpIsEnbld = isset($_POST['wkfGrpIsEnbld']) ? cleanInputData($_POST['wkfGrpIsEnbld']) : "";
+                $wkfGrpDesc = isset($_POST['wkfGrpDesc']) ? cleanInputData($_POST['wkfGrpDesc']) : '';
+                $slctdGrpMembers = isset($_POST['slctdGrpMembers']) ? cleanInputData($_POST['slctdGrpMembers']) : '';
+
+                $isenbld = ($wkfGrpIsEnbld == "YES") ? "1" : "0";
+                $oldGrpID = getGnrlRecID2("wkf.wkf_apprvr_groups", "group_name", "apprvr_group_id", $wkfGrpNm);
+                if ($wkfGrpNm != "" && ($oldGrpID <= 0 || $oldGrpID == $wkfGrpID)) {
+                    if ($wkfGrpID <= 0) {
+                        createWkfApprvrGrps($wkfGrpNm, $wkfGrpDesc, $wkfGrpLinkedFirmID, $isenbld);
+                        $wkfGrpID = getGnrlRecID2("wkf.wkf_apprvr_groups", "group_name", "apprvr_group_id", $wkfGrpNm);
+                    } else {
+                        updateWkfApprvrGrps($wkfGrpID, $wkfGrpNm, $wkfGrpDesc, $wkfGrpLinkedFirmID, $isenbld);
+                    }
+                    $affctdMembrs = 0;
+                    if ($wkfGrpID > 0) {
+                        if (trim($slctdGrpMembers, "|~") != "") {
+                            //Save Group Members
+                            $variousRows = explode("|", trim($slctdGrpMembers, "|"));
+                            for ($z = 0; $z < count($variousRows); $z++) {
+                                $crntRow = explode("~", $variousRows[$z]);
+                                if (count($crntRow) == 3) {
+                                    $memberID = (float) (cleanInputData1($crntRow[0]));
+                                    $prsnLocID = cleanInputData1($crntRow[1]);
+                                    $inptPrsnID = getPersonID($prsnLocID);
+                                    $isEnbld = cleanInputData1($crntRow[2]);
+                                    $isEnbld1 = ($isEnbld == "YES") ? "1" : "0";
+                                    $oldMemberID = getGnrlRecID2("wkf.wkf_apprvr_group_members", "''||person_id", "member_id", $inptPrsnID);
+
+                                    if ($prsnLocID != "") {
+                                        if ($oldMemberID <= 0 && $memberID <= 0) {
+                                            $affctdMembrs += createWkfGrpMembers($wkfGrpID, $inptPrsnID, $isEnbld1);
+                                        } else if ($memberID > 0) {
+                                            $affctdMembrs += updateWkfGrpMembers($memberID, $inptPrsnID, $isEnbld1);
+                                        } else if ($oldMemberID > 0) {
+                                            $affctdMembrs += updateWkfGrpMembers($memberID, $inptPrsnID, $isEnbld1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $arr_content['percent'] = 100;
+                    $arr_content['wkfGrpID'] = $wkfGrpID;
+                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Approver Group Successfully Saved!<br/>" . $affctdMembrs . " Group Members Added!";
+                    echo json_encode($arr_content);
+                    exit();
+                } else {
+                    $arr_content['percent'] = 100;
+                    $arr_content['wkfGrpID'] = -1;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Either the New Approver Group Exists <br/>or Data Supplied is Incomplete!</span>";
+                    echo json_encode($arr_content);
+                    exit();
+                }
             } else if ($actyp == 2) {
                 
             }
@@ -58,7 +126,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     </button>
                                 </div>
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveWkfGrpForm();" style="width:100% !important;">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveWkfAprvrGrp();" style="width:100% !important;">
                                         <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         Save
                                     </button>
@@ -159,13 +227,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $cntr += 1;
                                             ?>
                                             <tr id="allWkfGrpsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                <td><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allWkfGrpsRow<?php echo $cntr; ?>_GrpID" value="<?php echo $row[0]; ?>"></td>                                                
+                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                <td class="lovtd"><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allWkfGrpsRow<?php echo $cntr; ?>_GrpID" value="<?php echo $row[0]; ?>"></td>                                                
                                                 <?php
                                                 if ($canDelWkfGrp === true) {
                                                     ?>
-                                                    <td>
-                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Approver Group">
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfAprvrGrp('allWkfGrpsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Approver Group">
                                                             <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
@@ -272,7 +340,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <?php
                                                         if ($canEdtWkfGrp === true) {
                                                             $nwRowHtml = "<tr id=\"wkfGrpMmbrsRow__WWW123WWW\">"
-                                                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                                                    . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                                                     . "<td class=\"lovtd\">
                                                                              <div class=\"input-group\" style=\"width:100% !important;\">
                                                                                     <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfGrpMmbrsRow_WWW123WWW_PrsnNm\" value=\"\" style=\"width:100% !important;\">
@@ -284,7 +352,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                              </div>
                                                                         </td>
                                                                        <td class=\"lovtd\"> 
-                                                                           <div class=\"form-group form-group-sm normaltd\">
+                                                                           <div class=\"form-group form-group-sm \">
                                                                                          <div class=\"form-check\" style=\"font-size: 12px !important;\">
                                                                                              <label class=\"form-check-label\">
                                                                                                  <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfGrpMmbrsRow_WWW123WWW_Enabled\" name=\"wkfGrpMmbrsRow_WWW123WWW_Enabled\">
@@ -292,8 +360,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                          </div>
                                                                            </div>
                                                                         </td>                                                                        
-                                                                        <td>
-                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"alert('del');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
+                                                                        <td class=\"lovtd\">
+                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfAprvrGrpPrsn('wkfGrpMmbrsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
                                                                                 <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                                             </button>
                                                                         </td>
@@ -326,7 +394,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $cntr += 1;
                                                                     ?>
                                                                     <tr id="wkfGrpMmbrsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                                        <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                                        <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                                         <td class="lovtd">
                                                                             <?php if ($canEdtWkfGrp === true) { ?>
                                                                                 <div class="input-group" style="width:100% !important;">
@@ -338,7 +406,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[2]; ?></span>
+                                                                                <span class=""><?php echo $row2[2]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <td class="lovtd">
@@ -349,7 +417,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             }
                                                                             if ($canEdtWkfGrp === true) {
                                                                                 ?>
-                                                                                <div class="form-group form-group-sm normaltd">
+                                                                                <div class="form-group form-group-sm ">
                                                                                     <div class="form-check" style="font-size: 12px !important;">
                                                                                         <label class="form-check-label">
                                                                                             <input type="checkbox" class="form-check-input" id="wkfGrpMmbrsRow<?php echo $cntr; ?>_Enabled" name="wkfGrpMmbrsRow<?php echo $cntr; ?>_Enabled" <?php echo $isChkd ?>>
@@ -357,14 +425,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </div>
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[3]; ?></span>
+                                                                                <span class=""><?php echo $row2[3]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <?php
                                                                         if ($canDelWkfGrp === true) {
                                                                             ?>
-                                                                            <td>
-                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Group Member">
+                                                                            <td class="lovtd">
+                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfAprvrGrpPrsn('wkfGrpMmbrsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Group Member">
                                                                                     <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                                                 </button>
                                                                             </td>
@@ -423,7 +491,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div  class="col-lg-8">
                                             <?php if ($canEdtWkfGrp === true) { ?>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" aria-label="..." id="wkfGrpLinkedFirm" value="<?php echo $row1[4]; ?>">
+                                                    <input type="text" class="form-control" aria-label="..." id="wkfGrpLinkedFirm" value="<?php echo $row1[4]; ?>" readonly="true">
                                                     <input type="hidden" id="gnrlOrgID" value="<?php echo $orgID; ?>">
                                                     <input type="hidden" id="wkfGrpLinkedFirmID" value="<?php echo $row1[3]; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', 'gnrlOrgID', '', '', 'radio', true, '<?php echo $row1[3]; ?>', 'wkfGrpLinkedFirmID', 'wkfGrpLinkedFirm', 'clear', 1, '');">
@@ -486,10 +554,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <?php
                                     if ($canEdtWkfGrp === true) {
                                         $nwRowHtml = "<tr id=\"wkfGrpMmbrsRow__WWW123WWW\">"
-                                                . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                                . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                                 . "<td class=\"lovtd\">
                                                                              <div class=\"input-group\" style=\"width:100% !important;\">
-                                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfGrpMmbrsRow_WWW123WWW_PrsnNm\" value=\"\" style=\"width:100% !important;\">
+                                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfGrpMmbrsRow_WWW123WWW_PrsnNm\" value=\"\" style=\"width:100% !important;\" readonly=\"true\">
                                                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"wkfGrpMmbrsRow_WWW123WWW_PrsnLocID\" value=\"\">
                                                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"wkfGrpMmbrsRow_WWW123WWW_MmbrID\" value=\"-1\">
                                                                                     <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '', 'wkfGrpMmbrsRow_WWW123WWW_PrsnLocID', 'wkfGrpMmbrsRow_WWW123WWW_PrsnNm', 'clear', 0, '');\">
@@ -498,7 +566,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                              </div>
                                                                         </td>
                                                                        <td class=\"lovtd\"> 
-                                                                           <div class=\"form-group form-group-sm normaltd\">
+                                                                           <div class=\"form-group form-group-sm \">
                                                                                          <div class=\"form-check\" style=\"font-size: 12px !important;\">
                                                                                              <label class=\"form-check-label\">
                                                                                                  <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfGrpMmbrsRow_WWW123WWW_Enabled\" name=\"wkfGrpMmbrsRow_WWW123WWW_Enabled\">
@@ -506,8 +574,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                          </div>
                                                                            </div>
                                                                         </td>                                                                        
-                                                                        <td>
-                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"alert('del');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
+                                                                        <td class=\"lovtd\">
+                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfAprvrGrpPrsn('wkfGrpMmbrsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
                                                                                 <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                                             </button>
                                                                         </td>
@@ -540,11 +608,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="wkfGrpMmbrsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                    <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                    <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                     <td class="lovtd">
                                                         <?php if ($canEdtWkfGrp === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
-                                                                <input type="text" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnNm" value="<?php echo $row2[2] . " (" . $row2[1] . ")"; ?>" style="width:100% !important;">
+                                                                <input type="text" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnNm" value="<?php echo $row2[2] . " (" . $row2[1] . ")"; ?>" style="width:100% !important;" readonly="true">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnLocID" value="<?php echo $row2[1]; ?>">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_MmbrID" value="<?php echo $row2[0]; ?>">
                                                                 <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '<?php echo $row2[1]; ?>', 'wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnLocID', 'wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnNm', 'clear', 0, '');">
@@ -552,7 +620,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </label>
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[2]; ?></span>
+                                                            <span class=""><?php echo $row2[2]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <td class="lovtd">
@@ -563,7 +631,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         }
                                                         if ($canEdtWkfGrp === true) {
                                                             ?>
-                                                            <div class="form-group form-group-sm normaltd">
+                                                            <div class="form-group form-group-sm ">
                                                                 <div class="form-check" style="font-size: 12px !important;">
                                                                     <label class="form-check-label">
                                                                         <input type="checkbox" class="form-check-input" id="wkfGrpMmbrsRow<?php echo $cntr; ?>_Enabled" name="wkfGrpMmbrsRow<?php echo $cntr; ?>_Enabled" <?php echo $isChkd ?>>
@@ -571,14 +639,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </div>
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[3]; ?></span>
+                                                            <span class=""><?php echo $row2[3]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <?php
                                                     if ($canDelWkfGrp === true) {
                                                         ?>
-                                                        <td>
-                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Group Member">
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfAprvrGrpPrsn('wkfGrpMmbrsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Group Member">
                                                                 <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
@@ -617,6 +685,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div  class="col-lg-8">
                                     <input type="text" class="form-control" aria-label="..." id="wkfGrpNm" name="wkfGrpNm" value="" style="width:100%;">
                                     <input type="hidden" class="form-control" aria-label="..." id="wkfGrpID" name="wkfGrpID" value="">
+                                    <input type="hidden" class="form-control" aria-label="..." id="isNew123" name="isNew123" value="5">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -658,7 +727,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php
                             if ($canEdtWkfGrp === true) {
                                 $nwRowHtml = "<tr id=\"wkfGrpMmbrsRow__WWW123WWW\">"
-                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                        . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                         . "<td class=\"lovtd\">
                                                                              <div class=\"input-group\" style=\"width:100% !important;\">
                                                                                     <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfGrpMmbrsRow_WWW123WWW_PrsnNm\" value=\"\" style=\"width:100% !important;\">
@@ -670,7 +739,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                              </div>
                                                                         </td>
                                                                        <td class=\"lovtd\"> 
-                                                                           <div class=\"form-group form-group-sm normaltd\">
+                                                                           <div class=\"form-group form-group-sm \">
                                                                                          <div class=\"form-check\" style=\"font-size: 12px !important;\">
                                                                                              <label class=\"form-check-label\">
                                                                                                  <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfGrpMmbrsRow_WWW123WWW_Enabled\" name=\"wkfGrpMmbrsRow_WWW123WWW_Enabled\">
@@ -678,8 +747,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                          </div>
                                                                            </div>
                                                                         </td>                                                                        
-                                                                        <td>
-                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"alert('del');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
+                                                                        <td class=\"lovtd\">
+                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfAprvrGrpPrsn('wkfGrpMmbrsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
                                                                                 <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                                             </button>
                                                                         </td>
@@ -710,7 +779,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $cntr += 1;
                                     ?>
                                     <tr id="wkfGrpMmbrsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                        <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                        <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                         <td class="lovtd">
                                             <div class="input-group" style="width:100% !important;">
                                                 <input type="text" class="form-control" aria-label="..." id="wkfGrpMmbrsRow<?php echo $cntr; ?>_PrsnNm" value="" style="width:100% !important;">
@@ -725,7 +794,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             $isChkd = "";
                                             ?>
-                                            <div class="form-group form-group-sm normaltd">
+                                            <div class="form-group form-group-sm ">
                                                 <div class="form-check" style="font-size: 12px !important;">
                                                     <label class="form-check-label">
                                                         <input type="checkbox" class="form-check-input" id="wkfGrpMmbrsRow<?php echo $cntr; ?>_Enabled" name="wkfGrpMmbrsRow<?php echo $cntr; ?>_Enabled" <?php echo $isChkd ?>>
@@ -737,7 +806,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         if ($canDelWkfGrp === true) {
                                             ?>
                                             <td>
-                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Group Member">
+                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfAprvrGrpPrsn('wkfGrpMmbrsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Group Member">
                                                     <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
                                             </td>

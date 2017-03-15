@@ -12,7 +12,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 
         $canViewSelfsrvc = test_prmssns("View Self-Service", "Self Service");
         $canViewEvote = test_prmssns("View e-Voting", "e-Voting") || test_prmssns("View Elections", "Self Service");
-        $canViewELbry = test_prmssns("View e-Library", "e-Library");
+        $canViewELbry = test_prmssns("View e-Library", "e-Library") || test_prmssns("View Elections", "View E-Library");
         $canViewAcntng = test_prmssns("View Accounting", "Accounting");
         $canViewPrsn = test_prmssns("View Person", "Basic Person Data");
         $canViewIntrnlPay = test_prmssns("View Internal Payments", "Internal Payments");
@@ -118,7 +118,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 -moz-outline-radius:1px !important;
                 -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.12);
                 box-shadow:inset 0 1px 1px rgba(0,0,0,0.12);}
-            </style>
+            /*a:link {
+                color:  <?php echo $bckcolorOnly1; ?>;
+            }
+            a:visited {
+                color: <?php echo $bckcolorOnly2; ?>;
+            }
+            a:hover {
+                color: <?php echo $bckcolorOnly2; ?>;
+            }
+            a:active {
+                color:  <?php echo $bckcolorOnly1; ?>;
+            }*/
+        </style>
         </head>
         <body class="rhBody mdlloading page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo" style="background-color:white;min-width: 360px;height:100% !important;width:100%  !important;">
             <!-- BEGIN HEADER -->
@@ -169,7 +181,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <a href="javascript:openATab('#allmodules', 'grp=8&typ=1&pg=1&vtyp=0');"  data-toggle="tooltip" title="Person Profile!" data-placement="bottom" >
                                         <span class="username" style="<?php echo $forecolors; ?>font-weight: bold;"> <?php echo $usrName; ?> </span>
                                         <!-- DOC: Do not remove below empty space(&nbsp;) as its purposely used -->
-                                        <img alt="" class="img-circle" src="<?php echo $pemDest . $nwFileName; ?>" style="height: 45px !important; width: auto !important;"> 
+                                        <img alt="" class="img-circle" src="<?php echo $tmpDest . $nwFileName; ?>" style="height: 45px !important; width: auto !important;"> 
                                     </a>
                                     <!-- /.dropdown-user -->
                                 </li>
@@ -231,6 +243,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 </a>
                             </li>
                             <li class="nav-item  ">
+                                <a href="javascript:openATab('#myinbox', 'grp=40&typ=2');" class="nav-link " style="<?php echo $forecolors; ?>">
+                                    <i class="fa fa-envelope fa-fw" style="<?php echo $forecolors; ?>"></i> 
+                                    <span class="title">Inbox/Worklist</span>
+                                    <span class="badge bg-success" style="background-color: lime;float:right;">7</span>
+                                </a>
+                            </li>
+                            <li class="nav-item  ">
                                 <a href="javascript:;" class="nav-link " style="<?php echo $forecolors; ?>">
                                     <i class="fa fa-bar-chart-o fa-fw" style="<?php echo $forecolors; ?>"></i> 
                                     <span class="title">Charts/Reports</span>
@@ -263,13 +282,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <span class="fa arrow" style="<?php echo $forecolors; ?>"></span>
                                     </a>
                                     <ul class="sub-menu">
-                                        <li class="nav-item  ">
-                                            <a href="javascript:openATab('#myinbox', 'grp=40&typ=2');" class="nav-link " style="<?php echo $forecolors; ?>">
-                                                <i class="fa fa-envelope fa-fw" style="<?php echo $forecolors; ?>"></i> 
-                                                <span class="title">Inbox/Worklist</span>
-                                                <span class="badge bg-success" style="background-color: lime;float:right;">7</span>
-                                            </a>
-                                        </li>
                                         <li class="nav-item  ">
                                             <a href="javascript:openATab('#allmodules', 'grp=8&typ=1');" class="nav-link " style="<?php echo $forecolors; ?>">
                                                 <span class="title">Personal Records</span>
@@ -578,7 +590,20 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>                 
+                <div class="modal fade" id="myFormsModalx" tabindex="-1" role="dialog" aria-labelledby="myFormsModalxTitle" style="z-index: 9997 !important;">
+                    <div class="modal-dialog" role="document" id="myFormsModalxDiag" style="min-width:340px;max-width:90%;width:40%;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myFormsModalxTitle"></h4>
+                            </div>
+                            <div class="modal-body" id="myFormsModalxBody" style="min-height: 100px;border-bottom: none !important;"></div>
+                            <div class="modal-footer" style="border-top: none !important;">
+                            </div>
+                        </div>
+                    </div>
+                </div> 
                 <div class="modal fade" id="myFormsModal" tabindex="-1" role="dialog" aria-labelledby="myFormsModalTitle" style="z-index: 9997 !important;">
                     <div class="modal-dialog" role="document" style="max-width:400px;" id="myFormsModalDiag" >
                         <div class="modal-content">
@@ -587,8 +612,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <h4 class="modal-title" id="myFormsModalTitle"></h4>
                             </div>
                             <div class="modal-body" id="myFormsModalBody" style="min-height: 100px;border-bottom: none !important;"></div>
-                            <div class="modal-footer" style="border-top: none !important;">
-                            </div>
+                            <div class="modal-footer" style="border-top: none !important;"></div>
                         </div>
                     </div>
                 </div>
@@ -605,6 +629,32 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="myFormsModalLx" tabindex="-1" role="dialog" aria-labelledby="myFormsModalLxTitle">
+                    <div class="modal-dialog" role="document" style="min-width:300px;max-width:87%;width:87%;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myFormsModalLxTitle"></h4>
+                            </div>
+                            <div class="modal-body" id="myFormsModalLxBody" style="min-height: 100px;border-bottom: none !important;"></div>
+                            <div class="modal-footer" style="border-top: none !important;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="allOtherContent"></div>
+                <input type="hidden" id="allOtherInputData1" value=""/>
+                <input type="hidden" id="allOtherInputData2" value=""/>
+                <input type="hidden" id="allOtherInputData3" value=""/>
+                <input type="hidden" id="allOtherInputData4" value=""/>
+                <input type="hidden" id="allOtherInputData5" value=""/>
+                <input id="allOtherFileInput1" type="file" style="visibility:hidden" />
+                <input id="allOtherFileInput2" type="file" style="visibility:hidden" />
+                <input id="allOtherFileInput3" type="file" style="visibility:hidden" />
+                <input id="allOtherFileInput4" type="file" style="visibility:hidden" />
+                <input id="allOtherFileInput5" type="file" style="visibility:hidden" />
+                <input id="allOtherFileInput6" type="file" style="visibility:hidden" accept=".csv"/>
+                <input id="allOtherFileInput6" type="file" style="visibility:hidden" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
                 <!-- END FOOTER -->
                 <!--[if lt IE 9]>
 
@@ -628,7 +678,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <!-- the mousewheel plugin - optional to provide mousewheel support -->
                 <script type="text/javascript" src="cmn_scrpts/jquery.mousewheel.js"></script>
                 <script type="text/javascript" src="cmn_scrpts/mwheelIntent.js"></script>
-                <script type="text/javascript" src="cmn_scrpts/jquery.jscrollpane.min.js"></script>                
+                <script type="text/javascript" src="cmn_scrpts/jquery.jscrollpane.min.js"></script> 
+                <script type="text/javascript" src="cmn_scrpts/bootstrap337/bootbox.min.js"></script> 
+                <script type="text/javascript" src="cmn_scrpts/summernote081/summernote-ext-print.js"></script>
+                <script type="text/javascript" src="cmn_scrpts/jquery.csv.js"></script>
                 <style type="text/css">
                     .jspTrack
                     {
@@ -650,6 +703,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
                 </style>
                 <script type="text/javascript">
+                    /*document.addEventListener('contextmenu', function (e) {
+                     e.preventDefault();
+                     });
+                     document.addEventListener('keydown', function (e) {
+                     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                     if (charCode >= 112 && charCode <= 123) {
+                     e.preventDefault();
+                     return false;
+                     }
+                     });*/
                     $(document).ready(function () {
                     $('[data-toggle="tooltip"]').tooltip();
                     });

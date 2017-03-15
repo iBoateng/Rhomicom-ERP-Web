@@ -11,13 +11,440 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
         if ($qstr == "DELETE") {
             if ($actyp == 1) {
-                
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                echo deleteReportRun($pKeyID);
+            } else if ($actyp == 2) {
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $rptNm = isset($_POST['rptNm']) ? cleanInputData($_POST['rptNm']) : "";
+                echo deleteReport($pKeyID, $rptNm);
+            } else if ($actyp == 3) {
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $paramNm = isset($_POST['paramNm']) ? cleanInputData($_POST['paramNm']) : "";
+                echo deleteRptParam($pKeyID, $paramNm);
+            } else if ($actyp == 4) {
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $roleNm = isset($_POST['roleNm']) ? cleanInputData($_POST['roleNm']) : "";
+                echo deleteRptRole($pKeyID, $roleNm);
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //Import Reports
+                $dataToSend = trim(cleanInputData($_POST['dataToSend']), "|~");
+                session_write_close();
+                $affctd = 0;
+                if ($dataToSend != "") {
+                    $variousRows = explode("|", $dataToSend);
+                    $total = count($variousRows);
+                    for ($z = 0; $z < $total; $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 19) {
+                            $number = cleanInputData1($crntRow[0]);
+                            $processName = trim((cleanInputData1($crntRow[1])));
+                            $processDesc = trim(cleanInputData1($crntRow[2]));
+                            $processQuery = cleanInputData1($crntRow[3]);
+                            $ownerModule = cleanInputData1($crntRow[4]);
+                            $processType = cleanInputData1($crntRow[5]);
+                            $processRnnr = trim(cleanInputData1($crntRow[6]));
+                            $jrxmlFile = trim(cleanInputData1($crntRow[7]));
+                            $colsToGrp = cleanInputData1($crntRow[8]);
+                            $colsToCnt = cleanInputData1($crntRow[9]);
+                            $colsToFrmt = cleanInputData1($crntRow[10]);
+                            $colsToSum = cleanInputData1($crntRow[11]);
+                            $colsToAvrg = cleanInputData1($crntRow[12]);
+                            $outptType = cleanInputData1($crntRow[13]);
+                            $orntation = cleanInputData1($crntRow[14]);
+                            $layout = cleanInputData1($crntRow[15]);
+                            $dlmtr = cleanInputData1($crntRow[16]);
+                            $dtailImgCols = cleanInputData1($crntRow[17]);
+                            $isEnbld1 = cleanInputData1($crntRow[18]);
+                            $isEnbld = cleanInputData1($crntRow[18]) == "YES" ? TRUE : FALSE;
+                            $oldPrcsID = getRptID($processName);
+                            if ($z == 0) {
+                                if (strtoupper($number) == "NO." && strtoupper($processName) == "PROCESS NAME**" && strtoupper($isEnbld1) == "IS ENABLED?") {
+                                    continue;
+                                } else {
+                                    $arr_content['percent'] = 100;
+                                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> Selected File is Invalid!";
+                                    //.strtoupper($number) ."|". strtoupper($processName) ."|". strtoupper($isEnbld1 == "IS ENABLED?");
+                                    $arr_content['msgcount'] = $total;
+                                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsimprt_progress.rho", json_encode($arr_content));
+                                    break;
+                                }
+                            }
+                            if ($processName == "") {
+                                continue;
+                            }
+                            if ($oldPrcsID <= 0) {
+                                $affctd += createRpt($processName, $processDesc, $ownerModule, $processType, $processQuery, $isEnbld, $colsToGrp, $colsToCnt, $colsToSum, $colsToAvrg, $colsToFrmt, $outptType, $orntation, $processRnnr, $layout, $dlmtr, $dtailImgCols, $jrxmlFile);
+                            } else {
+                                $affctd += updateRpt($oldPrcsID, $processName, $processDesc, $ownerModule, $processType, $processQuery, $isEnbld, $colsToGrp, $colsToCnt, $colsToSum, $colsToAvrg, $colsToFrmt, $outptType, $orntation, $processRnnr, $layout, $dlmtr, $dtailImgCols, $jrxmlFile);
+                            }
+                        }
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> 100% Completed!..." . $affctd . " out of " . $total . " Process(es) imported.";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Reports/Processes...Please Wait..." . ($z + 1) . " out of " . $total . " Process(es) imported.";
+                        }
+                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsimprt_progress.rho", json_encode($arr_content));
+                    }
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsimprt_progress.rho", json_encode($arr_content));
+                }
             } else if ($actyp == 2) {
-                
+                //Checked Importing Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsimprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        unlink($file);
+                    }
+                } else {
+                    echo json_encode(array("percent" => null, "message" => null));
+                }
+            } else if ($actyp == 3) {
+                //Export Reports
+                $inptNum = isset($_POST['inptNum']) ? (int) cleanInputData($_POST['inptNum']) : 0;
+                session_write_close();
+                $affctd = 0;
+                $errMsg = "Invalid Option!";
+                if ($inptNum >= 0) {
+                    $hdngs = array(
+                        "No.", "Process Name**", "Process Description", "Process Query**",
+                        "Owner Module**", "Process Type**", "Process Runner**", "Jrxml File Loc.",
+                        "Cols Nos To Group or Width & Height (Px) for Charts", "Cols Nos To Count or Use in Charts",
+                        "Cols Nos To Format Numerically", "Cols Nos To Sum", "Cols Nos To Average",
+                        "Output Type**", "Orientation", "Layout", "Delimiter",
+                        "Detail Report Images Col Nos", "Is Enabled?");
+                    $limit_size = 0;
+                    if ($inptNum > 2) {
+                        $limit_size = $inptNum;
+                    } else if ($inptNum == 2) {
+                        $limit_size = 1000000;
+                    }
+                    $rndm = getRandomNum(10001, 9999999);
+                    $dteNm = date('dMY_His');
+                    $nwFileNm = $fldrPrfx . "dwnlds/" . $rndm . "_ReportsExport_" . $dteNm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/" . $rndm . "_ReportsExport_" . $dteNm . ".csv";
+                    $opndfile = fopen($nwFileNm, "w");
+                    fputcsv($opndfile, $hdngs);
+                    if ($limit_size <= 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Reports/Processes Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsexprt_progress.rho", json_encode($arr_content));
+
+                        fclose($opndfile);
+                        exit();
+                    }
+                    $z = 0;
+                    $crntRw = "";
+                    $result = get_RptsToExprt("%", "Report Name", 0, $limit_size);
+                    $total = loc_db_num_rows($result);
+                    $fieldCntr = loc_db_num_fields($result);
+                    while ($row = loc_db_fetch_array($result)) {
+                        $crntRw = array("" . ($z + 1), $row[1], $row[2], $row[3], $row[4], $row[5], $row[14], $row[18], $row[7], $row[8], $row[11], $row[9], $row[10], $row[12], $row[13], $row[15], $row[17], $row[16], $row[6]);
+                        fputcsv($opndfile, $crntRw);
+                        //file_put_contents($nwFileNm, $crntRw, FILE_APPEND | LOCK_EX);
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z + 1) . " out of " . $total . " Reports/Process(es) exported.</span>";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\">Exporting Reports/Processes...Please Wait..." . ($z + 1) . " out of " . $total . " Reports/Process(es) exported.</span>";
+                        }
+                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsexprt_progress.rho", json_encode($arr_content));
+                        $z++;
+                    }
+                    fclose($opndfile);
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    $arr_content['dwnld_url'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsexprt_progress.rho", json_encode($arr_content));
+                }
+            } else if ($actyp == 4) {
+                //Checked Exporting Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsexprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        unlink($file);
+                    }
+                } else {
+                    echo json_encode(array("percent" => 0, "message" => '<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Not Started</span>'));
+                }
+            } else if ($actyp == 5) {
+                //Save Reports
+                header("content-type:application/json");
+                $orgid = $_SESSION['ORG_ID'];
+                $rptsRptID = isset($_POST['rptsRptID']) ? cleanInputData($_POST['rptsRptID']) : -1;
+                $rptsRptNm = isset($_POST['rptsRptNm']) ? cleanInputData($_POST['rptsRptNm']) : "";
+                $rptsRptDesc = isset($_POST['rptsRptDesc']) ? cleanInputData($_POST['rptsRptDesc']) : "";
+                $rptsOwnrMdl = isset($_POST['rptsOwnrMdl']) ? cleanInputData($_POST['rptsOwnrMdl']) : "";
+                $rptsProcessTyp = isset($_POST['rptsProcessTyp']) ? cleanInputData($_POST['rptsProcessTyp']) : "";
+                $rptsPrcsRnnr = isset($_POST['rptsPrcsRnnr']) ? cleanInputData($_POST['rptsPrcsRnnr']) : '';
+                $rptsColsToGrp = isset($_POST['rptsColsToGrp']) ? cleanInputData($_POST['rptsColsToGrp']) : '';
+                $rptsColsToCnt = isset($_POST['rptsColsToCnt']) ? cleanInputData($_POST['rptsColsToCnt']) : '';
+                $rptsColsToFrmt = isset($_POST['rptsColsToFrmt']) ? cleanInputData($_POST['rptsColsToFrmt']) : '';
+                $rptsColsToSum = isset($_POST['rptsColsToSum']) ? cleanInputData($_POST['rptsColsToSum']) : '';
+                $rptsColsToAvrg = isset($_POST['rptsColsToAvrg']) ? cleanInputData($_POST['rptsColsToAvrg']) : '';
+                $rptsOutputType = isset($_POST['rptsOutputType']) ? cleanInputData($_POST['rptsOutputType']) : '';
+                $rptsOrntn = isset($_POST['rptsOrntn']) ? cleanInputData($_POST['rptsOrntn']) : '';
+                $rptsLayout = isset($_POST['rptsLayout']) ? cleanInputData($_POST['rptsLayout']) : '';
+                $rptsDelimiter = isset($_POST['rptsDelimiter']) ? cleanInputData($_POST['rptsDelimiter']) : '';
+                $rptsDetImgCols = isset($_POST['rptsDetImgCols']) ? cleanInputData($_POST['rptsDetImgCols']) : '';
+                $rptsQuerySQL = isset($_POST['rptsQuerySQL']) ? cleanInputData($_POST['rptsQuerySQL']) : '';
+                $rptsIsEnabled = isset($_POST['rptsIsEnabled']) ? cleanInputData($_POST['rptsIsEnabled']) : '';
+                $slctdRptParams = isset($_POST['slctdRptParams']) ? cleanInputData($_POST['slctdRptParams']) : '';
+                $slctdRptAllwdRoles = isset($_POST['slctdRptAllwdRoles']) ? cleanInputData($_POST['slctdRptAllwdRoles']) : '';
+                $isenbld = false;
+                if ($rptsIsEnabled == "YES") {
+                    $isenbld = true;
+                }
+                $rptsJrxmlFileSrc = isset($_POST['rptsJrxmlFileSrc']) ? cleanInputData($_POST['rptsJrxmlFileSrc']) : '';
+                $oldRptID = getRptID($rptsRptNm);
+                if ($rptsRptNm != "" && ($oldRptID <= 0 || $oldRptID == $rptsRptID)) {
+                    if ($rptsRptID <= 0) {
+                        createRpt($rptsRptNm, $rptsRptDesc, $rptsOwnrMdl, $rptsProcessTyp, $rptsQuerySQL, $isenbld, $rptsColsToGrp, $rptsColsToCnt, $rptsColsToSum, $rptsColsToAvrg, $rptsColsToFrmt, $rptsOutputType, $rptsOrntn, $rptsPrcsRnnr, $rptsLayout, $rptsDelimiter, $rptsDetImgCols, $rptsJrxmlFileSrc);
+                        $rptsRptID = getRptID($rptsRptNm);
+                    } else {
+                        updateRpt($rptsRptID, $rptsRptNm, $rptsRptDesc, $rptsOwnrMdl, $rptsProcessTyp, $rptsQuerySQL, $isenbld, $rptsColsToGrp, $rptsColsToCnt, $rptsColsToSum, $rptsColsToAvrg, $rptsColsToFrmt, $rptsOutputType, $rptsOrntn, $rptsPrcsRnnr, $rptsLayout, $rptsDelimiter, $rptsDetImgCols, $rptsJrxmlFileSrc);
+                    }
+                    $affctdParams = 0;
+                    $affctdRoles = 0;
+                    $nwImgLoc = "";
+                    if ($rptsRptID > 0) {
+                        if (isset($_FILES["rptsJrxmlFile"])) {
+                            uploadDaJrxml($rptsRptID, $nwImgLoc);
+                        }
+                        if (trim($slctdRptParams, "|~") != "") {
+                            //Save Report Parameters
+                            $variousRows = explode("|", trim($slctdRptParams, "|"));
+                            for ($z = 0; $z < count($variousRows); $z++) {
+                                $crntRow = explode("~", $variousRows[$z]);
+                                if (count($crntRow) == 9) {
+                                    $inptParamID = (int) (cleanInputData1($crntRow[0]));
+                                    $paramNm = cleanInputData1($crntRow[1]);
+                                    $sqlRep = cleanInputData1($crntRow[2]);
+                                    $dfltVal = cleanInputData1($crntRow[3]);
+                                    $inlovName = cleanInputData1($crntRow[4]);
+                                    $inlovID = (int) (cleanInputData1($crntRow[5]));
+                                    $inDataType = cleanInputData1($crntRow[6]);
+                                    $inDateFrmt = cleanInputData1($crntRow[7]);
+                                    $isPrmRqrd = cleanInputData1($crntRow[8]) == "YES" ? TRUE : FALSE;
+                                    $oldParamID = getParamID($paramNm, $rptsRptID);
+
+                                    if ($paramNm != "" && $sqlRep != "" && ($oldParamID <= 0 || $oldParamID == $inptParamID)) {
+                                        if ($inptParamID <= 0) {
+                                            $affctdParams += createParam($rptsRptID, $paramNm, $sqlRep, $dfltVal, $isPrmRqrd, $inlovID, $inDataType, $inDateFrmt, $inlovName);
+                                        } else {
+                                            $affctdParams += updateParam($inptParamID, $paramNm, $sqlRep, $dfltVal, $isPrmRqrd, $inlovID, $inDataType, $inDateFrmt, $inlovName);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (trim($slctdRptAllwdRoles, "|~") != "") {
+                            //Save Report Parameters
+                            $variousRows = explode("|", trim($slctdRptAllwdRoles, "|"));
+                            for ($z = 0; $z < count($variousRows); $z++) {
+                                $crntRow = explode("~", $variousRows[$z]);
+                                if (count($crntRow) == 2) {
+                                    $inptRoleID = (int) (cleanInputData1($crntRow[0]));
+                                    $roleNm = cleanInputData1($crntRow[1]);
+                                    $oldRoleID = doesRptHvRole($rptsRptID, $inptRoleID);
+                                    if ($oldRoleID <= 0 && $inptRoleID > 0) {
+                                        $affctdRoles += createRptRole($rptsRptID, $inptRoleID);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $arr_content['percent'] = 100;
+                    $arr_content['rptsRptID'] = $rptsRptID;
+                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Report/Process Successfully Saved!<br/>" . $affctdParams . " Parameters Saved!<br/>" . $affctdRoles . " Roles Added!";
+                    echo json_encode($arr_content);
+                    exit();
+                } else {
+                    $arr_content['percent'] = 100;
+                    $arr_content['rptsRptID'] = -1;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Either the New Report/Process Exists <br/>or Data Supplied is Incomplete!</span>";
+                    echo json_encode($arr_content);
+                    exit();
+                }
+            } else if ($actyp == 6) {
+                //Import Report Parameters
+                $dataToSend = trim(cleanInputData($_POST['dataToSend']), "|~");
+                session_write_close();
+                $affctd = 0;
+                if ($dataToSend != "") {
+                    $variousRows = explode("|", $dataToSend);
+                    $total = count($variousRows);
+                    for ($z = 0; $z < $total; $z++) {
+                        $crntRow = explode("~", $variousRows[$z]);
+                        if (count($crntRow) == 9) {
+                            $number = cleanInputData1($crntRow[0]);
+                            $processName = trim((cleanInputData1($crntRow[1])));
+                            $paramName = trim(cleanInputData1($crntRow[2]));
+                            $sqlRep = cleanInputData1($crntRow[3]);
+                            $dfltVal = cleanInputData1($crntRow[4]);
+                            $prmLovNm = cleanInputData1($crntRow[5]);
+                            $prmLovID = getLovID($prmLovNm);
+                            $isValRqrd1 = trim(cleanInputData1($crntRow[6]));
+                            $isValRqrd = cleanInputData1($crntRow[6]) == "YES" ? TRUE : FALSE;
+                            $prmDataTyp = trim(cleanInputData1($crntRow[7]));
+                            $prmDateFrmt = cleanInputData1($crntRow[8]);
+                            $inRptID = getRptID($processName);
+                            $oldParamID = getParamID($paramName, $inRptID);
+                            if ($z == 0) {
+                                if (strtoupper($number) == "NO." && strtoupper($processName) == "PROCESS NAME**" && strtoupper($paramName) == "PARAMETER NAME/PROMPT**" && strtoupper($prmDateFrmt) == "DATE FORMAT") {
+                                    continue;
+                                } else {
+                                    $arr_content['percent'] = 100;
+                                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> Selected File is Invalid!";
+                                    $arr_content['msgcount'] = $total;
+                                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsimprt_progress.rho", json_encode($arr_content));
+                                    break;
+                                }
+                            }
+                            if ($paramName == "" || $sqlRep == "" || $inRptID <= 0) {
+                                continue;
+                            }
+                            if ($oldParamID <= 0) {
+                                $affctd += createParam($inRptID, $paramName, $sqlRep, $dfltVal, $isValRqrd, $prmLovID, $prmDataTyp, $prmDateFrmt, $prmLovNm);
+                            } else {
+                                $affctd += updateParam($oldParamID, $paramName, $sqlRep, $dfltVal, $isValRqrd, $prmLovID, $prmDataTyp, $prmDateFrmt, $prmLovNm);
+                            }
+                        }
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span> 100% Completed!..." . $affctd . " out of " . $total . " Parameter(s) imported.";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<i class=\"fa fa-spin fa-spinner\"></i> Importing Parameters...Please Wait..." . ($z + 1) . " out of " . $total . " Parameter(s) imported.";
+                        }
+                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsimprt_progress.rho", json_encode($arr_content));
+                    }
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsimprt_progress.rho", json_encode($arr_content));
+                }
+            } else if ($actyp == 7) {
+                //Checked Importing Parameters Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsimprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        unlink($file);
+                    }
+                } else {
+                    echo json_encode(array("percent" => null, "message" => null));
+                }
+            } else if ($actyp == 8) {
+                //Export Parameters
+                $inptNum = isset($_POST['inptNum']) ? (int) cleanInputData($_POST['inptNum']) : 0;
+                session_write_close();
+                $affctd = 0;
+                $errMsg = "Invalid Option!";
+                if ($inptNum >= 0) {
+                    $hdngs = array(
+                        "No.", "Process Name**", "Parameter Name/Prompt**", "SQL Representation**",
+                        "Default Value", "LOV Name", "Is Required?", "Data Type", "Date Format");
+                    $limit_size = 0;
+                    if ($inptNum > 2) {
+                        $limit_size = $inptNum;
+                    } else if ($inptNum == 2) {
+                        $limit_size = 1000000;
+                    }
+                    $rndm = getRandomNum(10001, 9999999);
+                    $dteNm = date('dMY_His');
+                    $nwFileNm = $fldrPrfx . "dwnlds/" . $rndm . "_ParamsExport_" . $dteNm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/" . $rndm . "_ParamsExport_" . $dteNm . ".csv";
+                    $opndfile = fopen($nwFileNm, "w");
+                    fputcsv($opndfile, $hdngs);
+                    if ($limit_size <= 0) {
+                        $arr_content['percent'] = 100;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!... Parameters Template Exported.</span>";
+                        $arr_content['msgcount'] = 0;
+                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsexprt_progress.rho", json_encode($arr_content));
+
+                        fclose($opndfile);
+                        exit();
+                    }
+                    $z = 0;
+                    $crntRw = "";
+                    $result = get_AllParamsExprt(0, $limit_size);
+                    $total = loc_db_num_rows($result);
+                    $fieldCntr = loc_db_num_fields($result);
+                    while ($row = loc_db_fetch_array($result)) {
+                        $crntRw = array("" . ($z + 1), $row[8], $row[1], $row[2], $row[3], $row[9], $row[4], $row[6], $row[7]);
+                        fputcsv($opndfile, $crntRw);
+                        $percent = round((($z + 1) / $total) * 100, 2);
+                        $arr_content['percent'] = $percent;
+                        $arr_content['dwnld_url'] = $dwnldUrl;
+                        if ($percent >= 100) {
+                            $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z + 1) . " out of " . $total . " Parameter(s) exported.</span>";
+                            $arr_content['msgcount'] = $total;
+                        } else {
+                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\">Exporting Parameter(s)...Please Wait..." . ($z + 1) . " out of " . $total . " Parameter(s) exported.</span>";
+                        }
+                        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsexprt_progress.rho", json_encode($arr_content));
+                        $z++;
+                    }
+                    fclose($opndfile);
+                } else {
+                    $percent = 100;
+                    $arr_content['percent'] = $percent;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i> 100% Completed...An Error Occured!<br/>$errMsg</span>";
+                    $arr_content['msgcount'] = "";
+                    $arr_content['dwnld_url'] = "";
+                    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsexprt_progress.rho", json_encode($arr_content));
+                }
+            } else if ($actyp == 9) {
+                //Checked Exporting Process Status                
+                header('Content-Type: application/json');
+                $file = $ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsexprt_progress.rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo $text;
+
+                    $obj = json_decode($text);
+                    if ($obj->percent >= 100) {
+                        unlink($file);
+                    }
+                } else {
+                    echo json_encode(array("percent" => 0, "message" => '<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Not Started</span>'));
+                }
             }
         } else {
             if ($vwtyp == 0) {
@@ -52,16 +479,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         if ($canaddRpts === true) {
                             ?> 
                             <div class="<?php echo $colClassType2; ?>" style="padding:0px 1px 0px 1px !important;"> 
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneOrgStpForm(-1, 2);" style="width:100% !important;">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="getOneNewRptForm();" style="width:100% !important;">
                                         <img src="cmn_images/add1-64.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                         New Report
-                                    </button>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveOrgStpForm();" style="width:100% !important;">
-                                        <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
-                                        Save
                                     </button>
                                 </div>
                             </div>
@@ -160,8 +581,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $cntr += 1;
                                             ?>
                                             <tr id="allRptsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                <td class="lovtd"><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allRptsRow<?php echo $cntr; ?>_RptID" value="<?php echo $row[0]; ?>"></td>
+                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?>
+                                                    <input type="hidden" class="form-control" aria-label="..." id="allRptsRow<?php echo $cntr; ?>_RptID" value="<?php echo $row[0]; ?>"></td>
+                                                <td class="lovtd"><?php echo $row[1]; ?></td>
                                                 <td class="lovtd">
                                                     <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="getOneRptsParamsForm(<?php echo $row[0]; ?>, -1, '<?php echo $row[1]; ?>', 2, -1);" data-toggle="tooltip" data-placement="bottom" title="Run Report/Process">
                                                         <img src="cmn_images/98.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
@@ -169,7 +591,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </td>
                                                 <?php if ($candelRpts === true) { ?>
                                                     <td class="lovtd">
-                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Report/Process">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delRpts('allRptsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Report/Process">
                                                             <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
@@ -453,8 +875,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                                         <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="doAjax('grp=1&typ=11&q=Download&fnm=<?php echo $rpt_src_encrpt; ?>', '', 'Redirect', '', '', '');" data-toggle="tooltip" data-placement="bottom" title="OPEN OUTPUT FILE">
                                                                                                             <img src="cmn_images/dwldicon.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"> View Output
                                                                                                         </button>
-                                                                                                    <?php }
-                                                                                                    ?>
+                                                                                                    <?php } ?>
                                                                                                 </td>
                                                                                                 <td class="lovtd">
                                                                                                     <button type="button" class="btn btn-default" style="margin-bottom: 0px;" onclick="getOneRptsLogForm(<?php echo $row2[0]; ?>);" data-toggle="tooltip" data-placement="bottom" title="VIEW PROCESS LOG FILE INFO">
@@ -2285,13 +2706,34 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     while ($row1 = loc_db_fetch_array($result1)) {
                         ?>
                         <form id="rptsStpForm">
+                            <div class="row">                                 
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveReportsForm();" style="width:100% !important;">
+                                        <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                        Save Report
+                                    </button>
+                                </div>
+                                <div class="col-md-6" style="padding:0px 20px 0px 20px !important;">
+                                    <div class="" style="float:right;">
+                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="exprtRpts();" style="">
+                                            <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                            Export Reports
+                                        </button>
+                                        <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="importReports();" style="">
+                                            <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                            Import Reports
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;"> 
                                     <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                         <label for="rptsRptNm" class="control-label col-lg-4">Process Name:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($caneditRpts === true) { ?>
-                                                <input type="text" class="form-control" aria-label="..." id="rptsRptNm" name="rptsRptNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
+                                                <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsRptNm" name="rptsRptNm" value="<?php echo $row1[1]; ?>" style="width:100%;">
+                                                <input type="hidden" class="form-control" aria-label="..." id="rptsRptID" name="rptsRptID" value="<?php echo $pkID; ?>" style="width:100%;">
                                             <?php } else { ?>
                                                 <span><?php echo $row1[1]; ?></span>
                                             <?php } ?>
@@ -2301,7 +2743,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="rptsRptDesc" class="control-label col-lg-4">Description:</label>
                                         <div  class="col-lg-8">
                                             <?php if ($caneditRpts === true) { ?>
-                                                <textarea class="form-control rqrdFld" aria-label="..." id="rptsRptDesc" name="rptsRptDesc" style="width:100%;" cols="4" rows="5"><?php echo $row1[2]; ?></textarea>
+                                                <textarea class="form-control" aria-label="..." id="rptsRptDesc" name="rptsRptDesc" style="width:100%;" cols="4" rows="5"><?php echo $row1[2]; ?></textarea>
                                             <?php } else { ?>
                                                 <span><?php echo $row1[2]; ?></span>
                                             <?php } ?>
@@ -2312,7 +2754,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div  class="col-lg-8">
                                             <?php if ($caneditRpts === true) { ?>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" aria-label="..." id="rptsOwnrMdl" value="<?php echo $row1[4]; ?>">
+                                                    <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsOwnrMdl" value="<?php echo $row1[4]; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'System Modules', '', '', '', 'radio', true, '<?php echo $row1[4]; ?>', '', 'rptsOwnrMdl', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
@@ -2329,7 +2771,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="rptsProcessTyp" class="control-label col-lg-4">Process Type:</label>
                                         <div class="col-lg-8">
                                             <?php if ($caneditRpts === true && $row1[5] != "System Process") { ?>
-                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsProcessTyp" name="rptsProcessTyp">
+                                                <select data-placeholder="Select..." class="form-control chosen-select rqrdFld" id="rptsProcessTyp" name="rptsProcessTyp">
                                                     <?php
                                                     $valslctdArry = array("", "", "", "", "", "", "");
                                                     $srchInsArrys = array("SQL Report", "Database Function", "Command Line Script", "Command Line Script-Linux", "Posting of GL Trns. Batches", "Journal Import", "Import/Overwrite Data from Excel");
@@ -2354,7 +2796,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div  class="col-lg-8">
                                             <?php if ($caneditRpts === true) { ?>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" aria-label="..." id="rptsPrcsRnnr" value="<?php echo $row1[17]; ?>">
+                                                    <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsPrcsRnnr" value="<?php echo $row1[17]; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Background Process Runners', '', '', '', 'radio', true, '<?php echo $row1[17]; ?>', '', 'rptsPrcsRnnr', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
@@ -2423,7 +2865,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="rptsOutputType" class="control-label col-lg-6">Output Type:</label>
                                         <div class="col-lg-6">
                                             <?php if ($caneditRpts === true) { ?>
-                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsOutputType" name="rptsOutputType">
+                                                <select data-placeholder="Select..." class="form-control chosen-select rqrdFld" id="rptsOutputType" name="rptsOutputType">
                                                     <?php
                                                     $valslctdArry = array("", "", "", "", "", "", "", "", "", "");
                                                     $srchInsArrys = array("None", "HTML", "STANDARD", "MICROSOFT EXCEL", "PDF",
@@ -2445,7 +2887,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <label for="rptsOrntn" class="control-label col-lg-6">Orientation:</label>
                                         <div class="col-lg-6">
                                             <?php if ($caneditRpts === true) { ?>
-                                                <select data-placeholder="Select..." class="form-control chosen-select" id="rptsOrntn" name="rptsOrntn">
+                                                <select data-placeholder="Select..." class="form-control chosen-select rqrdFld" id="rptsOrntn" name="rptsOrntn">
                                                     <?php
                                                     $valslctdArry = array("", "", "");
                                                     $srchInsArrys = array("None", "Portrait", "Landscape");
@@ -2520,7 +2962,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php if ($caneditRpts === true) { ?>
                                                 <div class="input-group">
                                                     <label class="btn btn-primary btn-file input-group-addon">
-                                                        Browse... <input type="file" id="rptsJrxmlFile" name="rptsJrxmlFile" onchange="setFileLoc(this, '#rptsJrxmlFileSrc');" class="btn btn-default"  style="display: none;">
+                                                        Browse... <input type="file" id="rptsJrxmlFile" name="rptsJrxmlFile" onchange="setFileLoc(this, '#rptsJrxmlFileSrc');" class="btn btn-default"  style="display: none;" accept=".jrxml">
                                                     </label>
                                                     <input type="text" class="form-control" aria-label="..." id="rptsJrxmlFileSrc" value="<?php echo $row1[19]; ?>">                                                        
                                                 </div> 
@@ -2572,16 +3014,16 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php
                             if ($caneditRpts === true) {
                                 $nwRowHtml = "<tr id=\"rptsStpPrmsRow__WWW123WWW\">
-                                    <td class=\"lovtd\"><span class=\"normaltd\">New</span></td>
+                                    <td class=\"lovtd\"><span class=\"\">New</span></td>
                                                     <td class=\"lovtd\">
                                                             <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
-                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_ParamNm\" value=\"\" style=\"width:100% !important;\">
+                                                                <input type=\"text\" class=\"form-control rqrdFld\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_ParamNm\" value=\"\" style=\"width:100% !important;\">
                                                                 <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_ParamID\" value=\"-1\">
                                                             </div>
-													</td>                                                
+						    </td>                                                
                                                     <td class=\"lovtd\">
                                                             <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
-                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_SQLRep\" value=\"\" style=\"width:100% !important;\">
+                                                                <input type=\"text\" class=\"form-control rqrdFld\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_SQLRep\" value=\"\" style=\"width:100% !important;\">
                                                             </div>
 													</td>                                               
                                                     <td class=\"lovtd\">
@@ -2592,7 +3034,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class=\"lovtd\">
                                                             <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                                                 <div class=\"input-group\"  style=\"width:100%;\">
-                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_LovNm\" value=\"\">
+                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_LovNm\" value=\"\" readonly=\"true\">
                                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_LovID\" value=\"-1\">
                                                                     <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'LOV Names', '', '', '', 'radio', true, '', '', 'rptsStpPrmsRow_WWW123WWW_LovNm', 'clear', 1, '');\">
                                                                         <span class=\"glyphicon glyphicon-th-list\"></span>
@@ -2634,7 +3076,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </div>                                                       
                                                     </td>
                                                         <td class=\"lovtd\">
-                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Parameter\">
+                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delRptParam('rptsStpPrmsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Parameter\">
                                                                 <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                             </button>
                                                         </td>
@@ -2642,10 +3084,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $nwRowHtml = urlencode($nwRowHtml);
                                 ?>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('rptsStpPrmsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Parameter">
                                             <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">New Parameter
                                         </button> 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="" style="float:right;">
+                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="exprtRptParams();" style="">
+                                                <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                Export Parameters
+                                            </button>
+                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="importRptParams();" style="">
+                                                <img src="cmn_images/image007.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                                Import Parameters
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <?php
@@ -2681,11 +3135,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="rptsStpPrmsRow_<?php echo $cntr; ?>">                                    
-                                                    <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                    <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                     <td class="lovtd">
                                                         <?php if ($caneditRpts === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
-                                                                <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_ParamNm" value="<?php echo $row2[1]; ?>" style="width:100% !important;">
+                                                                <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_ParamNm" value="<?php echo $row2[1]; ?>" style="width:100% !important;">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_ParamID" value="<?php echo $row2[0]; ?>">
                                                             </div>
                                                         <?php } else { ?>
@@ -2695,7 +3149,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd">
                                                         <?php if ($caneditRpts === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
-                                                                <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_SQLRep" value="<?php echo $row2[2]; ?>" style="width:100% !important;">
+                                                                <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_SQLRep" value="<?php echo $row2[2]; ?>" style="width:100% !important;">
                                                             </div>
                                                         <?php } else { ?>
                                                             <span><?php echo $row2[2]; ?></span>
@@ -2714,7 +3168,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <?php if ($caneditRpts === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;">
                                                                 <div class="input-group"  style="width:100%;">
-                                                                    <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_LovNm" value="<?php echo $row2[6]; ?>">
+                                                                    <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_LovNm" value="<?php echo $row2[6]; ?>" readonly="true">
                                                                     <input type="hidden" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_LovID" value="<?php echo $row2[5]; ?>">
                                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'LOV Names', '', '', '', 'radio', true, '<?php echo $row2[6]; ?>', '', 'rptsStpPrmsRow<?php echo $cntr; ?>_LovNm', 'clear', 1, '');">
                                                                         <span class="glyphicon glyphicon-th-list"></span>
@@ -2790,7 +3244,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     if ($caneditRpts === true) {
                                                         ?>
                                                         <td class="lovtd">
-                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Parameter">
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delRptParam('rptsStpPrmsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Parameter">
                                                                 <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
@@ -2806,12 +3260,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php
                             if ($caneditRpts === true) {
                                 $nwRowHtml = "<tr id=\"rptsStpRolesRow__WWW123WWW\">
-                                    <td class=\"lovtd\"><span class=\"normaltd\">New</span></td>                                                                                                  
+                                    <td class=\"lovtd\"><span class=\"\">New</span></td>                                                                                                  
                                                     <td class=\"lovtd\">
                                                             <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                                                 <div class=\"input-group\"  style=\"width:100%;\">
-                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RoleNm\" value=\"\">
+                                                                    <input type=\"text\" class=\"form-control rqrdFld\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RoleNm\" value=\"\" readonly=\"true\">
                                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RoleID\" value=\"-1\">
+                                                                    <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RptRoleID\" value=\"-1\">
                                                                     <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'User Roles', '', '', '', 'radio', true, '', 'rptsStpRolesRow_WWW123WWW_RoleID', 'rptsStpRolesRow_WWW123WWW_RoleNm', 'clear', 0, '');\">
                                                                         <span class=\"glyphicon glyphicon-th-list\"></span>
                                                                     </label>
@@ -2819,7 +3274,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             </div>                                                       
                                                     </td> 
                                                         <td class=\"lovtd\">
-                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Role\">
+                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delRptRole('rptsStpRolesRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Role\">
                                                                 <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                             </button>
                                                         </td>
@@ -2861,13 +3316,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd"><span><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                     <td class="lovtd">
                                                         <span><?php echo $row3[1]; ?></span>
-                                                        <input type="hidden" class="form-control" aria-label="..." id="rptsStpRolesRow<?php echo $cntr; ?>_RoleID" value="<?php echo $row3[0]; ?>">                                                     
+                                                        <input type="hidden" class="form-control" aria-label="..." id="rptsStpRolesRow<?php echo $cntr; ?>_RoleID" value="<?php echo $row3[0]; ?>">  
+                                                        <input type="hidden" class="form-control" aria-label="..." id="rptsStpRolesRow<?php echo $cntr; ?>_RptRoleID" value="<?php echo $row3[2]; ?>">                                                   
                                                     </td>   
                                                     <?php
                                                     if ($caneditRpts === true) {
                                                         ?>
                                                         <td class="lovtd">
-                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="" data-toggle="tooltip" data-placement="bottom" title="Delete Role">
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delRptRole('rptsStpRolesRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Role">
                                                                 <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
@@ -2883,6 +3339,448 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         </form>
                         <?php
                     }
+                }
+            } else if ($vwtyp == 9) {
+                //echo "Add New Reports"
+                $sbmtdRptID = -1;
+                if ($caneditRpts === true) {
+                    ?>
+                    <form id="rptsStpForm">
+                        <div class="row">                                 
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveReportsForm();" style="width:100% !important;">
+                                    <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
+                                    Save Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div  class="col-md-6" style="padding:0px 3px 0px 3px !important;"> 
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsRptNm" class="control-label col-lg-4">Process Name:</label>
+                                    <div  class="col-lg-8">
+                                        <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsRptNm" name="rptsRptNm" value="" style="width:100%;">
+                                        <input type="hidden" class="form-control" aria-label="..." id="rptsRptID" name="rptsRptID" value="-1" style="width:100%;">
+                                        <input type="hidden" class="form-control" aria-label="..." id="isNew123" name="isNew123" value="5">                                    
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsRptDesc" class="control-label col-lg-4">Description:</label>
+                                    <div  class="col-lg-8">
+                                        <textarea class="form-control" aria-label="..." id="rptsRptDesc" name="rptsRptDesc" style="width:100%;" cols="4" rows="5"></textarea>
+                                    </div>
+                                </div> 
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsOwnrMdl" class="control-label col-lg-4">Owner Module:</label>
+                                    <div  class="col-lg-8">                                    
+                                        <div class="input-group">
+                                            <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsOwnrMdl" value="">
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'System Modules', '', '', '', 'radio', true, '', '', 'rptsOwnrMdl', 'clear', 1, '');">
+                                                <span class="glyphicon glyphicon-th-list"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsProcessTyp" class="control-label col-lg-4">Process Type:</label>
+                                    <div class="col-lg-8">
+                                        <select data-placeholder="Select..." class="form-control chosen-select rqrdFld" id="rptsProcessTyp" name="rptsProcessTyp">
+                                            <?php
+                                            $valslctdArry = array("", "", "", "", "", "", "");
+                                            $srchInsArrys = array("SQL Report", "Database Function", "Command Line Script", "Command Line Script-Linux", "Posting of GL Trns. Batches", "Journal Import", "Import/Overwrite Data from Excel");
+                                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                ?>
+                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsPrcsRnnr" class="control-label col-lg-4">Process Runner:</label>
+                                    <div  class="col-lg-8">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsPrcsRnnr" value="">
+                                            <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Background Process Runners', '', '', '', 'radio', true, '', '', 'rptsPrcsRnnr', 'clear', 1, '');">
+                                                <span class="glyphicon glyphicon-th-list"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsColsToGrp" class="control-label col-lg-6">Cols Nos To Group or Width & Height (px) for Charts:</label>
+                                    <div  class="col-lg-6">
+                                        <input type="text" class="form-control" aria-label="..." id="rptsColsToGrp" name="rptsColsToGrp" value="" style="width:100%;">                                        
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsColsToCnt" class="control-label col-lg-6">Cols Nos To Count or Use in Charts:</label>
+                                    <div  class="col-lg-6">
+                                        <input type="text" class="form-control" aria-label="..." id="rptsColsToCnt" name="rptsColsToCnt" value="" style="width:100%;">                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="padding:0px 3px 0px 3px !important;">
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsColsToFrmt" class="control-label col-lg-6">Cols Nos To Format Numerically:</label>
+                                    <div  class="col-lg-6">
+                                        <input type="text" class="form-control" aria-label="..." id="rptsColsToFrmt" name="rptsColsToFrmt" value="" style="width:100%;">
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsColsToSum" class="control-label col-lg-6">Cols Nos To Sum:</label>
+                                    <div  class="col-lg-6">
+                                        <input type="text" class="form-control" aria-label="..." id="rptsColsToSum" name="rptsColsToSum" value="" style="width:100%;">
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsColsToAvrg" class="control-label col-lg-6">Cols Nos To Average:</label>
+                                    <div  class="col-lg-6">
+                                        <input type="text" class="form-control" aria-label="..." id="rptsColsToAvrg" name="rptsColsToAvrg" value="" style="width:100%;">
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsOutputType" class="control-label col-lg-6">Output Type:</label>
+                                    <div class="col-lg-6">
+                                        <select data-placeholder="Select..." class="form-control chosen-select rqrdFld" id="rptsOutputType" name="rptsOutputType">
+                                            <?php
+                                            $valslctdArry = array("", "", "", "", "", "", "", "", "", "");
+                                            $srchInsArrys = array("None", "HTML", "STANDARD", "MICROSOFT EXCEL", "PDF",
+                                                "MICROSOFT WORD", "CHARACTER SEPARATED FILE (CSV)", "COLUMN CHART", "PIE CHART", "LINE CHART");
+                                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                ?>
+                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsOrntn" class="control-label col-lg-6">Orientation:</label>
+                                    <div class="col-lg-6">
+                                        <select data-placeholder="Select..." class="form-control chosen-select rqrdFld" id="rptsOrntn" name="rptsOrntn">
+                                            <?php
+                                            $valslctdArry = array("", "", "");
+                                            $srchInsArrys = array("None", "Portrait", "Landscape");
+                                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                ?>
+                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsLayout" class="control-label col-lg-6">Layout:</label>
+                                    <div class="col-lg-6">
+                                        <select data-placeholder="Select..." class="form-control chosen-select" id="rptsLayout" name="rptsLayout">
+                                            <?php
+                                            $valslctdArry = array("", "", "");
+                                            $srchInsArrys = array("None", "TABULAR", "DETAIL");
+                                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                ?>
+                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsDelimiter" class="control-label col-lg-6">Delimiter:</label>
+                                    <div class="col-lg-6">
+                                        <select data-placeholder="Select..." class="form-control chosen-select" id="rptsDelimiter" name="rptsDelimiter">
+                                            <?php
+                                            $valslctdArry = array("", "", "", "", "");
+                                            $srchInsArrys = array("None", "Semi-Colon(;)", "Pipe(|)", "Tab", "Tilde(~)");
+                                            for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                ?>
+                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>                                
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsDetImgCols" class="control-label col-lg-6">Detailed Report Images Cols:</label>
+                                    <div  class="col-lg-6">
+                                        <input type="text" class="form-control" aria-label="..." id="rptsDetImgCols" name="rptsDetImgCols" value="" style="width:100%;">
+                                    </div>
+                                </div>   
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsJrxmlFile" class="control-label col-lg-2">Jrxml File:</label>
+                                    <div  class="col-lg-10">
+                                        <div class="input-group">
+                                            <label class="btn btn-primary btn-file input-group-addon">
+                                                Browse... <input type="file" id="rptsJrxmlFile" name="rptsJrxmlFile" onchange="setFileLoc(this, '#rptsJrxmlFileSrc');" class="btn btn-default"  style="display: none;" accept=".jrxml">
+                                            </label>
+                                            <input type="text" class="form-control" aria-label="..." id="rptsJrxmlFileSrc" value="">                                                        
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                    <label for="rptsIsEnabled" class="control-label col-lg-7">Enabled?:</label>
+                                    <div  class="col-lg-5">
+                                        <?php
+                                        $chkdYes = "";
+                                        $chkdNo = "checked=\"\"";
+                                        ?>
+                                        <label class="radio-inline"><input type="radio" name="rptsIsEnabled" value="YES" <?php echo $chkdYes; ?>>YES</label>
+                                        <label class="radio-inline"><input type="radio" name="rptsIsEnabled" value="NO" <?php echo $chkdNo; ?>>NO</label>                                       
+                                    </div>
+                                </div>   
+                            </div>
+                        </div>
+                        <div class="row"  style="padding:1px 15px 1px 15px !important;"><hr style="margin:1px 0px 3px 0px;"></div>                    
+                        <div class="row">
+                            <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
+                                <label for="rptsQuerySQL" class="control-label col-lg-12">SQL Query for Report / Process:</label>
+                                <div  class="col-lg-12">
+                                    <textarea class="form-control rqrdFld" aria-label="..." id="rptsQuerySQL" name="rptsQuerySQL" style="width:100%;" cols="9" rows="20"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        $nwRowHtml = "<tr id=\"rptsStpPrmsRow__WWW123WWW\">
+                                    <td class=\"lovtd\"><span class=\"\">New</span></td>
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <input type=\"text\" class=\"form-control rqrdFld\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_ParamNm\" value=\"\" style=\"width:100% !important;\">
+                                                                <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_ParamID\" value=\"-1\">
+                                                            </div>
+													</td>                                                
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <input type=\"text\" class=\"form-control rqrdFld\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_SQLRep\" value=\"\" style=\"width:100% !important;\">
+                                                            </div>
+													</td>                                               
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_DfltVal\" value=\"\" style=\"width:100% !important;\">
+                                                            </div>                                                        
+                                                    </td>                                               
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <div class=\"input-group\"  style=\"width:100%;\">
+                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_LovNm\" value=\"\" readonly=\"true\">
+                                                                    <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpPrmsRow_WWW123WWW_LovID\" value=\"-1\">
+                                                                    <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'LOV Names', '', '', '', 'radio', true, '', '', 'rptsStpPrmsRow_WWW123WWW_LovNm', 'clear', 1, '');\">
+                                                                        <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>                                                       
+                                                    </td>                                                                                              
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"rptsStpPrmsRow_WWW123WWW_DataTyp\">";
+                        $valslctdArry = array("", "", "");
+                        $srchInsArrys = array("TEXT", "NUMBER", "DATE");
+                        for ($z = 0; $z < count($srchInsArrys); $z++) {
+                            $nwRowHtml .= "<option value=\"$srchInsArrys[$z]\" $valslctdArry[$z]>$srchInsArrys[$z]</option>";
+                        }
+                        $nwRowHtml .= "</select>
+                                                            </div>                                                      
+                                                    </td>                                                                                              
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"rptsStpPrmsRow_WWW123WWW_DateFrmt\">";
+
+                        $valslctdArry = array("", "", "", "", "");
+                        $srchInsArrys = array("None", "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "dd-MMM-yyyy", "dd-MM-yyyy HH:mm:ss");
+
+                        for ($z = 0; $z < count($srchInsArrys); $z++) {
+                            $nwRowHtml .= "<option value=\"$srchInsArrys[$z]\" $valslctdArry[$z]>$srchInsArrys[$z]</option>";
+                        }
+                        $nwRowHtml .= "</select>
+                                                            </div>                                                        
+                                                    </td>
+                                                    <td class=\"lovtd\">
+                                                        <div class=\"form-group form-group-sm\" style=\"width:100% !important;margin-bottom:0px !important;\">
+                                                                <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                                    <label class=\"form-check-label\">
+                                                                        <input type=\"checkbox\" class=\"form-check-input\" id=\"rptsStpPrmsRow_WWW123WWW_IsRqrd\" name=\"rptsStpPrmsRow_WWW123WWW_IsRqrd\">
+                                                                    </label>
+                                                                </div>
+                                                            </div>                                                       
+                                                    </td>
+                                                        <td class=\"lovtd\">
+                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delRptParam('rptsStpPrmsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Parameter\">
+                                                                <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                            </button>
+                                                        </td>
+                                        </tr>";
+                        $nwRowHtml = urlencode($nwRowHtml);
+                        ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="insertNewRowBe4('rptsStpPrmsTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Parameter">
+                                    <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">New Parameter
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="row"> 
+                            <div  class="col-md-12">
+                                <table class="table table-striped table-bordered table-responsive" id="rptsStpPrmsTable" cellspacing="0" width="100%" style="width:100%;min-width: 700px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th style="min-width:90px;">Prompt</th>
+                                            <th>SQL Representation</th>
+                                            <th style="min-width:90px;">Default Value</th>
+                                            <th style="min-width:150px;">LOV Name</th>
+                                            <th style="min-width:90px;">Data Type</th>
+                                            <th>Date Format</th>
+                                            <th>Required?</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $cntr = 1; ?>
+                                        <tr id="rptsStpPrmsRow_<?php echo $cntr; ?>">                                    
+                                            <td class="lovtd"><span class="">1</span></td>
+                                            <td class="lovtd">
+                                                <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                    <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_ParamNm" value="" style="width:100% !important;">
+                                                    <input type="hidden" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_ParamID" value="-1">
+                                                </div>                                                        
+                                            </td>                                                
+                                            <td class="lovtd">
+                                                <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                    <input type="text" class="form-control rqrdFld" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_SQLRep" value="" style="width:100% !important;">
+                                                </div>                                                      
+                                            </td>                                               
+                                            <td class="lovtd">
+                                                <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                    <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_DfltVal" value="" style="width:100% !important;">
+                                                </div>                                                       
+                                            </td>                                               
+                                            <td class="lovtd">
+                                                <div class="form-group form-group-sm" style="width:100% !important;">
+                                                    <div class="input-group"  style="width:100%;">
+                                                        <input type="text" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_LovNm" value="" readonly="true">
+                                                        <input type="hidden" class="form-control" aria-label="..." id="rptsStpPrmsRow<?php echo $cntr; ?>_LovID" value="">
+                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'LOV Names', '', '', '', 'radio', true, '', '', 'rptsStpPrmsRow<?php echo $cntr; ?>_LovNm', 'clear', 1, '');">
+                                                            <span class="glyphicon glyphicon-th-list"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>                                                        
+                                            </td>                                                                                              
+                                            <td class="lovtd">
+                                                <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                    <select data-placeholder="Select..." class="form-control chosen-select" id="rptsStpPrmsRow<?php echo $cntr; ?>_DataTyp">
+                                                        <?php
+                                                        $valslctdArry = array("", "", "");
+                                                        $srchInsArrys = array("TEXT", "NUMBER", "DATE");
+
+                                                        for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                            ?>
+                                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>                                                      
+                                            </td>                                                                                              
+                                            <td class="lovtd">
+                                                <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                    <select data-placeholder="Select..." class="form-control chosen-select" id="rptsStpPrmsRow<?php echo $cntr; ?>_DateFrmt">
+                                                        <?php
+                                                        $valslctdArry = array("", "", "", "", "");
+                                                        $srchInsArrys = array("None", "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "dd-MMM-yyyy", "dd-MM-yyyy HH:mm:ss");
+
+                                                        for ($z = 0; $z < count($srchInsArrys); $z++) {
+                                                            ?>
+                                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>                                                        
+                                            </td>
+                                            <td class="lovtd">
+                                                <?php
+                                                $isChkd = "";
+                                                ?>
+                                                <div class="form-group form-group-sm" style="width:100% !important;margin-bottom:0px !important;">
+                                                    <div class="form-check" style="font-size: 12px !important;">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox" class="form-check-input" id="rptsStpPrmsRow<?php echo $cntr; ?>_IsRqrd" name="rptsStpPrmsRow<?php echo $cntr; ?>_IsRqrd" <?php echo $isChkd ?>>
+                                                        </label>
+                                                    </div>
+                                                </div>                                                         
+                                            </td>
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delRptParam('rptsStpPrmsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Parameter">
+                                                    <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                     
+                        </div>  
+                        <?php
+                        $nwRowHtml = "<tr id=\"rptsStpRolesRow__WWW123WWW\">
+                                    <td class=\"lovtd\"><span class=\"\">New</span></td>                                                                                                  
+                                                    <td class=\"lovtd\">
+                                                            <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
+                                                                <div class=\"input-group\"  style=\"width:100%;\">
+                                                                    <input type=\"text\" class=\"form-control rqrdFld\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RoleNm\" value=\"\" readonly=\"true\">
+                                                                    <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RoleID\" value=\"-1\">
+                                                                    <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"rptsStpRolesRow_WWW123WWW_RptRoleID\" value=\"-1\">
+                                                                    <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'User Roles', '', '', '', 'radio', true, '', 'rptsStpRolesRow_WWW123WWW_RoleID', 'rptsStpRolesRow_WWW123WWW_RoleNm', 'clear', 0, '');\">
+                                                                        <span class=\"glyphicon glyphicon-th-list\"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>                                                       
+                                                    </td> 
+                                                        <td class=\"lovtd\">
+                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delRptRole('rptsStpRolesRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Role\">
+                                                                <img src=\"cmn_images/no.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                            </button>
+                                                        </td>
+                                        </tr>";
+                        $nwRowHtml = urlencode($nwRowHtml);
+                        ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-default" style="margin-bottom: 5px;margin-top:5px;" onclick="insertNewRowBe4('rptsStpRolesTable', 0, '<?php echo $nwRowHtml; ?>');" data-toggle="tooltip" data-placement="bottom" title="New Role">
+                                    <img src="cmn_images/add1-64.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">New Role
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="row"> 
+                            <div  class="col-md-12">
+                                <table class="table table-striped table-bordered table-responsive" id="rptsStpRolesTable" cellspacing="0" width="100%" style="width:100%;min-width: 700px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th style="min-width:90px;">Role Set Name</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $cntr = 1;
+                                        ?>
+                                        <tr id="rptsStpRolesRow_<?php echo $cntr; ?>">                                    
+                                            <td class="lovtd"><span>1</span></td>
+                                            <td class="lovtd">
+                                                <div class="form-group form-group-sm" style="width:100% !important;">
+                                                    <div class="input-group"  style="width:100%;">
+                                                        <input type="text" class="form-control" aria-label="..." id="rptsStpRolesRow<?php echo $cntr; ?>_RoleNm" value="" readonly="true">
+                                                        <input type="hidden" class="form-control" aria-label="..." id="rptsStpRolesRow<?php echo $cntr; ?>_RoleID" value="-1">  
+                                                        <input type="hidden" class="form-control" aria-label="..." id="rptsStpRolesRow<?php echo $cntr; ?>_RptRoleID" value="-1">  
+                                                        <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'User Roles', '', '', '', 'radio', true, '', 'rptsStpRolesRow<?php echo $cntr; ?>_RoleID', 'rptsStpRolesRow<?php echo $cntr; ?>_RoleNm', 'clear', 0, '');">
+                                                            <span class="glyphicon glyphicon-th-list"></span>
+                                                        </label>
+                                                    </div>
+                                                </div> 
+                                            </td> 
+                                            <td class="lovtd">
+                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delRptRole('rptsStpRolesRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Role">
+                                                    <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                     
+                        </div>  
+                    </form>
+                    <?php
+                } else {
+                    echo restricted();
                 }
             }
         }

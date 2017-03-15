@@ -50,7 +50,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             New Person
                         </button>
                     </div>
-                <?php
+                    <?php
                 } else {
                     $colClassType1 = "col-lg-2";
                     $colClassType2 = "col-lg-4";
@@ -60,6 +60,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="input-group">
                         <input class="form-control" id="dataAdminSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncDtAdmn(event, '', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0')">
                         <input id="dataAdminPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                        <input id="allAdminsSrcForm" type = "hidden" value="5">
                         <label class="btn btn-primary btn-file input-group-addon" onclick="getDataAdmin('clear', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=0')">
                             <span class="glyphicon glyphicon-remove"></span>
                         </label>
@@ -202,9 +203,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                   'EndDate' => $row[30]); */
                                 ?>
                                 <tr id="dtAdmnBscPrsnPrflRow<?php echo $cntr; ?>">                                    
-                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                     <?php if ($canAddPrsn === true) { ?>                                    
-                                        <td>
+                                        <td class="lovtd">
                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Basic Profile" 
                                                     onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View/Edit Person Basic Profile', <?php echo $row[0]; ?>, 0, 2, 'EDIT')" style="padding:2px !important;" style="padding:2px !important;">
                                                 <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
@@ -212,19 +213,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </button>
                                         </td>
                                     <?php } ?>
-                                    <td>
+                                    <td class="lovtd">
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Print Profile" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                             <img src="cmn_images/pdf.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                         </button>
                                     </td>
-                                    <td><?php echo $row[1]; ?></td>
-                                    <td><?php echo $row[2]; ?></td>
-                                    <td><?php echo str_replace("()", "", $row[22] . " (" . $row[24] . ")"); ?></td>
-                                    <td><?php echo $row[14]; ?></td>
-                                    <td><?php echo trim($row[15] . ", " . $row[16], ", "); ?></td>
-                                    <td><?php echo trim($row[13] . " " . $row[12], " "); ?></td>
-                                    <td>
+                                    <td class="lovtd"><?php echo $row[1]; ?></td>
+                                    <td class="lovtd"><?php echo $row[2]; ?></td>
+                                    <td class="lovtd"><?php echo str_replace("()", "", $row[22] . " (" . $row[24] . ")"); ?></td>
+                                    <td class="lovtd"><?php echo $row[14]; ?></td>
+                                    <td class="lovtd"><?php echo trim($row[15] . ", " . $row[16], ", "); ?></td>
+                                    <td class="lovtd"><?php echo trim($row[13] . " " . $row[12], " "); ?></td>
+                                    <td class="lovtd">
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Basic Profile" onclick="getBscProfileForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View Person Basic Profile', <?php echo $row[0]; ?>, 0, 1, 'VIEW')" style="padding:2px !important;" style="padding:2px !important;">
                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                             <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
@@ -248,7 +249,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
 					</li>
                                        </ul>
                                      </div>";
-        $extrWhere = " and a.lnkd_firm_org_id=" . $lnkdFirmID;
+        $extrWhere = " and a.lnkd_firm_org_id=" . $lnkdFirmID . " and a.lnkd_firm_org_id>0 ";
         $total = get_BscPrsnTtl($srchFor, $srchIn, $orgID, $searchAll, $fltrTypValue, $fltrTyp, $extrWhere);
         if ($pageNo > ceil($total / $lmtSze)) {
             $pageNo = 1;
@@ -272,6 +273,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <div class="input-group">
                         <input class="form-control" id="dataAdminSrchFor" type = "text" placeholder="Search For" value="<?php echo trim(str_replace("%", " ", $srchFor)); ?>" onkeyup="enterKeyFuncDtAdmn(event, '', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1')">
                         <input id="dataAdminPageNo" type = "hidden" value="<?php echo $pageNo; ?>">
+                        <input id="allAdminsSrcForm" type = "hidden" value="5">
                         <label class="btn btn-primary btn-file input-group-addon" onclick="getDataAdmin('clear', '#allmodules', 'grp=8&typ=1&pg=5&vtyp=1')">
                             <span class="glyphicon glyphicon-remove"></span>
                         </label>
@@ -414,9 +416,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                   'EndDate' => $row[30]); */
                                 ?>
                                 <tr id="dtAdmnBscPrsnPrflRow<?php echo $cntr; ?>">                                    
-                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                     <?php if ($canAddPrsn === true) { ?>                                    
-                                        <td>
+                                        <td class="lovtd">
                                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Edit Basic Profile" 
                                                     onclick="getBscProfile1Form('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View/Edit Person Basic Profile', <?php echo $row[0]; ?>, 0, 2, 'EDIT')" style="padding:2px !important;" style="padding:2px !important;">
                                                 <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
@@ -424,19 +426,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </button>
                                         </td>
                                     <?php } ?>
-                                    <td>
+                                    <td class="lovtd">
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Print Profile" onclick="" style="padding:2px !important;" style="padding:2px !important;">
                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                             <img src="cmn_images/pdf.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                         </button>
                                     </td>
-                                    <td><?php echo $row[1]; ?></td>
-                                    <td><?php echo $row[2]; ?></td>
-                                    <td><?php echo str_replace("()", "", $row[22] . " (" . $row[24] . ")"); ?></td>
-                                    <td><?php echo $row[14]; ?></td>
-                                    <td><?php echo trim($row[15] . ", " . $row[16], ", "); ?></td>
-                                    <td><?php echo trim($row[13] . " " . $row[12], " "); ?></td>
-                                    <td>
+                                    <td class="lovtd"><?php echo $row[1]; ?></td>
+                                    <td class="lovtd"><?php echo $row[2]; ?></td>
+                                    <td class="lovtd"><?php echo str_replace("()", "", $row[22] . " (" . $row[24] . ")"); ?></td>
+                                    <td class="lovtd"><?php echo $row[14]; ?></td>
+                                    <td class="lovtd"><?php echo trim($row[15] . ", " . $row[16], ", "); ?></td>
+                                    <td class="lovtd"><?php echo trim($row[13] . " " . $row[12], " "); ?></td>
+                                    <td class="lovtd">
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Basic Profile" onclick="getBscProfile1Form('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'dtAdmnBscPrsnPrflForm', 'View Person Basic Profile', <?php echo $row[0]; ?>, 0, 1, 'VIEW')" style="padding:2px !important;" style="padding:2px !important;">
                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                             <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">

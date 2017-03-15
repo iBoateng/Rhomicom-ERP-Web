@@ -50,16 +50,22 @@ body {
     background-color: #777;
 }
 .carousel-inner {
-    position: relative;
     width: 100%;
+    height: 100%;
+    justify-content: center;
     overflow: hidden;
 }
 .carousel-inner > .item > img {
-    position: absolute;
+    /*position: absolute;
     top: 0;
     left: 0;
-    width: auto;
-    /*min-width: 100%;*/
+    width: auto !important;
+    height: auto !important;*/
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
 }
 .wordwrap1 { 
     white-space: pre-wrap;      /* CSS3 */   
@@ -97,9 +103,22 @@ body {
     padding:1px;
     vertical-align: middle;
 }
+.wordwrap4 { 
+    white-space: pre-wrap;      /* CSS3 */   
+    white-space: -moz-pre-wrap; /* Firefox */    
+    white-space: -pre-wrap;     /* Opera <7 */   
+    white-space: -o-pre-wrap;   /* Opera 7 */    
+    word-wrap: break-word;      /* IE */
+    padding:10px;
+    position: absolute; 
+    top: 15%;
+    left:42%;
+    text-align: left !important;
+    max-width:64%;
+    vertical-align: middle;
+}
 @media screen and (max-width: 767px) {
     .carousel .item {height: 200px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 200px !important; width: auto;}
     .carousel-caption h1 {font-size:20px !important;}
     .wordwrap1 { 
         left:30%;
@@ -110,7 +129,6 @@ body {
 }
 @media (min-width: 768px) and (max-width: 991px) {
     .carousel .item {height: 200px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 200px !important; width: auto;}
     .carousel-caption h1 {font-size:24px !important;}
     .wordwrap1 { 
         left:35%;
@@ -121,12 +139,10 @@ body {
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     .carousel .item {height: 250px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 250px !important; width: auto;}
     .carousel-caption h1 {font-size:30px !important;}
 }
 @media screen and (min-width: 1200px) {
     .carousel .item {height: 250px !important;}
-    .carousel-inner,.carousel-inner > .item > img {height: 250px !important; width: auto;}
     .carousel-caption h1 {font-size:36px !important;}
 }
 
@@ -205,21 +221,26 @@ body {
 
 .jumbotron h2
 {
-    font-family : Verdana, Tahoma, Arial, sans-serif;
-    font-size: 1.5em;
-    font-weight:bold;
-    color:#333;
+    font-family :  Arial,Tahoma,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 22px;
+    font-weight:normal;
+    /*color:#333;*/
+    margin-bottom: 5px !important;    
+    color: #337ab7;
+}
+.h2, h2 {
+    font-size: 22px !important;
 }
 .jumbotron{
-    padding-top:1px !important;
-    padding-bottom:1px !important;                
+    padding-top:3px !important;
+    padding-bottom:5px !important;                
     background-color:#e3e3e3;
     /*background:none !important;background-image: url('images/bg23.png');*/                    
-    background-image:-webkit-linear-gradient(top,#fcfcfc,#e0e0e0);
-    background-image:-moz-linear-gradient(top,#fcfcfc,#e0e0e0);
-    background-image: -ms-linear-gradient(top, #fcfcfc, #e0e0e0);
-    background-image:-o-linear-gradient(top,#fcfcfc,#e0e0e0);
-    background-image:linear-gradient(bottom,#fcfcfc,#e0e0e0);
+    background-image:-webkit-linear-gradient(top,#fefefe,#ececec);
+    background-image:-moz-linear-gradient(top,#fefefe,#ececec);
+    background-image: -ms-linear-gradient(top, #fefefe, #ececec);
+    background-image:-o-linear-gradient(top,#fefefe,#ececec);
+    background-image:linear-gradient(bottom,#fefefe,#ececec);
     background-position: 0px;
     background-repeat: repeat;
     background-size: auto 100%;
@@ -235,14 +256,15 @@ body {
     -moz-box-shadow:0 0 200px rgba(255,255,255,0.1),1px 4px 7px rgba(150,150,150,0.7);
     -o-box-shadow:0 0 200px rgba(255,255,255,0.1),1px 4px 7px rgba(150,150,150,0.7);
     font-family: Tahoma,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin-bottom: 10px !important;
 }
 .jumbotron p {
-    margin-bottom: 15px;
-    font-size: 14px;
+    margin-bottom: 5px;
+    padding:0px;
+    font-size: 12px;
     font-weight: 200;
     color:#000;
-    padding:10px;
-    font-family: Tahoma,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: Arial, Tahoma,"Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 .introMsg{
     padding:5px;
@@ -421,6 +443,9 @@ body {
     top: 15px;
     z-index: 9996 !important;/*1055*/
 }
+.bootbox {
+    z-index: 9998 !important;/*1055*/
+}
 /*.close {
     color: #FFF !important;
 }*/
@@ -451,6 +476,9 @@ tr.selected{background-color: #00FFFF !important;}
     padding:4px !important;
     font-family: "Tahoma" !important;
 }*/
+.srvyInfoButton{
+    margin:1px !important;  
+}
 .modulesButton{max-width:96%;
                padding:5px;
                min-height:90px;
@@ -564,7 +592,7 @@ body.mdlloading .modalLdng {
 }
 .basic_person_fs{
     border: 1px solid #eee !important;
-    padding: 5px 5px 5px 5px !important;
+    padding: 5px 2px 5px 2px !important;
     margin: 0 0 0.5em 0 !important;
     -webkit-box-shadow:  0px 0px 0px 0px #000;
     box-shadow:  0px 0px 0px 0px #000;
@@ -619,7 +647,13 @@ body.mdlloading .modalLdng {
     min-width: 100% !important;
 }
 .lovtd{
-    padding: 2px 5px 2px 5px !important;
+    padding: 1px 5px 1px 5px !important;
+    line-height: 1.42857143 !important; 
+    vertical-align: middle !important; 
+}
+
+.formtd{
+    padding: 0px 0px 2px 0px !important;
     line-height: 1.42857143 !important; 
     vertical-align: middle !important; 
 }
@@ -658,9 +692,15 @@ select option[disabled]:first-child {
 /*.container-fluid{
     padding:0px 3px 0px 3px !important;
 }*/
+.control-label {
+    text-align:left !important;
+}
+.form-group {
+    margin-bottom: 3px !important;
+}
 .rho-container-fluid {
-    padding-right: 3px !important;
-    padding-left: 3px !important;
+    padding-right: 1px !important;
+    padding-left: 1px !important;
     margin-right: auto;
     margin-left: auto;
 }
@@ -669,9 +709,6 @@ select option[disabled]:first-child {
     padding-left: 10px !important;
     margin-right: auto;
     margin-left: auto;
-}
-.form-group {
-    margin-bottom: 5px !important;
 }
 .rhopagination{
     padding:6px 15px 5px 15px !important;
@@ -859,7 +896,15 @@ body {
      overflow-y: auto;
      max-height:500px;
 }
-
+.hideNotice{
+    display: none !important;
+}
+.showNotice{
+    display: block !important; 
+}
+.note-image-popover{
+    z-index: 9999 !important;
+}
 /* Let's get this party started */
 ::-webkit-scrollbar {
     width: 6px;
@@ -959,26 +1004,28 @@ table.gridtable td {
     background-color: #ffffff;
 }
 
-.otherButton{max-width:100%;
-             padding:0px !important;
-             min-height:55px;
-             font-size:13px;
-             font-family: Tahoma,"Helvetica Neue",Helvetica,Arial,sans-serif;
-             font-weight:400;
-             color:#000;
-             margin-bottom:7px;
-             margin-top: 7px;
-             background:#f9f9f9;
-             border:1px solid;
-             border-color: #d0d0d0 !important;
-             border-radius:2px;
-             box-sizing:content-box;
-             background-image:-webkit-linear-gradient(top,#fefefe,#f9f9f9);
-             background-image:-moz-linear-gradient(top,#fefefe,#f9f9f9);
-             background-image: -ms-linear-gradient(top, #fefefe, #f9f9f9);
-             background-image:-o-linear-gradient(top,#fefefe,#f9f9f9);
-             background-image:linear-gradient(bottom,#fefefe,#f9f9f9);
+.otherButton{
+    max-width:100%;
+    padding:0px !important;
+    min-height:55px;
+    font-size:13px;
+    font-family: Tahoma,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight:400;
+    color:#000;
+    margin-bottom:7px;
+    margin-top: 7px;
+    background:#f9f9f9;
+    border:1px solid;
+    border-color: #d0d0d0 !important;
+    border-radius:2px;
+    box-sizing:content-box;
+    background-image:-webkit-linear-gradient(top,#fefefe,#f9f9f9);
+    background-image:-moz-linear-gradient(top,#fefefe,#f9f9f9);
+    background-image: -ms-linear-gradient(top, #fefefe, #f9f9f9);
+    background-image:-o-linear-gradient(top,#fefefe,#f9f9f9);
+    background-image:linear-gradient(bottom,#fefefe,#f9f9f9);
 }
+
 .otherButton:active,
 .otherButton:hover,
 .otherButton:focus{
@@ -986,4 +1033,25 @@ table.gridtable td {
     border:1px solid;
     border-color:#d0d0d0;
     -webkit-box-shadow:inset 0 0 1px rgba(0,0,0,0.15);
-    box-shadow:inset 0 0 1px rgba(0,0,0,0.15)}
+    box-shadow:inset 0 0 1px rgba(0,0,0,0.15);
+}
+
+#myProgress {
+    width: 100%;
+    height: 30px;
+    background-color: #ddd;
+}
+
+#myBar {
+    width: 1%;
+    height: 100%;
+    background-color: #4CAF50;
+}
+.rho-error{
+    border:2px solid #a94442;
+    /*-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);*/
+    -moz-box-shadow: 0 4px 8px 0 rgba(255, 0, 0, 0.32), 0 6px 20px 0 rgba(255, 0, 0, 0.29);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(255, 0, 0, 0.32), 0 6px 20px 0 rgba(255, 0, 0, 0.29);
+    box-shadow: 0 4px 8px 0 rgba(255, 0, 0, 0.32), 0 6px 20px 0 rgba(255, 0, 0, 0.29);
+}

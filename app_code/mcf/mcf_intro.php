@@ -78,7 +78,7 @@ $cntent = "<div>
 						<span style=\"text-decoration:none;\">Home</span><span class=\"divider\"> | </span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"> | </span>
+						<span style=\"text-decoration:none;\">All Modules&nbsp;</span><span class=\"divider\"> | </span>
 					</li>";
 if ($lgn_num > 0 && $canview === true) {
     //echo $pgNo;

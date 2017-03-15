@@ -215,11 +215,11 @@ function savePsblValsForm()
             var rndmNum = $(el).attr('id').split("_")[1];
             /*var $tds1 = $(this).find('td');*/
             var isEnabled = typeof $("input[name='psblValsRow" + rndmNum + "_IsEnabled']:checked").val() === 'undefined' ? 'No' : 'Yes';
-            slctdPsblVals = slctdPsblVals + $('#psblValsRow' + rndmNum + '_PValID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#psblValsRow' + rndmNum + '_PValNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#psblValsRow' + rndmNum + '_AlwdOrgs').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#psblValsRow' + rndmNum + '_PValDesc').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + isEnabled.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+            slctdPsblVals = slctdPsblVals + $('#psblValsRow' + rndmNum + '_PValID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#psblValsRow' + rndmNum + '_PValNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#psblValsRow' + rndmNum + '_AlwdOrgs').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#psblValsRow' + rndmNum + '_PValDesc').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + isEnabled.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
         }
     });
     lnkArgs = lnkArgs + "&slctdPsblVals=" + slctdPsblVals.slice(0, -1);

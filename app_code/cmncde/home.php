@@ -1,18 +1,63 @@
+<?php
+$qstr = "";
+$dsply = "";
+$actyp = "";
+$PKeyID = -1;
+$vwtyp = isset($_POST['vtyp']) ? cleanInputData($_POST['vtyp']) : "0";
+$usrID = $_SESSION['USRID'];
+$prsnid = $_SESSION['PRSN_ID'];
+$orgID = $_SESSION['ORG_ID'];
+$error = "";
+$searchAll = true;
 
-                <!--<div class="col-md-3 colmd3special1">
-                    <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#myinbox', 'grp=40&typ=2');">
-                        <img src="cmn_images/openfileicon.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-                        <span class="wordwrap1"> Inbox & Worklist</span>
-                    </button>
-                </div>
-                <div class="col-md-3 colmd3special1">
-                    <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allnotices', 'grp=40&typ=3');">
-                        <img src="cmn_images/Notebook.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
-                        <span class="wordwrap1"> Notices</span>
-                    </button>
-                </div>-->
+$srchFor = isset($_POST['searchfor']) ? cleanInputData($_POST['searchfor']) : '';
+$srchIn = isset($_POST['searchin']) ? cleanInputData($_POST['searchin']) : 'All';
+$pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
+$lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
+$sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "Date Published";
+$isMaster = isset($_POST['isMaster']) ? cleanInputData($_POST['isMaster']) : "0";
+if (strpos($srchFor, "%") === FALSE) {
+    $srchFor = "%" . str_replace(" ", "%", $srchFor) . "%";
+    $srchFor = str_replace("%%", "%", $srchFor);
+}
 
 
+
+if (isset($_POST['vtyp'])) {
+    $vwtyp = cleanInputData($_POST['vtyp']);
+}
+
+if (isset($_POST['actyp'])) {
+    $actyp = cleanInputData($_POST['actyp']);
+}
+
+$qStrtDte = "";
+$qEndDte = "";
+$artCategory = "";
+$isMaster = "0";
+
+if (isset($_POST['qStrtDte'])) {
+    $qStrtDte = cleanInputData($_POST['qStrtDte']);
+    if (strlen($qStrtDte) == 19) {
+        $qStrtDte = substr($qStrtDte, 0, 10) . " 00:00:00";
+    } else {
+        $qStrtDte = "";
+    }
+}
+
+if (isset($_POST['qEndDte'])) {
+    $qEndDte = cleanInputData($_POST['qEndDte']);
+    if (strlen($qEndDte) == 19) {
+        $qEndDte = substr($qEndDte, 0, 10) . " 23:59:59";
+    } else {
+        $qEndDte = "";
+    }
+}
+
+if (isset($_POST['artCategory'])) {
+    $artCategory = cleanInputData($_POST['artCategory']);
+}
+?>
 <div class="row">
     <div class="col-md-12">
         <!-- Carousel-->
@@ -20,39 +65,47 @@
             <div class="col-md-12" style="padding:0px 16px 0px 15px;margin-top:1px;">
                 <div id="myCarousel" class="carousel slide" data-ride="carousel" style="border: 1px solid #ccc;border-radius: 2px;padding:0px;background-color:#fff;">
                     <ol class="carousel-indicators">
-                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#myCarousel" data-slide-to="1"></li>
-                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                        <?php
+                        $total1 = get_SliderNoticeTtls($srchFor, $srchIn);
+                        if ($pageNo > ceil($total1 / $lmtSze)) {
+                            $pageNo = 1;
+                        } else if ($pageNo < 1) {
+                            $pageNo = ceil($total1 / $lmtSze);
+                        }
+
+                        $curIdx1 = $pageNo - 1;
+                        $result1 = get_SliderNotices($srchFor, $srchIn, $curIdx1, $lmtSze, $sortBy);
+                        $cntr1 = 0;
+                        $ttlRecs1 = loc_db_num_rows($result1);
+                        $isactive = "active";
+                        $sliderCntnt = array();
+
+                        while ($row1 = loc_db_fetch_array($result1)) {
+                            if ($cntr1 > 0) {
+                                $isactive = "";
+                            }
+                            array_push($sliderCntnt, str_replace("{:articleID}", $row1[0], $row1[13]));
+                            ?>
+                            <li data-target="#myCarousel" data-slide-to="<?php echo $cntr1; ?>" class="<?php echo $isactive; ?>"></li>
+                            <?php
+                            $cntr1 += 1;
+                        }
+                        ?>
                     </ol>
-                    <!--data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw== <?php echo $lgn_image; ?>-->
                     <div class="carousel-inner" role="listbox">
-                        <div class="item active">
-                            <img class="first-slide" src="cmn_images/bnnr6.jpg" alt="First slide" style="height: 250px !important;width: auto !important;">
-                            <div class="container">
-                                <div class="carousel-caption">
-                                    <!--<h3>Example headline.</h3>-->
-                                    <p><a class="btn btn-sm btn-primary" href="#" role="button">Sign up today</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <img class="second-slide" src="cmn_images/bnnr14.jpg" alt="Second slide" style="height: 250px !important;width: auto !important;">
-                            <div class="container">
-                                <div class="carousel-caption">
-                                    <!--<h3>Another example headline.</h3>-->
-                                    <p><a class="btn btn-sm btn-primary" href="#" role="button">Learn more</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <img class="third-slide" src="cmn_images/bnnr9.jpg" alt="Third slide" style="height: 250px !important;width: auto !important;">
-                            <div class="container">
-                                <div class="carousel-caption">
-                                    <!--<h3>One more for good measure.</h3>-->
-                                    <p><a class="btn btn-sm btn-primary" href="#" role="button">Browse gallery</a></p>
-                                </div>
-                            </div>
-                        </div>
+                        <?php
+                        $isactive1 = "active";
+                        for ($i = 0; $i < count($sliderCntnt); $i++) {
+                            if ($i > 0) {
+                                $isactive1 = "";
+                            }
+                            ?>                        
+                            <div class="item <?php echo $isactive1; ?>">
+                                <?php echo $sliderCntnt[$i]; ?>
+                            </div>                        
+                            <?php
+                        }
+                        ?>
                         <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
                             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
@@ -67,22 +120,22 @@
         </div>
         <div class="row">
             <div class="col-md-12" style="padding:0px 14px 0px 15px;margin-top:5px;">
-                <div class="introMsg" style="">Welcome, MR. SYSTEM USER SETUP (RHO0002012) to the <?php echo $app_name; ?>!</div>
+                <div class="introMsg" style="">Welcome, <span style="color:blue;font-weight:bold;">MR. SYSTEM USER SETUP (RHO0002012)</span> to the <?php echo $app_name; ?>!</div>
             </div>
         </div>
         <div class="row" style="padding:1px 1px 0px 1px;margin: -1px -15px 0px -15px;">
             <div class="col-md-3" style="padding:0px 13px 0px 15px;">
                 <div class="panel" style="color:white;background-color:#5cb85c;border-radius:2px;border:1px solid #5cb85c;">
-                    <a href="javascript:openATab('#myinbox', 'grp=40&typ=2');">
+                    <a href="javascript:openATab('#allmodules', 'grp=8&typ=1');">
                         <div class="panel-heading" style="color:white;background-color:#5cb85c;border-radius:5px;border:1px solid #5cb85c;">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-envelope fa-5x"></i>
+                                    <i class="fa fa-user fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">&nbsp;</div>
-                                    <div class="huge">12</div>
-                                    <div>My Inbox!</div>
+                                    <div class="huge">1</div>
+                                    <div>Personal Records!</div>
                                 </div>
                             </div>
                         </div>
@@ -96,16 +149,16 @@
             </div>
             <div class="col-md-3" style="padding:0px 13px 0px 15px;">
                 <div class="panel panel-default" style="color:white;background-color:#337ab7;border-radius:2px;border:1px solid #337ab7;" >
-                    <a href="javascript:openATab('#allnotices', 'grp=40&typ=3');">
+                    <a href="javascript:openATab('#allmodules', 'grp=19&typ=10');">
                         <div class="panel-heading" style="color:white;background-color:#337ab7;border-radius:5px;border:1px solid #337ab7;">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-file-text fa-5x"></i>
+                                    <i class="fa fa-thumbs-o-up fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">&nbsp;</div>
-                                    <div class="huge">26</div>
-                                    <div>Unread Notices!</div>
+                                    <div class="huge">1</div>
+                                    <div>Elections!</div>
                                 </div>
                             </div>
                         </div>
@@ -164,6 +217,7 @@
                 </div>
             </div>
         </div>
+        <!--
         <div class="row">
             <div class="col-md-12" style="padding:0px 1px 0px 1px;margin-top: -20px;">
                 <div class="col-md-3">
@@ -178,8 +232,6 @@
                         <span class="wordwrap1"> Elections Centre</span>
                     </button>
                 </div>
-                <!--id="gnrlDshBrd"
-                 id="otherMdls"-->
                 <div class="col-md-3">
                     <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="openATab('#allmodules', 'grp=40&typ=4');">
                         <img src="cmn_images/dashboard220.png" style="margin:5px; padding-right: 1em; height:55px; width:auto; position: relative; vertical-align: middle;float:left;">
@@ -194,61 +246,318 @@
                 </div>
             </div>
         </div>
-       
-        <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 2px;">
+        -->
+        <?php
+        $ltstNwsID = getLtstNoticeID("Latest News");
+        $artBody = getNoticeIntroMsg($ltstNwsID);
+        ?>
+        <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 2px;margin-top: -10px;">
             <div class="container-fluid">
                 <!-- Example row of columns -->
                 <div class="row">
                     <div class="col-md-6">
                         <div style="">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                            <p style="width:100% !important;min-width:100% !important;"><?php echo $artBody; ?></p>  
                         </div>
                     </div>
+                    <?php
+                    $usfulLinksID = getLtstNoticeID("Useful Links");
+                    $artBody1 = getNoticeIntroMsg($usfulLinksID);
+                    ?>
                     <div class="col-md-6">
                         <div style="">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                            <p style="width:100% !important;min-width:100% !important;"><?php echo $artBody1; ?></p>                                
                         </div>
                     </div>
                 </div>
             </div> 
         </div> 
-        <!-- Main jumbotron for a primary marketing message or call to action -->
-        <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 2px;">
-            <div class="container-fluid">
-                <h2>Hello, world!</h2>
-                <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-                <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
-            </div>
-        </div>
-        <div class="" style="border: 1px solid #ddd;border-radius: 2px;">
-            <div class="container-fluid">
-                <!-- Example row of columns -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <div style="">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                        </div></div>
-                    <div class="col-md-4">
-                        <div style="">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                        </div></div>
-                    <div class="col-md-4">
-                        <div style="">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                        </div></div>
-                </div>
-            </div> 
+
+        <?php
+        $total = get_NoticeTtls($srchFor, $srchIn);
+        if ($pageNo > ceil($total / $lmtSze)) {
+            $pageNo = 1;
+        } else if ($pageNo < 1) {
+            $pageNo = ceil($total / $lmtSze);
+        }
+
+        $curIdx = $pageNo - 1;
+        $result = get_Notices($srchFor, $srchIn, $curIdx, $lmtSze, $sortBy);
+        ?>                  
+        <div class="row" style="padding:0px 15px 0px 15px !important;">
+            <?php
+            $cntr = 0;
+            $grpcntr = 0;
+            $ttlRecs = loc_db_num_rows($result);
+            while ($row = loc_db_fetch_array($result)) {
+                $cntr += 1;
+                if ($cntr == 1) {
+                    ?>
+                    <div class="jumbotron" style="border: 1px solid #ddd;border-radius: 2px;">
+                        <div class="container-fluid">
+                            <h2><a href="javascript: showArticleDetails(<?php echo $row[0]; ?>,'<?php echo $row[1]; ?>');" style=""><i class="fa fa-certificate" aria-hidden="true"></i> <?php echo $row[2]; ?></a></h2>
+                            <p style="width:100% !important;min-width:100% !important;"><?php echo $row[13]; ?></p>
+                            <p><a class="btn btn-primary" href="javascript: showArticleDetails(<?php echo $row[0]; ?>,'<?php echo $row[1]; ?>');" role="button">View Full Article &raquo;</a></p>
+                        </div>
+                    </div>  
+                    <?php
+                } else {
+                    if ($grpcntr == 0) {
+                        ?>
+                        <div class="" style="border: 1px solid #ddd;border-radius: 2px;margin-bottom: 10px;">
+                            <div class="container-fluid">
+                                <div class="row">          
+                                    <?php
+                                }
+                                ?>
+                                <div class="col-md-4">
+                                    <div style="">
+                                        <h2><a href="javascript: showArticleDetails(<?php echo $row[0]; ?>,'<?php echo $row[1]; ?>');" style=""><i class="fa fa-dot-circle-o" aria-hidden="true"></i> <?php echo $row[2]; ?></a></h2>
+                                        <p style="width:100% !important;min-width:100% !important;"><?php echo $row[13]; ?></p>
+                                        <p><a class="btn btn-default" href="javascript: showArticleDetails(<?php echo $row[0]; ?>,'<?php echo $row[1]; ?>');" role="button">View details &raquo;</a></p>
+                                    </div>
+                                </div>
+                                <?php
+                                if ($grpcntr == 2 || $cntr == $ttlRecs) {
+                                    ?>
+                                </div>
+                            </div> 
+                        </div>
+                        <?php
+                        $grpcntr = 0;
+                    } else {
+                        $grpcntr = $grpcntr + 1;
+                    }
+                }
+            }
+            ?>
         </div>
     </div>
     <!-- /container --> 
 </div>
+
+<?php
+
+function get_Notices($searchFor, $searchIn, $offset, $limit_size, $ordrBy) {
+    global $qStrtDte;
+    global $qEndDte;
+    global $artCategory;
+    global $isMaster;
+    global $prsnid;
+
+    $extrWhr = "";
+    $ordrByCls = "ORDER BY tbl1.article_id DESC";
+    if ($artCategory != "" && $artCategory != "All") {
+        $extrWhr = " AND (tbl1.article_category ilike '" . loc_db_escape_string($artCategory) . "')";
+    }
+    $extrWhr .= " AND (tbl1.is_published = '1') 
+            and (tbl1.article_category NOT IN ('Latest News','Useful Links','System Help', 'Forum Topic','Chat Room','Slider')) 
+            and (org.does_prsn_hv_crtria_id($prsnid,tbl1.allowed_group_id, tbl1.allowed_group_type)>0)";
+    $wherecls = " AND (tbl1.article_header ilike '" . loc_db_escape_string($searchFor) . "' "
+            . "or tbl1.header_url ilike '" . loc_db_escape_string($searchFor) .
+            "' OR tbl1.article_category ilike '" . loc_db_escape_string($searchFor) .
+            "' OR tbl1.article_body ilike '" . loc_db_escape_string($searchFor) . "')";
+
+    if ($qStrtDte != "") {
+        $wherecls .= " AND (tbl1.publishing_date >= '" . loc_db_escape_string($qStrtDte) . "')";
+    }
+    if ($qEndDte != "") {
+        $wherecls .= " AND (tbl1.publishing_date <= '" . loc_db_escape_string($qEndDte) . "')";
+    }
+    if ($ordrBy == "Date Published") {
+        $ordrByCls = "ORDER BY tbl1.publishing_date DESC";
+    } else if ($ordrBy == "No. of Hits") {
+        $ordrByCls = "ORDER BY tbl1.hits DESC";
+    } else if ($ordrBy == "Category") {
+        $ordrByCls = "ORDER BY tbl1.article_category ASC";
+    } else if ($ordrBy == "Title") {
+        $ordrByCls = "ORDER BY tbl1.article_header ASC";
+    } else {
+        $ordrByCls = "ORDER BY tbl1.publishing_date DESC";
+    }
+    $sqlStr = "SELECT tbl1.* FROM (SELECT a.article_id, a.article_category, a.article_header, a.header_url, a.article_body,  
+       a.is_published, a.publishing_date, a.author_name, a.author_email, prs.get_prsn_loc_id(a.author_prsn_id), 
+       (select count(distinct b.created_by) from self.self_articles_hits b where a.article_id = b.article_id) hits,
+       a.allowed_group_type, a.allowed_group_id, a.article_intro_msg  
+  FROM self.self_articles a) tbl1  
+WHERE (1=1" . $extrWhr . "$wherecls) $ordrByCls LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    //echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_NoticeTtls($searchFor, $searchIn) {
+//global $usrID;
+    global $qStrtDte;
+    global $qEndDte;
+    global $artCategory;
+    global $isMaster;
+    global $prsnid;
+    $extrWhr = "";
+
+    if ($artCategory != "" && $artCategory != "All") {
+        $extrWhr = " AND (a.article_category ilike '" . loc_db_escape_string($artCategory) . "')";
+    }
+    $extrWhr .= " AND (a.is_published = '1') 
+            and (a.article_category NOT IN ('Latest News','Useful Links','System Help', 'Forum Topic','Chat Room','Slider')) 
+            and (org.does_prsn_hv_crtria_id($prsnid,a.allowed_group_id, a.allowed_group_type)>0)";
+    $wherecls = " AND (a.article_header ilike '" . loc_db_escape_string($searchFor) . "' "
+            . "or a.header_url ilike '" . loc_db_escape_string($searchFor) .
+            "' OR a.article_category ilike '" . loc_db_escape_string($searchFor) .
+            "' OR a.article_body ilike '" . loc_db_escape_string($searchFor) . "')";
+
+    if ($qStrtDte != "") {
+        $qStrtDte = cnvrtDMYTmToYMDTm($qStrtDte);
+        $wherecls .= " AND (a.publishing_date >= '" . loc_db_escape_string($qStrtDte) . "')";
+    }
+    if ($qEndDte != "") {
+        $qEndDte = cnvrtDMYTmToYMDTm($qEndDte);
+        $wherecls .= " AND (a.publishing_date <= '" . loc_db_escape_string($qEndDte) . "')";
+    }
+
+    $sqlStr = "SELECT count(1) 
+  FROM self.self_articles a 
+  WHERE (1=1" . $extrWhr . "$wherecls)";
+//echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function get_SliderNotices($searchFor, $searchIn, $offset, $limit_size, $ordrBy) {
+    global $qStrtDte;
+    global $qEndDte;
+    global $artCategory;
+    global $isMaster;
+    global $prsnid;
+
+    $extrWhr = "";
+    $ordrByCls = "ORDER BY tbl1.article_id DESC";
+    if ($artCategory != "" && $artCategory != "All") {
+        $extrWhr = " AND (tbl1.article_category ilike '" . loc_db_escape_string($artCategory) . "')";
+    }
+    $extrWhr .= " AND (tbl1.is_published = '1') 
+            and (tbl1.article_category IN ('Slider')) 
+            and (org.does_prsn_hv_crtria_id($prsnid,tbl1.allowed_group_id, tbl1.allowed_group_type)>0)";
+    $wherecls = " AND (tbl1.article_header ilike '" . loc_db_escape_string($searchFor) . "' "
+            . "or tbl1.header_url ilike '" . loc_db_escape_string($searchFor) .
+            "' OR tbl1.article_category ilike '" . loc_db_escape_string($searchFor) .
+            "' OR tbl1.article_body ilike '" . loc_db_escape_string($searchFor) . "')";
+
+    if ($qStrtDte != "") {
+        $wherecls .= " AND (tbl1.publishing_date >= '" . loc_db_escape_string($qStrtDte) . "')";
+    }
+    if ($qEndDte != "") {
+        $wherecls .= " AND (tbl1.publishing_date <= '" . loc_db_escape_string($qEndDte) . "')";
+    }
+    if ($ordrBy == "Date Published") {
+        $ordrByCls = "ORDER BY tbl1.publishing_date DESC";
+    } else if ($ordrBy == "No. of Hits") {
+        $ordrByCls = "ORDER BY tbl1.hits DESC";
+    } else if ($ordrBy == "Category") {
+        $ordrByCls = "ORDER BY tbl1.article_category ASC";
+    } else if ($ordrBy == "Title") {
+        $ordrByCls = "ORDER BY tbl1.article_header ASC";
+    } else {
+        $ordrByCls = "ORDER BY tbl1.publishing_date DESC";
+    }
+    $sqlStr = "SELECT tbl1.* FROM (SELECT a.article_id, a.article_category, a.article_header, a.header_url, a.article_body,  
+       a.is_published, a.publishing_date, a.author_name, a.author_email, prs.get_prsn_loc_id(a.author_prsn_id), 
+       (select count(distinct b.created_by) from self.self_articles_hits b where a.article_id = b.article_id) hits,
+       a.allowed_group_type, a.allowed_group_id, a.article_intro_msg  
+  FROM self.self_articles a) tbl1  
+WHERE (1=1" . $extrWhr . "$wherecls) $ordrByCls LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    //echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function get_SliderNoticeTtls($searchFor, $searchIn) {
+//global $usrID;
+    global $qStrtDte;
+    global $qEndDte;
+    global $artCategory;
+    global $isMaster;
+    global $prsnid;
+    $extrWhr = "";
+
+    if ($artCategory != "" && $artCategory != "All") {
+        $extrWhr = " AND (a.article_category ilike '" . loc_db_escape_string($artCategory) . "')";
+    }
+    $extrWhr .= " AND (a.is_published = '1') 
+            and (a.article_category IN ('Slider')) 
+            and (org.does_prsn_hv_crtria_id($prsnid,a.allowed_group_id, a.allowed_group_type)>0)";
+    $wherecls = " AND (a.article_header ilike '" . loc_db_escape_string($searchFor) . "' "
+            . "or a.header_url ilike '" . loc_db_escape_string($searchFor) .
+            "' OR a.article_category ilike '" . loc_db_escape_string($searchFor) .
+            "' OR a.article_body ilike '" . loc_db_escape_string($searchFor) . "')";
+
+    if ($qStrtDte != "") {
+        $qStrtDte = cnvrtDMYTmToYMDTm($qStrtDte);
+        $wherecls .= " AND (a.publishing_date >= '" . loc_db_escape_string($qStrtDte) . "')";
+    }
+    if ($qEndDte != "") {
+        $qEndDte = cnvrtDMYTmToYMDTm($qEndDte);
+        $wherecls .= " AND (a.publishing_date <= '" . loc_db_escape_string($qEndDte) . "')";
+    }
+
+    $sqlStr = "SELECT count(1) 
+  FROM self.self_articles a 
+  WHERE (1=1" . $extrWhr . "$wherecls)";
+//echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return 0;
+}
+
+function getLtstNoticeID($articleCtgry) {
+    $sqlStr = "select article_id from self.self_articles "
+            . "where is_published='1' and (now() >= to_timestamp(publishing_date,'YYYY-MM-DD HH24:MI:SS')) "
+            . "and article_category = '" . loc_db_escape_string($articleCtgry)
+            . "' ORDER BY publishing_date DESC LIMIT 1 OFFSET 0";
+//echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return -1;
+}
+
+function get_OneNotice($articleID) {
+    $sqlStr = "SELECT a.article_id,
+            a.article_category,
+            a.article_header,
+            a.header_url,
+            a.article_body,
+            a.is_published,
+            to_char(to_timestamp(a.publishing_date, 'YYYY-MM-DD HH24:MI:SS'), 'DD-Mon-YYYY HH24:MI:SS') publishing_date,
+            CASE WHEN a.author_prsn_id>0 THEN prs.get_prsn_name(a.author_prsn_id) ELSE a.author_name END author_name,
+            a.author_email,
+            prs.get_prsn_loc_id(a.author_prsn_id),
+            (select count(distinct b.created_by) from self.self_articles_hits b where a.article_id = b.article_id) hits,
+            a.article_intro_msg,
+            a.allowed_group_type,
+            a.allowed_group_id,
+            org.get_criteria_name(a.allowed_group_id, a.allowed_group_type) group_name,
+            a.local_classification
+            FROM self.self_articles a
+            WHERE article_id = " . $articleID;
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function getNoticeIntroMsg($articleID) {
+    $sqlStr = "select article_intro_msg from self.self_articles where article_id = " . $articleID;
+//echo $sqlStr;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        $artBody = str_replace("{:articleID}", $articleID, $row[0]);
+        return $artBody;
+    }
+    return "";
+}
+?>

@@ -327,7 +327,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                 <?php
                                                                                 //$radomNo = rand(1000000, 999999999);
                                                                                 $ftp_src = $ftp_base_db_fldr . "/Org/" . $row1[2];
-                                                                                $img_src = "dwnlds/$db_folder/Org/" . $row1[2];
+                                                                                $img_src = "dwnlds/pem/" . $row1[2];
                                                                                 if ($row1[2] != "") {
                                                                                     if (file_exists($ftp_src) && !file_exists($fldrPrfx . $img_src)) {
                                                                                         copy("$ftp_src", "$fldrPrfx" . "$img_src");
@@ -622,7 +622,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <?php
                                                             //$radomNo = rand(1000000, 999999999);
                                                             $ftp_src = $ftp_base_db_fldr . "/Org/" . $row1[2];
-                                                            $img_src = "dwnlds/$db_folder/Org/" . $row1[2];
+                                                            $img_src = "dwnlds/pem/" . $row1[2];
                                                             if ($row1[2] != "") {
                                                                 if (file_exists($ftp_src) && !file_exists($fldrPrfx . $img_src)) {
                                                                     copy("$ftp_src", "$fldrPrfx" . "$img_src");

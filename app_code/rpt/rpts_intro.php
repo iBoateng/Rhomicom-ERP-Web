@@ -57,17 +57,10 @@ $cntent = "<div>
                                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+						<span style=\"text-decoration:none;\">All Modules&nbsp;</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>";
 if ($lgn_num > 0 && $canview === true) {
-    if ($qstr == "DELETE") {
-        if ($actyp == 1) {
-            $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
-            echo deleteReportRun($pKeyID);
-        }
-    } else if ($qstr == "UPDATE") {
-        
-    } else if ($pgNo == 0) {
+    if ($pgNo == 0) {
         $cntent .= "
 					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
 						<span style=\"text-decoration:none;\">Reports Menu</span>
@@ -121,142 +114,6 @@ if ($lgn_num > 0 && $canview === true) {
     restricted();
 }
 
-function generateReportRun($rptID, $slctdParams, $alrtID) {
-    global $usrID;
-    global $ftp_base_db_fldr;
-    global $host;
-    global $port;
-    global $db_usr;
-    global $db_pwd;
-    global $database;
-
-    $rptRunID = -1;
-    $rptRnnrNm = "";
-    $rnnrPrcsFile = "";
-    $slctdParamsRows = explode("|", $slctdParams);
-    $paramIDs = "";
-    $paramVals = "";
-    $outputUsd = "";
-    $orntn = "";
-
-    for ($i = 0; $i < count($slctdParamsRows); $i++) {
-        $slctdParamsCols = explode("~", $slctdParamsRows[$i]);
-        $paramIDs = $paramIDs . cleanInputData($slctdParamsCols[0]) . "|";
-        $paramVals = $paramVals . cleanInputData($slctdParamsCols[1]) . "|";
-        if (cleanInputData($slctdParamsCols[0]) == "-190") {
-            $outputUsd = cleanInputData($slctdParamsCols[1]);
-        } else if (cleanInputData($slctdParamsCols[0]) == "-200") {
-            $orntn = cleanInputData($slctdParamsCols[1]);
-        }
-    }
-
-    $paramIDs = substr($paramIDs, 0, -1);//trim($paramIDs, "| ");
-    $paramVals = substr($paramVals, 0, -1);//trim($paramVals, "| ");
-    if ($paramIDs != "" && $paramVals != "" && $outputUsd != "") {
-        $datestr = getDB_Date_time();
-        createRptRn($usrID, $datestr, $rptID, "", "", "", "", $alrtID);
-        $rptRunID = getRptRnID($rptID, $usrID, $datestr);
-        $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
-        if ($msg_id <= 0) {
-            createLogMsg($datestr .
-                    " .... Report/Process Run is about to Start...(Being run by " .
-                    getUserName($usrID) . ")", "rpt.rpt_run_msgs", "Process Run", $rptRunID, $datestr);
-            $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
-        }
-        updateLogMsg($msg_id, "\r\n\r\n" . $paramIDs . "\r\n" . $paramVals .
-                "\r\n\r\nOUTPUT FORMAT: " . $outputUsd . "\r\nORIENTATION: " . $orntn, "rpt.rpt_run_msgs", $datestr);
-        updateRptRnParams($rptRunID, $paramIDs, $paramVals, $outputUsd, $orntn);
-
-        //Launch appropriate process runner
-        $rptRnnrNm = getGnrlRecNm("rpt.rpt_reports", "report_id", "process_runner", $rptID);
-        $rnnrPrcsFile = $ftp_base_db_fldr . "/bin/REMSProcessRunner.jar";
-        updatePrcsRnnrCmd($rptRnnrNm, "0");
-        updateRptRnStopCmd($rptRunID, "0");
-        //PHP Command to start jar file
-        $strArgs = "\"" . $host . "\" " .
-                "\"" . $port . "\" " .
-                "\"" . $db_usr . "\" " .
-                "\"" . $db_pwd . "\" " .
-                "\"" . $database . "\" " .
-                "\"" . $rptRnnrNm . "\" " .
-                "\"" . $rptRunID . "\" " .
-                "\"" . $ftp_base_db_fldr . "/bin" . "\" " .
-                "WEB" . " " .
-                "\"" . $ftp_base_db_fldr . "\"";
-        //$strArgs = implode(" ", $args);
-        $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
-        execInBackground($cmd, $msg_id, $rptRunID);
-    } else {
-        echo "Invalid Parameters";
-    }
-    return $rptRunID;
-}
-
-function reRunReport($rptID, $rptRunID) {
-    global $usrID;
-    global $ftp_base_db_fldr;
-    global $host;
-    global $port;
-    global $db_usr;
-    global $db_pwd;
-    global $database;
-    $outputUsd = "";
-    $orntn = "";
-    $rptRnnrNm = getGnrlRecNm("rpt.rpt_reports", "report_id", "process_runner", $rptID);
-    $rnnrPrcsFile = $ftp_base_db_fldr . "/bin/REMSProcessRunner.jar";
-    $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
-    $datestr = getDB_Date_time();
-    if ($msg_id <= 0) {
-        createLogMsg($datestr .
-                " .... Report/Process Run is about to Start...(Being run by " .
-                getUserName($usrID) . ")", "rpt.rpt_run_msgs", "Process Run", $rptRunID, $datestr);
-        $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
-    }
-    updateLogMsg($msg_id, "\r\n\r\nRe-run of program about to start...", "rpt.rpt_run_msgs", $datestr);
-    updatePrcsRnnrCmd($rptRnnrNm, "0");
-    updateRptRnStopCmd($rptRunID, "0");
-    updateRptRnActvTme($rptRunID, $datestr);
-    //PHP Command to start jar file
-    $strArgs = "\"" . $host . "\" " .
-            "\"" . $port . "\" " .
-            "\"" . $db_usr . "\" " .
-            "\"" . $db_pwd . "\" " .
-            "\"" . $database . "\" " .
-            "\"" . $rptRnnrNm . "\" " .
-            "\"" . $rptRunID . "\" " .
-            "\"" . $ftp_base_db_fldr . "/bin" . "\" " .
-            "WEB" . " " .
-            "\"" . $ftp_base_db_fldr . "\"";
-    //$strArgs = implode(" ", $args);
-    $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
-    execInBackground($cmd, $msg_id, $rptRunID);
-    return $rptRunID;
-}
-
-function execInBackground($cmd, $msg_id, $rptRunID) {
-    global $ftp_base_db_fldr;
-    $output = array("");
-    $retval = 0;
-    if (substr(php_uname(), 0, 7) == "Windows") {
-        pclose(popen("start /B " . $cmd, "r"));
-    } else {
-        exec($cmd . " > /dev/null &");
-        //echo $cmd;
-        //" >> " . $ftp_base_db_fldr . "/Rpts/" . $rptRunID . "_" . $msg_id . ".log"
-    }
-    return "Success";
-    /*
-      $domain_bad = "google.com";
-      $output = array("");
-      $return_var = -1;
-      exec("ping -c 1 $domain_bad >> file_list.txt", $output, $return_var); //2>&1  /dev/null &
-      var_dump($return_var);
-      echo "return_var is: $return_var" . "\n";
-      var_dump($output);
-      exit();
-      // */
-}
-
 function deleteReportRun($hdrid) {
     $insSQL = "DELETE FROM rpt.rpt_report_runs WHERE rpt_run_id = " . $hdrid;
     $affctd = execUpdtInsSQL($insSQL);
@@ -273,6 +130,84 @@ function deleteReportRun($hdrid) {
         return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">
 
     $dsply</p>";
+    }
+}
+
+function deleteAlert($hdrid, $alrtNm = "") {
+    if (isAlertInUse($hdrid)) {
+        $dsply = "No Record Deleted!<br/>Alert has been run!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+    $insSQL = "DELETE FROM alrt.alrt_alerts WHERE alert_id = " . $hdrid;
+    $affctd = execUpdtInsSQL($insSQL, "Report Name:" . $alrtNm);
+    $insSQL1 = "DELETE FROM rpt.rpt_run_schdule_params WHERE alert_id = " . $hdrid . "";
+    $affctd1 = execUpdtInsSQL($insSQL1, "Report Name:" . $alrtNm);
+    if ($affctd > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd Alert(s)!";
+        $dsply .= "<br/>$affctd1 Alert Scheduled Parameter(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function deleteReport($hdrid, $rptNm = "") {
+    if (isRptInUse($hdrid)) {
+        $dsply = "No Record Deleted!<br/>Report/Process has been run!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+    $insSQL = "DELETE FROM rpt.rpt_reports WHERE report_id = " . $hdrid;
+    $affctd = execUpdtInsSQL($insSQL, "Report Name:" . $rptNm);
+    $insSQL1 = "DELETE FROM rpt.rpt_report_parameters WHERE report_id = " . $hdrid . "";
+    $affctd1 = execUpdtInsSQL($insSQL1, "Report Name:" . $rptNm);
+    $insSQL2 = "DELETE FROM rpt.rpt_reports_allwd_roles WHERE report_id = " . $hdrid . "";
+    $affctd2 = execUpdtInsSQL($insSQL2, "Report Name:" . $rptNm);
+    $insSQL3 = "DELETE FROM rpt.rpt_run_schdule_params WHERE schedule_id IN (select schedule_id from rpt.rpt_run_schdules where report_id = " . $hdrid . ")";
+    $affctd3 = execUpdtInsSQL($insSQL3, "Report Name:" . $rptNm);
+    $insSQL4 = "DELETE FROM rpt.rpt_run_schdules where report_id = " . $hdrid . "";
+    $affctd4 = execUpdtInsSQL($insSQL4, "Report Name:" . $rptNm);
+
+    if ($affctd > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd Report(s)!";
+        $dsply .= "<br/>$affctd1 Report Parameter(s)!";
+        $dsply .= "<br/>$affctd2 Report Role(s)!";
+        $dsply .= "<br/>$affctd3 Report Run Schedule Parameter(s)!";
+        $dsply .= "<br/>$affctd4 Report Run Schedule(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function deleteRptParam($hdrid, $paramNm = "") {
+    $insSQL = "DELETE FROM rpt.rpt_report_parameters WHERE parameter_id = " . $hdrid . "";
+    $affctd = execUpdtInsSQL($insSQL, "Parameter Name:" . $paramNm);
+
+    if ($affctd > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd Report Parameter(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
+    }
+}
+
+function deleteRptRole($hdrid, $roleNm = "") {
+    $insSQL = "DELETE FROM rpt.rpt_reports_allwd_roles WHERE rpt_roles_id = " . $hdrid . "";
+    $affctd = execUpdtInsSQL($insSQL, "Role Name:" . $roleNm);
+
+    if ($affctd > 0) {
+        $dsply = "Successfully Deleted the ff Records-";
+        $dsply .= "<br/>$affctd Report Role(s)!";
+        return "<p style = \"text-align:left; color:#32CD32;font-weight:bold;font-style:italic;\">$dsply</p>";
+    } else {
+        $dsply = "No Record Deleted!";
+        return "<p style = \"text-align:left; color:red;font-weight:bold;font-style:italic;\">$dsply</p>";
     }
 }
 
@@ -379,126 +314,6 @@ function updatePrcsRnnrNm($rnnrID, $rnnrNm, $rnnrDesc, $execFile) {
     execUpdtInsSQL($insSQL);
 }
 
-function isDteTmeWthnIntrvl($in_date, $intrval) {
-    //
-    $sqlStr = "SELECT age(now(), to_timestamp('$in_date', 'YYYY-MM-DD HH24:MI:SS')) " .
-            "<= interval '$intrval'";
-    $result = executeSQLNoParams($sqlStr);
-    while ($row = loc_db_fetch_array($result)) {
-        if ("$row[0]" == 't') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    return false;
-}
-
-function doesDteTmeExceedIntrvl($in_date, $intrval) {
-    //
-    $sqlStr = "SELECT age(now(), to_timestamp('$in_date', 'YYYY-MM-DD HH24:MI:SS')) " .
-            "> interval '$intrval'";
-    $result = executeSQLNoParams($sqlStr);
-    while ($row = loc_db_fetch_array($result)) {
-        if ("$row[0]" == 't') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    return false;
-}
-
-function findArryIdx($arry1, $srch) {
-    for ($i = 0; $i < count($arry1); $i++) {
-        if ($arry1[$i] == $srch) {
-            return $i;
-        }
-    }
-    return -1;
-}
-
-function createRptRn($runBy, $runDate, $rptID, $paramIDs, $paramVals, $outptUsd, $orntUsd, $alrtID) {
-    //$datestr = getDB_Date_time();
-    $insSQL = "INSERT INTO rpt.rpt_report_runs(
-            run_by, run_date, rpt_run_output, run_status_txt, 
-            run_status_prct, report_id, rpt_rn_param_ids, rpt_rn_param_vals, 
-            output_used, orntn_used, last_actv_date_tme, is_this_from_schdler, alert_id) 
-            VALUES ($runBy, '$runDate', '', 'Not Started!', 0, $rptID, 
-            '" . loc_db_escape_string($paramIDs) . "', 
-            '" . loc_db_escape_string($paramVals) . "', 
-            '" . loc_db_escape_string($outptUsd) . "', 
-            '" . loc_db_escape_string($orntUsd) . "', '$runDate', '0', " . loc_db_escape_string($alrtID) . ")";
-    execUpdtInsSQL($insSQL);
-}
-
-function getRptRnID($rptID, $runBy, $runDate) {
-    $sqlStr = "select rpt_run_id from rpt.rpt_report_runs where run_by = 
-        $runBy and report_id = $rptID and run_date = '$runDate' order by rpt_run_id DESC";
-    $result = executeSQLNoParams($sqlStr);
-    while ($row = loc_db_fetch_array($result)) {
-        return (float) $row[0];
-    }
-    return -1;
-}
-
-function createLogMsg($logmsg, $logTblNm, $procstyp, $procsID, $dateStr) {
-    global $usrID;
-    $insSQL = "INSERT INTO " . $logTblNm . "(" .
-            "log_messages, process_typ, process_id, created_by, creation_date, " .
-            "last_update_by, last_update_date) " .
-            "VALUES ('" . loc_db_escape_string($logmsg) .
-            "','" . loc_db_escape_string($procstyp) . "'," . $procsID .
-            ", " . $usrID . ", '" . $dateStr .
-            "', " . $usrID . ", '" . $dateStr .
-            "')";
-    execUpdtInsSQL($insSQL);
-}
-
-function updateLogMsg($msgid, $logmsg, $logTblNm, $dateStr) {
-    global $usrID;
-    $updtSQL = "UPDATE " . $logTblNm . " " .
-            "SET log_messages=log_messages || '" . loc_db_escape_string($logmsg) .
-            "', last_update_by=" . $usrID .
-            ", last_update_date='" . $dateStr .
-            "' WHERE msg_id = " . $msgid;
-    execUpdtInsSQL($updtSQL);
-}
-
-function updateRptRnParams($rptrnid, $paramIDs, $paramVals, $outputUsd, $orntn) {
-    $updtSQL = "UPDATE rpt.rpt_report_runs SET " .
-            "rpt_rn_param_ids = '" . loc_db_escape_string($paramIDs) .
-            "', rpt_rn_param_vals = '" . loc_db_escape_string($paramVals) .
-            "', output_used = '" . loc_db_escape_string($outputUsd) .
-            "', orntn_used= '" . loc_db_escape_string($orntn) .
-            "' WHERE (rpt_run_id = " . $rptrnid . ")";
-    execUpdtInsSQL($updtSQL);
-}
-
-function updatePrcsRnnrCmd($rnnrNm, $cmdStr) {
-    global $usrID;
-    $dateStr = getDB_Date_time();
-    $updtSQL = "UPDATE rpt.rpt_prcss_rnnrs SET 
-            shld_rnnr_stop='" . loc_db_escape_string($cmdStr) .
-            "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
-            "' WHERE rnnr_name = '" . loc_db_escape_string($rnnrNm) . "'";
-    execUpdtInsSQL($updtSQL);
-}
-
-function updateRptRnActvTme($rptrnid, $actvTme) {
-    $updtSQL = "UPDATE rpt.rpt_report_runs SET " .
-            "last_actv_date_tme = '" . loc_db_escape_string($actvTme) .
-            "' WHERE (rpt_run_id = " . $rptrnid . ")";
-    execUpdtInsSQL($updtSQL);
-}
-
-function updateRptRnStopCmd($rptrnid, $cmdStr) {
-    $updtSQL = "UPDATE rpt.rpt_report_runs SET " .
-            "shld_run_stop = '" . loc_db_escape_string($cmdStr) .
-            "' WHERE (rpt_run_id = " . $rptrnid . ")";
-    execUpdtInsSQL($updtSQL);
-}
-
 function get_RptsDet($pkeyID) {
     $strSql = "SELECT a.report_id, a.report_name, a.report_desc, a.rpt_sql_query, a.owner_module, 
        a.rpt_or_sys_prcs, a.is_enabled, a.cols_to_group, a.cols_to_count, a.cols_to_sum, 
@@ -513,7 +328,7 @@ function get_RptsDet($pkeyID) {
 
 function get_RptsTblr($searchWord, $searchIn, $offset, $limit_size) {
     global $caneditRpts;
-    
+
     $whereCls = "";
     if ($searchIn == "Report Name") {
         $whereCls = "(a.report_name ilike '" . loc_db_escape_string($searchWord) . "')";
@@ -534,6 +349,44 @@ function get_RptsTblr($searchWord, $searchIn, $offset, $limit_size) {
     ORDER BY a.report_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
     } else {
         $strSql = "SELECT distinct a.report_id mt, a.report_name, a.report_desc mt
+    FROM rpt.rpt_reports a
+    WHERE ($whereCls)
+    ORDER BY a.report_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    }
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function get_RptsToExprt($searchWord, $searchIn, $offset, $limit_size) {
+    global $caneditRpts;
+
+    $whereCls = "";
+    if ($searchIn == "Report Name") {
+        $whereCls = "(a.report_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Report Description") {
+        $whereCls = "(a.report_desc ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else if ($searchIn == "Owner Module") {
+        $whereCls = "(a.owner_module ilike '" . loc_db_escape_string($searchWord) . "')";
+    } else {
+        $whereCls = "(a.report_name ilike '" . loc_db_escape_string($searchWord) . "')";
+    }
+
+    $strSql = "";
+    if ($caneditRpts == false) {
+        $strSql = "SELECT distinct report_id, report_name, report_desc, rpt_sql_query, " .
+                "owner_module, rpt_or_sys_prcs, CASE WHEN is_enabled='1' THEN 'YES' ELSE 'NO' END, cols_to_group, cols_to_count, " .
+                "a.cols_to_sum, a.cols_to_average, a.cols_to_no_frmt, a.output_type, a.portrait_lndscp
+      ,a.process_runner , a.rpt_layout, a.imgs_col_nos, a.csv_delimiter, a.jrxml_file_name
+    FROM rpt.rpt_reports a,
+    rpt.rpt_reports_allwd_roles b
+    WHERE ((a.report_id = b.report_id) and (b.user_role_id IN (" . concatCurRoleIDs() . ")) and $whereCls)
+    ORDER BY a.report_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
+    } else {
+        $strSql = "SELECT distinct report_id, report_name, report_desc, rpt_sql_query, " .
+                "owner_module, rpt_or_sys_prcs, "
+                . "CASE WHEN is_enabled='1' THEN 'YES' ELSE 'NO' END, cols_to_group, cols_to_count, " .
+                "a.cols_to_sum, a.cols_to_average, a.cols_to_no_frmt, a.output_type, a.portrait_lndscp
+      ,a.process_runner , a.rpt_layout, a.imgs_col_nos, a.csv_delimiter, a.jrxml_file_name 
     FROM rpt.rpt_reports a
     WHERE ($whereCls)
     ORDER BY a.report_id DESC LIMIT " . $limit_size . " OFFSET " . abs($offset * $limit_size);
@@ -905,6 +758,7 @@ function get_AllParams($rptID) {
     $result = executeSQLNoParams($strSql);
     return $result;
 }
+
 function get_AllRptRoles($rptID) {
     $strSql = "SELECT a.user_role_id, b.role_name, a.rpt_roles_id "
             . "FROM rpt.rpt_reports_allwd_roles a, sec.sec_roles b "
@@ -913,6 +767,7 @@ function get_AllRptRoles($rptID) {
     $result = executeSQLNoParams($strSql);
     return $result;
 }
+
 function get_AllSchdldParams($schdlID) {
     $strSql = "SELECT a.schdl_param_id mt, a.parameter_id mt, b.parameter_name, a.parameter_value, lov_name_id
       FROM rpt.rpt_run_schdule_params a, rpt.rpt_report_parameters b  
@@ -949,6 +804,334 @@ function get_Rpt_ColsToAct($rptID) {
       FROM rpt.rpt_reports WHERE report_id = $rptID";
     $result = executeSQLNoParams($strSql);
     return $result;
+}
+
+function createRpt($rptNm, $rptDesc, $ownrMdl, $rptPrcs, $rptSQL, $isenbld, $colsGrp, $colsCnt, $colsSum, $colsAvrg
+, $colsNoFrmt, $outptTyp, $orntn, $prcRnnr, $rptLyout, $dlmtr, $img_cols, $jxrmlFileNm) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO rpt.rpt_reports(" .
+            "report_name, report_desc, rpt_sql_query, owner_module, " .
+            "created_by, creation_date, last_update_by, last_update_date, " .
+            "rpt_or_sys_prcs, is_enabled, cols_to_group, cols_to_count, " .
+            "cols_to_sum, cols_to_average, cols_to_no_frmt, output_type, portrait_lndscp, 
+            rpt_layout, imgs_col_nos, csv_delimiter, process_runner, jrxml_file_name) " .
+            "VALUES ('" . loc_db_escape_string($rptNm) .
+            "', '" . loc_db_escape_string($rptDesc) .
+            "', '" . loc_db_escape_string($rptSQL) .
+            "', '" . loc_db_escape_string($ownrMdl) .
+            "', " . $usrID .
+            ", '" . $dateStr .
+            "', " . $usrID .
+            ", '" . $dateStr .
+            "', '" . loc_db_escape_string($rptPrcs) .
+            "', '" . cnvrtBoolToBitStr($isenbld) .
+            "', '" . loc_db_escape_string($colsGrp) .
+            "', '" . loc_db_escape_string($colsCnt) .
+            "', '" . loc_db_escape_string($colsSum) .
+            "', '" . loc_db_escape_string($colsAvrg) .
+            "', '" . loc_db_escape_string($colsNoFrmt) .
+            "', '" . loc_db_escape_string($outptTyp) .
+            "', '" . loc_db_escape_string($orntn) .
+            "', '" . loc_db_escape_string($rptLyout) .
+            "', '" . loc_db_escape_string($img_cols) .
+            "', '" . loc_db_escape_string($dlmtr) .
+            "', '" . loc_db_escape_string($prcRnnr) .
+            "', '" . loc_db_escape_string($jxrmlFileNm) .
+            "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function createAlert($alertNm, $alertDesc, $toMail, $ccMail, $msgBody, $isenbld, $alrtTyp, $sbjct, $bccMail, $paramsSQL
+, $rptID, $runRpt, $strtDate, $rptUOM, $rptEvery, $runOnHour, $attchUrls, $endHour) {
+    global $usrID;
+    $strtDate = cnvrtDMYTmToYMDTm($strtDate);
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO alrt.alrt_alerts(
+            alert_name, alert_desc, to_mail_num_list_mnl, cc_mail_num_list_mnl, 
+            alert_msg_body_mnl, alert_type, created_by, creation_date, last_update_by, 
+            last_update_date, is_enabled, msg_sbjct_mnl, bcc_mail_num_list_mnl, 
+            paramtr_sets_gnrtn_sql, report_id, shd_rpt_be_run, start_dte_tme, 
+            repeat_uom, repeat_every, run_at_spcfd_hour, attchment_urls, end_hour) " .
+            "VALUES ('" . loc_db_escape_string($alertNm) .
+            "', '" . loc_db_escape_string($alertDesc) .
+            "', '" . loc_db_escape_string($toMail) .
+            "', '" . loc_db_escape_string($ccMail) .
+            "', '" . loc_db_escape_string($msgBody) .
+            "', '" . loc_db_escape_string($alrtTyp) . "', " .
+            $usrID .
+            ", '" . $dateStr .
+            "', " . $usrID .
+            ", '" . $dateStr .
+            "', '" . cnvrtBoolToBitStr($isenbld) .
+            "', '" . loc_db_escape_string($sbjct) .
+            "', '" . loc_db_escape_string($bccMail) .
+            "', '" . loc_db_escape_string($paramsSQL) .
+            "', " . $rptID .
+            ", '" . cnvrtBoolToBitStr($runRpt) .
+            "', '" . loc_db_escape_string($strtDate) .
+            "', '" . loc_db_escape_string($rptUOM) .
+            "', " . $rptEvery .
+            ", '" . cnvrtBoolToBitStr($runOnHour) .
+            "', '" . loc_db_escape_string($attchUrls) .
+            "', " . loc_db_escape_string($endHour) . ")";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updateAlert($alertID, $alertNm, $alertDesc, $toMail, $ccMail, $msgBody, $isenbld, $alrtTyp, $sbjct, $bccMail, $paramsSQL
+, $rptID, $runRpt, $strtDate, $rptUOM, $rptEvery, $runOnHour, $attchUrls, $endHour) {
+    global $usrID;
+    $strtDate = cnvrtDMYTmToYMDTm($strtDate);
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE alrt.alrt_alerts SET 
+            alert_name='" . loc_db_escape_string($alertNm) .
+            "', alert_desc='" . loc_db_escape_string($alertDesc) .
+            "', to_mail_num_list_mnl='" . loc_db_escape_string($toMail) .
+            "', cc_mail_num_list_mnl='" . loc_db_escape_string($ccMail) .
+            "', alert_msg_body_mnl='" . loc_db_escape_string($msgBody) .
+            "', alert_type='" . loc_db_escape_string($alrtTyp) .
+            "', last_update_by=" . $usrID .
+            ", last_update_date='" . $dateStr .
+            "', is_enabled='" . cnvrtBoolToBitStr($isenbld) .
+            "', msg_sbjct_mnl='" . loc_db_escape_string($sbjct) .
+            "', bcc_mail_num_list_mnl='" . loc_db_escape_string($bccMail) .
+            "', paramtr_sets_gnrtn_sql='" . loc_db_escape_string($paramsSQL) .
+            "', report_id=" . $rptID .
+            ", shd_rpt_be_run='" . cnvrtBoolToBitStr($runRpt) .
+            "', start_dte_tme='" . loc_db_escape_string($strtDate) .
+            "', repeat_uom='" . loc_db_escape_string($rptUOM) .
+            "', repeat_every=" . $rptEvery .
+            ", run_at_spcfd_hour='" . cnvrtBoolToBitStr($runOnHour) .
+            "', attchment_urls='" . loc_db_escape_string($attchUrls) .
+            "', end_hour=" . $endHour .
+            " WHERE alert_id = " . $alertID;
+    return execUpdtInsSQL($updtSQL);
+}
+
+function createParam($rptID, $paramNm, $qryRep, $dfltVal, $isrqrd, $lov_name
+, $dataType, $datefrmt, $lovNm) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO rpt.rpt_report_parameters(" .
+            "report_id, parameter_name, paramtr_rprstn_nm_in_query, " .
+            "created_by, creation_date, last_update_by, last_update_date, " .
+            "default_value, is_required, lov_name_id, param_data_type, date_format, lov_name) " .
+            "VALUES (" . $rptID .
+            ", '" . loc_db_escape_string($paramNm) .
+            "', '" . loc_db_escape_string($qryRep) .
+            "', " . $usrID .
+            ", '" . $dateStr .
+            "', " . $usrID .
+            ", '" . $dateStr .
+            "', '" . loc_db_escape_string($dfltVal) .
+            "', '" . cnvrtBoolToBitStr($isrqrd) .
+            "', '" . loc_db_escape_string($lov_name) .
+            "', '" . loc_db_escape_string($dataType) .
+            "', '" . loc_db_escape_string($datefrmt) .
+            "', '" . loc_db_escape_string($lovNm) . "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function createRptRole($rptID, $roleID) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO rpt.rpt_reports_allwd_roles(" .
+            "report_id, user_role_id, created_by, creation_date) " .
+            "VALUES (" . $rptID .
+            ", " . $roleID .
+            ", " . $usrID .
+            ", '" . $dateStr .
+            "')";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updateRptJrxml($rptid, $jxrmlFileNm) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE rpt.rpt_reports SET " .
+            "last_update_by = " . $usrID . ", " .
+            "last_update_date = '" . $dateStr .
+            "', jrxml_file_name='" . loc_db_escape_string($jxrmlFileNm) .
+            "' " .
+            "WHERE (report_id = " . $rptid . ")";
+    return execUpdtInsSQL($updtSQL);
+}
+
+function updateRpt($rptid, $rptNm, $rptDesc, $ownrMdl, $rptPrcs, $rptSQL, $isenbld, $colsGrp, $colsCnt, $colsSum, $colsAvrg, $colsNoFrmt, $outptTyp, $orntn, $prcRnnr, $rptLyout, $dlmtr, $img_cols, $jxrmlFileNm) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+
+    $updtSQL = "UPDATE rpt.rpt_reports SET " .
+            "report_name = '" . loc_db_escape_string($rptNm) .
+            "', report_desc = '" . loc_db_escape_string($rptDesc) .
+            "', rpt_sql_query = '" . loc_db_escape_string($rptSQL) . "', " .
+            "owner_module = '" . loc_db_escape_string($ownrMdl) . "', " .
+            "is_enabled = '" . cnvrtBoolToBitStr($isenbld) .
+            "', last_update_by = " . $usrID . ", " .
+            "last_update_date = '" . $dateStr .
+            "', rpt_or_sys_prcs = '" . loc_db_escape_string($rptPrcs) .
+            "', cols_to_group = '" . loc_db_escape_string($colsGrp) .
+            "', cols_to_count = '" . loc_db_escape_string($colsCnt) .
+            "', cols_to_sum = '" . loc_db_escape_string($colsSum) .
+            "', cols_to_average = '" . loc_db_escape_string($colsAvrg) .
+            "', cols_to_no_frmt = '" . loc_db_escape_string($colsNoFrmt) . "'" .
+            ", output_type = '" . loc_db_escape_string($outptTyp) . "'" .
+            ", portrait_lndscp = '" . loc_db_escape_string($orntn) .
+            "', rpt_layout='" . loc_db_escape_string($rptLyout) .
+            "', imgs_col_nos='" . loc_db_escape_string($img_cols) .
+            "', csv_delimiter='" . loc_db_escape_string($dlmtr) .
+            "', process_runner='" . loc_db_escape_string($prcRnnr) .
+            "', jrxml_file_name='" . loc_db_escape_string($jxrmlFileNm) .
+            "' WHERE (report_id = " . $rptid . ")";
+    return execUpdtInsSQL($updtSQL);
+}
+
+function updateParam($paramid, $paramNm, $qryRep, $dfltVal, $isrqrd, $lov_name, $dataType, $datefrmt, $lovNm) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE rpt.rpt_report_parameters SET " .
+            "parameter_name = '" . loc_db_escape_string($paramNm) .
+            "', paramtr_rprstn_nm_in_query = '" . loc_db_escape_string($qryRep) .
+            "', default_value = '" . loc_db_escape_string($dfltVal) . "', " .
+            "is_required = '" . cnvrtBoolToBitStr($isrqrd) .
+            "', last_update_by = " . $usrID . ", " .
+            "last_update_date = '" . $dateStr .
+            "', lov_name_id = '" . loc_db_escape_string($lov_name) .
+            "', param_data_type = '" . loc_db_escape_string($dataType) .
+            "', date_format = '" . loc_db_escape_string($datefrmt) .
+            "', lov_name = '" . loc_db_escape_string($lovNm) . "' " .
+            "WHERE (parameter_id = " . $paramid . ")";
+    return execUpdtInsSQL($updtSQL);
+}
+
+function updateParamLOV($lovID, $paramNm, $qryRep) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE rpt.rpt_report_parameters SET " .
+            "lov_name_id = '" . $lovID . "', last_update_by = " . $usrID . ", " .
+            "last_update_date = '" . $dateStr .
+            "' WHERE (paramtr_rprstn_nm_in_query = '" . loc_db_escape_string($qryRep) .
+            "' and report_id >=1 and report_id <=500)";
+    return execUpdtInsSQL($updtSQL);
+}
+
+function isRptInUse($rptID) {
+    $strSql = "SELECT a.rpt_run_id " .
+            "FROM rpt.rpt_report_runs a " .
+            "WHERE(a.report_id  = " . $rptID . ") LIMIT 1";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return true;
+    }
+    return false;
+}
+
+function isAlertInUse($alertID) {
+    $strSql = "SELECT a.rpt_run_id " .
+            "FROM rpt.rpt_report_runs a " .
+            "WHERE(a.alert_id  = " . $alertID . ") LIMIT 1";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return true;
+    }
+    return false;
+}
+
+function doesRptHvRole($rptID, $role_id) {
+    $strSql = "SELECT rpt_roles_id FROM rpt.rpt_reports_allwd_roles " .
+            "WHERE report_id = " . $rptID . " and user_role_id = " . $role_id;
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function uploadDaJrxml($rptID, &$nwImgLoc) {
+    global $tmpDest;
+    global $ftp_base_db_fldr;
+    global $usrID;
+    global $fldrPrfx;
+    global $smplTokenWord1;
+
+    $msg = "";
+    if (isset($_FILES["rptsJrxmlFile"])) {
+        $allowedExts = array('jrxml');
+        $flnm = $_FILES["rptsJrxmlFile"]["name"];
+        $temp = explode(".", $flnm);
+        $extension = end($temp);
+        if ($_FILES["rptsJrxmlFile"]["error"] > 0) {
+            $msg .= "Return Code: " . $_FILES["rptsJrxmlFile"]["error"] . "<br>";
+        } else {
+            $msg .= "Uploaded File: " . $_FILES["rptsJrxmlFile"]["name"] . "<br>";
+            $msg .= "Type: " . $_FILES["rptsJrxmlFile"]["type"] . "<br>";
+            $msg .= "Size: " . round(($_FILES["rptsJrxmlFile"]["size"]) / (1024 * 1024), 2) . " MB<br>";
+            //$msg .= "Temp file: " . $_FILES["daPrsnAttchmnt"]["tmp_name"] . "<br>";
+            if ((in_array($extension, $allowedExts))) {
+                $nwFileName = encrypt1($rptID . "." . $extension, $smplTokenWord1) . "." . $extension;
+                $img_src = $fldrPrfx . $tmpDest . "$nwFileName";
+                move_uploaded_file($_FILES["rptsJrxmlFile"]["tmp_name"], $img_src);
+                $ftp_src = $ftp_base_db_fldr . "/Rpts/jrxmls/$rptID" . "." . $extension;
+                if (file_exists($img_src)) {
+                    copy("$img_src", "$ftp_src");
+
+                    $dateStr = getDB_Date_time();
+                    $updtSQL = "UPDATE rpt.rpt_reports
+                            SET jrxml_file_name='" . $rptID . "." . $extension .
+                            "', last_update_by=" . $usrID .
+                            ", last_update_date='" . $dateStr .
+                            "' WHERE report_id=" . $rptID;
+                    execUpdtInsSQL($updtSQL);
+                }
+                $msg .= "Report Stored Successfully!<br/>";
+                $nwImgLoc = $msg . "$rptID" . "." . $extension;
+                return TRUE;
+            } else {
+                $msg .= "Invalid file!<br/>File Type must be in the ff:<br/>" . implode(", ", $allowedExts);
+                $nwImgLoc = $msg;
+            }
+        }
+    }
+    $msg .= "<br/>Invalid file";
+    $nwImgLoc = $msg;
+    return FALSE;
+}
+
+function get_AllParamsExprt($offset, $limit_size) {
+    $strSql = "SELECT parameter_id, parameter_name, paramtr_rprstn_nm_in_query, default_value, " .
+            "CASE WHEN is_required='1' THEN 'YES' ELSE 'NO' END, lov_name_id, param_data_type, date_format, rpt.get_rpt_name(report_id), lov_name FROM rpt.rpt_report_parameters ORDER BY report_id, parameter_name  LIMIT " . $limit_size .
+            " OFFSET " . abs($offset * $limit_size);
+    $result = executeSQLNoParams($strSql);
+    return $result;
+}
+
+function createPrcsSchdlParms($alertID, $schdlID, $paramID, $paramVal) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO rpt.rpt_run_schdule_params(
+            schedule_id, parameter_id, parameter_value, created_by, 
+            creation_date, last_update_by, last_update_date, alert_id) " .
+            "VALUES (" . $schdlID .
+            ", " . $paramID .
+            ", '" . loc_db_escape_string($paramVal) .
+            "', " . $usrID .
+            ", '" . $dateStr .
+            "', " . $usrID .
+            ", '" . $dateStr .
+            "', " . $alertID . ")";
+    return execUpdtInsSQL($insSQL);
+}
+
+function updatePrcsSchdlParms($schdlParamID, $paramID, $paramVal) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "UPDATE rpt.rpt_run_schdule_params SET 
+            parameter_id=" . $paramID .
+            ", parameter_value='" . loc_db_escape_string($paramVal) .
+            "', last_update_by=" . $usrID .
+            ", last_update_date='" . $dateStr .
+            "' WHERE schdl_param_id = " . $schdlParamID;
+    return execUpdtInsSQL($insSQL);
 }
 
 ?>

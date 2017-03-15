@@ -1,3 +1,8 @@
+Number.prototype.padLeft = function (base, chr) {
+    var len = (String(base || 10).length - String(this).length) + 1;
+    return len > 0 ? new Array(len).join(chr || '0') + this : this;
+};
+var jsFilesVrsn = '20170305';
 function isMyScriptLoaded(url) {
     var scripts = document.getElementsByTagName('script');
     for (var i = scripts.length; i--; ) {
@@ -75,7 +80,9 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
 {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null)
     {
-        callBackFunc = function () {var tstabcd=1;};
+        callBackFunc = function () {
+            var tstabcd = 1;
+        };
     }
     getMsgAsync('grp=1&typ=11&q=Check Session', function () {
         $body = $("body");
@@ -141,14 +148,15 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
 
                 $('#' + modalBodyID).html(xmlhttp.responseText);
                 $('#myLovModalDiag').draggable();
-
+                $('#' + elementID).off('show.bs.modal');
+                $('#' + elementID).off('hidden.bs.modal');
                 $('#' + elementID).on('show.bs.modal', function (e) {
                     $(this).find('.modal-body').css({
                         'max-height': '100%'
                     });
                 });
                 $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal('show');
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
                 $body.removeClass("mdlloading");
                 $(document).ready(function () {
                     $("#lovForm").submit(function (e) {
@@ -229,9 +237,9 @@ function getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
                 "&valElmntID=" + valueElmntID + "&descElmntID=" + descElemntID +
                 "&modalElementID=" + elementID + "&lovModalBody=" + modalBodyID +
                 "&lovModalTitle=" + titleElementID + "&searchfor=" + srchFor + "&searchin=" + srchIn +
-                "&pageNo=" + pageNo + "&limitSze=" + limitSze + 
-                "&colNoForChkBxCmprsn=" + colNoForChkBxCmprsn + 
-                "&addtnlWhere=" + addtnlWhere + "&callBackFunc="+callBackFunc);
+                "&pageNo=" + pageNo + "&limitSze=" + limitSze +
+                "&colNoForChkBxCmprsn=" + colNoForChkBxCmprsn +
+                "&addtnlWhere=" + addtnlWhere + "&callBackFunc=" + callBackFunc);
     });
 
 }
@@ -242,7 +250,9 @@ function enterKeyFuncLov(e, elementID, titleElementID, modalBodyID, lovNm, crite
 {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null)
     {
-        callBackFunc = function () {var tstabcd=1;};
+        callBackFunc = function () {
+            var tstabcd = 1;
+        };
     }
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
@@ -255,7 +265,9 @@ function enterKeyFuncLov(e, elementID, titleElementID, modalBodyID, lovNm, crite
 function applySlctdLov(modalElementID, formElmntID, valueElmntID, descElemntID, callBackFunc) {
     if (typeof callBackFunc === 'undefined' || callBackFunc === null)
     {
-        callBackFunc = function () {var tstabcd=1;};
+        callBackFunc = function () {
+            var tstabcd = 1;
+        };
     }
     var form = document.getElementById(formElmntID);
     var cbResults = '';
@@ -348,10 +360,15 @@ function doAjax(linkArgs, elementID, actionAfter, titleMsg, titleElementID, moda
                     $body.removeClass("mdlloading");
                     $('#' + titleElementID).html(titleMsg);
                     $('#' + modalBodyID).html(xmlhttp.responseText);
+                    $('#' + elementID).off('show.bs.modal');
+                    $('#' + elementID).off('hidden.bs.modal');
                     $('#' + elementID).on('show.bs.modal', function (e) {
-                        console.debug('modal shown!');
+                        /*console.debug('modal shown!');*/
+                        $(this).find('.modal-body').css({
+                            'max-height': '100%'
+                        });
                     });
-                    $('#' + elementID).modal('show');
+                    $('#' + elementID).modal({backdrop: 'static', keyboard: false});
                 } else
                 {
                     document.getElementById(elementID).innerHTML = xmlhttp.responseText;
@@ -395,11 +412,20 @@ function doAjaxWthCallBck(linkArgs, elementID, actionAfter, titleMsg, titleEleme
                     $body.removeClass("mdlloading");
                     $('#' + titleElementID).html(titleMsg);
                     $('#' + modalBodyID).html(xmlhttp.responseText);
+                    $('#' + elementID).off('show.bs.modal');
+                    $('#' + elementID).off('hidden.bs.modal');
                     $('#' + elementID).on('show.bs.modal', function (e) {
-                        console.debug('modal shown!');
+                        /*console.debug('modal shown!');*/
+                        $(this).find('.modal-body').css({
+                            'max-height': '100%'
+                        });
                     });
-                    $('#' + elementID).modal('show');
-                    rqstdCallBack();
+                    $('#' + elementID).modal({backdrop: 'static', keyboard: false});
+
+                    $('#' + elementID).off('shown.bs.modal');
+                    $('#' + elementID).on('shown.bs.modal', function () {
+                        rqstdCallBack();
+                    });
                 } else
                 {
                     document.getElementById(elementID).innerHTML = xmlhttp.responseText;
@@ -445,13 +471,13 @@ function openATab(slctr, linkArgs)
                 {
                     if (linkArgs.indexOf("grp=40&typ=2") !== -1)
                     {
-                        loadScript("app/cmncde/myinbox.js", function () {
+                        loadScript("app/cmncde/myinbox.js?v=" + jsFilesVrsn, function () {
                             $this.tab('show');
                             prepareInbox(linkArgs, $body, targ, xmlhttp.responseText);
                         });
                     } else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
                     {
-                        loadScript("app/prs/prsn.js?v=110", function () {
+                        loadScript("app/prs/prsn.js?v=" + jsFilesVrsn, function () {
                             $this.tab('show');
                             prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
                         });
@@ -466,40 +492,52 @@ function openATab(slctr, linkArgs)
                             $this.tab('show');
                             prepareUsrPrfl(linkArgs, $body, targ, xmlhttp.responseText);
                         } else {
-                            loadScript("app/sec/sys_admin.js?v=110", function () {
+                            loadScript("app/sec/sys_admin.js?v=" + jsFilesVrsn, function () {
                                 $this.tab('show');
                                 prepareSysAdmin(linkArgs, $body, targ, xmlhttp.responseText);
                             });
                         }
                     } else if (linkArgs.indexOf("grp=4&typ=1") !== -1)
                     {
-                        loadScript("app/gst/gst_admin.js?v=110", function () {
+                        loadScript("app/gst/gst_admin.js?v=" + jsFilesVrsn, function () {
                             $this.tab('show');
                             prepareGstAdmin(linkArgs, $body, targ, xmlhttp.responseText);
                         });
                     } else if (linkArgs.indexOf("grp=5&typ=1") !== -1)
                     {
-                        loadScript("app/org/org_admin.js?v=110", function () {
+                        loadScript("app/org/org_admin.js?v=" + jsFilesVrsn, function () {
                             $this.tab('show');
                             prepareOrgAdmin(linkArgs, $body, targ, xmlhttp.responseText);
                         });
                     } else if (linkArgs.indexOf("grp=11&typ=1") !== -1)
                     {
-                        loadScript("app/wkf/wkf_admin.js?v=110", function () {
+                        loadScript("app/wkf/wkf_admin.js?v=" + jsFilesVrsn, function () {
                             $this.tab('show');
                             prepareWkfAdmin(linkArgs, $body, targ, xmlhttp.responseText);
                         });
                     } else if (linkArgs.indexOf("grp=7&typ=1") !== -1)
                     {
-                        loadScript("app/pay/pay.js?v=110", function () {
+                        loadScript("app/pay/pay.js?v=" + jsFilesVrsn, function () {
                             $this.tab('show');
                             preparePay(linkArgs, $body, targ, xmlhttp.responseText);
                         });
-                    }  else if (linkArgs.indexOf("grp=9&typ=1") !== -1)
+                    } else if (linkArgs.indexOf("grp=9&typ=1") !== -1)
                     {
-                        loadScript("app/rpt/rpt.js?v=110", function () {
+                        loadScript("app/rpt/rpt.js?v=" + jsFilesVrsn, function () {
                             $this.tab('show');
                             prepareRpts(linkArgs, $body, targ, xmlhttp.responseText);
+                        });
+                    } else if (linkArgs.indexOf("grp=16&typ=1") !== -1)
+                    {
+                        loadScript("app/attn/attn.js?v=" + jsFilesVrsn, function () {
+                            $this.tab('show');
+                            prepareAttn(linkArgs, $body, targ, xmlhttp.responseText);
+                        });
+                    } else if (linkArgs.indexOf("grp=19&typ=10") !== -1)
+                    {
+                        loadScript("app/evote/evote.js?v=" + jsFilesVrsn, function () {
+                            $this.tab('show');
+                            prepareEvote(linkArgs, $body, targ, xmlhttp.responseText);
                         });
                     } else
                     {
@@ -539,13 +577,13 @@ function openATab1(slctr, linkArgs)
             {
                 if (linkArgs.indexOf("grp=40&typ=2") !== -1)
                 {
-                    loadScript("app/cmncde/myinbox.js", function () {
+                    loadScript("app/cmncde/myinbox.js?v=" + jsFilesVrsn, function () {
                         $this.tab('show');
                         prepareInbox(linkArgs, $body, targ, xmlhttp.responseText);
                     });
                 } else if (linkArgs.indexOf("grp=8&typ=1") !== -1)
                 {
-                    loadScript("app/prs/prsn.js?v=110", function () {
+                    loadScript("app/prs/prsn.js?v=" + jsFilesVrsn, function () {
                         $this.tab('show');
                         prepareProfile(linkArgs, $body, targ, xmlhttp.responseText);
                     });
@@ -560,7 +598,7 @@ function openATab1(slctr, linkArgs)
                         $this.tab('show');
                         prepareUsrPrfl(linkArgs, $body, targ, xmlhttp.responseText);
                     } else {
-                        loadScript("app/sec/sys_admin.js?v=110", function () {
+                        loadScript("app/sec/sys_admin.js?v=" + jsFilesVrsn, function () {
                             $this.tab('show');
                             prepareSysAdmin(linkArgs, $body, targ, xmlhttp.responseText);
                         });
@@ -656,9 +694,75 @@ function prepareNotices(lnkArgs, htBody, targ, rspns)
             });
         } else if (lnkArgs.indexOf("&vtyp=5") !== -1)
         {
+            var fileLink = function (context) {
+                var ui = $.summernote.ui;
+                var button = ui.button({
+                    contents: '<i class="fa fa-file"/> Upload',
+                    tooltip: 'Upload File',
+                    click: function () {
+                        $(function () {
+                            $("#allOtherFileInput1").change(function () {
+                                var fileName = $(this).val();
+                                var input = document.getElementById('allOtherFileInput1');
+                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                                    var inptUrl = $("#allOtherInputData1").val();
+                                    var inptText = $("#allOtherInputData2").val();
+                                    var inptNwWndw = $("#allOtherInputData2").val();
+                                    if (inptText === "")
+                                    {
+                                        inptText = "Read More...";
+                                    }
+                                    if (inptNwWndw === "")
+                                    {
+                                        inptNwWndw = true;
+                                    }
+                                    $('#fdbckMsgBody').summernote('createLink', {
+                                        text: inptText,
+                                        url: inptUrl,
+                                        newWindow: inptNwWndw
+                                    });
+                                });
+                            });
+                        });
+                        performFileClick('allOtherFileInput1');
+                    }
+                });
+                return button.render();
+            };
             $('#fdbckMsgBody').summernote({
-                minHeight: 375,
-                focus: true
+                minHeight: 350,
+                focus: true,
+                disableDragAndDrop: false,
+                dialogsInBody: true,
+                toolbar: [
+                    ['style', ['style']],
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph', 'height']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video', 'hr']],
+                    ['view', ['fullscreen']],
+                    ['help', ['help']],
+                    ['misc', ['print']],
+                    ['mybutton', ['upload']]
+                ],
+                buttons: {
+                    upload: fileLink
+                },
+                callbacks:
+                        {
+                            onImageUpload: function (file, editor, welEditable)
+                            {
+                                sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                                    var inptUrl = $("#allOtherInputData1").val();
+                                    $('#fdbckMsgBody').summernote("insertImage", inptUrl, 'filename');
+                                });
+                            }
+                        }
             });
             $('.note-editable').trigger('focus');
             $('#cmntsFdbckForm').submit(function (e) {
@@ -675,6 +779,145 @@ function prepareNotices(lnkArgs, htBody, targ, rspns)
                 "scrollX": false
             });
             $('#allForumsTable').wrap('<div class="dataTables_scroll"/>');
+        } else if (lnkArgs.indexOf("&vtyp=7") !== -1)
+        {
+            var fileLink = function (context) {
+                var ui = $.summernote.ui;
+                var button = ui.button({
+                    contents: '<i class="fa fa-file"/> Upload',
+                    tooltip: 'Upload File',
+                    click: function () {
+                        $(function () {
+                            $("#allOtherFileInput1").change(function () {
+                                var fileName = $(this).val();
+                                var input = document.getElementById('allOtherFileInput1');
+                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                                    var inptUrl = $("#allOtherInputData1").val();
+                                    var inptText = $("#allOtherInputData2").val();
+                                    var inptNwWndw = $("#allOtherInputData2").val();
+                                    if (inptText === "")
+                                    {
+                                        inptText = "Read More...";
+                                    }
+                                    if (inptNwWndw === "")
+                                    {
+                                        inptNwWndw = true;
+                                    }
+                                    $('#articleNwCmmntsMsg').summernote('createLink', {
+                                        text: inptText,
+                                        url: inptUrl,
+                                        newWindow: inptNwWndw
+                                    });
+                                });
+                            });
+                        });
+                        performFileClick('allOtherFileInput1');
+                    }
+                });
+                return button.render();
+            };
+            $('#articleNwCmmntsMsg').summernote({
+                minHeight: 100,
+                focus: true,
+                disableDragAndDrop: false,
+                dialogsInBody: true,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph', 'height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video', 'hr']],
+                    ['mybutton', ['upload']]
+                ],
+                buttons: {
+                    upload: fileLink
+                },
+                callbacks:
+                        {
+                            onImageUpload: function (file, editor, welEditable)
+                            {
+                                sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                                    var inptUrl = $("#allOtherInputData1").val();
+                                    $('#articleNwCmmntsMsg').summernote("insertImage", inptUrl, 'filename');
+                                });
+                            }
+                        }
+            });
+            $('#articleNwCmmntsMsg').summernote('reset');
+        } else if (lnkArgs.indexOf("&vtyp=8") !== -1)
+        {
+            var fileLink = function (context) {
+                var ui = $.summernote.ui;
+                var button = ui.button({
+                    contents: '<i class="fa fa-file"/> Upload',
+                    tooltip: 'Upload File',
+                    click: function () {
+                        $(function () {
+                            $("#allOtherFileInput1").change(function () {
+                                var fileName = $(this).val();
+                                var input = document.getElementById('allOtherFileInput1');
+                                sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                                    var inptUrl = $("#allOtherInputData1").val();
+                                    var inptText = $("#allOtherInputData2").val();
+                                    var inptNwWndw = $("#allOtherInputData2").val();
+                                    if (inptText === "")
+                                    {
+                                        inptText = "Read More...";
+                                    }
+                                    if (inptNwWndw === "")
+                                    {
+                                        inptNwWndw = true;
+                                    }
+                                    $('#articleNwCmmntsMsg').summernote('createLink', {
+                                        text: inptText,
+                                        url: inptUrl,
+                                        newWindow: inptNwWndw
+                                    });
+                                });
+                            });
+                        });
+                        performFileClick('allOtherFileInput1');
+                    }
+                });
+                return button.render();
+            };
+            $('#articleNwCmmntsMsg').summernote({
+                minHeight: 100,
+                focus: true,
+                disableDragAndDrop: false,
+                dialogsInBody: true,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph', 'height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video', 'hr']],
+                    ['mybutton', ['upload']]
+                ],
+                buttons: {
+                    upload: fileLink
+                },
+                callbacks:
+                        {
+                            onImageUpload: function (file, editor, welEditable)
+                            {
+                                sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                                    var inptUrl = $("#allOtherInputData1").val();
+                                    $('#articleNwCmmntsMsg').summernote("insertImage", inptUrl, 'filename');
+                                });
+                            }
+                        }
+            });
+        } else if (lnkArgs.indexOf("&vtyp=10") !== -1
+                || lnkArgs.indexOf("&vtyp=11") !== -1)
+        {
+            $('#articleNwCmmntsMsg').summernote('reset');
         }
         htBody.removeClass("mdlloading");
     });
@@ -686,7 +929,7 @@ function getAllNotices(actionText, slctr, linkArgs)
     /*var srchIn = typeof $("#allnoticesSrchIn").val() === 'undefined' ? 'Both' : $("#allnoticesSrchIn").val();*/
     var pageNo = typeof $("#allnoticesPageNo").val() === 'undefined' ? 1 : $("#allnoticesPageNo").val();
     var limitSze = typeof $("#allnoticesDsplySze").val() === 'undefined' ? 10 : $("#allnoticesDsplySze").val();
-    var sortBy = typeof $("#allnoticesSortBy").val() === 'undefined' ? '' : $("#allnoticesSortBy").val();
+    var sortBy = typeof $("#allnoticesSortBy").val() === 'undefined' ? 'Date Published' : $("#allnoticesSortBy").val();
     if (actionText == 'clear')
     {
         srchFor = "%";
@@ -708,6 +951,119 @@ function enterKeyFuncNotices(e, actionText, slctr, linkArgs)
     if (charCode == 13) {
         getAllNotices(actionText, slctr, linkArgs);
     }
+}
+
+function getAllComments(actionText, slctr, linkArgs, ttlCmnts, srcBtn)
+{
+    var srchFor = '%';
+    var srchIn = 'All';
+    var pageNo = typeof $("#allcommentsPageNo1").val() === 'undefined' ? 1 : $("#allcommentsPageNo1").val();
+    var sbmtdNoticeID = typeof $("#allcommentsArticleID").val() === 'undefined' ? 1 : $("#allcommentsArticleID").val();
+    var limitSze = 10;
+    var sortBy = "";
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    var shwHide = $('#shwCmmntsBtn').html();
+    if (srcBtn <= 1)
+    {
+        if (shwHide.indexOf('Show') !== -1)
+        {
+            $('#cmmntsNavBtns').removeClass('hideNotice');
+            $('#cmmntsDetailMsgsCntnr').removeClass('hideNotice');
+            $('#shwCmmntsRfrshBtn').removeClass('hideNotice');
+            $('#nwCmmntsBtn').removeClass('hideNotice');
+            $('#shwCmmntsBtn').html(' « Hide Comments');
+        } else
+        {
+            $('#cmmntsNavBtns').addClass('hideNotice');
+            $('#cmmntsDetailMsgsCntnr').addClass('hideNotice');
+            $('#shwCmmntsRfrshBtn').addClass('hideNotice');
+            $('#nwCmmntsBtn').addClass('hideNotice');
+            $('#shwCmmntsBtn').html('Show Comments (<span style="color:whitesmoke;">' + ttlCmnts + '</span>) »');
+            return false;
+        }
+    }
+    linkArgs = linkArgs + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor=" + srchFor + "&searchin=All&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    openATab(slctr, linkArgs);
+}
+
+function getMoreComments(actionText, slctr, linkArgs)
+{
+    var srchFor = '%';
+    var srchIn = 'All';
+    var pageNo = typeof $("#onenoticesPageNo1").val() === 'undefined' ? 1 : $("#onenoticesPageNo1").val();
+    var sbmtdNoticeID = typeof $("#allcommentsArticleID").val() === 'undefined' ? 1 : $("#allcommentsArticleID").val();
+    var prntCmmntID = typeof $("#onenoticesCmntID1").val() === 'undefined' ? 1 : $("#onenoticesCmntID1").val();
+    var limitSze = 10;
+    var sortBy = "";
+    pageNo = parseInt(pageNo) + 1;
+    linkArgs = linkArgs + "&prntCmmntID=" + prntCmmntID + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor1=" + srchFor + "&searchin1=All&pageNo1=" + pageNo + "&limitSze1=" + limitSze + "&sortBy1=" + sortBy;
+    openATab(slctr, linkArgs);
+}
+
+function getMoreComments1(actionText, slctr, linkArgs)
+{
+    var srchFor = '%';
+    var srchIn = 'All';
+    var pageNo = typeof $("#onenoticesPageNo1").val() === 'undefined' ? 1 : $("#onenoticesPageNo1").val();
+    var sbmtdNoticeID = typeof $("#allcommentsArticleID").val() === 'undefined' ? 1 : $("#allcommentsArticleID").val();
+    var limitSze = 10;
+    var sortBy = "";
+    pageNo = parseInt(pageNo) + 1;
+    linkArgs = linkArgs + "&sbmtdNoticeID=" + sbmtdNoticeID + "&searchfor1=" + srchFor + "&searchin1=All&pageNo1=" + pageNo + "&limitSze1=" + limitSze + "&sortBy1=" + sortBy;
+    openATab(slctr, linkArgs);
+}
+
+function newComments(crntPrnCmntID)
+{
+    $("#crntPrnCmntID").val(crntPrnCmntID);
+    $('#cmmntsNewMsgs').removeClass('hideNotice');
+}
+
+function getOneNotice(actionText, slctr, linkArgs, srcBtn, srcBtnNo)
+{
+    var srchFor = '%'
+    var srchIn = 'All';
+    var pageNo = 1;
+    var limitSze = 1;
+    var sortBy = "";
+    if (srcBtn <= 0)
+    {
+        srchFor = typeof $("#allnoticesSrchFor").val() === 'undefined' ? '%' : $("#allnoticesSrchFor").val();
+        srchIn = 'All';
+        pageNo = srcBtnNo;
+        limitSze = 1;
+        sortBy = typeof $("#allnoticesSortBy").val() === 'undefined' ? '' : $("#allnoticesSortBy").val();
+    } else
+    {
+        srchFor = typeof $("#onenoticesSrchFor").val() === 'undefined' ? '%' : $("#onenoticesSrchFor").val();
+        srchIn = 'All';
+        pageNo = typeof $("#onenoticesPageNo").val() === 'undefined' ? 1 : $("#onenoticesPageNo").val();
+        limitSze = 1;
+        sortBy = typeof $("#onenoticesSortBy").val() === 'undefined' ? '' : $("#onenoticesSortBy").val();
+    }
+    if (actionText == 'clear')
+    {
+        srchFor = "%";
+        pageNo = 1;
+    } else if (actionText == 'next')
+    {
+        pageNo = parseInt(pageNo) + 1;
+    } else if (actionText == 'previous')
+    {
+        pageNo = parseInt(pageNo) - 1;
+    }
+    linkArgs = linkArgs + "&searchfor=" + srchFor + "&searchin=" + srchIn + "&pageNo=" + pageNo + "&limitSze=" + limitSze + "&sortBy=" + sortBy;
+    openATab(slctr, linkArgs);
 }
 
 function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
@@ -733,7 +1089,6 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
             {
                 $('#' + titleElementID).html(formTitle);
                 $('#' + modalBodyID).html(xmlhttp.responseText);
-
                 $(function () {
                     $('.form_date').datetimepicker({
                         format: "dd-M-yyyy hh:ii:ss",
@@ -749,26 +1104,117 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
                         forceParse: true
                     });
                 });
+
+                $('#articleIntroMsg').summernote({
+                    minHeight: 145,
+                    focus: true,
+                    disableDragAndDrop: false,
+                    dialogsInBody: true,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['fontname', ['fontname']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph', 'height']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'hr']],
+                        ['view', ['fullscreen', 'codeview']]
+                    ],
+                    callbacks:
+                            {
+                                onImageUpload: function (file, editor, welEditable)
+                                {
+                                    sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                                        var inptUrl = $("#allOtherInputData1").val();
+                                        $('#articleIntroMsg').summernote("insertImage", inptUrl, 'filename');
+                                    });
+                                }
+                            }
+                });
+                var fileLink = function (context) {
+                    var ui = $.summernote.ui;
+                    var button = ui.button({
+                        contents: '<i class="fa fa-file"/> Upload',
+                        tooltip: 'Upload File',
+                        click: function () {
+                            $(function () {
+                                $("#allOtherFileInput1").change(function () {
+                                    var fileName = $(this).val();
+                                    var input = document.getElementById('allOtherFileInput1');
+                                    sendNoticesFile(input.files[0], "", "", "OTHERS", function () {
+                                        var inptUrl = $("#allOtherInputData1").val();
+                                        var inptText = $("#allOtherInputData2").val();
+                                        var inptNwWndw = $("#allOtherInputData2").val();
+                                        if (inptText === "")
+                                        {
+                                            inptText = "Read More...";
+                                        }
+                                        if (inptNwWndw === "")
+                                        {
+                                            inptNwWndw = true;
+                                        }
+                                        $('#articleBodyText').summernote('createLink', {
+                                            text: inptText,
+                                            url: inptUrl,
+                                            newWindow: inptNwWndw
+                                        });
+                                    });
+                                });
+                            });
+                            performFileClick('allOtherFileInput1');
+                        }
+                    });
+                    return button.render();
+                };
+                $('#articleBodyText').summernote({
+                    minHeight: 270,
+                    focus: true,
+                    disableDragAndDrop: false,
+                    dialogsInBody: true,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['fontname', ['fontname']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph', 'height']],
+                        ['height', ['height']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video', 'hr']],
+                        ['view', ['fullscreen', 'codeview']],
+                        ['help', ['help']],
+                        ['misc', ['print']],
+                        ['mybutton', ['upload']]
+                    ],
+                    buttons: {
+                        upload: fileLink
+                    },
+                    callbacks:
+                            {
+                                onImageUpload: function (file, editor, welEditable)
+                                {
+                                    sendNoticesFile(file[0], editor, welEditable, "IMAGES", function () {
+                                        var inptUrl = $("#allOtherInputData1").val();
+                                        $('#articleBodyText').summernote("insertImage", inptUrl, 'filename');
+                                    });
+                                }
+                            }
+                });
                 if (vtyp != 3)
                 {
-                    $('#articleIntroMsg').summernote({
-                        minHeight: 145,
-                        focus: true
-                    });
-                    $('#articleBodyText').summernote({
-                        minHeight: 270,
-                        focus: true
-                    });
+                    /*Do Nothing*/
+                } else {
+                    var markupStr1 = typeof $("#articleIntroMsgDecoded").val() === 'undefined' ? '' : $("#articleIntroMsgDecoded").val();
+                    var markupStr2 = typeof $("#articleBodyTextDecoded").val() === 'undefined' ? '' : $("#articleBodyTextDecoded").val();
+                    $('#articleIntroMsg').summernote('code', urldecode(markupStr1));
+                    $('#articleBodyText').summernote('code', urldecode(markupStr2));
                 }
                 $('.note-editable').trigger('focus');
-
-                $('#' + elementID).on('show.bs.modal', function (e) {
-                    $(this).find('.modal-body').css({
-                        'max-height': '100%'
-                    });
-                });
                 $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal('show');
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
                 $body.removeClass("mdlloading");
                 $(document).ready(function () {
                     $('#' + formElementID).submit(function (e) {
@@ -785,44 +1231,546 @@ function getOneNoticeForm(elementID, modalBodyID, titleElementID, formElementID,
     });
 }
 
-function saveOneNoticeForm(elementID, pKeyID, personID, tableElementID)
-{
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-        $body = $("body");
-        $body.addClass("mdlloadingDiag");
-        var divGrpName = typeof $("#divGrpName").val() === 'undefined' ? '%' : $("#divGrpName").val();
-        var divGrpTyp = typeof $("#divGrpTyp").val() === 'undefined' ? 'Both' : $("#divGrpTyp").val();
-        var divGrpStartDate = typeof $("#divGrpStartDate").val() === 'undefined' ? 1 : $("#divGrpStartDate").val();
-        var divGrpEndDate = typeof $("#divGrpEndDate").val() === 'undefined' ? 10 : $("#divGrpEndDate").val();
-        var xmlhttp;
-        if (window.XMLHttpRequest)
-        {
-            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-            xmlhttp = new XMLHttpRequest();
-        } else
-        {
-            /*code for IE6, IE5*/
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function ()
-        {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-            {
-                $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
-                $body.removeClass("mdlloadingDiag");
-                $body.removeClass("mdlloading");
-                $('#' + elementID).modal('hide');
+function performFileClick(elemId) {
+    var elem = document.getElementById(elemId);
+    if (elem && document.createEvent) {
+        var evt = document.createEvent("MouseEvents");
+        evt.initEvent("click", true, false);
+        elem.dispatchEvent(evt);
+    }
+}
+
+function sendNoticesFile(file, editor, welEditable, fileTypes, callBackFunc) {
+    var data1 = new FormData();
+    data1.append("file", file);
+    if (fileTypes !== "IMAGES")
+    {
+        $.ajax({
+            url: "dwnlds/uploader1.php",
+            data: data1,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                $("#allOtherInputData1").val(data);
+                callBackFunc();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus + " " + errorThrown);
             }
-        };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=4" +
-                "&divGrpName=" + divGrpName +
-                "&divGrpTyp=" + divGrpTyp +
-                "&divGrpStartDate=" + divGrpStartDate +
-                "&divGrpEndDate=" + divGrpEndDate +
-                "&divsGrpsPkeyID=" + pKeyID +
-                "&sbmtdPersonID=" + personID);
+        });
+    } else
+    {
+        $.ajax({
+            url: "dwnlds/uploader.php",
+            data: data1,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                $("#allOtherInputData1").val(data);
+                callBackFunc();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus + " " + errorThrown);
+            }
+        });
+    }
+}
+
+function grpTypNoticesChange()
+{
+    var lovChkngElementVal = typeof $("#grpType").val() === 'undefined' ? '' : $("#grpType").val();
+    lovNm = "";
+    if (lovChkngElementVal === "Everyone")
+    {
+        $('#groupName').attr("disabled", "true");
+        $('#groupName').val("");
+        $('#groupNameLbl').attr("disabled", "true");
+    } else
+    {
+        $('#groupName').removeAttr("disabled");
+        $('#groupName').val("");
+        $('#groupNameLbl').removeAttr("disabled");
+    }
+}
+
+function getNoticeLovs(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
+        criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
+        selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
+{
+    var lovChkngElementVal = typeof $("#grpType").val() === 'undefined' ? 10 : $("#grpType").val();
+    lovNm = "";
+    if (lovChkngElementVal === "Divisions/Groups")
+    {
+        lovNm = "Divisions/Groups";
+    } else if (lovChkngElementVal === "Grade")
+    {
+        lovNm = "Grades";
+    } else if (lovChkngElementVal === "Job")
+    {
+        lovNm = "Jobs";
+    } else if (lovChkngElementVal === "Position")
+    {
+        lovNm = "Positions";
+    } else if (lovChkngElementVal === "Site/Location")
+    {
+        lovNm = "Sites/Locations";
+    } else if (lovChkngElementVal === "Person Type")
+    {
+        lovNm = "Person Types";
+    } else
+    {
+        return false;
+    }
+    getLovsPage(elementID, titleElementID, modalBodyID, lovNm, criteriaID,
+            criteriaID2, criteriaID3, chkOrRadio, mustSelSth,
+            selVals, valueElmntID, descElemntID, actionText, colNoForChkBxCmprsn, addtnlWhere, callBackFunc)
+}
+
+function saveOneNoticeForm(actionText, slctr, linkArgs)
+{
+    var articleCategory = typeof $("#articleCategory").val() === 'undefined' ? '' : $("#articleCategory").val();
+    var articleLoclClsfctn = typeof $("#articleLoclClsfctn").val() === 'undefined' ? '' : $("#articleLoclClsfctn").val();
+    var grpType = typeof $("#grpType").val() === 'undefined' ? '' : $("#grpType").val();
+    var groupID = typeof $("#groupID").val() === 'undefined' ? '' : $("#groupID").val();
+    var datePublished = typeof $("#datePublished").val() === 'undefined' ? '' : $("#datePublished").val();
+    var articleTitle = typeof $("#articleTitle").val() === 'undefined' ? '' : $("#articleTitle").val();
+    var articleIntroMsg = typeof $("#articleIntroMsg").val() === 'undefined' ? '' : ($('#articleIntroMsg').summernote('code'));
+    var articleBodyText = typeof $("#articleBodyText").val() === 'undefined' ? '' : ($('#articleBodyText').summernote('code'));
+    var articleID = typeof $("#articleID").val() === 'undefined' ? -1 : $("#articleID").val();
+    /*urlencode*/
+    if (articleCategory === "")
+    {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;">Category cannot be empty!</span></p>'});
+        return false;
+    }
+    if (articleLoclClsfctn === '')
+    {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;">Classification cannot be empty!</span></p>'});
+        return false;
+    }
+    if (articleTitle === '')
+    {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;">Title cannot be empty!</span></p>'});
+        return false;
+    }
+    if (articleIntroMsg === '')
+    {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;">Intro Message cannot be empty!</span></p>'});
+        return false;
+    }
+    var dialog = bootbox.alert({
+        title: 'Save Forum/Notice',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Saving Forum/Notice...Please Wait...</p>',
+        callback: function () {
+            getAllNotices(actionText, slctr, linkArgs);
+        }
+    });
+    dialog.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                method: "POST",
+                url: "index.php",
+                data: {
+                    grp: 40,
+                    typ: 3,
+                    pg: 0,
+                    q: 'UPDATE',
+                    actyp: 1,
+                    articleID: articleID,
+                    articleCategory: articleCategory,
+                    articleLoclClsfctn: articleLoclClsfctn,
+                    grpType: grpType,
+                    groupID: groupID,
+                    datePublished: datePublished,
+                    articleTitle: articleTitle,
+                    articleIntroMsg: articleIntroMsg,
+                    articleBodyText: articleBodyText
+                },
+                success: function (result) {
+                    setTimeout(function () {
+                        dialog.find('.bootbox-body').html(result);
+                    }, 500);
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    /*dialog.find('.bootbox-body').html(errorThrown);*/
+                    console.warn(jqXHR.responseText);
+                }
+            });
+        });
+    });
+}
+
+function closeNoticeForm(actionText, slctr, linkArgs)
+{
+    $('#myFormsModalLg').modal('hide');
+    /*$('#myFormsModalLg').html("");
+     $('#modal').modal('toggle');*/
+    getAllNotices(actionText, slctr, linkArgs);
+}
+
+function delOneNotice(rowIDAttrb)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var pKeyID = -1;
+    if (typeof $('#allnoticesRow' + rndmNum + '_ArticleID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#allnoticesRow' + rndmNum + '_ArticleID').val();
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete Notice?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Notice?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Notice?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Notice...Please Wait...</p>'
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 40,
+                                    typ: 3,
+                                    pg: 0,
+                                    q: 'DELETE',
+                                    actyp: 1,
+                                    articleID: pKeyID
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function pblshUnplsh(rowIDAttrb, action, actionText, slctr, linkArgs)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var pKeyID = -1;
+    if (typeof $('#allnoticesRow' + rndmNum + '_ArticleID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#allnoticesRow' + rndmNum + '_ArticleID').val();
+    }
+    var msgTxt = action + " Notice";
+    var dialog = bootbox.confirm({
+        title: msgTxt + '?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;font-family:georgia, times;">' + msgTxt + '</span>?<br/></p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: msgTxt + '?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Working...Please Wait...</p>'
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 40,
+                                    typ: 3,
+                                    pg: 0,
+                                    q: 'UPDATE',
+                                    actyp: 2,
+                                    articleID: pKeyID,
+                                    actionNtice: action
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            getAllNotices(actionText, slctr, linkArgs);
+                                            dialog1.modal('hide');
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                    dialog1.modal('hide');
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            getAllNotices(actionText, slctr, linkArgs);
+                            dialog1.modal('hide');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function sendComment(actionText, slctr, linkArgs)
+{
+    var articleNwCmmntsMsg = typeof $("#articleNwCmmntsMsg").val() === 'undefined' ? '' : ($('#articleNwCmmntsMsg').summernote('code'));
+    var allcommentsArticleID = typeof $("#allcommentsArticleID").val() === 'undefined' ? -1 : $("#allcommentsArticleID").val();
+    var prntCmntID = typeof $("#crntPrnCmntID").val() === 'undefined' ? -1 : $("#crntPrnCmntID").val();
+    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+        $body = $("body");
+        $body.removeClass("mdlloading");
+        $.ajax({
+            method: "POST",
+            url: "index.php",
+            data: {
+                grp: 40,
+                typ: 3,
+                pg: 0,
+                q: 'UPDATE',
+                actyp: 3,
+                articleID: allcommentsArticleID,
+                prntCmntID: prntCmntID,
+                articleComment: articleNwCmmntsMsg
+            },
+            success: function (result1) {
+                getAllComments(actionText, slctr, linkArgs, 3);
+                $('#articleNwCmmntsMsg').summernote('reset');
+            },
+            error: function (jqXHR1, textStatus1, errorThrown1)
+            {
+                console.log(errorThrown1);
+            }
+        });
+    });
+}
+function showArticleDetails(sbmtdNoticeID, ctgry)
+{
+    openATab('#allnotices', 'grp=40&typ=3&pg=0&vtyp=4&sbmtdNoticeID=' + sbmtdNoticeID);
+}
+
+function autoQueueFdbck()
+{
+    var mailCc = typeof $("#fdbckMailCc").val() === 'undefined' ? '' : $("#fdbckMailCc").val();
+    var mailAttchmnts = typeof $("#fdbckMailAttchmnts").val() === 'undefined' ? '' : $("#fdbckMailAttchmnts").val();
+    var mailSubject = typeof $("#fdbckSubject").val() === 'undefined' ? '' : $("#fdbckSubject").val();
+
+    var bulkMessageBody = typeof $("#fdbckMsgBody").val() === 'undefined' ? '' : ($('#fdbckMsgBody').summernote('code'));
+
+    if (mailSubject.trim() === '')
+    {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;">Subject cannot be empty!</span></p>'
+        });
+        return false;
+    }
+    if (bulkMessageBody.trim() === '')
+    {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;">Message Body cannot be empty!</span></p>'});
+        return false;
+    }
+    var dialog1 = bootbox.confirm({
+        title: 'Send Feedback?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:green;font-weight:bold;font-style:italic;">SEND THIS MESSAGE</span> to the Portal Administrator?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog = bootbox.alert({
+                    title: 'Sending Feedback',
+                    size: 'small',
+                    message: '<div id="myProgress"><div id="myBar"></div></div><div id="myInformation"><i class="fa fa-spin fa-spinner"></i> Sending Messages...Please Wait...</div>',
+                    callback: function () {
+
+                    }
+                });
+                dialog.init(function () {
+                    getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                        $body = $("body");
+                        $body.removeClass("mdlloading");
+
+                        $.ajax({
+                            method: "POST",
+                            url: "index.php",
+                            data: {
+                                grp: 40,
+                                typ: 3,
+                                pg: 0,
+                                q: 'UPDATE',
+                                actyp: 4,
+                                mailCc: mailCc,
+                                mailAttchmnts: mailAttchmnts,
+                                mailSubject: mailSubject,
+                                bulkMessageBody: bulkMessageBody
+                            },
+                            success: function (data) {
+                                var elem = document.getElementById('myBar');
+                                elem.style.width = data.percent + '%';
+                                $("#myInformation").html(data.message);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus + " " + errorThrown);
+                                console.warn(jqXHR.responseText);
+                            }
+                        });
+                    });
+                });
+            }
+        }
+    });
+}
+
+function clearFdbckForm()
+{
+    var dialog = bootbox.confirm({
+        title: 'Clear Form?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">CLEAR</span> this Form?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                $("#fdbckMailCc").val('');
+                $("#fdbckMailAttchmnts").val('');
+                $("#fdbckSubject").val('');
+                $('#fdbckMsgBody').summernote('code', '<p></p>');
+            }
+        }
+    });
+}
+
+function attchFileToFdbck()
+{
+    var crntAttchMnts = $("#fdbckMailAttchmnts").val();
+    $("#allOtherFileInput2").change(function () {
+        var fileName = $(this).val();
+        var input = document.getElementById('allOtherFileInput2');
+        sendFdbckFile(input.files[0], function () {
+            var inptUrl = $("#allOtherInputData2").val();
+            crntAttchMnts = crntAttchMnts + ";" + inptUrl;
+            $("#fdbckMailAttchmnts").val(crntAttchMnts);
+        });
+    });
+    performFileClick('allOtherFileInput2');
+}
+
+function sendFdbckFile(file, callBackFunc) {
+    var data1 = new FormData();
+    data1.append("file", file);
+    $.ajax({
+        url: "dwnlds/uploader1.php",
+        data: data1,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (data) {
+            $("#allOtherInputData2").val(data);
+            callBackFunc();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus + " " + errorThrown);
+        }
     });
 }
 
@@ -830,8 +1778,12 @@ function insertNewRowBe4(tableElmntID, position, inptHtml)
 {
     var nwRndm = Math.floor((Math.random() * 9999999) + 1000000);
     var nwInptHtml = urldecode(inptHtml.replace(/(_WWW123WWW_)+/g, nwRndm + "_").replace(/(_WWW123WWW)+/g, nwRndm));
-    $('#' + tableElmntID + ' > tbody > tr').eq(position).before(nwInptHtml);
-
+    if ($('#' + tableElmntID + ' > tbody > tr').length <= 0)
+    {
+        $('#' + tableElmntID).append(nwInptHtml);
+    } else {
+        $('#' + tableElmntID + ' > tbody > tr').eq(position).before(nwInptHtml);
+    }
     $(function () {
         $('.form_date_tme').datetimepicker({
             format: "dd-M-yyyy hh:ii:ss",
@@ -846,13 +1798,28 @@ function insertNewRowBe4(tableElmntID, position, inptHtml)
             maxView: 4,
             forceParse: true
         });
+        $('.form_date').datetimepicker({
+            format: "dd-M-yyyy",
+            language: 'en',
+            weekStart: 0,
+            todayBtn: true,
+            autoclose: true,
+            todayHighlight: true,
+            keyboardNavigation: true,
+            startView: 2,
+            minView: 2,
+            maxView: 4,
+            forceParse: true
+        });
     });
 }
 
 function urldecode(str) {
     return unescape(decodeURIComponent(str.replace(/\+/g, ' ')));
 }
-
+function urlencode(str) {
+    return escape(encodeURIComponent(str.replace(/\+/g, ' ')));
+}
 function logOutFunc()
 {
     BootstrapDialog.show({
@@ -861,6 +1828,9 @@ function logOutFunc()
         title: 'System Alert!',
         message: 'Are you sure you want to Logout?',
         animate: true,
+        closable: true,
+        closeByBackdrop: false,
+        closeByKeyboard: false,
         onshow: function (dialog) {
         },
         buttons: [{
@@ -874,6 +1844,10 @@ function logOutFunc()
                 icon: 'glyphicon glyphicon-menu-left',
                 cssClass: 'btn-primary',
                 action: function (dialogItself) {
+                    var $button = this;
+                    $button.disable();
+                    $button.spin();
+                    dialogItself.setClosable(false);
                     $.ajax({
                         method: "POST",
                         url: "index.php",
@@ -887,6 +1861,7 @@ function logOutFunc()
 }
 var isLgnSccfl = 0;
 var curDialogItself = null;
+var lgnBtnSsn = null;
 var curCallBack = null;
 function getMsgAsync(linkArgs, callback) {
     $body = $("body");
@@ -905,21 +1880,20 @@ function getMsgAsync(linkArgs, callback) {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
             var sessionvld = xmlhttp.responseText;
-            //alert(sessionvld);
             if (sessionvld != 1
                     || sessionvld == ''
                     || (typeof sessionvld === 'undefined'))
             {
                 sessionvld = '<div class="login"><form role="form">' +
                         '<fieldset>' +
-                        '<div class="form-group">' +
+                        '<div class="form-group" style="margin-bottom:10px !important;">' +
                         '<div class="input-group">' +
                         '<span class="input-group-addon" id="basic-addon1">' +
                         '<i class="fa fa-user fa-fw fa-border"></i></span>' +
-                        '<input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" id="usrnm" name="usrnm"  onkeyup="enterKeyFuncLgn(event);" autofocus>' +
+                        '<input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" id="usrnm" name="usrnm" onkeyup="enterKeyFuncLgn(event);" autofocus>' +
                         '</div>' +
                         '</div>' +
-                        '<div class="form-group">' +
+                        '<div class="form-group" style="margin-bottom:10px !important;">' +
                         '<div class="input-group">' +
                         '<span class="input-group-addon" id="basic-addon1"><i class="fa fa-key fa-fw fa-border"></i></span>' +
                         '<input class="form-control" placeholder="Password" id="pwd" name="pwd" type="password" value=""  onkeyup="enterKeyFuncLgn(event);">' +
@@ -944,15 +1918,27 @@ function getMsgAsync(linkArgs, callback) {
                     title: 'Session Expired!',
                     message: sessionvld,
                     animate: true,
+                    closable: true,
+                    closeByBackdrop: false,
+                    closeByKeyboard: false,
                     onshow: function (dialogItself) {
                         curDialogItself = dialogItself;
                         curCallBack = callback;
+                        lgnBtnSsn = dialogItself.getButton('lgnBtnSsn');
+                    },
+                    onshown: function (dialogItself) {
+                        $('#usrnm').focus();
+                        lgnBtnSsn = dialogItself.getButton('lgnBtnSsn');
                     },
                     buttons: [{
                             label: 'Logout',
                             icon: 'glyphicon glyphicon-menu-left',
                             cssClass: 'btn-default',
                             action: function (dialogItself) {
+                                var $button = this;
+                                $button.disable();
+                                $button.spin();
+                                dialogItself.setClosable(false);
                                 $.ajax({
                                     method: "POST",
                                     url: "index.php",
@@ -962,12 +1948,128 @@ function getMsgAsync(linkArgs, callback) {
                                     }});
                             }
                         }, {
+                            id: 'lgnBtnSsn',
                             label: 'Login',
                             icon: 'glyphicon glyphicon-menu-right',
                             cssClass: 'btn-primary',
                             action: function (dialogItself) {
                                 curDialogItself = dialogItself;
                                 curCallBack = callback;
+                                var $button = this;
+                                $button.disable();
+                                $button.spin();
+                                dialogItself.setClosable(false);
+                                homePageLgn(dialogItself, callback);
+                            }
+                        }]
+                });
+            } else {
+                callback();
+            }
+        } else
+        {
+
+        }
+    };
+    xmlhttp.open("POST", "index.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send(linkArgs.trim());
+}
+
+function getMsgAsyncSilent(linkArgs, callback) {
+    $body = $("body");
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        xmlhttp = new XMLHttpRequest();
+    } else
+    {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange = function ()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            var sessionvld = xmlhttp.responseText;
+            if (sessionvld != 1
+                    || sessionvld == ''
+                    || (typeof sessionvld === 'undefined'))
+            {
+                sessionvld = '<div class="login"><form role="form">' +
+                        '<fieldset>' +
+                        '<div class="form-group" style="margin-bottom:10px !important;">' +
+                        '<div class="input-group">' +
+                        '<span class="input-group-addon" id="basic-addon1">' +
+                        '<i class="fa fa-user fa-fw fa-border"></i></span>' +
+                        '<input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" id="usrnm" name="usrnm" onkeyup="enterKeyFuncLgn(event);" autofocus>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="form-group" style="margin-bottom:10px !important;">' +
+                        '<div class="input-group">' +
+                        '<span class="input-group-addon" id="basic-addon1"><i class="fa fa-key fa-fw fa-border"></i></span>' +
+                        '<input class="form-control" placeholder="Password" id="pwd" name="pwd" type="password" value=""  onkeyup="enterKeyFuncLgn(event);">' +
+                        '<input type="hidden" id="machdet" name="machdet" value="Unknown">' +
+                        '</div>' +
+                        '</div>' +
+                        '<p class="label" id="msgArea">' +
+                        '<label style="color:red;font-size:12px;text-align: center;">' +
+                        '&nbsp;' +
+                        '</label>' +
+                        '</p>' +
+                        '</fieldset>' +
+                        '</form></div>';
+            }
+
+            if (sessionvld != 1)
+            {
+                BootstrapDialog.show({
+                    size: BootstrapDialog.SIZE_SMALL,
+                    type: BootstrapDialog.TYPE_DEFAULT,
+                    title: 'Session Expired!',
+                    message: sessionvld,
+                    animate: true,
+                    closable: true,
+                    closeByBackdrop: false,
+                    closeByKeyboard: false,
+                    onshow: function (dialogItself) {
+                        curDialogItself = dialogItself;
+                        curCallBack = callback;
+                        lgnBtnSsn = dialogItself.getButton('lgnBtnSsn');
+                    },
+                    onshown: function (dialogItself) {
+                        $('#usrnm').focus();
+                        lgnBtnSsn = dialogItself.getButton('lgnBtnSsn');
+                    },
+                    buttons: [{
+                            label: 'Logout',
+                            icon: 'glyphicon glyphicon-menu-left',
+                            cssClass: 'btn-default',
+                            action: function (dialogItself) {
+                                var $button = this;
+                                $button.disable();
+                                $button.spin();
+                                dialogItself.setClosable(false);
+                                $.ajax({
+                                    method: "POST",
+                                    url: "index.php",
+                                    data: {q: 'logout'},
+                                    success: function (result) {
+                                        window.location = "index.php";
+                                    }});
+                            }
+                        }, {
+                            id: 'lgnBtnSsn',
+                            label: 'Login',
+                            icon: 'glyphicon glyphicon-menu-right',
+                            cssClass: 'btn-primary',
+                            action: function (dialogItself) {
+                                curDialogItself = dialogItself;
+                                curCallBack = callback;
+                                var $button = this;
+                                $button.disable();
+                                $button.spin();
+                                dialogItself.setClosable(false);
                                 homePageLgn(dialogItself, callback);
                             }
                         }]
@@ -989,6 +2091,9 @@ function enterKeyFuncLgn(e)
 {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
     if (charCode == 13) {
+        lgnBtnSsn.disable();
+        lgnBtnSsn.spin();
+        curDialogItself.setClosable(false);
         homePageLgn(curDialogItself, curCallBack);
     }
     //return false;
@@ -1010,14 +2115,12 @@ function homePageLgn(dialogItself, callback)
     {
         $('#modal-7 .modal-body').html('User Name cannot be empty!');
         $('#modal-7').modal('show', {backdrop: 'static'});
-        //alert('User Name cannot be empty!');
         return false;
     }
     if (old_pswd === "" || old_pswd === null)
     {
         $('#modal-7 .modal-body').html('Password cannot be empty!');
         $('#modal-7').modal('show', {backdrop: 'static'});
-        //alert('Password cannot be empty!');
         return false;
     }
     lnkArgs = "usrnm=" + usrNm + "&pwd=" + old_pswd + "&machdet=" + machdet + "&screenwdth=" + screen.width;
@@ -1042,7 +2145,7 @@ function homePageLgn(dialogItself, callback)
             if (rspns.indexOf('change password') > -1
                     || rspns.indexOf('select role') > -1)
             {
-                //window.location = 'index.php';
+                dialogItself.setClosable(true);
                 isLgnSccfl = 1;
                 dialogItself.close();
                 $body = $("body");
@@ -1050,6 +2153,9 @@ function homePageLgn(dialogItself, callback)
                 callback();
             } else
             {
+                lgnBtnSsn.enable();
+                lgnBtnSsn.stopSpin();
+                dialogItself.setClosable(true);
                 isLgnSccfl = 0;
                 document.getElementById("msgArea").innerHTML = "<span style=\"color:red;font-size:12px;text-align: center;margin-top:0px;\">&nbsp;" + rspns + "</span>";
             }
@@ -1075,11 +2181,12 @@ function dwnldAjxCall(linkArgs, elemtnID) {
         {
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
-
         xmlhttp.onreadystatechange = function ()
         {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
             {
+                $body = $("body");
+                $body.removeClass("mdlloading");
                 document.getElementById(elemtnID).innerHTML = "&nbsp;";
                 window.open(xmlhttp.responseText, '_blank');
             } else
@@ -1202,4 +2309,71 @@ function setFileLoc(input, nwSrcLocElmnt) {
     if (input.files && input.files[0]) {
         $(nwSrcLocElmnt).attr('value', $(input).val());
     }
+}
+function scrollTo(hash) {
+    location.hash = "#" + hash;
+}
+function rhotrim(s, mask) {
+    while (~mask.indexOf(s[0])) {
+        s = s.slice(1);
+    }
+    while (~mask.indexOf(s[s.length - 1])) {
+        s = s.slice(0, -1);
+    }
+    return s;
+}
+
+function rhoFrmtDate()
+{
+    var m_names = new Array("Jan", "Feb", "Mar",
+            "Apr", "May", "Jun", "Jul", "Aug", "Sep",
+            "Oct", "Nov", "Dec");
+
+    var d = new Date();
+    var curr_date = d.getDate().padLeft();
+    var curr_month = d.getMonth();
+    var curr_year = d.getFullYear();
+    var first_part = curr_date + "-" + m_names[curr_month]
+            + "-" + curr_year;
+
+    var dformat = first_part + ' ' +
+            [d.getHours().padLeft(),
+                d.getMinutes().padLeft(),
+                d.getSeconds().padLeft()].join(':');
+    return dformat;
+}
+
+
+function isReaderAPIAvlbl() {
+    // Check for the various File API support.
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // Great success! All the File APIs are supported.
+        return true;
+    } else {
+        // source: File API availability - http://caniuse.com/#feat=fileapi
+        // source: <output> availability - http://html5doctor.com/the-output-element/
+        var errMsg = "";
+        errMsg += 'The HTML5 APIs used in this form are only available in the following browsers:<br />';
+        // 6.0 File API & 13.0 <output>
+        errMsg += ' - Google Chrome: 13.0 or later<br />';
+        // 3.6 File API & 6.0 <output>
+        errMsg += ' - Mozilla Firefox: 6.0 or later<br />';
+        // 10.0 File API & 10.0 <output>
+        errMsg += ' - Internet Explorer: Not supported (partial support expected in 10.0)<br />';
+        // ? File API & 5.1 <output>
+        errMsg += ' - Safari: Not supported<br />';
+        // ? File API & 9.2 <output>
+        errMsg += ' - Opera: Not supported';
+        var dialog = bootbox.alert({
+            title: 'System Alert',
+            size: 'small',
+            message: '<p style="color:red;font-weight:bold;">' + errMsg + '</p>',
+            callback: function () {
+            }
+        });
+        return false;
+    }
+}
+function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
 }

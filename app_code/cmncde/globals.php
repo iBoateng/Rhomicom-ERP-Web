@@ -4,6 +4,10 @@ function cleanInputData($data) {
     return $data;
 }
 
+function cleanInputData1($data) {
+    return str_replace("{:;:;}", "|", str_replace("{-;-;}", "~", $data));
+}
+
 function cleanOutputData($data) {
     return trim(htmlentities(strip_tags($data)));
 }
@@ -24,11 +28,11 @@ function executeSQLNoParams($selSQL, $extrMsg = '') {
     $conn = getConn();
     $result = loc_db_query($conn, $selSQL);
     if (!$result) {
-        $txt = "An error occurred. <br/> " . loc_db_result_error($result);
+        $txt = "@" . date("d-M-Y H:i:s") . PHP_EOL . "An error occurred. <br/> " . loc_db_result_error($result) . PHP_EOL . $selSQL;
         echo $txt;
         file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . PHP_EOL . $selSQL . $logNxtLine, FILE_APPEND | LOCK_EX);
     } else if ($extrMsg != '') {
-        $txt = $extrMsg;
+        $txt = $extrMsg . "@" . date("d-M-Y H:i:s");
         file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . PHP_EOL . $selSQL . $logNxtLine, FILE_APPEND | LOCK_EX);
     }
     loc_db_close($conn);
@@ -42,11 +46,12 @@ function execUpdtInsSQL($inSQL, $extrMsg = '', $src = 0) {
     $conn = getConn();
     $result = loc_db_query($conn, $inSQL);
     if (!$result) {
-        $txt = "An error occurred. <br/> " . loc_db_result_error($result);
+        $txt = "@" . date("d-M-Y H:i:s") . PHP_EOL . "An error occurred. <br/> " . loc_db_result_error($result) . PHP_EOL . $inSQL;
         echo $txt;
         file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . PHP_EOL . $inSQL . $logNxtLine, FILE_APPEND | LOCK_EX);
-    } else if ($extrMsg != '') {
-        $txt = $extrMsg;
+    } else if ($src <= 0) {
+        /* $extrMsg != '' */
+        $txt = $extrMsg . "@" . date("d-M-Y H:i:s");
         file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", $txt . PHP_EOL . $inSQL . $logNxtLine, FILE_APPEND | LOCK_EX);
     }
     loc_db_close($conn);
@@ -81,10 +86,10 @@ function storeAdtTrailInfo($infoStmnt, $actntype, $extrMsg) {
     $seqID = getNewAdtTrailID($seqName);
     if ($seqID > 0) {
         $sqlStr = "INSERT INTO " . $ModuleAdtTbl . " (" .
-                "user_id, action_type, action_details, action_time, login_number) " .
+                "user_id, action_type, action_details, action_time, login_number, dflt_row_id) " .
                 "VALUES (" . $usrID . ", '" . $action_types[$actntype] .
-                "', '" . "', '" . $dateStr . "', " . $lgn_num . ")";
-        $txt = loc_db_escape_string($extrMsg) . PHP_EOL .
+                "', '" . loc_db_escape_string($extrMsg) . "', '" . $dateStr . "', " . $lgn_num . ", " . $seqID . ")";
+        $txt = loc_db_escape_string($extrMsg) . "@" . date("d-M-Y H:i:s") . PHP_EOL .
                 loc_db_escape_string($infoStmnt);
         file_put_contents($ftp_base_db_fldr . "/bin/log_files/adt_trail/$seqID" . "_" . $lgn_num . ".rho", $txt . $logNxtLine, FILE_APPEND | LOCK_EX);
         execUpdtInsSQL($sqlStr, '', 1);
@@ -209,7 +214,7 @@ function doesCrPlcTrckThisActn($actionTyp) {
 
 function deleteGnrlRecs($rowID, $tblnm, $pk_nm, $extrInf = '') {
     $delSQL = "DELETE FROM " . $tblnm . " WHERE " . $pk_nm . " = " . $rowID;
-    execUpdtInsSQL($delSQL, $extrInf);
+    return execUpdtInsSQL($delSQL, $extrInf);
 }
 
 function getLogMsgID($logTblNm, $procstyp, $procsID) {
@@ -220,6 +225,269 @@ function getLogMsgID($logTblNm, $procstyp, $procsID) {
         return (float) $row[0];
     }
     return -1;
+}
+
+function isDteTmeWthnIntrvl($in_date, $intrval) {
+    $sqlStr = "SELECT age(now(), to_timestamp('$in_date', 'YYYY-MM-DD HH24:MI:SS')) " .
+            "<= interval '$intrval'";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        if ("$row[0]" == 't') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
+function doesDteTmeExceedIntrvl($in_date, $intrval) {
+    //
+    $sqlStr = "SELECT age(now(), to_timestamp('$in_date', 'YYYY-MM-DD HH24:MI:SS')) " .
+            "> interval '$intrval'";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        if ("$row[0]" == 't') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
+function findArryIdx($arry1, $srch) {
+    for ($i = 0; $i < count($arry1); $i++) {
+        if ($arry1[$i] == $srch) {
+            return $i;
+        }
+    }
+    return -1;
+}
+
+function createRptRn($runBy, $runDate, $rptID, $paramIDs, $paramVals, $outptUsd, $orntUsd, $alrtID) {
+    //$datestr = getDB_Date_time();
+    $insSQL = "INSERT INTO rpt.rpt_report_runs(
+            run_by, run_date, rpt_run_output, run_status_txt, 
+            run_status_prct, report_id, rpt_rn_param_ids, rpt_rn_param_vals, 
+            output_used, orntn_used, last_actv_date_tme, is_this_from_schdler, alert_id) 
+            VALUES ($runBy, '$runDate', '', 'Not Started!', 0, $rptID, 
+            '" . loc_db_escape_string($paramIDs) . "', 
+            '" . loc_db_escape_string($paramVals) . "', 
+            '" . loc_db_escape_string($outptUsd) . "', 
+            '" . loc_db_escape_string($orntUsd) . "', '$runDate', '0', " . loc_db_escape_string($alrtID) . ")";
+    execUpdtInsSQL($insSQL);
+}
+
+function getRptRnID($rptID, $runBy, $runDate) {
+    $sqlStr = "select rpt_run_id from rpt.rpt_report_runs where run_by = 
+        $runBy and report_id = $rptID and run_date = '$runDate' order by rpt_run_id DESC";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function createLogMsg($logmsg, $logTblNm, $procstyp, $procsID, $dateStr) {
+    global $usrID;
+    $insSQL = "INSERT INTO " . $logTblNm . "(" .
+            "log_messages, process_typ, process_id, created_by, creation_date, " .
+            "last_update_by, last_update_date) " .
+            "VALUES ('" . loc_db_escape_string($logmsg) .
+            "','" . loc_db_escape_string($procstyp) . "'," . $procsID .
+            ", " . $usrID . ", '" . $dateStr .
+            "', " . $usrID . ", '" . $dateStr .
+            "')";
+    execUpdtInsSQL($insSQL);
+}
+
+function updateLogMsg($msgid, $logmsg, $logTblNm, $dateStr) {
+    global $usrID;
+    $updtSQL = "UPDATE " . $logTblNm . " " .
+            "SET log_messages=log_messages || '" . loc_db_escape_string($logmsg) .
+            "', last_update_by=" . $usrID .
+            ", last_update_date='" . $dateStr .
+            "' WHERE msg_id = " . $msgid;
+    execUpdtInsSQL($updtSQL);
+}
+
+function updateRptRnParams($rptrnid, $paramIDs, $paramVals, $outputUsd, $orntn) {
+    $updtSQL = "UPDATE rpt.rpt_report_runs SET " .
+            "rpt_rn_param_ids = '" . loc_db_escape_string($paramIDs) .
+            "', rpt_rn_param_vals = '" . loc_db_escape_string($paramVals) .
+            "', output_used = '" . loc_db_escape_string($outputUsd) .
+            "', orntn_used= '" . loc_db_escape_string($orntn) .
+            "' WHERE (rpt_run_id = " . $rptrnid . ")";
+    execUpdtInsSQL($updtSQL);
+}
+
+function updatePrcsRnnrCmd($rnnrNm, $cmdStr) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $updtSQL = "UPDATE rpt.rpt_prcss_rnnrs SET 
+            shld_rnnr_stop='" . loc_db_escape_string($cmdStr) .
+            "', last_update_by=" . $usrID . ", last_update_date='" . $dateStr .
+            "' WHERE rnnr_name = '" . loc_db_escape_string($rnnrNm) . "'";
+    execUpdtInsSQL($updtSQL);
+}
+
+function updateRptRnActvTme($rptrnid, $actvTme) {
+    $updtSQL = "UPDATE rpt.rpt_report_runs SET " .
+            "last_actv_date_tme = '" . loc_db_escape_string($actvTme) .
+            "' WHERE (rpt_run_id = " . $rptrnid . ")";
+    execUpdtInsSQL($updtSQL);
+}
+
+function updateRptRnStopCmd($rptrnid, $cmdStr) {
+    $updtSQL = "UPDATE rpt.rpt_report_runs SET " .
+            "shld_run_stop = '" . loc_db_escape_string($cmdStr) .
+            "' WHERE (rpt_run_id = " . $rptrnid . ")";
+    execUpdtInsSQL($updtSQL);
+}
+
+function generateReportRun($rptID, $slctdParams, $alrtID) {
+    global $usrID;
+    global $ftp_base_db_fldr;
+    global $host;
+    global $port;
+    global $db_usr;
+    global $db_pwd;
+    global $database;
+    global $app_url;
+    global $lgn_num;
+    $rptRunID = -1;
+    $rptRnnrNm = "";
+    $rnnrPrcsFile = "";
+    $slctdParamsRows = explode("|", $slctdParams);
+    $paramIDs = "";
+    $paramVals = "";
+    $outputUsd = "HTML";
+    $orntn = "";
+    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . ".rho", "Inside generateReportRun, RPTID=" . $rptID . "==" . $slctdParams . PHP_EOL, FILE_APPEND | LOCK_EX);
+
+
+    for ($i = 0; $i < count($slctdParamsRows); $i++) {
+        $slctdParamsCols = explode("~", $slctdParamsRows[$i]);
+        if ($slctdParamsCols[0] != "") {
+            $paramIDs = $paramIDs . cleanInputData($slctdParamsCols[0]) . "|";
+            $paramVals = $paramVals . cleanInputData($slctdParamsCols[1]) . "|";
+            if (cleanInputData($slctdParamsCols[0]) == "-190") {
+                $outputUsd = cleanInputData($slctdParamsCols[1]);
+            } else if (cleanInputData($slctdParamsCols[0]) == "-200") {
+                $orntn = cleanInputData($slctdParamsCols[1]);
+            }
+        }
+    }
+
+    $paramIDs = substr($paramIDs, 0, -1); //trim($paramIDs, "| ");
+    $paramVals = substr($paramVals, 0, -1); //trim($paramVals, "| ");
+    //file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . ".rho", $paramIDs . "==" . $paramVals . "==" . $slctdParamsRows . PHP_EOL, FILE_APPEND | LOCK_EX);
+
+    if ($paramIDs != "" && $paramVals != "") {
+        $datestr = getDB_Date_time();
+        createRptRn($usrID, $datestr, $rptID, "", "", "", "", $alrtID);
+        $rptRunID = getRptRnID($rptID, $usrID, $datestr);
+        $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+        if ($msg_id <= 0) {
+            createLogMsg($datestr .
+                    " .... Report/Process Run is about to Start...(Being run by " .
+                    getUserName($usrID) . ")", "rpt.rpt_run_msgs", "Process Run", $rptRunID, $datestr);
+            $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+        }
+        updateLogMsg($msg_id, "\r\n\r\n" . $paramIDs . "\r\n" . $paramVals .
+                "\r\n\r\nOUTPUT FORMAT: " . $outputUsd . "\r\nORIENTATION: " . $orntn, "rpt.rpt_run_msgs", $datestr);
+        updateRptRnParams($rptRunID, $paramIDs, $paramVals, $outputUsd, $orntn);
+
+        //Launch appropriate process runner
+        $rptRnnrNm = getGnrlRecNm("rpt.rpt_reports", "report_id", "process_runner", $rptID);
+        $rnnrPrcsFile = $ftp_base_db_fldr . "/bin/REMSProcessRunner.jar";
+        updatePrcsRnnrCmd($rptRnnrNm, "0");
+        updateRptRnStopCmd($rptRunID, "0");
+        //PHP Command to start jar file
+        $strArgs = "\"" . $host . "\" " .
+                "\"" . $port . "\" " .
+                "\"" . $db_usr . "\" " .
+                "\"" . $db_pwd . "\" " .
+                "\"" . $database . "\" " .
+                "\"" . $rptRnnrNm . "\" " .
+                "\"" . $rptRunID . "\" " .
+                "\"" . $ftp_base_db_fldr . "/bin" . "\" " .
+                "WEB" . " " .
+                "\"" . $ftp_base_db_fldr . "\" " .
+                "\"" . $app_url . "\"";
+        $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
+        execInBackground($cmd);
+    } else {
+        echo "Invalid Parameters";
+    }
+    return $rptRunID;
+}
+
+function reRunReport($rptID, $rptRunID) {
+    global $usrID;
+    global $ftp_base_db_fldr;
+    global $host;
+    global $port;
+    global $db_usr;
+    global $db_pwd;
+    global $database;
+    global $app_url;
+    $outputUsd = "HTML";
+    $orntn = "";
+    $rptRnnrNm = getGnrlRecNm("rpt.rpt_reports", "report_id", "process_runner", $rptID);
+    $rnnrPrcsFile = $ftp_base_db_fldr . "/bin/REMSProcessRunner.jar";
+    $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+    $datestr = getDB_Date_time();
+    if ($msg_id <= 0) {
+        createLogMsg($datestr .
+                " .... Report/Process Run is about to Start...(Being run by " .
+                getUserName($usrID) . ")", "rpt.rpt_run_msgs", "Process Run", $rptRunID, $datestr);
+        $msg_id = getLogMsgID("rpt.rpt_run_msgs", "Process Run", $rptRunID);
+    }
+    updateLogMsg($msg_id, "\r\n\r\nRe-run of program about to start...", "rpt.rpt_run_msgs", $datestr);
+    updatePrcsRnnrCmd($rptRnnrNm, "0");
+    updateRptRnStopCmd($rptRunID, "0");
+    updateRptRnActvTme($rptRunID, $datestr);
+    //PHP Command to start jar file
+    $strArgs = "\"" . $host . "\" " .
+            "\"" . $port . "\" " .
+            "\"" . $db_usr . "\" " .
+            "\"" . $db_pwd . "\" " .
+            "\"" . $database . "\" " .
+            "\"" . $rptRnnrNm . "\" " .
+            "\"" . $rptRunID . "\" " .
+            "\"" . $ftp_base_db_fldr . "/bin" . "\" " .
+            "WEB" . " " .
+            "\"" . $ftp_base_db_fldr . "\" " .
+            "\"" . $app_url . "\"";
+    $cmd = "java -jar " . $rnnrPrcsFile . " " . $strArgs;
+    execInBackground($cmd);
+    return $rptRunID;
+}
+
+function execInBackground($cmd) {
+    if (substr(php_uname(), 0, 7) == "Windows") {
+        pclose(popen("start /B " . $cmd, "r"));
+    } else {
+        exec($cmd . " > /dev/null &");
+    }
+    return "Success";
+}
+
+function execInBckgrndWndws($cmd) {
+    pclose(popen("start /B " . $cmd, "r"));
+    return "Success";
+}
+
+function execInBckgrndUnix($cmd) {
+    global $ftp_base_db_fldr;
+    global $lgn_num;
+    global $logNxtLine;
+    file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", PHP_EOL . $cmd . $logNxtLine, FILE_APPEND | LOCK_EX);
+
+    exec($cmd . " > " . $ftp_base_db_fldr . "/bin/log_files/" . $lgn_num . "_lgout.rho");
+    return "Success";
 }
 
 function getCurPlcyID() {
@@ -315,17 +583,17 @@ function updateWkfApp($appID, $applNm, $srcMdl, $appdesc) {
     execUpdtInsSQL($insSQL);
 }
 
-function deleteWkfApp($appID) {
+function deleteWkfApp($appID, $appNm = "") {
     $affctd1 = 0;
     $affctd2 = 0;
     $affctd3 = 0;
 
     $insSQL = "DELETE FROM wkf.wkf_apps_n_hrchies WHERE app_id = " . $appID;
-    $affctd1 += execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL, "App Name:" . $appNm);
     $insSQL = "DELETE FROM wkf.wkf_apps_actions WHERE app_id = " . $appID;
-    $affctd2 += execUpdtInsSQL($insSQL);
+    $affctd2 += execUpdtInsSQL($insSQL, "App Name:" . $appNm);
     $insSQL = "DELETE FROM wkf.wkf_apps WHERE app_id = " . $appID;
-    $affctd3 += execUpdtInsSQL($insSQL);
+    $affctd3 += execUpdtInsSQL($insSQL, "App Name:" . $appNm);
 
     if ($affctd3 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
@@ -351,7 +619,7 @@ function createWkfAppAction($actionNm, $sqlStmnt, $appID, $exctbl, $webURL, $isd
             "', " . $usrID . ", '" . $dateStr . "', " . $usrID . ", '" . $dateStr . "', $appID, 
             '" . loc_db_escape_string($exctbl) . "', '" . loc_db_escape_string($webURL) .
             "', '$isdiag','" . loc_db_escape_string($desc) . "','" . loc_db_escape_string($isadmnonly) . "')";
-    execUpdtInsSQL($insSQL);
+    return execUpdtInsSQL($insSQL);
 }
 
 function updateWkfAppAction($actionID, $actionNm, $sqlStmnt, $appID, $exctbl, $webURL, $isdiag, $desc, $isadmnonly = "0") {
@@ -369,12 +637,12 @@ function updateWkfAppAction($actionID, $actionNm, $sqlStmnt, $appID, $exctbl, $w
             is_admin_only='" . loc_db_escape_string($isadmnonly) . "',
             web_url='" . loc_db_escape_string($webURL) .
             "' WHERE action_sql_id = " . $actionID;
-    execUpdtInsSQL($insSQL);
+    return execUpdtInsSQL($insSQL);
 }
 
-function deleteWkfAppAction($actionID) {
+function deleteWkfAppAction($actionID, $actnNm = "") {
     $insSQL = "DELETE FROM wkf.wkf_apps_actions WHERE action_sql_id = " . $actionID;
-    $affctd1 += execUpdtInsSQL($insSQL);
+    $affctd1 += execUpdtInsSQL($insSQL, "Action Name:" . $actnNm);
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 App Action(s)!";
@@ -426,6 +694,101 @@ function getNextApprvrInMnlHrchy($hrchyID, $curHrchyLvl) {
         return (float) $row[0];
     }
     return -1;
+}
+
+function getNextMnlHrchyLvlID($hrchyID, $curHrchyLvl) {
+    $sqlStr = "SELECT mnl_hrchy_det_id from wkf.wkf_manl_hierarchy_details " .
+            "where ((is_enabled = '1' and hrchy_level > " . $curHrchyLvl . ") AND (hierarchy_id = " . $hrchyID . ")) "
+            . "ORDER BY hrchy_level ASC LIMIT 1 OFFSET 0";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function getNextApprvrsInMnlHrchy($hrchyID, $curHrchyLvl) {
+    $sqlStr = "SELECT CASE WHEN b.person_id IS NULL THEN c.person_id ELSE b.person_id END "
+            . " from wkf.wkf_manl_hierarchy_details c "
+            . "LEFT OUTER JOIN wkf.wkf_apprvr_group_members b ON (b.apprvr_group_id=c.apprvr_group_id) " .
+            " WHERE c.hrchy_level = COALESCE((select a.hrchy_level from wkf.wkf_manl_hierarchy_details a "
+            . "where ((a.is_enabled = '1' and a.hrchy_level > " . $curHrchyLvl .
+            ") AND (a.hierarchy_id = " . $hrchyID . ")) "
+            . "ORDER BY a.hrchy_level ASC LIMIT 1 OFFSET 0),-999999999) "
+            . "AND (c.hierarchy_id = " . $hrchyID . " and c.is_enabled = '1')";
+    $result = executeSQLNoParams($sqlStr);
+    return $result;
+}
+
+function getTrnsBatchID($batchname, $orgid) {
+    $sqlStr = "select batch_id from accb.accb_trnsctn_batches where lower(batch_name) = '" .
+            loc_db_escape_string(strtolower($batchname)) . "' and org_id = " . $orgid;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function getTrnsBatchName($batchid) {
+    $sqlStr = "select batch_name from accb.accb_trnsctn_batches where batch_id = " .
+            $batchid . "";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+function getAccntID($accntname, $orgid) {
+    $sqlStr = "select accnt_id from accb.accb_chart_of_accnts where ((lower(accnt_name) = '" .
+            loc_db_escape_string(strtolower($accntname)) . "' or lower(accnt_num) = '" .
+            loc_db_escape_string(strtolower($accntname)) . "') and org_id = " . $orgid . ")";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
+function getAccntName($accntid) {
+    $sqlStr = "select accnt_name from accb.accb_chart_of_accnts where accnt_id = " .
+            $accntid . "";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+function getAccntNum($accntid) {
+    $sqlStr = "select accnt_num from accb.accb_chart_of_accnts where accnt_id = " .
+            $accntid . "";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+function getAccntType($accntid) {
+    $sqlStr = "select accnt_type from accb.accb_chart_of_accnts where accnt_id = " .
+            $accntid . "";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
+}
+
+function isAccntContra($accntid) {
+    $sqlStr = "select is_contra from accb.accb_chart_of_accnts where accnt_id = " .
+            $accntid . "";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return "";
 }
 
 function add_date($givendate, $day = 0, $mth = 0, $yr = 0) {
@@ -609,6 +972,19 @@ function getUserPrsnID($username) {
     return -1;
 }
 
+function getUserStoreID($userid, $orgID) {
+    $sqlStr = "select y.subinv_id 
+              from inv.inv_itm_subinventories y, inv.inv_user_subinventories z
+              where y.subinv_id=z.subinv_id and 
+              y.allow_sales = '1' and z.user_id = " . $userid .
+            "and y.org_id= " . $orgID . " order by 1 LIMIT 1 OFFSET 0 ";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (float) $row[0];
+    }
+    return -1;
+}
+
 function getUserPrsnID1($userID) {
     $sqlStr = "select person_id from sec.sec_users where 
         user_id=$userID";
@@ -694,6 +1070,15 @@ function getPersonLocID($prsnID) {
         return $row[0];
     }
     return "";
+}
+
+function getPersonImg($pkID) {
+    $sqlStr = "select img_location from prs.prsn_names_nos WHERE (person_id=$pkID)";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return '';
 }
 
 function getPersonSlfSrvcsImg($pkID) {
@@ -1009,6 +1394,17 @@ function getLovNm($lovID) {
     return "";
 }
 
+function getEnbldPssblValID($pssblVal, $lovID) {
+    $sqlStr = "SELECT pssbl_value_id from gst.gen_stp_lov_values " .
+            "where ((pssbl_value = '" .
+            loc_db_escape_string($pssblVal) . "') AND (value_list_id = " . $lovID . ") and is_enabled = '1')";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
+}
+
 function getPssblValID($pssblVal, $lovID) {
     $sqlStr = "SELECT pssbl_value_id from gst.gen_stp_lov_values " .
             "where ((pssbl_value = '" .
@@ -1087,6 +1483,7 @@ function getSQLForDynamicVlLst($lovID) {
 }
 
 function getLovValues($searchWord, $searchIn, $offset, $limit_size, &$brghtsqlStr, $lovID, &$is_dynamic, $criteriaID, $criteriaID2, $criteriaID3, $addtnlWhere = "") {
+    global $usrID;
     $lovNm = getLovNm($lovID);
     $strSql = "";
     $is_dynamic = false;
@@ -1107,31 +1504,31 @@ function getLovValues($searchWord, $searchIn, $offset, $limit_size, &$brghtsqlSt
     }
     if (isVlLstDynamic($lovID) == true) {
         if ($criteriaID <= 0 && $criteriaID2 == "" && $criteriaID3 == "") {
-            $strSql = "select * from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select * from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE 1=1 " . $extrWhere . $addtnlWhere . " " . $ordrBy . " LIMIT " . $limit_size .
                     " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID >= 0 && $criteriaID2 == "" && $criteriaID3 == "") {
-            $strSql = "select " . $selLst . " from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE tbl1.d = " . $criteriaID . " " . $extrWhere . $addtnlWhere . " " . $ordrBy . " LIMIT " . $limit_size .
                     " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 == "") {
-            $strSql = "select " . $selLst . " from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
                     loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                     " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 != "") {
-            $strSql = "select " . $selLst . " from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
                     loc_db_escape_string($criteriaID2) . "' and tbl1.f = '" . loc_db_escape_string($criteriaID3) .
                     "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                     " OFFSET " . abs($offset * $limit_size);
         } else if ($criteriaID < 0 && $criteriaID2 != "" && $criteriaID3 == "") {
-            $strSql = "select " . $selLst . " from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE (tbl1.e = '" .
                     loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                     " OFFSET " . abs($offset * $limit_size);
         } else {
-            $strSql = "select " . $selLst . " from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select " . $selLst . " from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE (1=1 " . $extrWhere . $addtnlWhere . ") " . $ordrBy . " LIMIT " . $limit_size .
                     " OFFSET " . abs($offset * $limit_size);
         }
@@ -1164,6 +1561,7 @@ function getLovValues($searchWord, $searchIn, $offset, $limit_size, &$brghtsqlSt
 }
 
 function getTtlLovValues($searchWord, $searchIn, &$brghtsqlStr, $lovID, &$is_dynamic, $criteriaID, $criteriaID2, $criteriaID3, $addtnlWhere = "") {
+    global $usrID;
     $lovNm = getLovNm($lovID);
     $strSql = "";
     $is_dynamic = false;
@@ -1184,26 +1582,26 @@ function getTtlLovValues($searchWord, $searchIn, &$brghtsqlStr, $lovID, &$is_dyn
     }
     if (isVlLstDynamic($lovID) == true) {
         if ($criteriaID <= 0 && $criteriaID2 == "" && $criteriaID3 == "") {
-            $strSql = "select count(1) from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE 1=1 " . $extrWhere . $addtnlWhere . " ";
         } else if ($criteriaID >= 0 && $criteriaID2 == "" && $criteriaID3 == "") {
-            $strSql = "select count(1) from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE tbl1.d = " . $criteriaID . " " . $extrWhere . $addtnlWhere . " ";
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 == "") {
-            $strSql = "select count(1) from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
                     loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") ";
         } else if ($criteriaID >= 0 && $criteriaID2 != "" && $criteriaID3 != "") {
-            $strSql = "select count(1) from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE (tbl1.d = " . $criteriaID . " and tbl1.e = '" .
                     loc_db_escape_string($criteriaID2) . "' and tbl1.f = '" . loc_db_escape_string($criteriaID3) .
                     "' " . $extrWhere . $addtnlWhere . ") ";
         } else if ($criteriaID < 0 && $criteriaID2 != "" && $criteriaID3 == "") {
-            $strSql = "select count(1) from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE (tbl1.e = '" .
                     loc_db_escape_string($criteriaID2) . "' " . $extrWhere . $addtnlWhere . ") ";
         } else {
-            $strSql = "select count(1) from (" . getSQLForDynamicVlLst($lovID) .
+            $strSql = "select count(1) from (" . str_replace("{:prsn_id}", getUserPrsnID($usrID), getSQLForDynamicVlLst($lovID)) .
                     ") tbl1 WHERE (1=1 " . $extrWhere . $addtnlWhere . ") ";
         }
         $is_dynamic = true;
@@ -1422,6 +1820,10 @@ function getRandomTxt($numChars) {
     return $pswd;
 }
 
+function getRandomNum($numLow, $numHigh) {
+    return rand($numLow, $numHigh);
+}
+
 function sendSMS($msgBody, $rcpntNo, &$errMsg) {
     $msgBody = str_replace("|", "/", str_replace("\n", " ", str_replace("\r", " ", str_replace("\r\n", " ", $msgBody))));
     $dtstResult = executeSQLNoParams("select sms_param1, sms_param2, sms_param3, 
@@ -1498,6 +1900,45 @@ function sendSMS($msgBody, $rcpntNo, &$errMsg) {
     }
 }
 
+function checkForInternetConnection() {
+    $num = 0;
+    $error = "";
+    if (!$sock = @fsockopen('www.google.com', 80, $num, $error, 5)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function isEmailValid($emailString, $lovID) {
+    $isEmailValid = filter_var($emailString, FILTER_VALIDATE_EMAIL);
+    if ($isEmailValid === false) {
+        createSysLovsPssblVals1($emailString, $lovID);
+    }
+    return $isEmailValid;
+}
+
+function createSysLovsPssblVals1($pssblVals, $lovID) {
+    if (getPssblValID($pssblVals, $lovID) <= 0) {
+        createPssblValsForLov1($lovID, $pssblVals, $pssblVals, "1", "");
+    }
+}
+
+function createPssblValsForLov1($lovID, $pssblVal, $pssblValDesc, $isEnbld, $allwd) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO gst.gen_stp_lov_values(" .
+            "value_list_id, pssbl_value, pssbl_value_desc, " .
+            "created_by, creation_date, last_update_by, " .
+            "last_update_date, is_enabled, allowed_org_ids) " .
+            "VALUES (" . $lovID . ", '" . loc_db_escape_string($pssblVal) . "', '" .
+            loc_db_escape_string($pssblValDesc) .
+            "', " . $usrID . ", '" . $dateStr . "', " . $usrID .
+            ", '" . $dateStr . "', '" . loc_db_escape_string($isEnbld) .
+            "', '" . loc_db_escape_string($allwd) . "')";
+    execUpdtInsSQL($insSQL);
+}
+
 function sendEMail($to, $nameto, $subject, $message, &$errMsg, $ccMail = "", $bccMail = "", $attchmnts = "", $namefrom = "Portal Administrator") {
     global $admin_email;
     global $app_url;
@@ -1509,6 +1950,7 @@ function sendEMail($to, $nameto, $subject, $message, &$errMsg, $ccMail = "", $bc
         $smtpClnt = "";
         $fromEmlNm = "";
         $fromPswd = "";
+        $errMsg = "";
         $portNo = 0;
         while ($row = loc_db_fetch_array($selDtSt)) {
             $smtpClnt = $row[0];
@@ -1551,6 +1993,49 @@ function sendEMail($to, $nameto, $subject, $message, &$errMsg, $ccMail = "", $bc
             str_replace("src=\"" . $src1 . "\"", "src=\"" .
                     $swmessage->embed(Swift_Image::fromPath(str_replace($app_url . "/", "", $src1))) . "\"", $message);
         }
+        $lovID = getLovID("Email Addresses to Ignore");
+        $toEmails = explode(",", $to);
+        for ($i = 0; $i < count($toEmails); $i++) {
+            if (isEmailValid($toEmails[$i], $lovID)) {
+                if (getEnbldPssblValID($toEmails[$i], $lovID) <= 0) {
+                    //DO Nothing
+                } else {
+                    $to = str_replace($toEmails[$i], "", $to);
+                    $errMsg .= "Address:" . $toEmails[$i] . " blacklisted by Admin!<br/>";
+                }
+            } else {
+                $errMsg .= "Address:" . $toEmails[$i] . " is Invalid!<br/>";
+            }
+        }
+        $to = preg_replace('/,+/', ',', $to);
+        $ccEmails = explode(";", $ccMail);
+        for ($i = 0; $i < count($ccEmails); $i++) {
+            if (isEmailValid($ccEmails[$i], $lovID)) {
+                if (getEnbldPssblValID($ccEmails[$i], $lovID) <= 0) {
+                    //DO Nothing
+                } else {
+                    $ccMail = str_replace($ccEmails[$i], "", $ccMail);
+                    $errMsg .= "Address:" . $ccEmails[$i] . " blacklisted by Admin!<br/>";
+                }
+            } else {
+                $errMsg .= "Address:" . $ccEmails[$i] . " is Invalid!<br/>";
+            }
+        }
+        $bccMail = preg_replace('/;+/', ';', $bccMail);
+        $bccEmails = explode(";", $bccMail);
+        for ($i = 0; $i < count($bccEmails); $i++) {
+            if (isEmailValid($bccEmails[$i], $lovID)) {
+                if (getEnbldPssblValID($bccEmails[$i], $lovID) <= 0) {
+                    //DO Nothing
+                } else {
+                    $bccMail = str_replace($bccEmails[$i], "", $bccMail);
+                    $errMsg .= "Address:" . $bccEmails[$i] . " blacklisted by Admin!<br/>";
+                }
+            } else {
+                $errMsg .= "Address:" . $bccEmails[$i] . " is Invalid!<br/>";
+            }
+        }
+        $bccMail = preg_replace('/;+/', ';', $bccMail);
         if ($ccMail != "" && $bccMail != "") {
             $swmessage->setFrom(array("$from" => "$namefrom")) // can be $_POST['email'] etc...
                     ->setTo(explode(",", $to)) // your email / multiple supported.
@@ -1587,12 +2072,17 @@ function sendEMail($to, $nameto, $subject, $message, &$errMsg, $ccMail = "", $bc
         }
 // Send the message
         $swmessage->setMaxLineLength(1000);
-        if ($mailer->send($swmessage)) {
-            $errMsg = 'Mail sent successfully!';
-        } else {
-            $errMsg = "Failed to Send Mail!";
+        if (checkForInternetConnection()) {
+            if ($mailer->send($swmessage)) {
+                $errMsg = 'Mail sent successfully!';
+                return TRUE;
+            } else {
+                $errMsg = "Failed to Send Mail!";
+                return FALSE;
+            }
         }
-        return TRUE;
+        $errMsg .= "No Internet Connection";
+        return FALSE;
     } catch (Exception $e) {
         $eMsg = substr($e->getMessage(), 0, 40);
         if (strpos($eMsg, 'Connection could not be established') !== FALSE) {
@@ -1604,6 +2094,35 @@ function sendEMail($to, $nameto, $subject, $message, &$errMsg, $ccMail = "", $bc
         $errMsg = "<span style=\"color:red !important;\">Failed to Send Mail! " . $eMsg . "</span>";
         return FALSE;
     }
+}
+
+function getMsgBatchID() {
+    $strSql = "select nextval('alrt.bulk_msgs_batch_id_seq')";
+    $result = executeSQLNoParams($strSql);
+    while ($row = loc_db_fetch_array($result)) {
+        return $row[0];
+    }
+    return -1;
+}
+
+function createMessageQueue($batchID, $mailTo, $mailCc, $mailBcc, $msgBody, $msgSbjct, $attachmnts, $msgType) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $insSQL = "INSERT INTO alrt.bulk_msgs_sent(
+            batch_id, to_list, cc_list, msg_body, date_sent, 
+            msg_sbjct, bcc_list, created_by, creation_date, sending_status, 
+            err_msg, attch_urls, msg_type) VALUES (" . $batchID .
+            ",'" . loc_db_escape_string($mailTo) .
+            "','" . loc_db_escape_string($mailCc) .
+            "','" . loc_db_escape_string($msgBody) .
+            "','" . loc_db_escape_string($dateStr) .
+            "','" . loc_db_escape_string($msgSbjct) .
+            "','" . loc_db_escape_string($mailBcc) .
+            "', " . $usrID .
+            ", '" . loc_db_escape_string($dateStr) .
+            "','0','','" . loc_db_escape_string($attachmnts) .
+            "','" . loc_db_escape_string($msgType) . "')";
+    execUpdtInsSQL($insSQL);
 }
 
 function getGnrlRecID2($tblNm, $srchcol, $rtrnCol, $recname) {
@@ -1752,12 +2271,12 @@ function getShapes() {
     global $org_name;
     global $app_image;
     global $orgID;
-    global $db_folder;
+    global $pemDest;
     global $orgID;
     GLOBAL $ftp_base_db_fldr;
 
-    if ($orgID > 0) {
-        $img_src = "dwnlds/$db_folder/Org/$orgID.png";
+    if ($orgID > 0) {        
+        $img_src = $pemDest."$orgID.png";
         $ftp_src = $ftp_base_db_fldr . "/Org/$orgID.png";
         if (file_exists($ftp_src)) {
             copy("$ftp_src", "$img_src");
@@ -1780,7 +2299,6 @@ function getHeadline() {
 }
 
 function getRptDrctry() {
-//\\172.25.10.96\bog_applsys project\RICHARD\Images\Org
     $sqlStr = "select pssbl_value from gst.gen_stp_lov_values where ((value_list_id = " .
             getLovID("Reports Directory") . ") AND (is_enabled='1')) ORDER BY pssbl_value_id DESC LIMIT 1";
     $result = executeSQLNoParams($sqlStr);
@@ -1788,6 +2306,61 @@ function getRptDrctry() {
         return $row[0];
     }
     return "";
+}
+
+function getRptID($rptname) {
+    $sqlStr = "select report_id from rpt.rpt_reports where report_name = '" .
+            loc_db_escape_string($rptname) . "'";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
+}
+
+function getAlertID($alrtname) {
+    $sqlStr = "select alert_id from alrt.alrt_alerts where alert_name = '" .
+            loc_db_escape_string($alrtname) . "'";
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
+}
+
+function getParamIDUseSQLRep($paramSQLRep, $rptID) {
+    $sqlStr = "SELECT parameter_id
+  FROM rpt.rpt_report_parameters WHERE paramtr_rprstn_nm_in_query = '" .
+            loc_db_escape_string($paramSQLRep) . "' and report_id=" . $rptID;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
+}
+
+function getParamID($paramNm, $rptID) {
+    $sqlStr = "SELECT parameter_id, report_id, parameter_name, paramtr_rprstn_nm_in_query, 
+       created_by, creation_date, last_update_by, last_update_date, 
+       default_value, is_required, lov_name_id, param_data_type, date_format, 
+       lov_name
+  FROM rpt.rpt_report_parameters WHERE parameter_name = '" .
+            loc_db_escape_string($paramNm) . "' and report_id=" . $rptID;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
+}
+
+function getAlrtParamID($alert_id, $paramID) {
+    $sqlStr = "SELECT schdl_param_id 
+  FROM rpt.rpt_run_schdule_params WHERE alert_id = " . $alert_id . " and parameter_id=" . $paramID;
+    $result = executeSQLNoParams($sqlStr);
+    while ($row = loc_db_fetch_array($result)) {
+        return (int) $row[0];
+    }
+    return -1;
 }
 
 function recurse_copy($src, $dst) {
@@ -1842,28 +2415,7 @@ function logoutActions() {
     $orgID = $_SESSION['ORG_ID'];
     $lgn_num = $_SESSION['LGN_NUM'];
     storeLogoutTime($lgn_num);
-
-    $_SESSION['UNAME'] = "";
-    $_SESSION['USRID'] = -1;
-    $_SESSION['LGN_NUM'] = -1;
-    $_SESSION['ORG_NAME'] = "";
-    $_SESSION['ORG_ID'] = -1;
-    $_SESSION['ROOT_FOLDER'] = "";
-    $_SESSION['ROLE_SET_IDS'] = "";
-    $_SESSION['MUST_CHNG_PWD'] = "0";
-    $usrID = $_SESSION['USRID'];
-    $user_Name = $_SESSION['UNAME'];
-    $orgID = $_SESSION['ORG_ID'];
-    $lgn_num = $_SESSION['LGN_NUM'];
-    $ifrmeSrc = $_SESSION['CUR_IFRM_SRC'];
-
-
-    $org_name = $_SESSION['ORG_NAME'];
-    $ssnRoles = $_SESSION['ROLE_SET_IDS'];
-    $Role_Set_IDs = explode(";", $ssnRoles);
-    $ModuleName = "";
-    session_destroy();   // destroy session data in storage
-    session_unset();     // unset $_SESSION variable for the runtime	
+    destroySession();
 }
 
 /**

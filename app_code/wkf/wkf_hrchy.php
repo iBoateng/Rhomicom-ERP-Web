@@ -11,11 +11,92 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
         if ($qstr == "DELETE") {
             if ($actyp == 1) {
-                
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $hrchyNm = isset($_POST['hrchyNm']) ? cleanInputData($_POST['hrchyNm']) : "";
+                if ($pKeyID > 0) {
+                    echo deleteWkfHrchy($pKeyID, $hrchyNm);
+                }
+            } else if ($actyp == 2) {
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $apprvNm = isset($_POST['apprvNm']) ? cleanInputData($_POST['apprvNm']) : "";
+                if ($pKeyID > 0) {
+                    echo deleteWkfMnlHrchy($pKeyID, $apprvNm);
+                }
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //Save Workflow Hierarchy
+                header("content-type:application/json");
+                $orgid = $_SESSION['ORG_ID'];
+                $wkfHrchyID = isset($_POST['wkfHrchyID']) ? (int) cleanInputData($_POST['wkfHrchyID']) : -1;
+                $wkfHrchyNm = isset($_POST['wkfHrchyNm']) ? cleanInputData($_POST['wkfHrchyNm']) : "";
+                $wkfHrchyDesc = isset($_POST['wkfHrchyDesc']) ? cleanInputData($_POST['wkfHrchyDesc']) : "";
+                $wkfHrchyIsEnbld = isset($_POST['wkfHrchyIsEnbld']) ? cleanInputData($_POST['wkfHrchyIsEnbld']) : "";
+                $wkfHrchyType = isset($_POST['wkfHrchyType']) ? cleanInputData($_POST['wkfHrchyType']) : '';
+                $wkfHrchySQL = isset($_POST['wkfHrchySQL']) ? cleanInputData($_POST['wkfHrchySQL']) : '';
+                $slctdHrchyLvls = isset($_POST['slctdHrchyLvls']) ? cleanInputData($_POST['slctdHrchyLvls']) : '';
+
+                $isenbld = ($wkfHrchyIsEnbld == "YES") ? "1" : "0";
+                $oldHrchyID = getGnrlRecID2("wkf.wkf_hierarchy_hdr", "hierarchy_name", "hierarchy_id", $wkfHrchyNm);
+                if ($wkfHrchyNm != "" && $wkfHrchyType != "" && ($oldHrchyID <= 0 || $oldHrchyID == $wkfHrchyID)) {
+                    if ($wkfHrchyID <= 0) {
+                        createWkfHrchy($wkfHrchyNm, $wkfHrchyDesc, $wkfHrchyType, $wkfHrchySQL, $isenbld);
+                        $wkfHrchyID = getGnrlRecID2("wkf.wkf_hierarchy_hdr", "hierarchy_name", "hierarchy_id", $wkfHrchyNm);
+                    } else {
+                        updateWkfHrchy($wkfHrchyID, $wkfHrchyNm, $wkfHrchyDesc, $wkfHrchyType, $wkfHrchySQL, $isenbld);
+                    }
+                    $affctdLvls = 0;
+                    if ($wkfHrchyID > 0) {
+                        if (trim($slctdHrchyLvls, "|~") != "") {
+                            //Save Report Parameters
+                            $variousRows = explode("|", trim($slctdHrchyLvls, "|"));
+                            for ($z = 0; $z < count($variousRows); $z++) {
+                                $crntRow = explode("~", $variousRows[$z]);
+                                if (count($crntRow) == 6) {
+                                    $mnlHrchyID = (int) (cleanInputData1($crntRow[0]));
+                                    $apprvrID = cleanInputData1($crntRow[1]);
+                                    $apprvrNm = cleanInputData1($crntRow[2]);
+                                    $aprvrTyp = cleanInputData1($crntRow[3]);
+                                    $apprvrLevel = (int) cleanInputData1($crntRow[4]);
+                                    $isEnbld = cleanInputData1($crntRow[5]);
+                                    $isEnbld1 = ($isEnbld == "YES") ? "1" : "0";
+                                    $apprvrPrsnID = -1;
+                                    $apprvrPosID = -1;
+                                    $appvrGrpID = -1;
+                                    if ($aprvrTyp == "Position Holder") {
+                                        $apprvrPosID = $apprvrID;
+                                    } else if ($aprvrTyp == "Group") {
+                                        $appvrGrpID = $apprvrID;
+                                    } else {
+                                        $apprvrID = getPersonID($apprvrID);
+                                        $apprvrPrsnID = $apprvrID;
+                                    }
+                                    $oldHrchyDetID = get_MnlHrchyDetID($wkfHrchyID, $apprvrID, $apprvrLevel);
+                                    if ($apprvrNm != "") {
+                                        if ($oldHrchyDetID <= 0 && $mnlHrchyID <= 0) {
+                                            $affctdLvls += createWkfMnlHrchy($wkfHrchyID, $apprvrPrsnID, $apprvrLevel, $isEnbld1, $apprvrPosID, $appvrGrpID, $aprvrTyp);
+                                        } else if ($mnlHrchyID > 0) {
+                                            $affctdLvls += updateWkfMnlHrchy($mnlHrchyID, $apprvrPrsnID, $apprvrLevel, $isEnbld1, $apprvrPosID, $appvrGrpID, $aprvrTyp);
+                                        } else if ($oldHrchyDetID > 0) {
+                                            $affctdLvls += updateWkfMnlHrchy($oldHrchyDetID, $apprvrPrsnID, $apprvrLevel, $isEnbld1, $apprvrPosID, $appvrGrpID, $aprvrTyp);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $arr_content['percent'] = 100;
+                    $arr_content['wkfHrchyID'] = $wkfHrchyID;
+                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Workflow Hierarchy Successfully Saved!<br/>" . $affctdLvls . " Hierarchy Levels Saved!";
+                    echo json_encode($arr_content);
+                    exit();
+                } else {
+                    $arr_content['percent'] = 100;
+                    $arr_content['wkfHrchyID'] = -1;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Either the New Workflow Hierarchy Exists <br/>or Data Supplied is Incomplete!</span>";
+                    echo json_encode($arr_content);
+                    exit();
+                }
             } else if ($actyp == 2) {
                 
             }
@@ -159,13 +240,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $cntr += 1;
                                             ?>
                                             <tr id="allWkfHrchysRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                <td><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allWkfHrchysRow<?php echo $cntr; ?>_HrchyID" value="<?php echo $row[0]; ?>"></td>                                                
+                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                <td class="lovtd"><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allWkfHrchysRow<?php echo $cntr; ?>_HrchyID" value="<?php echo $row[0]; ?>"></td>                                                
                                                 <?php
                                                 if ($canDelWkfHrchy === true) {
                                                     ?>
-                                                    <td>
-                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Workflow Hierarchy">
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfHrchy('allWkfHrchysRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Workflow Hierarchy">
                                                             <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
@@ -289,7 +370,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <?php
                                                         if ($canEdtWkfHrchy === true) {
                                                             $nwRowHtml = "<tr id=\"wkfHrchyLvlsRow__WWW123WWW\">"
-                                                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                                                    . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                                                     . "<td class=\"lovtd\">
                                                                             <div class=\"form-group form-group-sm col-md-12\" style=\"padding:0px 3px 0px 3px !important;\">
                                                                                 <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfHrchyLvlsRow_WWW123WWW_AprvrTyp\">";
@@ -316,7 +397,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </div>                                                    
                                                                         </td>
                                                                        <td class=\"lovtd\"> 
-                                                                           <div class=\"form-group form-group-sm normaltd\">
+                                                                           <div class=\"form-group form-group-sm \">
                                                                                          <div class=\"form-check\" style=\"font-size: 12px !important;\">
                                                                                              <label class=\"form-check-label\">
                                                                                                  <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfHrchyLvlsRow_WWW123WWW_Enabled\" name=\"wkfHrchyLvlsRow_WWW123WWW_Enabled\">
@@ -324,8 +405,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                          </div>
                                                                            </div>
                                                                         </td>                                                                        
-                                                                        <td>
-                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"alert('del');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Hierarchy Level\">
+                                                                        <td class=\"lovtd\">
+                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfHrchyLvl('wkfHrchyLvlsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Hierarchy Level\">
                                                                                 <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                                             </button>
                                                                         </td>
@@ -360,7 +441,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $cntr += 1;
                                                                     ?>
                                                                     <tr id="wkfHrchyLvlsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                                        <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                                        <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                                         <td class="lovtd">
                                                                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                                                 <?php if ($canEdtWkfHrchy === true) { ?>
@@ -388,14 +469,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             <?php if ($canEdtWkfHrchy === true) { ?>
                                                                                 <div class="input-group" style="width:100% !important;">
                                                                                     <input type="text" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm" value="<?php echo $row2[2]; ?>" style="width:100% !important;">
-                                                                                    <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID" value="<?php echo $row2[3]; ?>">
+                                                                                    <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID" value="<?php echo (($row2[1] == "Individual") ? getPersonLocID($row2[3]) : $row2[3]); ?>">
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_MnlHrchyID" value="<?php echo $row2[0]; ?>">
-                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getHrchyLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '', '', '', '', 'radio', true, '<?php echo $row2[3]; ?>', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm', 'clear', 0, '','wkfHrchyLvlsRow<?php echo $cntr; ?>_AprvrTyp');">
+                                                                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getHrchyLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '', '', '', '', 'radio', true, '<?php echo $row2[3]; ?>', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm', 'clear', 0, '', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_AprvrTyp');">
                                                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                                                     </label>
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[2]; ?></span>
+                                                                                <span class=""><?php echo $row2[2]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <td class="lovtd">
@@ -404,7 +485,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_Level" name="wkfHrchyLvlsRow<?php echo $cntr; ?>_Level" value="<?php echo $row2[4]; ?>" style="width:100%;">
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[4]; ?></span>
+                                                                                <span class=""><?php echo $row2[4]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <td class="lovtd">
@@ -415,7 +496,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             }
                                                                             if ($canEdtWkfHrchy === true) {
                                                                                 ?>
-                                                                                <div class="form-group form-group-sm normaltd">
+                                                                                <div class="form-group form-group-sm ">
                                                                                     <div class="form-check" style="font-size: 12px !important;">
                                                                                         <label class="form-check-label">
                                                                                             <input type="checkbox" class="form-check-input" id="wkfHrchyLvlsRow<?php echo $cntr; ?>_Enabled" name="wkfHrchyLvlsRow<?php echo $cntr; ?>_Enabled" <?php echo $isChkd ?>>
@@ -423,14 +504,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </div>
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[5]; ?></span>
+                                                                                <span class=""><?php echo $row2[5]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <?php
                                                                         if ($canDelWkfHrchy === true) {
                                                                             ?>
-                                                                            <td>
-                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Hierarchy Level">
+                                                                            <td class="lovtd">
+                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfHrchyLvl('wkfHrchyLvlsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Hierarchy Level">
                                                                                     <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                                                 </button>
                                                                             </td>
@@ -569,7 +650,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <?php
                                     if ($canEdtWkfHrchy === true) {
                                         $nwRowHtml = "<tr id=\"wkfHrchyLvlsRow__WWW123WWW\">"
-                                                . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                                . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                                 . "<td class=\"lovtd\">
                                                                             <div class=\"form-group form-group-sm col-md-12\" style=\"padding:0px 3px 0px 3px !important;\">
                                                                                 <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfHrchyLvlsRow_WWW123WWW_AprvrTyp\">";
@@ -583,7 +664,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                         </td>
                                                                         <td class=\"lovtd\">  
                                                                             <div class=\"input-group\" style=\"width:100% !important;\">
-                                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfHrchyLvlsRow_WWW123WWW_ApprvrNm\" value=\"\" style=\"width:100% !important;\">
+                                                                                    <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfHrchyLvlsRow_WWW123WWW_ApprvrNm\" value=\"\" style=\"width:100% !important;\" readonly=\"true\">
                                                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"wkfHrchyLvlsRow_WWW123WWW_ApprvrID\" value=\"-1\">
                                                                                     <input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"wkfHrchyLvlsRow_WWW123WWW_MnlHrchyID\" value=\"-1\">
                                                                                     <label class=\"btn btn-primary btn-file input-group-addon\" onclick=\"getHrchyLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '', '', '', '', 'radio', true, '', 'wkfHrchyLvlsRow_WWW123WWW_ApprvrID', 'wkfHrchyLvlsRow_WWW123WWW_ApprvrNm', 'clear', 0, '','wkfHrchyLvlsRow_WWW123WWW_AprvrTyp');\">
@@ -597,7 +678,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </div>                                                    
                                                                         </td>
                                                                        <td class=\"lovtd\"> 
-                                                                           <div class=\"form-group form-group-sm normaltd\">
+                                                                           <div class=\"form-group form-group-sm \">
                                                                                          <div class=\"form-check\" style=\"font-size: 12px !important;\">
                                                                                              <label class=\"form-check-label\">
                                                                                                  <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfHrchyLvlsRow_WWW123WWW_Enabled\" name=\"wkfHrchyLvlsRow_WWW123WWW_Enabled\">
@@ -605,8 +686,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                          </div>
                                                                            </div>
                                                                         </td>                                                                        
-                                                                        <td>
-                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"alert('del');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Hierarchy Level\">
+                                                                        <td class=\"lovtd\">
+                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfHrchyLvl('wkfHrchyLvlsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Hierarchy Level\">
                                                                                 <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                                             </button>
                                                                         </td>
@@ -641,7 +722,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="wkfHrchyLvlsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                    <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                    <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                     <td class="lovtd">
                                                         <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
                                                             <?php if ($canEdtWkfHrchy === true) { ?>
@@ -668,15 +749,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     <td class="lovtd">
                                                         <?php if ($canEdtWkfHrchy === true) { ?>
                                                             <div class="input-group" style="width:100% !important;">
-                                                                <input type="text" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm" value="<?php echo $row2[2]; ?>" style="width:100% !important;">
-                                                                <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID" value="<?php echo $row2[3]; ?>">
+                                                                <input type="text" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm" value="<?php echo $row2[2]; ?>" style="width:100% !important;" readonly="true">
+                                                                <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID" value="<?php echo (($row2[1] == "Individual") ? getPersonLocID($row2[3]) : $row2[3]); ?>">
                                                                 <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_MnlHrchyID" value="<?php echo $row2[0]; ?>">
-                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getHrchyLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '', '', '', '', 'radio', true, '<?php echo $row2[3]; ?>', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm', 'clear', 0, '','wkfHrchyLvlsRow<?php echo $cntr; ?>_AprvrTyp');">
+                                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getHrchyLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '', '', '', '', 'radio', true, '<?php echo $row2[3]; ?>', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm', 'clear', 0, '', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_AprvrTyp');">
                                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                                 </label>
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[2]; ?></span>
+                                                            <span class=""><?php echo $row2[2]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <td class="lovtd">
@@ -685,7 +766,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <input type="number" min="1" max="9999" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_Level" name="wkfHrchyLvlsRow<?php echo $cntr; ?>_Level" value="<?php echo $row2[4]; ?>" style="width:100%;">
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[4]; ?></span>
+                                                            <span class=""><?php echo $row2[4]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <td class="lovtd">
@@ -696,7 +777,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         }
                                                         if ($canEdtWkfHrchy === true) {
                                                             ?>
-                                                            <div class="form-group form-group-sm normaltd">
+                                                            <div class="form-group form-group-sm ">
                                                                 <div class="form-check" style="font-size: 12px !important;">
                                                                     <label class="form-check-label">
                                                                         <input type="checkbox" class="form-check-input" id="wkfHrchyLvlsRow<?php echo $cntr; ?>_Enabled" name="wkfHrchyLvlsRow<?php echo $cntr; ?>_Enabled" <?php echo $isChkd ?>>
@@ -704,14 +785,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </div>
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[5]; ?></span>
+                                                            <span class=""><?php echo $row2[5]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <?php
                                                     if ($canDelWkfHrchy === true) {
                                                         ?>
-                                                        <td>
-                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Hierarchy Level">
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfHrchyLvl('wkfHrchyLvlsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Hierarchy Level">
                                                                 <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
@@ -750,6 +831,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div  class="col-lg-8">
                                     <input type="text" class="form-control" aria-label="..." id="wkfHrchyNm" name="wkfHrchyNm" value="" style="width:100%;">
                                     <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyID" name="wkfHrchyID" value="">
+                                    <input type="hidden" class="form-control" aria-label="..." id="isNew123" name="isNew123" value="5">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
@@ -802,7 +884,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php
                             if ($canEdtWkfHrchy === true) {
                                 $nwRowHtml = "<tr id=\"wkfHrchyLvlsRow__WWW123WWW\">"
-                                        . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                        . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                         . "<td class=\"lovtd\">
                                                                             <div class=\"form-group form-group-sm col-md-12\" style=\"padding:0px 3px 0px 3px !important;\">
                                                                                 <select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfHrchyLvlsRow_WWW123WWW_AprvrTyp\">";
@@ -830,7 +912,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             </div>                                                    
                                                                         </td>
                                                                        <td class=\"lovtd\"> 
-                                                                           <div class=\"form-group form-group-sm normaltd\">
+                                                                           <div class=\"form-group form-group-sm \">
                                                                                          <div class=\"form-check\" style=\"font-size: 12px !important;\">
                                                                                              <label class=\"form-check-label\">
                                                                                                  <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfHrchyLvlsRow_WWW123WWW_Enabled\" name=\"wkfHrchyLvlsRow_WWW123WWW_Enabled\">
@@ -838,8 +920,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                          </div>
                                                                            </div>
                                                                         </td>
-                                                                        <td>
-                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"alert('del');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Hierarchy Level\">
+                                                                        <td class=\"lovtd\">
+                                                                            <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfHrchyLvl('wkfHrchyLvlsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Hierarchy Level\">
                                                                                 <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
                                                                             </button>
                                                                         </td>
@@ -872,7 +954,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $cntr += 1;
                                     ?>
                                     <tr id="wkfHrchyLvlsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                        <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                        <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                         <td class="lovtd">
                                             <div class="form-group form-group-sm col-md-12" style="padding:0px 3px 0px 3px !important;">
 
@@ -893,7 +975,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <input type="text" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm" value="" style="width:100% !important;">
                                                 <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID" value="-1">
                                                 <input type="hidden" class="form-control" aria-label="..." id="wkfHrchyLvlsRow<?php echo $cntr; ?>_MnlHrchyID" value="-1">
-                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getHrchyLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '', '', '', '', 'radio', true, '', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm', 'clear', 0, '','wkfHrchyLvlsRow<?php echo $cntr; ?>_AprvrTyp');">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getHrchyLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', '', '', '', '', 'radio', true, '', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrID', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_ApprvrNm', 'clear', 0, '', 'wkfHrchyLvlsRow<?php echo $cntr; ?>_AprvrTyp');">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </label>
                                             </div>
@@ -907,7 +989,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             $isChkd = "";
                                             ?>                                                
-                                            <div class="form-group form-group-sm normaltd">
+                                            <div class="form-group form-group-sm ">
                                                 <div class="form-check" style="font-size: 12px !important;">
                                                     <label class="form-check-label">
                                                         <input type="checkbox" class="form-check-input" id="wkfHrchyLvlsRow<?php echo $cntr; ?>_Enabled" name="wkfHrchyLvlsRow<?php echo $cntr; ?>_Enabled" <?php echo $isChkd ?>>
@@ -915,8 +997,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
-                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Hierarchy Level">
+                                        <td class="lovtd">
+                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfHrchyLvl('wkfHrchyLvlsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Hierarchy Level">
                                                 <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                             </button>
                                         </td>

@@ -161,7 +161,7 @@ function prepareSysAdmin(lnkArgs, htBody, targ, rspns)
                     }
                     var rndmNum = $(this).attr('id').split("_")[1];
                     var curSrvrID = typeof $('#allSrvrStngsRow' + rndmNum + '_SrvrID').val() === 'undefined' ? '%' : $('#allSrvrStngsRow' + rndmNum + '_SrvrID').val();
-                    
+
                     getOneSrvrStngForm(curSrvrID, 1);
                 });
                 $('#allSrvrStngsTable tbody')
@@ -174,8 +174,7 @@ function prepareSysAdmin(lnkArgs, htBody, targ, rspns)
                             }
                         });
             });
-        }
-         else if (lnkArgs.indexOf("&pg=7&vtyp=0") !== -1)
+        } else if (lnkArgs.indexOf("&pg=7&vtyp=0") !== -1)
         {
             var table1 = $('#trckUsrLgnsTable').DataTable({
                 "paging": false,
@@ -319,13 +318,18 @@ function getOneUserForm(elementID, modalBodyID, titleElementID, formElementID,
                     });
                 });
                 $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal('show');
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
                 $body.removeClass("mdlloading");
 
                 $('#' + formElementID).submit(function (e) {
                     e.preventDefault();
                     return false;
                 });
+                $('#' + elementID).off('hidden.bs.modal');
+                $('#' + elementID).on("hidden.bs.modal", function () {
+                    getAllUsers('', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0');
+                });
+
             }
         };
         xmlhttp.open("POST", "index.php", true);
@@ -334,43 +338,105 @@ function getOneUserForm(elementID, modalBodyID, titleElementID, formElementID,
     });
 }
 
-function saveOneUserForm(elementID, userID, tableElementID)
+function saveOneUserForm()
 {
-    getMsgAsync('grp=1&typ=11&q=Check Session', function () {
-        $body = $("body");
-        $body.addClass("mdlloadingDiag");
-        var divGrpName = typeof $("#divGrpName").val() === 'undefined' ? '%' : $("#divGrpName").val();
-        var divGrpTyp = typeof $("#divGrpTyp").val() === 'undefined' ? 'Both' : $("#divGrpTyp").val();
-        var divGrpStartDate = typeof $("#divGrpStartDate").val() === 'undefined' ? 1 : $("#divGrpStartDate").val();
-        var divGrpEndDate = typeof $("#divGrpEndDate").val() === 'undefined' ? 10 : $("#divGrpEndDate").val();
-        var xmlhttp;
-        if (window.XMLHttpRequest)
+    var usrPrflAccountID = typeof $("#usrPrflAccountID").val() === 'undefined' ? -1 : $("#usrPrflAccountID").val();
+    var usrPrflAccountName = typeof $("#usrPrflAccountName").val() === 'undefined' ? '' : $("#usrPrflAccountName").val();
+    var usrPrflAcntOwnerLocID = typeof $("#usrPrflAcntOwnerLocID").val() === 'undefined' ? '' : $("#usrPrflAcntOwnerLocID").val();
+    var usrPrflLnkdCstmrID = typeof $("#usrPrflLnkdCstmrID").val() === 'undefined' ? -1 : $("#usrPrflLnkdCstmrID").val();
+    var usrPrflVldtyStartDate = typeof $("#usrPrflVldtyStartDate").val() === 'undefined' ? '' : $("#usrPrflVldtyStartDate").val();
+    var usrPrflVldtyEndDate = typeof $("#usrPrflVldtyEndDate").val() === 'undefined' ? '' : $("#usrPrflVldtyEndDate").val();
+    var usrPrflModulesNeeded = typeof $("#usrPrflModulesNeeded").val() === 'undefined' ? '' : $("#usrPrflModulesNeeded").val();
+
+    var errMsg = "";
+    if (usrPrflAccountName.trim() === '')
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Account Name cannot be empty!</span></p>';
+    }
+    if (usrPrflAcntOwnerLocID.trim() === '')
+    {
+        errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                'font-weight:bold;color:red;">Account Owner cannot be empty!</span></p>';
+    }
+    if (usrPrflVldtyStartDate.trim() === '')
+    {
+        usrPrflVldtyStartDate = rhoFrmtDate();
+        $("#usrPrflVldtyStartDate").val(usrPrflVldtyStartDate);
+    }
+    if (rhotrim(errMsg, '; ') !== '')
+    {
+        bootbox.alert({
+            title: 'System Alert!',
+            size: 'small',
+            message: errMsg});
+        return false;
+    }
+    var slctdUsrPrflRoles = "";
+    $('#userRolesTable').find('tr').each(function (i, el) {
+        if (i > 0)
         {
-            /*code for IE7+, Firefox, Chrome, Opera, Safari*/
-            xmlhttp = new XMLHttpRequest();
-        } else
-        {
-            /*code for IE6, IE5*/
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function ()
-        {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            if (typeof $(el).attr('id') === 'undefined')
             {
-                $('#' + tableElementID).append('<tr><td></td><td colspan="6">' + xmlhttp.responseText + '</td></tr>');
-                $body.removeClass("mdlloadingDiag");
-                $body.removeClass("mdlloading");
-                $('#' + elementID).modal('hide');
+                /*Do Nothing*/
+            } else {
+                var rndmNum = $(el).attr('id').split("_")[1];
+                var roleID = $('#usrPrflEdtRow' + rndmNum + '_RoleID').val();
+                if (roleID > 0) {
+                    slctdUsrPrflRoles = slctdUsrPrflRoles + $('#usrPrflEdtRow' + rndmNum + '_RoleID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                            + $('#usrPrflEdtRow' + rndmNum + '_RoleNm').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                            + $('#usrPrflEdtRow' + rndmNum + '_DfltRowID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                            + $('#usrPrflEdtRow' + rndmNum + '_StrtDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                            + $('#usrPrflEdtRow' + rndmNum + '_EndDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
+                }
             }
-        };
-        xmlhttp.open("POST", "index.php", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send("grp=3&typ=1&pg=0&q=UPDATE&actyp=4" +
-                "&divGrpName=" + divGrpName +
-                "&divGrpTyp=" + divGrpTyp +
-                "&divGrpStartDate=" + divGrpStartDate +
-                "&divGrpEndDate=" + divGrpEndDate +
-                "&divsGrpsPkeyID=" + userID);
+        }
+    });
+    var dialog = bootbox.alert({
+        title: 'Save User',
+        size: 'small',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Saving User...Please Wait...</p>',
+        callback: function () {
+        }
+    });
+    dialog.init(function () {
+        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+            $body = $("body");
+            $body.removeClass("mdlloading");
+            $.ajax({
+                method: "POST",
+                url: "index.php",
+                data: {
+                    grp: 3,
+                    typ: 1,
+                    pg: 1,
+                    q: 'UPDATE',
+                    actyp: 1,
+                    usrPrflAccountID: usrPrflAccountID,
+                    usrPrflAccountName: usrPrflAccountName,
+                    usrPrflAcntOwnerLocID: usrPrflAcntOwnerLocID,
+                    usrPrflLnkdCstmrID: usrPrflLnkdCstmrID,
+                    usrPrflVldtyStartDate: usrPrflVldtyStartDate,
+                    usrPrflVldtyEndDate: usrPrflVldtyEndDate,
+                    usrPrflModulesNeeded: usrPrflModulesNeeded,
+                    slctdUsrPrflRoles: slctdUsrPrflRoles
+                },
+                success: function (result) {
+                    setTimeout(function () {
+                        dialog.find('.bootbox-body').html(result.message);
+                        $("#usrPrflAccountID").val(result.usrPrflAccountID);
+                        if (slctdUsrPrflRoles.trim().length > 0)
+                        {
+                            getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'userRolesForm', 'View/Edit User', result.usrPrflAccountID, 1, 1, '');
+                        }
+                    }, 500);
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    /*dialog.find('.bootbox-body').html(errorThrown);*/
+                    console.warn(jqXHR.responseText);
+                }});
+        });
     });
 }
 
@@ -382,49 +448,6 @@ function enterKeyFuncOneUser(e, elementID, modalBodyID, titleElementID, formElem
         getOneUserForm(elementID, modalBodyID, titleElementID, formElementID,
                 formTitle, userID, vtyp, pgNo, actionText);
     }
-}
-
-function saveUserNRoleForm()
-{
-    var lnkArgs = "";
-    var usrPrflAccountName = typeof $("#usrPrflAccountName").val() === 'undefined' ? '%' : $("#usrPrflAccountName").val();
-    var usrPrflAccountID = typeof $("#usrPrflAccountID").val() === 'undefined' ? '%' : $("#usrPrflAccountID").val();
-    var usrPrflAcntOwnerLocID = typeof $("#usrPrflAcntOwnerLocID").val() === 'undefined' ? '%' : $("#usrPrflAcntOwnerLocID").val();
-    var usrPrflModulesNeeded = typeof $("#usrPrflModulesNeeded").val() === 'undefined' ? '%' : $("#usrPrflModulesNeeded").val();
-    var usrPrflVldtyStartDate = typeof $("#usrPrflVldtyStartDate").val() === 'undefined' ? '%' : $("#usrPrflVldtyStartDate").val();
-    var usrPrflVldtyEndDate = typeof $("#usrPrflVldtyEndDate").val() === 'undefined' ? '%' : $("#usrPrflVldtyEndDate").val();
-
-    if (usrPrflAccountName === "" || usrPrflAccountName === null)
-    {
-        $('#modal-7 .modal-body').html('User Name cannot be empty!');
-        $('#modal-7').modal('show', {backdrop: 'static'});
-        return false;
-    }
-    if (usrPrflAcntOwnerLocID === "" || usrPrflAcntOwnerLocID === null)
-    {
-        $('#modal-7 .modal-body').html('Account Owner cannot be empty!');
-        $('#modal-7').modal('show', {backdrop: 'static'});
-        return false;
-    }
-    lnkArgs = "grp=3&typ=1&q=UPDATE&actyp=2&usrPrflAccountName=" + usrPrflAccountName + "&usrPrflAccountID=" +
-            usrPrflAccountID + "&usrPrflAcntOwnerLocID=" + usrPrflAcntOwnerLocID +
-            "&usrPrflModulesNeeded=" + usrPrflModulesNeeded + "&usrPrflVldtyStartDate=" + usrPrflVldtyStartDate +
-            "&usrPrflVldtyEndDate=" + usrPrflVldtyEndDate;
-    var slctdUsrPrflRoles = "";
-    $('#userRolesTable').find('tr').each(function (i, el) {
-        if (i > 0)
-        {
-            var rndmNum = $(el).attr('id').split("_")[1];
-            /*var $tds1 = $(this).find('td');*/
-            slctdUsrPrflRoles = slctdUsrPrflRoles + $('#usrPrflEdtRow' + rndmNum + '_RoleID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#usrPrflEdtRow' + rndmNum + '_RoleNm').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#usrPrflEdtRow' + rndmNum + '_DfltRowID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#usrPrflEdtRow' + rndmNum + '_StrtDte').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#usrPrflEdtRow' + rndmNum + '_EndDte').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
-        }
-    });
-    lnkArgs = lnkArgs + "&slctdUsrPrflRoles=" + slctdUsrPrflRoles.slice(0, -1);
-    doAjax(lnkArgs, 'myFormsModal', 'ShowDialog', 'System Alert!', 'myFormsModalTitle', 'myFormsModalBody');
 }
 
 
@@ -476,11 +499,11 @@ function saveAllRolesForm()
                  $('#modal-7').modal('show', {backdrop: 'static'});
                  return false;*/
             } else {
-                slctdRoles = slctdRoles + $('#allRolesEdtRow' + rndmNum + '_RoleID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                        + curRoleNm.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                        + $('#allRolesEdtRow' + rndmNum + '_CanAdmn').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                        + $('#allRolesEdtRow' + rndmNum + '_StrtDte').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                        + $('#allRolesEdtRow' + rndmNum + '_EndDte').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+                slctdRoles = slctdRoles + $('#allRolesEdtRow' + rndmNum + '_RoleID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                        + curRoleNm.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                        + $('#allRolesEdtRow' + rndmNum + '_CanAdmn').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                        + $('#allRolesEdtRow' + rndmNum + '_StrtDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                        + $('#allRolesEdtRow' + rndmNum + '_EndDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
             }
         }
     });
@@ -571,7 +594,7 @@ function getOneRoleForm(elementID, modalBodyID, titleElementID, formElementID,
                     });
                 });
                 $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal('show');
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
                 $body.removeClass("mdlloading");
 
                 $('#' + formElementID).submit(function (e) {
@@ -603,10 +626,10 @@ function saveRolesPrvldgsForm()
                  $('#modal-7').modal('show', {backdrop: 'static'});
                  return false;*/
             } else {
-                slctdRolesPrvldgs = slctdRolesPrvldgs + $('#rolePrvldgsEdtRow' + rndmNum + '_PrvldgID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                        + curPrvldgNm.replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                        + $('#rolePrvldgsEdtRow' + rndmNum + '_StrtDte').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                        + $('#rolePrvldgsEdtRow' + rndmNum + '_EndDte').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+                slctdRolesPrvldgs = slctdRolesPrvldgs + $('#rolePrvldgsEdtRow' + rndmNum + '_PrvldgID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                        + curPrvldgNm.replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                        + $('#rolePrvldgsEdtRow' + rndmNum + '_StrtDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                        + $('#rolePrvldgsEdtRow' + rndmNum + '_EndDte').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
             }
         }
     });
@@ -724,7 +747,7 @@ function getOneMdlForm(elementID, modalBodyID, titleElementID, formElementID,
                     });
                 });
                 $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal('show');
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
                 $body.removeClass("mdlloading");
 
                 $('#' + formElementID).submit(function (e) {
@@ -849,7 +872,7 @@ function getOneSbgrpForm(elementID, modalBodyID, titleElementID, formElementID,
                     });
                 });
                 $body.removeClass("mdlloadingDiag");
-                $('#' + elementID).modal('show');
+                $('#' + elementID).modal({backdrop: 'static', keyboard: false});
                 $body.removeClass("mdlloading");
 
                 $('#' + formElementID).submit(function (e) {
@@ -969,10 +992,10 @@ function saveSecPlcyForm()
         if (i > 0)
         {
             var rndmNum = $(el).attr('id').split("_")[1];
-            slctdAdtTbls = slctdAdtTbls + $('#secPlcyAdtTblsRow' + rndmNum + '_EnblTrckng').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#secPlcyAdtTblsRow' + rndmNum + '_ActnsToTrck').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#secPlcyAdtTblsRow' + rndmNum + '_MdlID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#secPlcyAdtTblsRow' + rndmNum + '_DfltRwID').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+            slctdAdtTbls = slctdAdtTbls + $('#secPlcyAdtTblsRow' + rndmNum + '_EnblTrckng').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#secPlcyAdtTblsRow' + rndmNum + '_ActnsToTrck').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#secPlcyAdtTblsRow' + rndmNum + '_MdlID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#secPlcyAdtTblsRow' + rndmNum + '_DfltRwID').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
         }
     });
     lnkArgs = lnkArgs + "&slctdAdtTbls=" + slctdAdtTbls.slice(0, -1);
@@ -1075,8 +1098,8 @@ function saveSrvrStngForm()
         if (i > 0)
         {
             var rndmNum = $(el).attr('id').split("_")[1];
-            slctdApiVals = slctdApiVals + $('#srvrStngSmsApiRow' + rndmNum + '_Param').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "~"
-                    + $('#srvrStngSmsApiRow' + rndmNum + '_Value').val().replace(/(~)+/g, "{-;-;}").replace(/(\|)+/g, "{:;:;}") + "|";
+            slctdApiVals = slctdApiVals + $('#srvrStngSmsApiRow' + rndmNum + '_Param').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "~"
+                    + $('#srvrStngSmsApiRow' + rndmNum + '_Value').val().replace(/(~)/g, "{-;-;}").replace(/(\|)/g, "{:;:;}") + "|";
         }
     });
     lnkArgs = lnkArgs + "&slctdApiVals=" + slctdApiVals.slice(0, -1);
@@ -1114,6 +1137,11 @@ function enterKeyFuncTrckUsrLgns(e, actionText, slctr, linkArgs)
     }
 }
 
+function getOneUsrLgnDet(pKeyID, lnkArgs)
+{
+    lnkArgs = lnkArgs + '&sbmtdLgnNum=' + pKeyID;
+    doAjaxWthCallBck(lnkArgs, 'myFormsModalLg', 'ShowDialog', 'User Logon Activity Logs (ID:' + pKeyID + ')', 'myFormsModalTitleLg', 'myFormsModalBodyLg', function () {});
+}
 
 function getAdtTrails(actionText, slctr, linkArgs)
 {
@@ -1145,4 +1173,250 @@ function enterKeyFuncAdtTrails(e, actionText, slctr, linkArgs)
     if (charCode == 13) {
         getAdtTrails(actionText, slctr, linkArgs);
     }
+}
+
+function lockUnlock(rowIDAttrb, action)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var pKeyID = -1;
+    var usrNm = "";
+    if (typeof $('#allUsersRow' + rndmNum + '_UserID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#allUsersRow' + rndmNum + '_UserID').val();
+        var $tds = $('#' + rowIDAttrb).find('td');
+        usrNm = $.trim($tds.eq(1).text());
+    }
+    var msgTxt = action + " User";
+    var dialog = bootbox.confirm({
+        title: msgTxt + '?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;font-family:georgia, times;">' + msgTxt + '</span>?<br/></p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: msgTxt + '?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Working...Please Wait...</p>'
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 3,
+                                    typ: 1,
+                                    pg: 1,
+                                    q: 'UPDATE',
+                                    actyp: 2,
+                                    pKeyID: pKeyID,
+                                    nwStatus: action.toUpperCase(),
+                                    usrNm: usrNm
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            getAllUsers('', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0');
+                                            dialog1.modal('hide');
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                    dialog1.modal('hide');
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            getAllUsers('', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0');
+                            dialog1.modal('hide');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+
+function suspendUnsuspend(rowIDAttrb, action)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var pKeyID = -1;
+    var usrNm = "";
+    if (typeof $('#allUsersRow' + rndmNum + '_UserID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#allUsersRow' + rndmNum + '_UserID').val();
+        var $tds = $('#' + rowIDAttrb).find('td');
+        usrNm = $.trim($tds.eq(1).text());
+    }
+    var msgTxt = action + " User";
+    var dialog = bootbox.confirm({
+        title: msgTxt + '?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;font-family:georgia, times;">' + msgTxt + '</span>?<br/></p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: msgTxt + '?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Working...Please Wait...</p>'
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 3,
+                                    typ: 1,
+                                    pg: 1,
+                                    q: 'UPDATE',
+                                    actyp: 3,
+                                    pKeyID: pKeyID,
+                                    nwStatus: action.toUpperCase(),
+                                    usrNm: usrNm
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            getAllUsers('', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0');
+                                            dialog1.modal('hide');
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                    dialog1.modal('hide');
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            getAllUsers('', '#allmodules', 'grp=3&typ=1&pg=1&vtyp=0');
+                            dialog1.modal('hide');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function delUser(rowIDAttrb)
+{
+    var rndmNum = rowIDAttrb.split("_")[1];
+    var pKeyID = -1;
+    var usrNm = "";
+    if (typeof $('#allUsersRow' + rndmNum + '_UserID').val() === 'undefined')
+    {
+        /*Do Nothing allnoticesRow<?php echo $cntr; ?> */
+    } else {
+        pKeyID = $('#allUsersRow' + rndmNum + '_UserID').val();
+        var $tds = $('#' + rowIDAttrb).find('td');
+        usrNm = $.trim($tds.eq(1).text());
+    }
+    var dialog = bootbox.confirm({
+        title: 'Delete Survey/Election?',
+        size: 'small',
+        message: '<p style="text-align:center;">Are you sure you want to <span style="color:red;font-weight:bold;font-style:italic;">DELETE</span> this Survey/Election?<br/>Action cannot be Undone!</p>',
+        buttons: {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result === true)
+            {
+                var dialog1 = bootbox.alert({
+                    title: 'Delete Survey/Election?',
+                    size: 'small',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Deleting Survey/Election...Please Wait...</p>'
+                });
+                dialog1.init(function () {
+                    if (pKeyID > 0) {
+                        getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
+                            $body = $("body");
+                            $body.removeClass("mdlloading");
+                            $.ajax({
+                                method: "POST",
+                                url: "index.php",
+                                data: {
+                                    grp: 3,
+                                    typ: 1,
+                                    pg: 1,
+                                    q: 'DELETE',
+                                    actyp: 1,
+                                    pKeyID: pKeyID,
+                                    usrNm: usrNm
+                                },
+                                success: function (result1) {
+                                    setTimeout(function () {
+                                        dialog1.find('.bootbox-body').html(result1);
+                                        if (result1.indexOf("Success") !== -1) {
+                                            $("#" + rowIDAttrb).remove();
+                                        }
+                                    }, 500);
+                                },
+                                error: function (jqXHR1, textStatus1, errorThrown1)
+                                {
+                                    dialog1.find('.bootbox-body').html(errorThrown1);
+                                }
+                            });
+                        });
+                    } else
+                    {
+                        setTimeout(function () {
+                            $("#" + rowIDAttrb).remove();
+                            dialog1.find('.bootbox-body').html('Row Removed Successfully!');
+                        }, 500);
+                    }
+                });
+            }
+        }
+    });
 }

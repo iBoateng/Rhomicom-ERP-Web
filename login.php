@@ -7,6 +7,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             if ((typeof window.Worker === "function"))
             {
                 //Worker Supported
+                /*document.addEventListener('contextmenu', function (e) {
+                    e.preventDefault();
+                });
+                document.addEventListener('keydown', function (e) {
+                    //alert(e.which);
+                    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+                    if (charCode >= 112 && charCode <= 123) {
+                        e.preventDefault();
+                        return false;
+                    }
+                });*/
             } else
             {
                 window.location = 'notsupported.php';
@@ -33,7 +44,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 usrNm = document.getElementById("usrnm").value;
                 old_pswd = document.getElementById("pwd").value;
                 machdet = document.getElementById("machdet").value;
-
                 if (usrNm === "" || usrNm === null)
                 {
                     $('#modal-7 .modal-body').html('User Name cannot be empty!');
@@ -49,7 +59,6 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     return false;
                 }
                 lnkArgs = "usrnm=" + usrNm + "&pwd=" + old_pswd + "&machdet=" + machdet + "&screenwdth=" + screen.width;
-
                 if (window.XMLHttpRequest)
                 {
                     // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -61,9 +70,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 }
 
                 xmlhttp.onreadystatechange = function ()
-                {                    
+                {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-                    {                        
+                    {
                         var rspns = xmlhttp.responseText;
                         /*alert(xmlhttp.responseText);*/
                         if (rspns.indexOf('change password') > -1
@@ -79,18 +88,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         document.getElementById("msgArea").innerHTML = "<span class=\"wordwrap3\" style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><img style=\"width:145px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/>Loading...Please Wait...</span>";
                     }
                 };
-
                 xmlhttp.open("POST", "index.php", true);
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xmlhttp.send(lnkArgs);//+ "&machdetls=" + machDet
+                xmlhttp.send(lnkArgs); //+ "&machdetls=" + machDet
             }
 
             function forgotPwd()
-            {                
+            {
                 var xmlhttp;
-
                 var lnkArgs = "q=forgotpwd";
-
                 if (window.XMLHttpRequest)
                 {
                     // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -113,11 +119,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         document.getElementById("loginDiv").innerHTML = "<p style=\"padding:10px;margin:50px;\"><img style=\"width:80px;height:80px;display:inline;float:none;margin-right:auto;clear: left;\" src='cmn_scrpts/images/ajax-loader7.gif'/></p>";
                     }
                 };
-
                 xmlhttp.open("POST", "index.php", true);
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-                xmlhttp.send(lnkArgs);//+ "&machdetls=" + machDet
+                xmlhttp.send(lnkArgs); //+ "&machdetls=" + machDet
             }
 
             function enterKeyFunc1(e)
@@ -174,11 +178,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         document.getElementById("fullName").innerHTML = "Sending Password Reset Link...Please Wait...";
                     }
                 };
-
                 xmlhttp.open("POST", "index.php", true);
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-                xmlhttp.send(lnkArgs);//+ "&machdetls=" + machDet
+                xmlhttp.send(lnkArgs); //+ "&machdetls=" + machDet
                 return false;
             }
         </script>
@@ -239,7 +241,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <button type="button"  onclick="forgotPwd();" class="btn btn-md btn-default btn-block otherButton">Request for New Password</button>
                                                 <button type="button" class="btn btn-default btn-lg btn-block otherButton" onclick="window.open('<?php echo $app_cstmr_url; ?>', '_blank');">
                                                     <img src="cmn_images/<?php echo $app_image1; ?>" style="left: 0.5%; padding-right: 1em; height:60px; width:auto; position: relative; vertical-align: middle;">
-                                                    <br/>Rhomicom Website
+                                                    <br/><?php echo $website_btn_txt; ?>
                                                 </button>
                                             </fieldset>
                                         </form>
@@ -258,13 +260,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="col-md-4 text-center" style="">
                             <div class="container" style="padding:25px;margin-bottom: 10px;background-color: rgba(0,0,0,0.32);min-height: 200px;">
                                 <h1>About Portal</h1>
-                                Lorem Ipsum dolor sit
+                                <div style="font-family: Tahoma;font-size:12px;"><?php echo $abt_portal; ?></div>
                             </div>
                         </div>                                                
                         <div class="col-md-4 text-center" style="">
                             <div class="container" style="padding:25px;margin-bottom: 10px;background-color: rgba(0,0,0,0.32);min-height: 200px;">
                                 <h1>Instructions</h1>
-                                Lorem Ipsum dolor sit
+                                <div style="text-align: left;font-family: Tahoma;font-size:12px;padding-left: 30px;"><?php echo $instructions; ?></div>
                             </div>
                         </div>
                         <div class="col-md-4 text-center" style="">
@@ -273,23 +275,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <div class="col-xs-12 text-center">
                                         <div class="navy-line"></div>
                                         <h1>Contact Us</h1>
-                                        For enquiries/complaints, you may visit the nearest Office or 
+                                        <div><?php echo $loginPgNotice ?> </div>                                       
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12 text-center">
-                                        <a href="mailto:info@rhomicom.com" class="btn btn-primary">Send us a mail</a>
-                                        <p class="m-t-sm">
-                                            Or follow us on social platforms
-                                        </p>
-                                        <ul class="list-inline social-icon">
-                                            <li><a href="#"><i class="fa fa-twitter" style="color:lime;"></i></a>
-                                            </li>
-                                            <li><a href="#"><i class="fa fa-facebook" style="color:lime;"></i></a>
-                                            </li>
-                                            <li><a href="#"><i class="fa fa-linkedin" style="color:lime;"></i></a>
-                                            </li>
-                                        </ul>
+                                        <a href="mailto:<?php echo $admin_email; ?>" class="btn btn-primary">Send us a mail</a>                                        
                                     </div>
                                 </div>
                             </div>
@@ -326,9 +317,9 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             <!-- Bootstrap Core JavaScript -->
             <script src="cmn_scrpts/bootstrap337/js/bootstrap.min.js"></script>
             <script type="text/javascript">
-                $body = $("body");
-                $body.removeClass("mdlloading");
-                </script>
+                                                    $body = $("body");
+                                                    $body.removeClass("mdlloading");
+            </script>
         </body>
         </html>
         <?php

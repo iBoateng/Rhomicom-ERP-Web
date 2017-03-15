@@ -9,13 +9,82 @@ $sortBy = isset($_POST['sortBy']) ? cleanInputData($_POST['sortBy']) : "";
 
 if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
-        if ($qstr == "DELETE") {
+        if ($qstr == 'DELETE') {
             if ($actyp == 1) {
-                
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $appNm = isset($_POST['appNm']) ? cleanInputData($_POST['appNm']) : "";
+                if ($PKeyID > 0) {
+                    echo deleteWkfApp($pKeyID, $appNm);
+                }
+            } else if ($actyp == 2) {
+                $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
+                $actnNm = isset($_POST['actnNm']) ? cleanInputData($_POST['actnNm']) : "";
+                if ($pKeyID > 0) {
+                    echo deleteWkfAppAction($pKeyID, $actnNm);
+                }
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //Save Workflow App
+                header("content-type:application/json");
+                $orgid = $_SESSION['ORG_ID'];
+                $wkfDetAppID = isset($_POST['wkfDetAppID']) ? (int) cleanInputData($_POST['wkfDetAppID']) : -1;
+                $wkfDetAppNm = isset($_POST['wkfDetAppNm']) ? cleanInputData($_POST['wkfDetAppNm']) : "";
+                $wkfDetSrcMdl = isset($_POST['wkfDetSrcMdl']) ? cleanInputData($_POST['wkfDetSrcMdl']) : "";
+                $wkfDetSrcMdlID = isset($_POST['wkfDetSrcMdlID']) ? cleanInputData($_POST['wkfDetSrcMdlID']) : -1;
+                $wkfDetAppDesc = isset($_POST['wkfDetAppDesc']) ? cleanInputData($_POST['wkfDetAppDesc']) : '';
+                $slctdAppActns = isset($_POST['slctdAppActns']) ? cleanInputData($_POST['slctdAppActns']) : '';
+                $oldAppID = getGnrlRecID2("wkf.wkf_apps", "app_name", "app_id", $wkfDetAppNm);
+                if ($wkfDetAppNm != "" && $wkfDetSrcMdl != "" && ($oldAppID <= 0 || $oldAppID == $wkfDetAppID)) {
+                    if ($wkfDetAppID <= 0) {
+                        createWkfApp($wkfDetAppNm, $wkfDetSrcMdl, $wkfDetAppDesc);
+                        $wkfDetAppID = getGnrlRecID2("wkf.wkf_apps", "app_name", "app_id", $wkfDetAppNm);
+                    } else {
+                        updateWkfApp($wkfDetAppID, $wkfDetAppNm, $wkfDetSrcMdl, $wkfDetAppDesc);
+                    }
+                    $affctdAppActns = 0;
+                    if ($wkfDetAppID > 0) {
+                        if (trim($slctdAppActns, "|~") != "") {
+                            //Save Report Parameters
+                            $variousRows = explode("|", trim($slctdAppActns, "|"));
+                            for ($z = 0; $z < count($variousRows); $z++) {
+                                $crntRow = explode("~", $variousRows[$z]);
+                                if (count($crntRow) == 7) {
+                                    $inptActionID = (int) (cleanInputData1($crntRow[0]));
+                                    $actionNm = cleanInputData1($crntRow[1]);
+                                    $actionDesc = cleanInputData1($crntRow[2]);
+                                    $actionSQL = cleanInputData1($crntRow[3]);
+                                    $actionUrl = cleanInputData1($crntRow[4]);
+                                    $actionDsplyTyp = cleanInputData1($crntRow[5]);
+                                    $isdiag = ($actionDsplyTyp == "Dialog") ? '1' : '0';
+                                    $admnOnly = cleanInputData1($crntRow[6]);
+                                    $isAdmnOnly = cnvrtBoolToBitStr(($admnOnly == "YES") ? true : false);
+
+                                    $oldAppActionID = getGnrlRecIDExtr("wkf.wkf_apps_actions", "action_performed_nm", "app_id", "action_sql_id", $actionNm, $wkfDetAppID);
+
+                                    if ($actionNm != "") {
+                                        if ($oldAppActionID <= 0) {
+                                            $affctdAppActns += createWkfAppAction($actionNm, $actionSQL, $wkfDetAppID, "", $actionUrl, $isdiag, $actionDesc, $isAdmnOnly);
+                                        } else {
+                                            $affctdAppActns += updateWkfAppAction($oldAppActionID, $actionNm, $actionSQL, $wkfDetAppID, "", $actionUrl, $isdiag, $actionDesc, $isAdmnOnly);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $arr_content['percent'] = 100;
+                    $arr_content['wkfDetAppID'] = $wkfDetAppID;
+                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>Workflow App Successfully Saved!<br/>" . $affctdAppActns . " App Actions Saved!";
+                    echo json_encode($arr_content);
+                    exit();
+                } else {
+                    $arr_content['percent'] = 100;
+                    $arr_content['wkfDetAppID'] = -1;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Either the New Workflow App Exists <br/>or Data Supplied is Incomplete!</span>";
+                    echo json_encode($arr_content);
+                    exit();
+                }
             } else if ($actyp == 2) {
                 
             }
@@ -159,13 +228,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             $cntr += 1;
                                             ?>
                                             <tr id="allWkfAppsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                <td><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allWkfAppsRow<?php echo $cntr; ?>_AppID" value="<?php echo $row[0]; ?>"></td>                                                
+                                                <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                <td class="lovtd"><?php echo $row[1]; ?><input type="hidden" class="form-control" aria-label="..." id="allWkfAppsRow<?php echo $cntr; ?>_AppID" value="<?php echo $row[0]; ?>"></td>                                                
                                                 <?php
                                                 if ($canDelWkfAp === true) {
                                                     ?>
-                                                    <td>
-                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete Workflow App">
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfApp('allWkfAppsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete Workflow App">
                                                             <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                         </button>
                                                     </td>
@@ -255,7 +324,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         <?php
                                                         if ($canEdtWkfAp === true) {
                                                             $nwRowHtml = "<tr id=\"wkfAppActnsRow__WWW123WWW\">"
-                                                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                                                    . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                                                     . "<td class=\"lovtd\">                                            
                                               <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                                             <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnNm\" value=\"\" style=\"width:100% !important;\">
@@ -277,7 +346,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnURL\" name=\"wkfAppActnsRow_WWW123WWW_ActnURL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
                                                             </div>                                                       
                                                     </td>
-                                          <td>
+                                          <td class=\"lovtd\">
 							<select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\" name=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\">";
 
                                                             $valslctdArry = array("", "");
@@ -288,15 +357,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             $nwRowHtml .= "</select>
                                                     </td>
                                           <td class=\"lovtd\"> 
-                                              <div class=\"form-group form-group-sm normaltd\">
-                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
-                                                                <label class=\"form-check-label\">
-                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
-                                                                </label>
-                                                            </div>
+                                              <div class=\"form-group form-group-sm \">
+                                                <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                    <label class=\"form-check-label\">
+                                                        <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
+                                                    </label>
+                                                </div>
                                               </div>
                                            </td>
-                                           <td class=\"lovtd\">&nbsp;</td>
+                                           <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfAppAction('wkfAppActnsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
+                                                    <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                </button>
+                                           </td>
                                         </tr>";
                                                             $nwRowHtml = urlencode($nwRowHtml);
                                                             ?>
@@ -330,7 +403,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                     $cntr += 1;
                                                                     ?>
                                                                     <tr id="wkfAppActnsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                                        <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                                        <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                                         <td class="lovtd">
                                                                             <?php if ($canEdtWkfAp === true) { ?>
                                                                                 <div class="form-group form-group-sm" style="width:100% !important;">
@@ -338,7 +411,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <input type="hidden" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnID" value="<?php echo $row2[0]; ?>">
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[1]; ?></span>
+                                                                                <span class=""><?php echo $row2[1]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <td class="lovtd">
@@ -347,7 +420,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%;" cols="7" rows="2"><?php echo $row2[2]; ?></textarea>
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[2]; ?></span>
+                                                                                <span class=""><?php echo $row2[2]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <td class="lovtd">
@@ -356,7 +429,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%;" cols="7" rows="2"><?php echo $row2[3]; ?></textarea>
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[3]; ?></span>
+                                                                                <span class=""><?php echo $row2[3]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <td class="lovtd">
@@ -365,10 +438,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%;" cols="7" rows="2"><?php echo $row2[10]; ?></textarea>
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[10]; ?></span>
+                                                                                <span class=""><?php echo $row2[10]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
-                                                                        <td>
+                                                                        <td class="lovtd">
                                                                             <?php if ($canEdtWkfAp === true) { ?>
                                                                                 <select data-placeholder="Select..." class="form-control chosen-select" id="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp" name="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp">
                                                                                     <?php
@@ -397,7 +470,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                             }
                                                                             if ($canEdtWkfAp === true) {
                                                                                 ?>
-                                                                                <div class="form-group form-group-sm normaltd">
+                                                                                <div class="form-group form-group-sm ">
                                                                                     <div class="form-check" style="font-size: 12px !important;">
                                                                                         <label class="form-check-label">
                                                                                             <input type="checkbox" class="form-check-input" id="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" name="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" <?php echo $isChkd ?>>
@@ -405,14 +478,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                                     </div>
                                                                                 </div>
                                                                             <?php } else { ?>
-                                                                                <span class="normaltd"><?php echo $row2[12]; ?></span>
+                                                                                <span class=""><?php echo $row2[12]; ?></span>
                                                                             <?php } ?>                                                         
                                                                         </td>
                                                                         <?php
                                                                         if ($canDelWkfAp === true) {
                                                                             ?>
-                                                                            <td>
-                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
+                                                                            <td class="lovtd">
+                                                                                <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfAppAction('wkfAppActnsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
                                                                                     <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                                                 </button>
                                                                             </td>
@@ -517,7 +590,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     <?php
                                     if ($canEdtWkfAp === true) {
                                         $nwRowHtml = "<tr id=\"wkfAppActnsRow__WWW123WWW\">"
-                                                . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                                . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                                 . "<td class=\"lovtd\">                                            
                                               <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                                             <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnNm\" value=\"\" style=\"width:100% !important;\">
@@ -539,7 +612,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnURL\" name=\"wkfAppActnsRow_WWW123WWW_ActnURL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
                                                             </div>                                                       
                                                     </td>
-                                          <td>
+                                          <td class=\"lovtd\">
 							<select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\" name=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\">";
 
                                         $valslctdArry = array("", "");
@@ -550,15 +623,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $nwRowHtml .= "</select>
                                                     </td>
                                           <td class=\"lovtd\"> 
-                                              <div class=\"form-group form-group-sm normaltd\">
-                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
-                                                                <label class=\"form-check-label\">
-                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
-                                                                </label>
-                                                            </div>
+                                              <div class=\"form-group form-group-sm \">
+                                                <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                    <label class=\"form-check-label\">
+                                                        <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
+                                                    </label>
+                                                </div>
                                               </div>
                                            </td>
-                                           <td class=\"lovtd\">&nbsp;</td>
+                                           <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfAppAction('wkfAppActnsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
+                                                    <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                </button>
+                                           </td>
                                         </tr>";
                                         $nwRowHtml = urlencode($nwRowHtml);
                                         ?>
@@ -592,7 +669,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="wkfAppActnsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                                    <td class="lovtd"><span class="normaltd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
+                                                    <td class="lovtd"><span class=""><?php echo ($curIdx * $lmtSze) + ($cntr); ?></span></td>
                                                     <td class="lovtd">
                                                         <?php if ($canEdtWkfAp === true) { ?>
                                                             <div class="form-group form-group-sm" style="width:100% !important;">
@@ -600,7 +677,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <input type="hidden" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnID" value="<?php echo $row2[0]; ?>">
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[1]; ?></span>
+                                                            <span class=""><?php echo $row2[1]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <td class="lovtd">
@@ -609,7 +686,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnDesc" style="width:100%;" cols="7" rows="2"><?php echo $row2[2]; ?></textarea>
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[2]; ?></span>
+                                                            <span class=""><?php echo $row2[2]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <td class="lovtd">
@@ -618,7 +695,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnSQL" style="width:100%;" cols="7" rows="2"><?php echo $row2[3]; ?></textarea>
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[3]; ?></span>
+                                                            <span class=""><?php echo $row2[3]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <td class="lovtd">
@@ -627,10 +704,10 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%;" cols="7" rows="2"><?php echo $row2[10]; ?></textarea>
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[10]; ?></span>
+                                                            <span class=""><?php echo $row2[10]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
-                                                    <td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtWkfAp === true) { ?>
                                                             <select data-placeholder="Select..." class="form-control chosen-select" id="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp" name="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp">
                                                                 <?php
@@ -659,7 +736,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                         }
                                                         if ($canEdtWkfAp === true) {
                                                             ?>
-                                                            <div class="form-group form-group-sm normaltd">
+                                                            <div class="form-group form-group-sm ">
                                                                 <div class="form-check" style="font-size: 12px !important;">
                                                                     <label class="form-check-label">
                                                                         <input type="checkbox" class="form-check-input" id="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" name="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" <?php echo $isChkd ?>>
@@ -667,14 +744,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 </div>
                                                             </div>
                                                         <?php } else { ?>
-                                                            <span class="normaltd"><?php echo $row2[12]; ?></span>
+                                                            <span class=""><?php echo $row2[12]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
                                                     <?php
                                                     if ($canDelWkfAp === true) {
                                                         ?>
-                                                        <td>
-                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
+                                                        <td class="lovtd">
+                                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfAppAction('wkfAppActnsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
                                                                 <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                                             </button>
                                                         </td>
@@ -696,7 +773,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     <?php
                 }
             } else if ($vwtyp == 2) {
-                //New Org Form
+                //New Workflow App Form
                 $curIdx = 0;
                 $pkID = -1;
                 if ($canAddWkfAp === true) {
@@ -713,6 +790,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <div  class="col-lg-8">
                                     <input type="text" class="form-control" aria-label="..." id="wkfDetAppNm" name="wkfDetAppNm" value="" style="width:100%;">
                                     <input type="hidden" class="form-control" aria-label="..." id="wkfDetAppID" name="wkfDetAppID" value="-1">
+                                    <input type="hidden" class="form-control" aria-label="..." id="isNew123" name="isNew123" value="5">
                                 </div>
                             </div>
                         </fieldset>
@@ -751,7 +829,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <fieldset class="basic_person_fs"> 
                             <?php
                             $nwRowHtml = "<tr id=\"wkfAppActnsRow__WWW123WWW\">"
-                                    . "<td class=\"lovtd\"><span class=\"normaltd\">New</span></td>"
+                                    . "<td class=\"lovtd\"><span class=\"\">New</span></td>"
                                     . "<td class=\"lovtd\">                                            
                                               <div class=\"form-group form-group-sm\" style=\"width:100% !important;\">
                                                             <input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnNm\" value=\"\" style=\"width:100% !important;\">
@@ -773,9 +851,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                                 <textarea class=\"form-control\" aria-label=\"...\" id=\"wkfAppActnsRow_WWW123WWW_ActnURL\" name=\"wkfAppActnsRow_WWW123WWW_ActnURL\" style=\"width:100%;\" cols=\"7\" rows=\"2\"></textarea>
                                                             </div>                                                       
                                                     </td>
-                                          <td>
+                                          <td class=\"lovtd\">
 							<select data-placeholder=\"Select...\" class=\"form-control chosen-select\" id=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\" name=\"wkfAppActnsRow_WWW123WWW_DsplyTyp\">";
-
                             $valslctdArry = array("", "");
                             $srchInsArrys = array("Dialog", "Direct");
                             for ($z = 0; $z < count($srchInsArrys); $z++) {
@@ -784,15 +861,19 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $nwRowHtml .= "</select>
                                                     </td>
                                           <td class=\"lovtd\"> 
-                                              <div class=\"form-group form-group-sm normaltd\">
-                                                            <div class=\"form-check\" style=\"font-size: 12px !important;\">
-                                                                <label class=\"form-check-label\">
-                                                                    <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
-                                                                </label>
-                                                            </div>
+                                              <div class=\"form-group form-group-sm \">
+                                                <div class=\"form-check\" style=\"font-size: 12px !important;\">
+                                                    <label class=\"form-check-label\">
+                                                        <input type=\"checkbox\" class=\"form-check-input\" id=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\" name=\"wkfAppActnsRow_WWW123WWW_AdmnOnly\">
+                                                    </label>
+                                                </div>
                                               </div>
                                            </td>
-                                           <td class=\"lovtd\">&nbsp;</td>
+                                           <td class=\"lovtd\">
+                                                <button type=\"button\" class=\"btn btn-default\" style=\"margin: 0px !important;padding:0px 3px 2px 4px !important;\" onclick=\"delWkfAppAction('wkfAppActnsRow__WWW123WWW');\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Delete Group Member\">
+                                                    <img src=\"cmn_images/delete.png\" style=\"height:15px; width:auto; position: relative; vertical-align: middle;\">
+                                                </button>
+                                           </td>
                                         </tr>";
                             $nwRowHtml = urlencode($nwRowHtml);
                             ?>
@@ -818,7 +899,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     $cntr = 1;
                                     ?>
                                     <tr id="wkfAppActnsRow_<?php echo $cntr; ?>" class="hand_cursor">                                    
-                                        <td class="lovtd"><span class="normaltd">New</span></td>
+                                        <td class="lovtd"><span class="">New</span></td>
                                         <td class="lovtd">
                                             <div class="form-group form-group-sm" style="width:100% !important;">
                                                 <input type="text" class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnNm" value="" style="width:100% !important;">
@@ -840,7 +921,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 <textarea class="form-control" aria-label="..." id="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" name="wkfAppActnsRow<?php echo $cntr; ?>_ActnURL" style="width:100%;" cols="7" rows="2"></textarea>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="lovtd">
                                             <select data-placeholder="Select..." class="form-control chosen-select" id="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp" name="wkfAppActnsRow<?php echo $cntr; ?>_DsplyTyp">
                                                 <?php
                                                 $valslctdArry = array("", "");
@@ -855,7 +936,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             $isChkd = "";
                                             ?>
-                                            <div class="form-group form-group-sm normaltd">
+                                            <div class="form-group form-group-sm ">
                                                 <div class="form-check" style="font-size: 12px !important;">
                                                     <label class="form-check-label">
                                                         <input type="checkbox" class="form-check-input" id="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" name="wkfAppActnsRow<?php echo $cntr; ?>_AdmnOnly" <?php echo $isChkd ?>>
@@ -863,23 +944,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 </div>
                                             </div>                                                       
                                         </td>
-                                        <td>
-                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="alert('del');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
+                                        <td class="lovtd">
+                                            <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delWkfAppAction('wkfAppActnsRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete App Action">
                                                 <img src="cmn_images/delete.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
                                             </button>
                                         </td>
                                     </tr>
-                            </tbody>
-                        </table>
-                    </fieldset>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </div>
                 </div>
-            </div>
-            <?php
-        } else if ($vwtyp == 3) {
-            
-        } else if ($vwtyp == 4) {
-            
+                <?php
+            } else if ($vwtyp == 3) {
+                
+            } else if ($vwtyp == 4) {
+                
+            }
         }
     }
-}
 }    

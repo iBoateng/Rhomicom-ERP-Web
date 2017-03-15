@@ -17,19 +17,19 @@ $menuLinks = array("grp=8&typ=1", "grp=7&typ=1", "grp=16&typ=1",
     "grp=15&typ=1", "grp=13&typ=1", "grp=14&typ=1&mdl=Clinic/Hospital",
     "grp=17&typ=1", "grp=40&typ=4", "grp=40&typ=3&vtyp=1",
     "grp=9&typ=1", "grp=41&typ=1");
-$mdlNms = array("Basic Person Data", "Internal Payments", "Events And Attendance",
-    "e-Voting", "e-Library", "Accounting",
+$mdlNms = array("Basic Person Data", "Self Service", "Self Service",
+    "Self Service", "Self Service", "Accounting",
     "Stores And Inventory Manager", "Hospitality Management", "Visits and Appointments",
     "Learning/Performance Management", "Projects Management", "Clinic/Hospital",
-    "Basic Person Data", "Self Service", "System Administration",
+    "Basic Person Data", "Self Service", "Self Service",
     "Reports And Processes", "Self Service");
 
 $dfltPrvldgs = array(
-    "View Person", "View Internal Payments", "View Events And Attendance",
-    "View e-Voting", "View e-Library", "View Accounting",
+    "View Person", "View Internal Payments", "View Events/Attendances",
+    "View Elections", "View E-Library", "View Accounting",
     "View Inventory Manager", "View Hospitality Manager", "View Visits and Appointments",
     "View Learning/Performance Management", "View Projects Management", "View Clinic/Hospital",
-    "View Person", "View Self-Service", "View Notices Admin",
+    "View Person", "View Self-Service", "View Self-Service",
     "View Reports And Processes", "View Self-Service");
 
 $canview = test_prmssns($dfltPrvldgs[0], $mdlNms[0]) || test_prmssns("View Self-Service", "Self Service");
@@ -41,7 +41,7 @@ $cntent = "<div>
                                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span>
+						<span style=\"text-decoration:none;\">All Modules&nbsp;</span>
 					</li>
 				</ul>
 			</div>";

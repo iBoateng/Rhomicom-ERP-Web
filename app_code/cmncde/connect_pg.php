@@ -8,6 +8,7 @@ $year = date('Y');
 $fulldte = date('d-M-Y H:i:s');
 $app_url = "http://192.168.56.250/rho_erp/";
 $admin_email = "info@rhomicom.com";
+$admin_name = "Rhomicom Portal Administrator";
 $smplPwd = "AoP12@34";
 $jsCssFileVrsn = "1015";
 //More than 62 Characters Recommended
@@ -16,15 +17,16 @@ $smplTokenWord = "eRRTRhbnsdGeneral Key for Rhomi|com Systems "
 $smplTokenWord1 = "xewe19fs58rte21This is a General Key for Rhomi|com Systems "
         . "Tech. !Ltd Web/Mobile Portal @7612364kjebdfjwegyr78236429orbjkasdbhi";
 $ModuleName = "";
-$database = "ecog_live";
-$db_folder = "ecng";
+$database = "test_database";
+$db_folder = "tst";
 $script_folder = "scripts7";
 $base_folder = "";
 $fldrPrfx = '/var/www/html/rho_erp/';
 //$tmpDest = 'C:\\wamp\\www\\portal\\dwnlds\\ghie_test\\Person\\Request\\';
-$tmpDest = 'dwnlds/' . $db_folder . '/Person/Request/'; ///var/www/html/portal/
+$tmpDest = 'dwnlds/tmp/'; ///var/www/html/portal/
 //$prsnDocDest = 'dwnlds/' . $db_folder . '/PrsnDoc/';      
-$pemDest = 'dwnlds/' . $db_folder . '/Person/'; ///var/www/html/portal/
+$pemDest = 'dwnlds/pem/';
+///var/www/html/portal/
 //$dest = "dwnlds/$db_folder/Person/";
 //$base_dir = "C:/xampp/htdocs/rems_pg/app_code/cmncde/";
 //$ftp_base_db_fldr = "/home/oracle/Databases/test_database";
@@ -56,6 +58,8 @@ $bckcolorsChngPwd = "background-color: #FFFFFF !important;background: url('cmn_i
   background-size: cover;";
 $bckcolors_home = "background-repeat: repeat;background-color: #003245 !important;background-size:100% 100%;";
 $bckcolorOnly = "#00779D";
+$bckcolorOnly1 = "#003245";
+$bckcolorOnly2 = "#5a8f9d";
 $bckcolorshv = "background-color: #5a8f9d !important;"; //#00AACF
 $forecolors = "color:#FFFFFF !important;";
 $bckcolors1 = "#FFF";
@@ -70,14 +74,26 @@ $breadCrmbBckclr = "
     background-image: linear-gradient(to bottom, #336578, #003245);
     filter: progid:dximagetransform.microsoft.gradient(startColorstr='#336578', endColorstr='#003245', GradientType=0);";
 
-$loginPgNotice = "<p>Rhomicom Head Quarters, Achimota-ABC, Accra-Ghana</p>";
+$loginPgNotice = "<p style=\"font-size:12px;\">Rhomicom Head Quarters, Achimota-ABC, Accra-Ghana</p>";
 $goBackButtonMsg = "Go Back to Rhomicom Website";
 $placeHolder1 = "Username or ID No.";
 $loginTitle = "LOGIN TO THE PARTNERSHIP PORTAL";
+$website_btn_txt = "Rhomicom Website";
 $showAboutRho = "0";
 $introWdth = 1050;
 $subArtWdth = 524;
-$introToPrtlArtBody = "<div class=\"rho_form1\" style=\"max-width:{:introWdth}px;font-family:Arial !important; padding-left:20px\">
+$instructions = "<ol type=\"1\" start=\"1\"><li>Click on Request for New password</li>
+<li>Enter your ID number and Click Send Password Reset Link</li>
+<li>Check your email (registered) for a mail from Portal Administrator ($admin_email)</li>
+<li>In the mail, click on \"<span style=\"text-decoration:underline;color:lime;\">Click on this link to RESET it!</span>\" and then enter your New Password!</li>
+</ol>";
+$abt_portal = "The IT system accessible to all Registered Members of the Institution through the use of personal identification. It has the ff features:
+    <ul style=\"list-style-type: square;text-align:left;padding-left: 80px;color:lime;\">
+    <li>Forums/Notices</li>
+    <li>Elections</li>
+    <li>Payments etc.</li>
+    </ul>";
+$introToPrtlArtBody = "<div class=\"\" style=\"font-family:Arial !important; padding-left:20px\">
                     <h3><a href=\"javascript: showNoticeDetails({:articleID},'Notices/Announcements');\" style=\"font-weight:bold;text-decoration:underline;\">INTRODUCTION TO THE PORTAL</a></h3>
                                 <p style=\"line-height: 162%;\">
                                 <a href=\"$app_cstmr_url\" target=\"_blank\">
@@ -94,17 +110,17 @@ $introToPrtlArtBody = "<div class=\"rho_form1\" style=\"max-width:{:introWdth}px
                                 Voting and Checking of Election Results can all be done from here...{:RMS} <br/>There is also a live and vibrant forum here where members can share knowledge
             and expertise on areas of importance. Notices and research papers can be
             submitted to the Institution via this platform as well.{:RME}</p></div>";
-$ltstNewArtBody = "<div class=\"rho_form1\" style=\"float:left;padding-left:20px;margin:5px;max-width:{:subArtWdth}px;min-height:170px;line-height: 162%;font-family:Arial !important;font-size:13px !important;\">
+$ltstNewArtBody = "<div class=\"\" style=\"float:left;padding-left:20px;margin:5px;min-height:170px;line-height: 162%;font-family:Arial !important;font-size:13px !important;\">
                                 <h3><a href=\"javascript: showNoticeDetails({:articleID},'Latest News');\" style=\"font-weight:bold;text-decoration:underline;\">LATEST NEWS AND HIGHLIGHTS</a></h3>
                                 <ul style=\"list-style-image: url(cmn_images/rho_arrow2.png);list-style-position:outside;padding-left:40px;\">
-                                <li style=\"list-style-image: url(cmn_images/new.gif) !important;\"><a href=\"#\">User friendly Interface.</a></li>
-                                <li>It can run on a variety of computer hardware and network configuration.</li>
-                                <li>It employs a centralized robust database as a repository of information.</li>
-                                <li>Data Import/Export to Excel and Word.</li>
-                                <li>Supports multiple users.</li>
+                                    <li style=\"list-style-image: url(cmn_images/new.gif) !important;\"><a href=\"#\">User friendly Interface.</a></li>
+                                    <li>It can run on a variety of computer hardware and network configuration.</li>
+                                    <li>It employs a centralized robust database as a repository of information.</li>
+                                    <li>Data Import/Export to Excel and Word.</li>
+                                    <li>Supports multiple users.</li>
                                 </ul>
                                 </div>";
-$usefulLnksArtBody = "<div class=\"rho_form1\" style=\"float:left;padding-left:20px;margin:5px;max-width:{:subArtWdth}px;min-height:170px;line-height: 162%;font-family:Arial !important;font-size:13px !important;\">
+$usefulLnksArtBody = "<div class=\"\" style=\"float:left;padding-left:20px;margin:5px;min-height:170px;line-height: 162%;font-family:Arial !important;font-size:13px !important;\">
                                 <h3><a href=\"javascript: showNoticeDetails({:articleID},'Useful Links');\" style=\"font-weight:bold;text-decoration:underline;\">USEFUL QUICK LINKS & RESOURCES</a></h3>
                                 <ul style=\"list-style-image: url(cmn_images/rho_arrow2.png);list-style-position:outside;list-style-type:circle;padding-left:40px;\">
                                 <li style=\"list-style-image: url(cmn_images/new.gif) !important;\">Database backup and restore from application.</li>
@@ -165,6 +181,38 @@ $aboutOrgArtBody = "<div class=\"rho_form1\" style=\"float:left;padding-left:20p
                 " . $aboutRho . "</div>";
 
 function destroySession() {
+    //Get all downloaded files and delete
+    global $fldrPrfx;
+    global $tmpDest;
+    global $ftp_base_db_fldr;
+    global $lgn_num;
+    global $logNxtLine;
+    $dwnldFiles = isset($_SESSION['CUR_RPT_FILES']) ? $_SESSION['CUR_RPT_FILES'] : "";
+    $osNm = substr(php_uname(), 0, 7);
+    if ($dwnldFiles != "") {
+        file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", PHP_EOL . $dwnldFiles . $logNxtLine, FILE_APPEND | LOCK_EX);
+
+        $dwnldFilesArry = explode("|", $dwnldFiles);
+        for ($i = 0; $i < count($dwnldFilesArry); $i++) {
+            file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num.rho", PHP_EOL . $dwnldFilesArry[$i] . $logNxtLine, FILE_APPEND | LOCK_EX);
+            if ($osNm == "Windows") {
+                $cmd = "del " . $dwnldFilesArry[$i];
+                execInBckgrndWndws($cmd);
+            } else {
+                $cmd = "rm " . $dwnldFilesArry[$i];
+                execInBckgrndUnix($cmd);
+            }
+        }
+    }
+    if ($osNm == "Windows") {
+        $cmd = "forfiles -p \"" . $fldrPrfx . $tmpDest . "\" -s -m *.* -d -5 -c \"cmd /c del @path\"";
+        execInBckgrndWndws($cmd);
+    } else {
+        $cmd = "find " . $fldrPrfx . "" . $tmpDest . "* -type f -maxdepth 1 -mmin +30 -name '*.*' -exec rm -f {} \;";
+        execInBckgrndUnix($cmd);
+        $cmd = "find " . $fldrPrfx . "dwnlds/amcharts_2100/samples/* -type f -maxdepth 1 -mmin +30 -name '*.html' -exec rm -f {} \;";
+        execInBckgrndUnix($cmd);
+    }
     $_SESSION['UNAME'] = "";
     $_SESSION['USRID'] = -1;
     $_SESSION['LGN_NUM'] = -1;

@@ -518,44 +518,45 @@ function encrypt($inpt, $key) {
     }
 }
 
-//function getRandomInt($a, $b) {
-//    return rand($a, $b); // creates a number between a and b
-//}
-//
-//function getRandomPswd() {
-//    $charset1 = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
-//        "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
-//        "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-//        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
-//        "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x",
-//        "y", "z");
-//    $charset2 = array("e", "q", "0", "P", "3", "i", "D", "O", "V", "8", "E", "6",
-//        "B", "Z", "A", "W", "5", "g", "G", "F", "H", "u", "t", "s",
-//        "C", "K", "d", "p", "r", "w", "z", "x", "a", "c", "1", "m",
-//        "I", "f", "Q", "L", "v", "Y", "j", "S", "R", "o", "J", "4",
-//        "9", "h", "7", "M", "b", "X", "k", "N", "l", "n", "2", "y",
-//        "T", "U");
-//    $wldChars = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
-//    $pswd = "";
-//    //Random rnd = new Random();
-//    $idx = -1;
-//    for ($i = 1; $i < 8; $i++) {
-//        if ($i == 1 || $i == 4 || $i == 7) {
-//            $idx = rand(0, count($charset1));
-//            $pswd += $charset1[$idx];
-//        } else if ($i == 2 || $i == 5) {
-//            $idx = rand(0, count($charset2));
-//            $pswd += $charset2[$idx];
-//        } else if ($i == 3 || $i == 6) {
-//            $idx = rnd . Next(0, count($wldChars));
-//            $pswd += $wldChars[$idx]
+function encrypt2($inpt, $key) {
+    try {
+        $numChars = 123456;
+        $numChars1 = 789012;
+        $encrptdLen = str_pad(strlen($inpt) + $numChars, 6, "0", STR_PAD_LEFT);
+        $encrptdLen1 = str_pad(strlen($inpt) + $numChars1, 6, "0", STR_PAD_LEFT);
 
-;
-
-//        }
-//    }
-//    return pswd;
-//}
+        $inpt = $numChars . $encrptdLen . $inpt . $numChars1 . $encrptdLen1;
+        $fnl_str = "";
+        $charset1 = array(
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+            "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
+            "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+            "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x",
+            "y", "z");
+        $charset2 = str_split(getNewKey($key), 1);
+        $wldChars = array("`", "¬", "!", "\"", "£", "$", "%", "^", "&", "*", "(", ")",
+            "-", "_", "=", "+", "{", "[", "]", "}", ":", ";", "@", "'",
+            "#", "~", "/", "?", ">", ".", "<", ",", "\\", "|", " ");
+        for ($i = strlen($inpt) - 1; $i >= 0; $i--) {
+            $tst_str = substr($inpt, $i, 1);
+            $j = findCharIndx($tst_str, $charset1);
+            if ($j == -1) {
+                $k = findCharIndx($tst_str, $wldChars);
+                if ($k == -1) {
+                    $fnl_str .= $tst_str;
+                } else {
+                    $fnl_str .= $charset2[$k] . "_";
+                }
+            } else {
+                $fnl_str .= $charset2[$j];
+            }
+        }
+        return $fnl_str;
+    } catch (Exception $e) {
+        return $inpt;
+    }
+}
 
 function getUserPswd($username) {
     $sqlStr = "select usr_password from sec.sec_users where lower(user_name) = lower('" .
@@ -624,7 +625,7 @@ function checkNCreateUser($UNM, &$dsply) {
         //$prn_Nm = getPrsnFullNm($nwPrsnID);
         $prn_Loc_ID = $UNM;
         $start_date = date('d-M-Y H:i:s');
-        $end_date = date('d-M-Y H:i:s', strtotime('31-Dec-4000 23:59:59'));
+        $end_date = '31-Dec-4000 23:59:59';
         $datestr = getDB_Date_time();
         $slctdRoles = "-1;" . getRoleID('Self-Service (Standard)') . ";" . $start_date . ";" . $end_date . "|";
 //exit();
@@ -1244,6 +1245,7 @@ function loadMdlsNthrRolesNLovs() {
     loadProjsMdl();
     loadEvoteMdl();
     loadELibraryMdl();
+    loadHelpDskMdl();
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
     createSysLovsPssblVals($pssblVals, $sysLovs);
 
@@ -1315,9 +1317,9 @@ function loadWkflMdl() {
         /* 16 */ "Administer Notifications", "Administer Workflow Setups");
 
 
-    $subGrpNames = ""; 
-    $mainTableNames = ""; 
-    $keyColumnNames = ""; 
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
     $myName = "Workflow Manager";
     $myDesc = "This module helps you to configure the application's workflow system!";
     $audit_tbl_name = "wkf.wkf_audit_trail_tbl";
@@ -1330,10 +1332,11 @@ function loadWkflMdl() {
 
 function createWkfRqrdLOVs() {
 
-    $sysLovs = array("Hierarchy Names", "Workflow Apps");
-    $sysLovsDesc = array("Hierarchy Names", "Workflow Apps");
+    $sysLovs = array("Hierarchy Names", "Workflow Apps", "Approver Groups");
+    $sysLovsDesc = array("Hierarchy Names", "Workflow Apps", "Approver Groups");
     $sysLovsDynQrys = array("select distinct trim(to_char(hierarchy_id,'999999999999999999999999999999')) a, hierarchy_name b, '' c from wkf.wkf_hierarchy_hdr order by hierarchy_name",
-        "select distinct trim(to_char(app_id,'999999999999999999999999999999')) a, app_name b, '' c from wkf.wkf_apps order by app_name");
+        "select distinct trim(to_char(app_id,'999999999999999999999999999999')) a, app_name b, '' c from wkf.wkf_apps order by app_name",
+        "select distinct ''||apprvr_group_id a, group_name b, '' c from wkf.wkf_apprvr_groups order by group_name");
     //$pssblVals = array("","","");
 
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
@@ -1427,12 +1430,12 @@ function createWkfRqrdLOVs() {
         "User approves submitted request");
     $sqlStmnt = array("", "", "", "", "", "");
     $exctbl = array("", "", "", "", "", "");
-    $webURL = array("grp=21&typ=1&p=9&q=act&RoutingID={:wkfRtngID}&actyp={:wkfAction}",
-        "grp=21&typ=1&p=9&q=act&RoutingID={:wkfRtngID}&actyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
-        "grp=21&typ=1&p=9&q=act&RoutingID={:wkfRtngID}&actyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
-        "grp=21&typ=1&p=9&q=act&RoutingID={:wkfRtngID}&actyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
-        "grp=21&typ=1&p=9&q=act&RoutingID={:wkfRtngID}&actyp={:wkfAction}",
-        "grp=21&typ=1&p=9&q=act&RoutingID={:wkfRtngID}&actyp={:wkfAction}");
+    $webURL = array("grp=8&typ=1&pg=2&q=UPDATE&actyp=40&RoutingID={:wkfRtngID}&actiontyp={:wkfAction}",
+        "grp=8&typ=1&pg=2&q=UPDATE&actyp=40&RoutingID={:wkfRtngID}&actiontyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
+        "grp=8&typ=1&pg=2&q=UPDATE&actyp=40&RoutingID={:wkfRtngID}&actiontyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
+        "grp=8&typ=1&pg=2&q=UPDATE&actyp=40&RoutingID={:wkfRtngID}&actiontyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
+        "grp=8&typ=1&pg=2&q=UPDATE&actyp=40&RoutingID={:wkfRtngID}&actiontyp={:wkfAction}",
+        "grp=8&typ=1&pg=2&q=UPDATE&actyp=40&RoutingID={:wkfRtngID}&actiontyp={:wkfAction}");
     $isdiag = array("0", "1", "1", "1", "1", "1");
     $isadmnonly = array("0", "0", "0", "0", "0", "0");
     for ($i = 0; $i < count($actionNm); $i++) {
@@ -1498,6 +1501,26 @@ function loadAlrtMdl() {
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
 }
 
+function loadHelpDskMdl() {
+    //For Accounting
+    $DefaultPrvldgs = array("View Help Desk",
+        /* 1 */ "View Help Desk Dashboard",
+        /* 2 */ "View My Request Tickets", "View All Request Tickets",
+        /* 4 */ "View SQL", "View Record History",
+        /* 6 */ "Add Request Tickets", "Edit Request Tickets", "Delete Request Tickets",
+        /* 9 */ "Add Tickets for Others", "Edit Tickets for Others", "Delete Tickets for Others");
+
+    $subGrpNames = "";
+    $mainTableNames = "";
+    $keyColumnNames = "";
+    $myName = "Service Desk Manager";
+    $myDesc = "This module helps you to manage your support tickets and I.T Service requests!";
+    $audit_tbl_name = "hlpd.hlpd_audit_trail_tbl";
+    $smplRoleName = "Service Desk Manager Administrator";
+
+    checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
+}
+
 function loadSysAdminMdl() {
     //For Accounting
     global $sysLovs, $sysLovsDesc, $sysLovsDynQrys;
@@ -1523,6 +1546,13 @@ function loadSysAdminMdl() {
 
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
+
+    $sysLovs2 = array("Notice Classifications");
+    $sysLovsDesc2 = array("Notice Classifications");
+    $sysLovsDynQrys2 = array("");
+    $pssblVals2 = array("0", "System Notifications", "System Notifications");
+    createSysLovs($sysLovs2, $sysLovsDesc2, $sysLovsDynQrys2);
+    createSysLovsPssblVals($pssblVals2, $sysLovs2);
 }
 
 function loadAccntngMdl() {
@@ -1584,10 +1614,9 @@ function loadPersonMdl() {
         /* 4 */ "View Person Pay Item Assignments", "View SQL", "View Record History",
         /* 7 */ "Add Person Info", "Edit Person Info", "Delete Person Info",
         /* 10 */ "Add Basic Assignments", "Edit Basic Assignments", "Delete Basic Assignments",
-        /* 13 */ "Add Pay Item Assignments", "Edit Pay Item Assignments", "Delete Pay Item Assignments",
-        "View Banks",
+        /* 13 */ "Add Pay Item Assignments", "Edit Pay Item Assignments", "Delete Pay Item Assignments", "View Banks",
         /* 17 */ "Define Assignment Templates", "Edit Assignment Templates", "Delete Assignment Templates",
-        "View Assignment Templates");
+        /* 20 */ "View Assignment Templates", "Manage My Firm");
 
     $subGrpNames = array("Person Data");
     $mainTableNames = array("prs.prsn_names_nos");
@@ -1747,10 +1776,10 @@ function loadOrgStpMdl() {
 
 function loadRptMdl() {
     $DefaultPrvldgs = array("View Reports And Processes",
-    /* 1 */ "View Report Definitions", "View Report Runs", "View SQL", "View Record History",
-    /* 5 */ "Add Report/Process", "Edit Report/Process", "Delete Report/Process",
-    /* 8 */ "Run Reports/Process", "Delete Report/Process Runs", "View Runs from Others",
-    /* 11 */ "Delete Run Output File", "Add Alert", "Edit Alert", "Delete Alert");
+        /* 1 */ "View Report Definitions", "View Report Runs", "View SQL", "View Record History",
+        /* 5 */ "Add Report/Process", "Edit Report/Process", "Delete Report/Process",
+        /* 8 */ "Run Reports/Process", "Delete Report/Process Runs", "View Runs from Others",
+        /* 11 */ "Delete Run Output File", "Add Alert", "Edit Alert", "Delete Alert");
 
     $subGrpNames = "";
     $mainTableNames = "";
@@ -1788,7 +1817,7 @@ function loadEvoteMdl() {
     $sysLovsDesc = array("Questions Bank", "Question Possible Answers");
     $sysLovsDynQrys = array("select '' || qstn_id a, qstn_desc b, '' c "
         . "from self.self_question_bank order by qstn_id",
-        "select '' || psbl_ansr_id a, psbl_ansr_desc b, '' c, -1 d, '' || qstn_id e "
+        "select '' || psbl_ansr_id a, psbl_ansr_desc b, '' c, qstn_id d, '' || qstn_id e "
         . "from self.self_question_possible_answers where is_enabled='1' order by psbl_ansr_order_no");
 
     createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys);
@@ -2002,6 +2031,23 @@ function loadAttnMdl() {
 
     $smplRoleName = "Events And Attendance Administrator";
     checkNAssignReqrmnts($myName, $myDesc, $audit_tbl_name, $smplRoleName, $DefaultPrvldgs, $subGrpNames, $mainTableNames, $keyColumnNames);
+    createPayRqrdLOVs();
+}
+
+function createPayRqrdLOVs() {
+    $sysLovs = array("Item Sets for Payments(Enabled)", "Person Sets for Payments(Enabled)",
+        "Pay Run Names/Numbers", "Retro Pay Items", "Pay Balance Items");
+    $sysLovsDesc = array("Item Sets for Payments(Enabled)", "Person Sets for Payments(Enabled)",
+        "Quick/Mass Pay Run Names/Numbers", "Retro Pay Items", "Pay Balance Items");
+    $sysLovsDynQrys = array("select distinct trim(to_char(z.hdr_id,'999999999999999999999999999999')) a, z.itm_set_name b, '' c, z.org_id d, '' e, '' f, y.user_role_id g from pay.pay_itm_sets_hdr z, pay.pay_sets_allwd_roles y where z.hdr_id = y.itm_set_id and z.is_enabled='1' order by z.itm_set_name",
+        "select distinct trim(to_char(z.prsn_set_hdr_id,'999999999999999999999999999999')) a, z.prsn_set_hdr_name b, '' c, z.org_id d, '' e, '' f, y.user_role_id g  from pay.pay_prsn_sets_hdr z, pay.pay_sets_allwd_roles y where z.prsn_set_hdr_id = y.prsn_set_id and z.is_enabled='1' order by z.prsn_set_hdr_name",
+        "select distinct mass_pay_name a, mass_pay_desc b, '' c, org_id d, mass_pay_id e from pay.pay_mass_pay_run_hdr where run_status='1' order by mass_pay_id DESC",
+        "select '' || item_id a, item_code_name b, '' c, org_id d from org.org_pay_items where is_retro_element='1' and (item_id NOT IN (select distinct z.retro_item_id from org.org_pay_items z)) order by item_code_name",
+        "select item_code_name a, item_desc||' ('|| item_id||')' b, '' c, org_id d from org.org_pay_items where item_maj_type='Balance Item' order by item_code_name");
+    $pssblVals = array();
+
+    createSysLovs($sysLovs, $sysLovsDynQrys, $sysLovsDesc);
+    //createSysLovsPssblVals($sysLovs, $pssblVals);
 }
 
 function loadMcfMdl() {
@@ -2010,13 +2056,18 @@ function loadMcfMdl() {
 
 function createSysLovs($sysLovs, $sysLovsDesc, $sysLovsDynQrys) {
     for ($i = 0; $i < count($sysLovs); $i++) {
-        if (getLovID($sysLovs[$i]) <= 0) {
+        $lovID = getLovID($sysLovs[$i]);
+        if ($lovID <= 0) {
             if ($sysLovsDynQrys[$i] == "") {
                 createLovNm($sysLovs[$i]
                         , $sysLovsDesc[$i], '0 ', "", "SYS", '1');
             } else {
                 createLovNm($sysLovs[$i], $sysLovsDesc[$i]
                         , '1', $sysLovsDynQrys[$i], "SYS", '1');
+            }
+        } else {
+            if ($sysLovsDynQrys[$i] != "") {
+                updateLovNm($lovID, true, $sysLovsDynQrys[$i], "SYS", true);
             }
         }
     }
@@ -2056,7 +2107,21 @@ function createLovNm($lovNm, $lovDesc, $isDyn
             "', '" . $isDyn . "', '" . loc_db_escape_string($sqlQry) . "', '" . loc_db_escape_string($dfndBy) .
             "', " . $usrID . ", '" . $dateStr . "', " . $usrID .
             ", '" . $dateStr . "', '" . $isEnbld . "')";
-    $result = execUpdtInsSQL($sqlStr);
+    execUpdtInsSQL($sqlStr);
+}
+
+function updateLovNm($lovID, $isDyn, $sqlQry, $dfndBy, $isEnbld) {
+    global $usrID;
+    $dateStr = getDB_Date_time();
+    $sqlStr = "UPDATE gst.gen_stp_lov_names SET " .
+            "is_list_dynamic='" . cnvrtBoolToBitStr($isDyn) . "', " .
+            "sqlquery_if_dyn='" . loc_db_escape_string($sqlQry) .
+            "', defined_by='" . loc_db_escape_string($dfndBy) .
+            "', last_update_by=" . $usrID . ", " .
+            "last_update_date='" . $dateStr .
+            "', is_enabled='" . cnvrtBoolToBitStr($isEnbld) .
+            "' WHERE value_list_id = " . $lovID;
+    execUpdtInsSQL($sqlStr);
 }
 
 function createPssblValsForLov($lovID, $pssblVal, $pssblValDesc, $isEnbld, $allwd) {

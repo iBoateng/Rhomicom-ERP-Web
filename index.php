@@ -88,6 +88,12 @@ if (!isset($_SESSION['PRSN_FNAME_PM'])) {
 if (!isset($_SESSION['SCREEN_WIDTH'])) {
     $_SESSION['SCREEN_WIDTH'] = 0;
 }
+if (!isset($_SESSION['PROGRESS_PRCNT'])) {
+    $_SESSION['PROGRESS_PRCNT'] = 0;
+}
+if (!isset($_SESSION['PROGRESS_RSLT'])) {
+    $_SESSION['PROGRESS_RSLT'] = "";
+}
 if (!isset($_SESSION['SESSION_TIMEOUT'])) {
     $_SESSION['SESSION_TIMEOUT'] = get_CurPlcy_SessnTmOut();
 }
@@ -127,6 +133,15 @@ require 'loginController.php';
 
 $gDcrpt = isset($_GET['g']) ? cleanInputData($_GET['g']) : '';
 $mstChngPwd = isset($_GET['cp']) ? cleanInputData($_GET['cp']) : '';
+$progressPrcnt = isset($_POST['gtp']) ? cleanInputData($_POST['gtp']) : '';
+if ($progressPrcnt == "GETPROGRESS") {
+    echo $_SESSION['PROGRESS_PRCNT'];
+    exit();
+} else if ($progressPrcnt == "GETRSLT") {
+    echo $_SESSION['PROGRESS_RSLT'];
+    exit();
+}
+
 $screenwdth = isset($_POST['screenwdth']) ? cleanInputData($_POST['screenwdth']) : $_SESSION['SCREEN_WIDTH'];
 $_SESSION['SCREEN_WIDTH'] = $screenwdth;
 $gUNM = '';
@@ -142,8 +157,16 @@ $prsnid = $_SESSION['PRSN_ID'];
 $lgn_num = $_SESSION['LGN_NUM'];
 $orgID = $_SESSION['ORG_ID'];
 $orgName = $_SESSION['ORG_NAME'];
-$myImgFileName = $_SESSION['FILES_NAME_PRFX'] . '.png';
-
+$myImgFileName = $_SESSION['FILES_NAME_PRFX'];
+$blnFlExst = file_exists($fldrPrfx . $tmpDest . $myImgFileName);
+if ($lgn_num > 0 && $usrID > 0 && !$blnFlExst) {
+    recopyPrflPic($usrName, $lgn_num);
+    $myImgFileName = $_SESSION['FILES_NAME_PRFX'];
+} /* else {
+  $redirect = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+  header("HTTP/1.1 301 Moved Permanently");
+  header("Location: $redirect");
+  } */
 $formArray = array();
 if ($gDcrpt != '') {
     $gDcrpt = decrypt($gDcrpt, $smplTokenWord1);

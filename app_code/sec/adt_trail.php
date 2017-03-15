@@ -107,7 +107,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 $valslctdArry[$z] = "selected";
                             }
                             ?>
-                                                <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
+                                                                            <option value="<?php echo $srchInsArrys[$z]; ?>" <?php echo $valslctdArry[$z]; ?>><?php echo $srchInsArrys[$z]; ?></option>
                         <?php } ?>
                                 </select> 
                             </div>
@@ -159,23 +159,31 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         $cntr += 1;
                                         ?>
                                         <tr id="adtTrailsEdtRow_<?php echo $cntr; ?>">                                    
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[0]; ?></span>                                                         
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[1]; ?></span>                                                         
                                             </td>
-                                            <td>
-                                                <span><?php echo $row[2]; ?></span>                                                        
-                                            </td>
-                                            <td>
+                                            <?php if (strpos($row[4], "Browser") === FALSE) { ?>
+                                                <td class="lovtd">
+                                                    <span><?php echo $row[2]; ?></span>                                                        
+                                                </td>
+                                            <?php } else { ?>
+                                                <td class="lovtd">
+                                                    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneUsrLgnDet('<?php echo $row[6]; ?>', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=1&sbmtdRowID=<?php echo $row[7]; ?>');" style="padding:2px !important;" style="padding:2px !important;">
+                                                        <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;"><?php echo $row[2] == "" ? "View Details" : $row[2]; ?>
+                                                    </button>
+                                                </td>
+                                            <?php } ?>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[3]; ?></span>                                                       
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[4]; ?></span>                                                       
                                             </td>
-                                            <td>
+                                            <td class="lovtd">
                                                 <span><?php echo $row[6]; ?></span>                                                       
                                             </td>
                                         </tr>
@@ -189,7 +197,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 </form>
                 <?php
             } else if ($vwtyp == 1) {
-                
+                $sbmtdRowID = isset($_POST['sbmtdRowID']) ? cleanInputData($_POST['sbmtdRowID']) : -1;
+                $sbmtdLgnNum = isset($_POST['sbmtdLgnNum']) ? cleanInputData($_POST['sbmtdLgnNum']) : -1;
+                $file = $ftp_base_db_fldr . "/bin/log_files/adt_trail/$sbmtdRowID" . "_" . "$sbmtdLgnNum" . ".rho";
+                if (file_exists($file)) {
+                    $text = file_get_contents($file);
+                    echo str_replace(PHP_EOL, "<br/>", $text);
+                } else {
+                    echo $file."_File not Found!";
+                }
             } else if ($vwtyp == 2) {
                 
             } else if ($vwtyp == 3) {

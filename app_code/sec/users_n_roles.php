@@ -11,13 +11,118 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     if ($lgn_num > 0 && $canview === true) {
         if ($qstr == "DELETE") {
             if ($actyp == 1) {
-                
+                $inptUsrID = cleanInputData($_POST['pKeyID']);
+                $inptUsrNm = cleanInputData($_POST['usrNm']);
+                echo deleteUser($inptUsrID, $inptUsrNm);
+            } else if ($actyp == 2) {
+                //Delete User Role
             }
         } else if ($qstr == "UPDATE") {
             if ($actyp == 1) {
-                
+                //User and Roles
+                header("content-type:application/json");
+                $inptUserID = isset($_POST['usrPrflAccountID']) ? cleanInputData($_POST['usrPrflAccountID']) : "";
+                $lnkdCstmrID = isset($_POST['usrPrflLnkdCstmrID']) ? cleanInputData($_POST['usrPrflLnkdCstmrID']) : -1;
+                $prsnLocID = isset($_POST['usrPrflAcntOwnerLocID']) ? cleanInputData($_POST['usrPrflAcntOwnerLocID']) : "";
+                $userAccntName = isset($_POST['usrPrflAccountName']) ? cleanInputData($_POST['usrPrflAccountName']) : "";
+                $vldtyStrtDte = isset($_POST['usrPrflVldtyStartDate']) ? cleanInputData($_POST['usrPrflVldtyStartDate']) : "";
+                $vldtyEndDte = isset($_POST['usrPrflVldtyEndDate']) ? cleanInputData($_POST['usrPrflVldtyEndDate']) : "";
+                $slctdUsrPrflRoles = isset($_POST['slctdUsrPrflRoles']) ? cleanInputData($_POST['slctdUsrPrflRoles']) : '';
+                if (trim($vldtyStrtDte) == "") {
+                    $vldtyStrtDte = date("d-M-Y H:i:s");
+                }
+                if (trim($vldtyEndDte) == "") {
+                    $vldtyEndDte = "31-Dec-4000 23:59:59";
+                }
+                if ($vldtyStrtDte != "") {
+                    $vldtyStrtDte = cnvrtDMYTmToYMDTm($vldtyStrtDte);
+                }
+                if ($vldtyEndDte != "") {
+                    $vldtyEndDte = cnvrtDMYTmToYMDTm($vldtyEndDte);
+                }
+                $oldUserID = getGnrlRecID2("sec.sec_users", "user_name", "user_id", $userAccntName);
+                $ownrID = getPersonID($prsnLocID);
+                $cstmrID = (float) $lnkdCstmrID;
+                if ($userAccntName != "" && $prsnLocID != "" && ($oldUserID <= 0 || $oldUserID == $inptUserID)) {
+                    if ($inptUserID <= 0) {
+                        $pwd = getRandomPswd();
+                        createUser($userAccntName, $ownrID, $vldtyStrtDte, $vldtyEndDte, $pwd, $cstmrID);
+                        $inptUserID = getGnrlRecID2("sec.sec_users", "user_name", "user_id", $userAccntName);
+                    } else {
+                        updateUser($inptUserID, $userAccntName, $ownrID, $vldtyStrtDte, $vldtyEndDte, $cstmrID);
+                    }
+
+                    $affctdRws = 0;
+                    if (trim($slctdUsrPrflRoles, "|~") != "") {
+                        //Save Question Answers
+                        $variousRows = explode("|", trim($slctdUsrPrflRoles, "|"));
+                        for ($z = 0; $z < count($variousRows); $z++) {
+                            $crntRow = explode("~", $variousRows[$z]);
+                            if (count($crntRow) == 5) {
+                                $inptRoleID = (int) (cleanInputData1($crntRow[0]));
+                                $inptRoleNm = (cleanInputData1($crntRow[1]));
+                                $dfltRowID = (int) (cleanInputData1($crntRow[2]));
+                                $vldStrtDte = cleanInputData1($crntRow[3]);
+                                $vldEndDte = cleanInputData1($crntRow[4]) == "YES" ? TRUE : FALSE;
+                                $oldDefaultRowID = getUsrIDHvThsRoleID($inptUserID, $inptRoleID);
+                                if (trim($vldStrtDte) == "") {
+                                    $vldStrtDte = date("d-M-Y H:i:s");
+                                }
+                                if (trim($vldEndDte) == "") {
+                                    $vldEndDte = "31-Dec-4000 23:59:59";
+                                }
+                                if ($vldStrtDte != "") {
+                                    $vldStrtDte = cnvrtDMYTmToYMDTm($vldStrtDte);
+                                }
+                                if ($vldEndDte != "") {
+                                    $vldEndDte = cnvrtDMYTmToYMDTm($vldEndDte);
+                                }
+                                if ($inptRoleID > 0) {
+                                    if ($oldDefaultRowID <= 0) {
+                                        $affctdRws += asgnRoleToUserWthDte($inptUserID, $inptRoleID, $vldStrtDte, $vldEndDte);
+                                    } else {
+                                        $affctdRws += updtRoleToUserWthDte($oldDefaultRowID, $vldStrtDte, $vldEndDte);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $arr_content['percent'] = 100;
+                    $arr_content['usrPrflAccountID'] = $inptUserID;
+                    $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span>User Successfully Saved!<br/>" . $affctdRws . "Role(s) Saved!";
+                    echo json_encode($arr_content);
+                    exit();
+                } else {
+                    $arr_content['percent'] = 100;
+                    $arr_content['usrPrflAccountID'] = -1;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Either the New User Name is in Use <br/>or Data Supplied is Incomplete!</span>";
+                    echo json_encode($arr_content);
+                    exit();
+                }
             } else if ($actyp == 2) {
-                
+                //Lock/Unlock User
+                $inptUsrID = cleanInputData($_POST['pKeyID']);
+                $inptUsrNm = cleanInputData($_POST['usrNm']);
+                $status = cleanInputData($_POST['nwStatus']);
+                $fldAttmpts = 0;
+                if ($status == "LOCK") {
+                    $fldAttmpts = get_CurPlcy_Mx_Fld_lgns() + 1;
+                } else {
+                    $fldAttmpts = 0;
+                }
+                echo chngUsrLockStatus($inptUsrID, $fldAttmpts, $inptUsrNm);
+            } else if ($actyp == 3) {
+                //Suspend/Unsuspend User
+                $inptUsrID = cleanInputData($_POST['pKeyID']);
+                $inptUsrNm = cleanInputData($_POST['usrNm']);
+                $status = strtoupper(cleanInputData($_POST['nwStatus']));
+                if ($status == "SUSPEND") {
+                    echo chngUsrSuspensionStatus($inptUsrID, "TRUE", $inptUsrNm);
+                } else {
+                    echo chngUsrSuspensionStatus($inptUsrID, "FALSE", $inptUsrNm);
+                }
+            } else if ($actyp == 4) {
+                //Update User Selected Roles in Session
             }
         } else {
             if ($vwtyp == 0) {
@@ -114,7 +219,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:getAllUsers('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
+                                        <a class="rhopagination" href="javascript:getAllUsers('next', '#allmodules', 'grp=<?php echo $group; ?>&typ=<?php echo $type; ?>&pg=<?php echo $pgNo; ?>&vtyp=<?php echo $vwtyp; ?>');" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -136,7 +241,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <th>Account Locked?</th>
                                         <th>Password Expired?</th>
                                         <th>Active Roles</th>
-                                        <th>...</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -144,19 +250,22 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                     while ($row = loc_db_fetch_array($result)) {
                                         $cntr += 1;
                                         ?>
-                                        <tr id="allUsersRow<?php echo $cntr; ?>">                                    
-                                            <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                        <tr id="allUsersRow_<?php echo $cntr; ?>">                                    
+                                            <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                             <?php if ($canEdtUsers === true) { ?>
                                             <?php } ?>
-                                            <td><?php echo $row[0]; ?></td>
-                                            <td><?php echo $row[1] . " (" . $row[10] . ")"; ?></td>
-                                            <td><?php echo $row[13]; ?></td>
+                                            <td class="lovtd">
+                                                <?php echo $row[0]; ?>
+                                                <input type="hidden" class="form-control" aria-label="..." id="allUsersRow<?php echo $cntr; ?>_UserID" value="<?php echo $row[9]; ?>">
+                                            </td>
+                                            <td class="lovtd"><?php echo $row[1] . " (" . $row[10] . ")"; ?></td>
+                                            <td class="lovtd"><?php echo $row[13]; ?></td>
                                             <?php
                                             if ($canEdtUsers === true) {
                                                 if ($row[4] == 1) {
                                                     ?>
-                                                    <td>
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Unsuspend" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Unsuspend" onclick="suspendUnsuspend('allUsersRow_<?php echo $cntr; ?>', 'Unsuspend');" style="padding:2px !important;" style="padding:2px !important;">
                                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                             <img src="cmn_images/success.gif" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <span>UNSUSPEND&nbsp;&nbsp;</span>
@@ -164,8 +273,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </td>
                                                 <?php } else {
                                                     ?>
-                                                    <td>
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Publish" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Suspend" onclick="suspendUnsuspend('allUsersRow_<?php echo $cntr; ?>', 'Suspend');" style="padding:2px !important;" style="padding:2px !important;">
                                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                             <img src="cmn_images/90.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <span>SUSPEND&nbsp;&nbsp;</span>
@@ -175,16 +284,15 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 }
                                             } else {
                                                 ?>
-                                                <td><?php echo ($row[4] == '1' ? "YES" : "NO"); ?></td>
+                                                <td class="lovtd"><?php echo ($row[4] == '1' ? "YES" : "NO"); ?></td>
                                             <?php } ?>
-                                            <td><?php echo ($row[5] == '1' ? "YES" : "NO"); ?></td>
-
+                                            <td class="lovtd"><?php echo ($row[5] == '1' ? "YES" : "NO"); ?></td>
                                             <?php
                                             if ($canEdtUsers === true) {
                                                 if ($row[6] >= $prm) {
                                                     ?>
-                                                    <td>
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Unsuspend" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Unlock" onclick="lockUnlock('allUsersRow_<?php echo $cntr; ?>', 'Unlock');" style="padding:2px !important;" style="padding:2px !important;">
                                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                             <img src="cmn_images/success.gif" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <span>UNLOCK&nbsp;&nbsp;</span>
@@ -192,8 +300,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     </td>
                                                 <?php } else {
                                                     ?>
-                                                    <td>
-                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Publish" onclick="" style="padding:2px !important;" style="padding:2px !important;">
+                                                    <td class="lovtd">
+                                                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Click to Lock" onclick="lockUnlock('allUsersRow_<?php echo $cntr; ?>', 'Lock');" style="padding:2px !important;" style="padding:2px !important;">
                                                             <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                             <img src="cmn_images/90.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                             <span>LOCK&nbsp;&nbsp;</span>
@@ -203,16 +311,23 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 }
                                             } else {
                                                 ?>
-                                                <td><?php echo ($row[6] >= $prm ? "YES" : "NO"); ?></td>
+                                                <td class="lovtd"><?php echo ($row[6] >= $prm ? "YES" : "NO"); ?></td>
                                             <?php } ?>
-                                            <td><?php echo ($row[12] == '1' ? "YES" : "NO"); ?></td>
-                                            <td><?php echo $row[11]; ?></td>
-                                            <td>
+                                            <td class="lovtd"><?php echo ($row[12] == '1' ? "YES" : "NO"); ?></td>
+                                            <td class="lovtd"><?php echo $row[11]; ?></td>
+                                            <td class="lovtd">
                                                 <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Details" onclick="getOneUserForm('myFormsModalLg', 'myFormsModalBodyLg', 'myFormsModalTitleLg', 'newUserForm', 'View/Edit User', <?php echo $row[9]; ?>, 1, <?php echo $pgNo ?>, 'clear');" style="padding:2px !important;" style="padding:2px !important;">
                                                     <!--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>-->
                                                     <img src="cmn_images/kghostview.png" style="height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 </button>
                                             </td>
+                                            <?php if ($canDelUsers === true) { ?>
+                                                <td class="lovtd">
+                                                    <button type="button" class="btn btn-default" style="margin: 0px !important;padding:0px 3px 2px 4px !important;" onclick="delUser('allUsersRow_<?php echo $cntr; ?>');" data-toggle="tooltip" data-placement="bottom" title="Delete User">
+                                                        <img src="cmn_images/no.png" style="height:15px; width:auto; position: relative; vertical-align: middle;">
+                                                    </button>
+                                                </td>
+                                            <?php } ?>
                                         </tr>
                                         <?php
                                     }
@@ -244,7 +359,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             <?php
                                             if ($canEdtUsers === true) {
                                                 ?>
-                                                <input type="text" class="form-control" aria-label="..." id="usrPrflAccountName" value="<?php echo $row[0]; ?>">
+                                                <input type="text" class="form-control rqrdFld" aria-label="..." id="usrPrflAccountName" value="<?php echo $row[0]; ?>">
                                                 <input type="hidden" class="form-control" aria-label="..." id="usrPrflAccountID" value="<?php echo $row[10]; ?>">
                                             <?php } else { ?>
                                                 <span><?php echo $row[0]; ?></span>
@@ -258,7 +373,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             if ($canEdtUsers === true) {
                                                 ?>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" aria-label="..." id="usrPrflAcntOwner" value="<?php echo $row[1]; ?>">
+                                                    <input type="text" class="form-control rqrdFld" aria-label="..." id="usrPrflAcntOwner" value="<?php echo $row[1]; ?>" readonly="true">
                                                     <input type="hidden" class="form-control" aria-label="..." id="usrPrflAcntOwnerLocID" value="<?php echo $row[11]; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '<?php echo $row[11]; ?>', 'usrPrflAcntOwnerLocID', 'usrPrflAcntOwner', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
@@ -343,6 +458,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div  class="col-md-6">
                                             <span><?php echo $row[8]; ?></span>
                                         </div>
+                                    </div>
+                                    <div class="row form-group form-group-sm">
+                                        <label for="usrPrflLnkdCstmr" class="control-label col-md-4">Customer / Supplier:</label>
+                                        <div  class="col-md-8">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" aria-label="..." id="usrPrflLnkdCstmr" value="<?php echo $row[16]; ?>" readonly="true">
+                                                <input type="hidden" class="form-control" aria-label="..." id="usrPrflLnkdCstmrID" value="<?php echo $row[15]; ?>">
+                                                <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', '', '', '', 'radio', true, '<?php echo $row[15]; ?>', 'usrPrflLnkdCstmrID', 'usrPrflLnkdCstmr', 'clear', 1, '');">
+                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div> 
                                 </div>
                                 <div class="col-md-4">
@@ -408,8 +535,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                 <?php
                                 if ($canEdtUsers === true) {
                                     $nwRowHtml = urlencode("<tr id=\"usrPrflEdtRow__WWW123WWW\">"
-                                            . "<td>New</td>"
-                                            . "<td><div class=\"form-group form-group-sm col-md-12\">"
+                                            . "<td class=\"lovtd\">New</td>"
+                                            . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">"
                                             . "<div class=\"input-group\"  style=\"width:100%\">"
                                             . "<input type=\"text\" class=\"form-control\" aria-label=\"...\" id=\"usrPrflEdtRow_WWW123WWW_RoleNm\" value=\"\">"
                                             . "<input type=\"hidden\" class=\"form-control\" aria-label=\"...\" id=\"usrPrflEdtRow_WWW123WWW_RoleID\" value=\"-1\">"
@@ -420,14 +547,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             . "</div>"
                                             . "</div>"
                                             . "</td>"
-                                            . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                            . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">
                                                                 <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
                                                                     <input class=\"form-control\" size=\"16\" type=\"text\" id=\"usrPrflEdtRow_WWW123WWW_StrtDte\" value=\"\" readonly=\"\">
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-calendar\"></span></span>
                                                                 </div>                                                                
                                                             </div></td>"
-                                            . "<td><div class=\"form-group form-group-sm col-md-12\">
+                                            . "<td class=\"lovtd\"><div class=\"form-group form-group-sm col-md-12\">
                                                                 <div class=\"input-group date form_date_tme\" data-date=\"\" data-date-format=\"dd-M-yyyy hh:ii:ss\" data-link-field=\"dtp_input2\" data-link-format=\"yyyy-mm-dd hh:ii:ss\" style=\"width:100%\">
                                                                     <input class=\"form-control\" size=\"16\" type=\"text\" id=\"usrPrflEdtRow_WWW123WWW_EndDte\" value=\"\" readonly=\"\">
                                                                     <span class=\"input-group-addon\"><span class=\"glyphicon glyphicon-remove\"></span></span>
@@ -444,7 +571,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                             </button>
                                         </div>
                                         <div class="col-md-6">
-                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveUserNRoleForm();">
+                                            <button type="button" class="btn btn-default" style="margin-bottom: 5px;" onclick="saveOneUserForm();">
                                                 <img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:20px; width:auto; position: relative; vertical-align: middle;">
                                                 Save Roles
                                             </button>
@@ -542,8 +669,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                 $cntr += 1;
                                                 ?>
                                                 <tr id="usrPrflEdtRow_<?php echo $cntr; ?>">                                    
-                                                    <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
-                                                    <td>
+                                                    <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtUsers === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
                                                                 <div class="input-group"  style="width:100%;">
@@ -559,7 +686,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <span><?php echo $row1[0]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
-                                                    <td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtUsers === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
                                                                 <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
@@ -572,8 +699,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                             <span><?php echo $row1[1]; ?></span>
                                                         <?php } ?>                                                         
                                                     </td>
-
-                                                    <td>
+                                                    <td class="lovtd">
                                                         <?php if ($canEdtUsers === true) { ?>
                                                             <div class="form-group form-group-sm col-md-12">
                                                                 <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss" style="width:100%;">
@@ -603,62 +729,64 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 <form class="form-horizontal" id="newUserForm" style="padding:5px 20px 5px 20px;">
                     <div class="row">
                         <div class="form-group form-group-sm">
-                            <label for="usrAccountName" class="control-label col-md-4">User Name:</label>
+                            <label for="usrPrflAccountName" class="control-label col-md-4">User Name:</label>
                             <div  class="col-md-8">
-                                <input type="text" class="form-control" aria-label="..." id="usrAccountName" value="">
+                                <input type="text" class="form-control rqrdFld" aria-label="..." id="usrPrflAccountName" value="">
+                                <input type="hidden" class="form-control" aria-label="..." id="usrPrflAccountID" value="-1">
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label for="usrAcntOwner" class="control-label col-md-4">Owned / Used By:</label>
+                            <label for="usrPrflAcntOwner" class="control-label col-md-4">Owned / Used By:</label>
                             <div  class="col-md-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" aria-label="..." id="usrAcntOwner" value="">
-                                    <input type="hidden" class="form-control" aria-label="..." id="usrAcntOwnerLocID" value="">
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '', 'usrAcntOwnerLocID', 'usrAcntOwner', 'clear', 1, '');">
+                                    <input type="text" class="form-control rqrdFld" aria-label="..." id="usrPrflAcntOwner" value="" readonly="true">
+                                    <input type="hidden" class="form-control" aria-label="..." id="usrPrflAcntOwnerLocID" value="">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Active Persons', '', '', '', 'radio', true, '', 'usrPrflAcntOwnerLocID', 'usrPrflAcntOwner', 'clear', 1, '');">
                                         <span class="glyphicon glyphicon-th-list"></span>
                                     </label>
                                 </div>
                             </div>
                         </div> 
                         <div class="form-group form-group-sm">
-                            <label for="usrLnkdCstmr" class="control-label col-md-4">Linked Customer/Supplier:</label>
+                            <label for="usrPrflLnkdCstmr" class="control-label col-md-4">Linked Customer/Supplier:</label>
                             <div  class="col-md-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" aria-label="..." id="usrLnkdCstmr" value="">
-                                    <input type="hidden" class="form-control" aria-label="..." id="usrLnkdCstmrID" value="">
-                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', '', '', '', 'radio', true, '', 'usrLnkdCstmrID', 'usrLnkdCstmr', 'clear', 1, '');">
+                                    <input type="text" class="form-control" aria-label="..." id="usrPrflLnkdCstmr" value="" readonly="true">
+                                    <input type="hidden" class="form-control" aria-label="..." id="usrPrflLnkdCstmrID" value="">
+                                    <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'All Customers and Suppliers', '', '', '', 'radio', true, '', 'usrPrflLnkdCstmrID', 'usrPrflLnkdCstmr', 'clear', 1, '');">
                                         <span class="glyphicon glyphicon-th-list"></span>
                                     </label>
                                 </div>
                             </div>
                         </div> 
                         <div class="form-group form-group-sm">
-                            <label for="usrVldtyStartDate" class="control-label col-md-4">Start Date:</label>
+                            <label for="usrPrflVldtyStartDate" class="control-label col-md-4">Start Date:</label>
                             <div class="col-md-8">
                                 <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
-                                    <input class="form-control" size="16" type="text" id="usrVldtyStartDate" value="" readonly="">
+                                    <input class="form-control" size="16" type="text" id="usrPrflVldtyStartDate" value="" readonly="">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label for="usrVldtyEndDate" class="control-label col-md-4">End Date:</label>
+                            <label for="usrPrflVldtyEndDate" class="control-label col-md-4">End Date:</label>
                             <div class="col-md-8">
                                 <div class="input-group date form_date_tme" data-date="" data-date-format="dd-M-yyyy hh:ii:ss" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd hh:ii:ss">
-                                    <input class="form-control" size="16" type="text" id="usrVldtyEndDate" value="" readonly="">
+                                    <input class="form-control" size="16" type="text" id="usrPrflVldtyEndDate" value="" readonly="">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
                         </div>                
                         <div class="form-group form-group-sm">
-                            <label for="usrModulesNeeded" class="control-label col-md-4">Modules Needed:</label>
+                            <label for="usrPrflModulesNeeded" class="control-label col-md-4">Modules Needed:</label>
                             <div class="col-md-8">
-                                <select class="form-control selectpicker" id="usrModulesNeeded">  
+                                <select class="form-control selectpicker" id="usrPrflModulesNeeded">  
                                     <option value="" selected disabled>Please Select...</option>
                                     <?php
-                                    $valslctdArry = array("", "", "", "", "",
+                                    $valslctdArry = array(
+                                        "", "", "", "", "",
                                         "", "", "", "", "",
                                         "", "", "", "", "",
                                         "", "", "", "", "",
@@ -704,7 +832,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     </div>
                     <div class="row" style="float:right;padding-right: 1px;">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" onclick="saveOneUserForm('myFormsModal', '-1', 'allUsersTable');">Save Changes</button>
+                        <button type="button" class="btn btn-primary" onclick="saveOneUserForm();">Save Changes</button>
                     </div>
                 </form>
                 <?php
@@ -807,7 +935,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             <?php
                             while ($row = loc_db_fetch_array($result)) {
                                 ?>
-                                <fieldset class="basic_person_fs"><legend class="basic_person_lg">User Summary Information</legend>
+                                <fieldset class=""><legend class="basic_person_lg">User Summary Information</legend>
                                     <div class="col-md-4">
                                         <div class="row form-group form-group-sm">
                                             <label for="userName" class="control-label col-md-5">User Name:</label>
@@ -893,18 +1021,18 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <div class="form-group form-group-sm">
                                             <label for="crntOrgName" class="control-label col-md-3">Current Organisation:</label>
                                             <div  class="col-md-9">
-                                                <!--<span><?php echo $orgName; ?></span>-->
-                                                <div class="input-group">
+                                                <span><?php echo $orgName; ?></span>
+                                                <!--<div class="input-group">
                                                     <input type="text" class="form-control" aria-label="..." id="crntOrgName" value="<?php echo $orgName; ?>">
                                                     <input type="hidden" id="crntOrgID" value="<?php echo $orgID; ?>">
                                                     <label class="btn btn-primary btn-file input-group-addon" onclick="getLovsPage('myLovModal', 'myLovModalTitle', 'myLovModalBody', 'Organisations', '', '', '', 'radio', true, '<?php echo $orgID; ?>', 'crntOrgID', 'crntOrgName', 'clear', 1, '');">
                                                         <span class="glyphicon glyphicon-th-list"></span>
                                                     </label>
-                                                </div>
+                                                </div>-->
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2">
+                                    <!--<div class="col-lg-2">
                                         <button type="button" class="btn btn-default btn-sm" style="width:100% !important;" onclick="checkAllBtns('usrPrflForm');">
                                             <img src="cmn_images/check_all.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">
                                             Check All
@@ -917,7 +1045,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         </button>
                                     </div>
                                     <div class="col-lg-3"><button type="button" class="btn btn-default btn-sm" style="width:100% !important;"><img src="cmn_images/FloppyDisk.png" style="left: 0.5%; padding-right: 5px; height:17px; width:auto; position: relative; vertical-align: middle;">SAVE</button></div>
-
+                                    -->
                                     <!--<div class="col-lg-3">&nbsp;</div>
                                     <div class="col-lg-4"></div>-->
                                 </div>
@@ -926,7 +1054,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                         <table class="table table-striped table-bordered table-responsive" id="usrPrflTable" cellspacing="0" width="100%" style="width:100%;">
                                             <thead>
                                                 <tr>
-                                                    <th>...</th>
+                                                    <!--<th>...</th>-->
                                                     <th>No.</th>
                                                     <th>Role Name</th>
                                                     <th>Start Date</th>
@@ -947,13 +1075,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                                                     }
                                                     ?>
                                                     <tr id="usrPrflRow<?php echo $cntr; ?>"> 
-                                                        <td><input type="checkbox" name="usrPrflChkbx<?php echo $cntr; ?>" value="<?php echo $row[3] . ";" . $row[1]; ?>" <?php echo $chckd ?>></td>
-                                                        <td><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
+                                                        <!--<td><input type="checkbox" name="usrPrflChkbx<?php echo $cntr; ?>" value="<?php echo $row[3] . ";" . $row[1]; ?>" <?php echo $chckd ?>></td>-->
+                                                        <td class="lovtd"><?php echo ($curIdx * $lmtSze) + ($cntr); ?></td>
                                                         <?php if ($canEdtUsers === true) { ?>
                                                         <?php } ?>
-                                                        <td><?php echo $row1[0]; ?></td>
-                                                        <td><?php echo $row1[1]; ?></td>
-                                                        <td><?php echo $row1[2]; ?></td>
+                                                        <td class="lovtd"><?php echo $row1[0]; ?></td>
+                                                        <td class="lovtd"><?php echo $row1[1]; ?></td>
+                                                        <td class="lovtd"><?php echo $row1[2]; ?></td>
                                                     </tr>
                                                     <?php
                                                 }

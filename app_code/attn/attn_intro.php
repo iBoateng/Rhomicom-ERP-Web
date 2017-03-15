@@ -1,9 +1,9 @@
 <?php
 
-$menuItems = array("My Events Attended", "My Assigned Events",
+$menuItems = array("My Events Attended"/*, "My Assigned Events"*/,
     "Attendance Registers", "Time Tables", "Activities/Events",
     "Venues", "Attendance Search");
-$menuImages = array("calendar2.png", "Calander.png", "openfileicon.png", "chcklst1.png",
+$menuImages = array("calendar2.png"/*, "Calander.png"*/, "openfileicon.png", "chcklst1.png",
     "Folder.png", "house_72.png", "search.png", "98.png");
 
 $mdlNm = "Events And Attendance";
@@ -63,17 +63,16 @@ $cntent = "<div>
                                                 <span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
 					</li>
 					<li onclick=\"openATab('#allmodules', 'grp=40&typ=5');\">
-						<span style=\"text-decoration:none;\">All Modules</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+						<span style=\"text-decoration:none;\">All Modules&nbsp;</span><span class=\"divider\"><i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i></span>
+					</li>"
+                                      . "<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
+						<span style=\"text-decoration:none;\">Events & Attendance Menu</span>
 					</li>";
 
 if ($lgn_num > 0 && $canview === true) {
     if ($pgNo == 0) {
 
-        $cntent .= "
-					<li onclick=\"openATab('#allmodules', 'grp=$group&typ=$type');\">
-						<span style=\"text-decoration:none;\">Events & Attendance Menu</span>
-					</li>
-                                       </ul>
+        $cntent .= "</ul>
                                      </div>" . "<div style=\"font-family: Tahoma, Arial, sans-serif;font-size: 1.3em;
                     padding:10px 15px 15px 20px;border:1px solid #ccc;\">                    
       <div style=\"padding:5px 30px 5px 10px;margin-bottom:2px;\">
@@ -86,17 +85,17 @@ if ($lgn_num > 0 && $canview === true) {
             $No = $i + 1;
             if ($i == 0) {
                 
-            } else if ($i == 1) {
+            } /*else if ($i == 1) {
                 //continue;
-            } else if ($i == 2 && test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
+            }*/ else if ($i == 1 && test_prmssns($dfltPrvldgs[1], $mdlNm) == FALSE) {
                 continue;
-            } else if ($i == 3 && test_prmssns($dfltPrvldgs[2], $mdlNm) == FALSE) {
+            } else if ($i == 2 && test_prmssns($dfltPrvldgs[2], $mdlNm) == FALSE) {
                 continue;
-            } else if ($i == 4 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
+            } else if ($i == 3 && test_prmssns($dfltPrvldgs[3], $mdlNm) == FALSE) {
                 continue;
-            } else if ($i == 5 && test_prmssns($dfltPrvldgs[4], $mdlNm) == FALSE) {
+            } else if ($i == 4 && test_prmssns($dfltPrvldgs[4], $mdlNm) == FALSE) {
                 continue;
-            } else if ($i == 6 && test_prmssns($dfltPrvldgs[5], $mdlNm) == FALSE) {
+            } else if ($i == 5 && test_prmssns($dfltPrvldgs[5], $mdlNm) == FALSE) {
                 continue;
             }
             if ($grpcntr == 0) {
@@ -149,9 +148,13 @@ function get_MyEvntsAttndTblr($searchFor, $searchIn, $offset, $limit_size, $prsn
                 loc_db_escape_string($searchFor) . "') and ";
     }
 
-    $strSql = "SELECT attnd_rec_id mt, a.recs_hdr_id m1, 
+    $strSql = "SELECT attnd_rec_id mt, 
+        a.recs_hdr_id m1, 
         c.recs_hdr_name reg_name, 
-        c.recs_hdr_desc hdrdesc, c.event_date, c.end_date, person_id m2, 
+        c.recs_hdr_desc hdrdesc, 
+        to_char(to_timestamp(c.event_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
+        to_char(to_timestamp(c.end_date,'YYYY-MM-DD HH24:MI:SS'),'DD-Mon-YYYY HH24:MI:SS'), 
+        person_id m2, 
 	'''' || prs.get_prsn_loc_id(a.person_id) id_no, 
       CASE WHEN a.customer_id <= 0 and a.person_id <= 0 THEN a.visitor_name_desc 
            WHEN a.person_id>0 THEN prs.get_prsn_surname(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')' 
@@ -167,14 +170,21 @@ function get_MyEvntsAttndTblr($searchFor, $searchIn, $offset, $limit_size, $prsn
 	a.attn_comments remarks,
       a.visitor_classfctn classification,
       a.point_scored1 cpd_points, 
-	a.no_of_persons m3, 0 m4, a.customer_id m5, a.sponsor_id m6
+	a.no_of_persons m3, 
+        0 m4, 
+        a.customer_id m5, 
+        a.sponsor_id m6,
+        attn.getevntamntbilled(a.recs_hdr_id, a.customer_id), 
+        attn.getEvntAmntPaid(a.recs_hdr_id, a.customer_id)
   FROM attn.attn_attendance_recs a
   LEFT OUTER JOIN attn.attn_attendance_recs_hdr c ON (a.recs_hdr_id = c.recs_hdr_id) 
   LEFT OUTER JOIN (SELECT DISTINCT w.check_in_id, w.doc_num, y.invc_number, w.customer_id, 
             scm.get_doc_smry_typ_amnt(y.invc_hdr_id,'Sales Invoice','5Grand Total') invoice_amnt,
             scm.get_doc_smry_typ_amnt(y.invc_hdr_id,'Sales Invoice','6Total Payments Received')+
 	    scm.get_doc_smry_typ_amnt(y.invc_hdr_id,'Sales Invoice','8Deposits') amnt_paid,
-            scm.get_doc_smry_typ_amnt(y.invc_hdr_id,'Sales Invoice','9Actual_Change/Balance') amnt_left 
+            scm.get_doc_smry_typ_amnt(y.invc_hdr_id,'Sales Invoice','9Actual_Change/Balance') amnt_left,
+            y.event_doc_type,
+            y.event_rgstr_id
 	FROM hotl.checkins_hdr w 
 	LEFT OUTER JOIN hotl.service_types d ON (w.service_type_id=d.service_type_id )
 	LEFT OUTER JOIN hotl.rooms b ON (w.service_det_id = b.room_id)
@@ -183,7 +193,7 @@ function get_MyEvntsAttndTblr($searchFor, $searchIn, $offset, $limit_size, $prsn
 	WHERE (w.sponsor_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '%') or 
 	w.customer_id IN (select c.cust_sup_id from scm.scm_cstmr_suplr c where c.cust_sup_name ilike '%')) 
 	and COALESCE(d.org_id, 1)=$orgID and w.doc_type IN ('Booking','Check-In') 
-	and w.fclty_type IN ('Event')) tbl1  ON (a.customer_id = tbl1.customer_id)
+	and w.fclty_type IN ('Event')) tbl1  ON (a.customer_id = tbl1.customer_id  and tbl1.event_doc_type='Attendance Register' and tbl1.event_rgstr_id=a.recs_hdr_id)
    WHERE($wherecls(a.person_id = $prsnID) and ((CASE WHEN a.customer_id <= 0 and a.person_id <= 0 THEN a.visitor_name_desc 
            WHEN a.person_id>0 THEN prs.get_prsn_surname(a.person_id) || ' (' || prs.get_prsn_loc_id(a.person_id) || ')' 
             ELSE scm.get_cstmr_splr_name(a.customer_id)||scm.get_cstmr_splr_name(a.sponsor_id) END) ilike '%')) 
