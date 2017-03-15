@@ -386,6 +386,7 @@ function saveNtnlIDForm(elementID, tRowElementID, ntnlIDpKey, ntnlIDPersonID)
                 "&ntnlIDCardsExpDate=" + nicExpDate +
                 "&ntnlIDCardsOtherInfo=" + nicOtherInfo +
                 "&ntnlIDPersonID=" + ntnlIDPersonID +
+                "&sbmtdPersonID=" + ntnlIDPersonID +
                 "&ntnlIDpKey=" + ntnlIDpKey +
                 "&srcForm=" + srcForm);
     });
@@ -395,6 +396,7 @@ function delNtnlID(rowIDAttrb)
 {
     var rndmNum = rowIDAttrb.split("_")[1];
     var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
     var pKeyID = -1;
     if (typeof $('#ntnlIDCardsRow' + rndmNum + '_NtnlIDpKey').val() === 'undefined')
     {
@@ -439,7 +441,8 @@ function delNtnlID(rowIDAttrb)
                                     q: 'DELETE',
                                     actyp: 3,
                                     ntnlIDpKey: pKeyID,
-                                    srcForm: srcForm
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
                                 },
                                 success: function (result1) {
                                     setTimeout(function () {
@@ -549,6 +552,7 @@ function getAddtnlDataForm(elementID, modalBodyID, titleElementID, formElementID
 
 function saveAddtnlDataForm(modalBodyID, addtnlPrsPkey, pipeSprtdFieldIDs, extDtColNum, tableElmntID, tRowElementID, addOrEdit)
 {
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
     getMsgAsync('grp=1&typ=11&q=Check Session', function () {
         $body = $("body");
         $body.addClass("mdlloadingDiag");
@@ -618,7 +622,8 @@ function saveAddtnlDataForm(modalBodyID, addtnlPrsPkey, pipeSprtdFieldIDs, extDt
         xmlhttp.open("POST", "index.php", true);
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xmlhttp.send("grp=8&typ=1&pg=2&q=UPDATE&actyp=4&addtnlPrsPkey=" + addtnlPrsPkey
-                + "&extDtColNum=" + extDtColNum + "&tableElmntID=" + tableElmntID + "&allTblValues=" + allTblValues);
+                + "&extDtColNum=" + extDtColNum + "&tableElmntID=" + tableElmntID
+                + "&allTblValues=" + allTblValues + "&sbmtdPersonID=" + sbmtdPersonID);
     });
 }
 
@@ -820,6 +825,7 @@ function delEducID(rowIDAttrb)
 {
     var rndmNum = rowIDAttrb.split("_")[1];
     var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
     var pKeyID = -1;
     if (typeof $('#educBkgrdRow' + rndmNum + '_PKeyID').val() === 'undefined')
     {
@@ -864,7 +870,8 @@ function delEducID(rowIDAttrb)
                                     q: 'DELETE',
                                     actyp: 11,
                                     educBkgrdPkeyID: pKeyID,
-                                    srcForm: srcForm
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
                                 },
                                 success: function (result1) {
                                     setTimeout(function () {
@@ -1085,6 +1092,7 @@ function delWorkID(rowIDAttrb)
 {
     var rndmNum = rowIDAttrb.split("_")[1];
     var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
     var pKeyID = -1;
     if (typeof $('#workBkgrdRow' + rndmNum + '_PKeyID').val() === 'undefined')
     {
@@ -1129,7 +1137,8 @@ function delWorkID(rowIDAttrb)
                                     q: 'DELETE',
                                     actyp: 12,
                                     workBkgrdPkeyID: pKeyID,
-                                    srcForm: srcForm
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
                                 },
                                 success: function (result1) {
                                     setTimeout(function () {
@@ -1335,6 +1344,7 @@ function delSkillID(rowIDAttrb)
 {
     var rndmNum = rowIDAttrb.split("_")[1];
     var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
     var pKeyID = -1;
     if (typeof $('#skillsTblRow' + rndmNum + '_PKeyID').val() === 'undefined')
     {
@@ -1379,7 +1389,8 @@ function delSkillID(rowIDAttrb)
                                     q: 'DELETE',
                                     actyp: 13,
                                     skillsPkeyID: pKeyID,
-                                    srcForm: srcForm
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
                                 },
                                 success: function (result1) {
                                     setTimeout(function () {
@@ -1418,6 +1429,7 @@ function saveBasicPrsnData(actTyp, shdSbmt)
         shdSbmt = 0;
     }
     var daPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
     var daPrsnLocalID = typeof $("#daPrsnLocalID").val() === 'undefined' ? '' : $("#daPrsnLocalID").val();
     var daTitle = $("#daTitle").val() ? $("#daTitle").val() : '';
     var daFirstName = typeof $("#daFirstName").val() === 'undefined' ? '' : $("#daFirstName").val();
@@ -1490,15 +1502,69 @@ function saveBasicPrsnData(actTyp, shdSbmt)
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Nationality cannot be empty!</span></p>';
     }
+    var orgnlMobileNos = daMobileNos;
+    if (daMobileNos.trim() !== '') {
+        daMobileNos = daMobileNos.replace(/;/g, ',').replace(/:/g, ',').replace(/, /g, ',').replace(/ /g, ',').replace(/[, ]+/g, ",").trim();
+        var tmpMobileNos = daMobileNos.split(',');
+        var anodaMobileNo = '';
+
+        for (var i = 0; i < tmpMobileNos.length; i++) {
+            if (tmpMobileNos[i].indexOf('0') === 0) {
+                tmpMobileNos[i] = tmpMobileNos[i].replace('0', '+233');
+            }
+            if (isMobileNumValid(tmpMobileNos[i])) {
+                anodaMobileNo += tmpMobileNos[i] + ', ';
+            }
+        }
+        if (anodaMobileNo.trim() !== '') {
+            daMobileNos = rhotrim(anodaMobileNo, ', ');
+        }
+        $("#daMobileNos").val(daMobileNos);
+        if (daMobileNos.trim() !== ''
+                && daMobileNos.trim() !== orgnlMobileNos.trim())
+        {
+            var errMsg1 = '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:blue;">Your Mobile Nos provided<br/>' + orgnlMobileNos
+                    + ' has been formatted and replaced with <br/>' + daMobileNos + '!</span></p>';
+            bootbox.alert({
+                title: 'System Alert!',
+                message: errMsg1});
+        }
+    }
     if (daMobileNos.trim() === '')
     {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
                 'font-weight:bold;color:red;">Mobile No. cannot be empty!</span></p>';
     }
+    var orgnlEmail = daEmail;
+    if (daEmail.trim() !== '') {
+        daEmail = daEmail.replace(/;/g, ',').replace(/:/g, ',').replace(/, /g, ',').replace(/ /g, ',').replace(/[, ]+/g, ",").trim();
+        var tmpMails = daEmail.split(',');
+        var anodaEmail = '';
+        for (var i = 0; i < tmpMails.length; i++) {
+            if (isEmailValid(tmpMails[i])) {
+                anodaEmail += tmpMails[i] + ', ';
+            }
+        }
+        if (anodaEmail.trim() !== '') {
+            daEmail = rhotrim(anodaEmail, ', ');
+        }
+        $("#daEmail").val(daEmail);
+        if (daEmail.trim() !== ''
+                && daEmail.trim() !== orgnlEmail.trim())
+        {
+            var errMsg1 = '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
+                    'font-weight:bold;color:blue;">Your Email Address provided<br/>' + orgnlEmail
+                    + ' has been formatted and replaced with <br/>' + daEmail + '!</span></p>';
+            bootbox.alert({
+                title: 'System Alert!',
+                message: errMsg1});
+        }
+    }
     if (daEmail.trim() === '')
     {
         errMsg += '<p><span style="font-family: georgia, times;font-size: 12px;font-style:italic;' +
-                'font-weight:bold;color:red;">Mobile No. cannot be empty!</span></p>';
+                'font-weight:bold;color:red;">Please provide a VALID Email Address!</span></p>';
     }
     if (actTyp === 2)
     {
@@ -1595,6 +1661,7 @@ function saveBasicPrsnData(actTyp, shdSbmt)
             formData.append('shdSbmt', shdSbmt);
             formData.append('actyp', actTyp);
             formData.append('daPersonID', daPersonID);
+            formData.append('sbmtdPersonID', sbmtdPersonID);
             formData.append('daPrsnLocalID', daPrsnLocalID);
             formData.append('daTitle', daTitle);
 
@@ -1692,20 +1759,22 @@ function saveBasicPrsnData(actTyp, shdSbmt)
                                 '<span style="color:red;font-weight: bold;">Requires Approval </span>';
                         $("#mySelfStatusBtn").html(msg);
                     }
-                    setTimeout(function () {
-                        dialog.modal('hide');
-                        var dialog2 = bootbox.alert({
-                            title: 'Submit Records Change Request',
-                            size: 'large',
-                            message: data.sbmt_message,
-                            callback: function () {
-                                if (shdSbmt > 0)
-                                {
-                                    openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');
+                    if (shdSbmt > 0) {
+                        setTimeout(function () {
+                            dialog.modal('hide');
+                            var dialog2 = bootbox.alert({
+                                title: 'Submit Records Change Request',
+                                size: 'large',
+                                message: data.sbmt_message,
+                                callback: function () {
+                                    if (shdSbmt > 0)
+                                    {
+                                        openATab('#allmodules', 'grp=8&typ=1&pg=2&vtyp=0');
+                                    }
                                 }
-                            }
-                        });
-                    }, 800);
+                            });
+                        }, 800);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log(textStatus + " " + errorThrown);
@@ -1914,6 +1983,7 @@ function delAttchdDoc(rowIDAttrb)
 {
     var rndmNum = rowIDAttrb.split("_")[1];
     var srcForm = $("#allAdminsSrcForm").val() ? $("#allAdminsSrcForm").val() : '0';
+    var sbmtdPersonID = typeof $("#daPersonID").val() === 'undefined' ? -1 : $("#daPersonID").val();
     var pKeyID = -1;
     if (typeof $('#attchdDocsRow' + rndmNum + '_AttchdDocsID').val() === 'undefined')
     {
@@ -1958,7 +2028,8 @@ function delAttchdDoc(rowIDAttrb)
                                     q: 'DELETE',
                                     actyp: 15,
                                     attchmentID: pKeyID,
-                                    srcForm: srcForm
+                                    srcForm: srcForm,
+                                    sbmtdPersonID: sbmtdPersonID
                                 },
                                 success: function (result1) {
                                     setTimeout(function () {

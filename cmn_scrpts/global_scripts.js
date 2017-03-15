@@ -27,6 +27,25 @@ function isMyCssLoaded(url) {
     return false;
 }
 
+function isMobileNumValid(mobileNum) {
+    if (/^\+?[1-9]\d{4,14}$/.test(mobileNum))
+    {
+        return (true);
+    }
+    return (false);
+    /* var regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;*/
+}
+
+function isEmailValid(email) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+    {
+        return (true);
+    }
+    return (false);
+    /*var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+     return re.test(email);*/
+}
+
 function loadScript(url, callback) {
     var script = document.createElement("script");
     script.type = "text/javascript";

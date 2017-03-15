@@ -642,7 +642,7 @@ function updateWkfAppAction($actionID, $actionNm, $sqlStmnt, $appID, $exctbl, $w
 
 function deleteWkfAppAction($actionID, $actnNm = "") {
     $insSQL = "DELETE FROM wkf.wkf_apps_actions WHERE action_sql_id = " . $actionID;
-    $affctd1 += execUpdtInsSQL($insSQL, "Action Name:" . $actnNm);
+    $affctd1 = execUpdtInsSQL($insSQL, "Action Name:" . $actnNm);
     if ($affctd1 > 0) {
         $dsply = "Successfully Deleted the ff Records-";
         $dsply .= "<br/>$affctd1 App Action(s)!";
@@ -880,6 +880,31 @@ function routWkfMsg($msg_id, $frmID, $toID, $userID, $curStatus, $actnToPrfm, $h
             loc_db_escape_string($actnToPrfm) . "', $userID, '$dateStr', $hrchylvl, 
                 '" . loc_db_escape_string($actCmmnts) . "')";
     return execUpdtInsSQL($sqlStr);
+}
+
+function getEmlDetailsAftrActn($srcdoctyp, $srcdocid) {
+    $selSQL = "SELECT b.to_prsn_id, a.msg_hdr, a.msg_body, COALESCE((select z.action_comments
+        from wkf.wkf_actual_msgs_routng z WHERE z.msg_id=b.msg_id ORDER BY z.routing_id DESC LIMIT 1 OFFSET 0),'NONE'), b.msg_id  
+  FROM wkf.wkf_actual_msgs_hdr a, wkf.wkf_actual_msgs_routng b
+  WHERE a.msg_id=b.msg_id and a.src_doc_type='" . $srcdoctyp . "' 
+  and a.src_doc_id=" . $srcdocid . "   
+  and b.is_action_done='1' and b.action_comments!='' 
+  GROUP BY 1,2,3,4,5 
+  HAVING b.msg_id=(Select MAX(z.msg_id) from wkf.wkf_actual_msgs_hdr z WHERE z.src_doc_id=" . $srcdocid . " and z.src_doc_type='" . $srcdoctyp . "')
+     ORDER BY 1 DESC";
+    return executeSQLNoParams($selSQL);
+}
+
+function getEmlDetailsB4Actn($srcdoctyp, $srcdocid) {
+    $selSQL = "SELECT b.to_prsn_id, a.msg_hdr, a.msg_body, COALESCE((select z.action_comments
+        from wkf.wkf_actual_msgs_routng z WHERE z.msg_id=b.msg_id ORDER BY z.routing_id DESC LIMIT 1 OFFSET 0),'NONE'), b.msg_id  
+  FROM wkf.wkf_actual_msgs_hdr a, wkf.wkf_actual_msgs_routng b
+  WHERE a.msg_id=b.msg_id and a.src_doc_type='" . $srcdoctyp . "' 
+  and a.src_doc_id=" . $srcdocid . " 
+  GROUP BY 1,2,3,4,5 
+  HAVING b.msg_id=(Select MAX(z.msg_id) from wkf.wkf_actual_msgs_hdr z WHERE z.src_doc_id=" . $srcdocid . " and z.src_doc_type='" . $srcdoctyp . "')
+     ORDER BY 1 DESC";
+    return executeSQLNoParams($selSQL);
 }
 
 function updtWkfMsgRtng($rtngID, $usrPrsnID, $nwstatus, $nwAction, $userID) {
@@ -1918,6 +1943,10 @@ function isEmailValid($emailString, $lovID) {
     return $isEmailValid;
 }
 
+function isMobileNumValid($mobileNum) {
+    return preg_match("/^\+?[1-9]\d{4,14}$/", $mobileNum);
+}
+
 function createSysLovsPssblVals1($pssblVals, $lovID) {
     if (getPssblValID($pssblVals, $lovID) <= 0) {
         createPssblValsForLov1($lovID, $pssblVals, $pssblVals, "1", "");
@@ -2275,8 +2304,8 @@ function getShapes() {
     global $orgID;
     GLOBAL $ftp_base_db_fldr;
 
-    if ($orgID > 0) {        
-        $img_src = $pemDest."$orgID.png";
+    if ($orgID > 0) {
+        $img_src = $pemDest . "$orgID.png";
         $ftp_src = $ftp_base_db_fldr . "/Org/$orgID.png";
         if (file_exists($ftp_src)) {
             copy("$ftp_src", "$img_src");

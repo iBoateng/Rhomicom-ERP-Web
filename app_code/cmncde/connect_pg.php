@@ -17,7 +17,7 @@ $smplTokenWord = "eRRTRhbnsdGeneral Key for Rhomi|com Systems "
 $smplTokenWord1 = "xewe19fs58rte21This is a General Key for Rhomi|com Systems "
         . "Tech. !Ltd Web/Mobile Portal @7612364kjebdfjwegyr78236429orbjkasdbhi";
 $ModuleName = "";
-$database = "test_database";
+$database = "tst_db_community";
 $db_folder = "tst";
 $script_folder = "scripts7";
 $base_folder = "";
@@ -74,7 +74,7 @@ $breadCrmbBckclr = "
     background-image: linear-gradient(to bottom, #336578, #003245);
     filter: progid:dximagetransform.microsoft.gradient(startColorstr='#336578', endColorstr='#003245', GradientType=0);";
 
-$loginPgNotice = "<p style=\"font-size:12px;\">Rhomicom Head Quarters, Achimota-ABC, Accra-Ghana</p>";
+$loginPgNotice = "<p style=\"font-family: Tahoma;font-size:14px;\">Rhomicom Head Quarters, Achimota-ABC, Accra-Ghana</p>";
 $goBackButtonMsg = "Go Back to Rhomicom Website";
 $placeHolder1 = "Username or ID No.";
 $loginTitle = "LOGIN TO THE PARTNERSHIP PORTAL";

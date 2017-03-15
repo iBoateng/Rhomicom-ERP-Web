@@ -2438,15 +2438,6 @@ function updatePrsDataChangeReq($srcDocID, $nwvalue) {
 }
 
 function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrfrm = "Initiate", $srcDocID = -1, $srcDocType = "Personal Records Change") {
-//1. Get Msg Routing ID, Action To Perform
-//2. Determin what to do for Initiate,Open,Re-Assign,Reject,Request for Information,Respond, Approve
-//global $formArray;
-//$inptSlctdRtngs = isset($formArray['routingIDs']) ? cleanInputData($formArray['routingIDs']) : "";
-    /* $numargs = func_num_args();
-      $arg_list = func_get_args();
-      for ($i = 0; $i < $numargs; $i++) {
-      echo "Argument $i is: " . $arg_list[$i] . "\n";
-      } */
     global $app_url;
     global $admin_name;
     $userID = $_SESSION['USRID'];
@@ -2469,12 +2460,17 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
     $msg_id = -1;
     $appID = -1;
     $attchmnts = "";
-//Request Details
     $reqestDte = getFrmtdDB_Date_time();
 
     $srcdoctyp = $srcDocType;
     $srcdocid = $srcDocID;
-//echo $routingID . "" . $inptSlctdRtngs . "" . $actionToPrfrm . "" . $srcDocID;
+
+    $reportTitle = "Send Outstanding Bulk Messages";
+    $reportName = "Send Outstanding Bulk Messages";
+    $rptID = getRptID($reportName);
+    $prmID = getParamIDUseSQLRep("{:msg_batch_id}", $rptID);
+    $msgBatchID = -1;
+    //session_write_close();
     if ($routingID <= 0 && $inptSlctdRtngs == "") {
         if ($actionToPrfrm == "Initiate" && $srcDocID > 0) {
             $msg_id = getWkfMsgID();
@@ -2505,6 +2501,9 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
 //Get Hierarchy Members
             $result = getNextApprvrsInMnlHrchy($hrchyid, $curPrsnsLevel);
             $prsnsFnd = 0;
+            $lastPrsnID = "|";
+            $msgBatchID = getMsgBatchID();
+            $paramRepsNVals = $prmID . "~" . $msgBatchID . "|-190~HTML";
             while ($row = loc_db_fetch_array($result)) {
                 $toPrsnID = (float) $row[0];
                 $prsnsFnd++;
@@ -2513,6 +2512,34 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     $dsply = '<div style="text-align:center;font-weight:bold;font-size:18px;color:blue;position:relative;top:50%;transform:translateY(-50%);">CONGRATULATIONS!</br>Your request has been submitted successfully for Approval.</br>
                         A notification will be sent to you on approval of your request. Thank you!</div>';
                     $msg = $dsply;
+                    //Begin Email Sending Process                    
+                    $result1 = getEmlDetailsB4Actn($srcdoctyp, $srcdocid);
+                    while ($row1 = loc_db_fetch_array($result1)) {
+                        $frmID = $toPrsnID;
+                        if (strpos($lastPrsnID, "|" . $frmID . "|") !== FALSE) {
+                            $lastPrsnID .= $frmID . "|";
+                            continue;
+                        }
+                        $lastPrsnID .= $frmID . "|";
+                        $subject = $row1[1];
+                        $actSoFar = $row1[3];
+                        if ($actSoFar == "") {
+                            $actSoFar = "&nbsp;&nbsp;NONE";
+                        }
+                        $msgPart = "<span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ACTIONS TAKEN SO FAR:</span><br/>" . $actSoFar . "<br/> <span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ORIGINAL MESSAGE:</span><br/>&nbsp;&nbsp;" . $row1[2];
+                        $docType = $srcDocType;
+                        $to = getPrsnEmail($frmID);
+                        $nameto = getPrsnFullNm($frmID);
+                        if ($docType != "" && $docType != "Login") {
+                            $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
+                                    . "<br/><br/>"
+                                    . $msgPart .
+                                    "<br/><br/>Kindly <a href=\""
+                                    . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                            $errMsg = "";
+                            createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
+                        }
+                    }
                 }
             }
             if ($prsnsFnd <= 0) {
@@ -2520,7 +2547,7 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                 $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
             }
             //Update Request Status to In Process
-            updatePrsDataChangeReq($srcdocid, "Approval Initiated"); //In Process
+            updatePrsDataChangeReq($srcdocid, "Approval Initiated");
         } else {
             $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Generated";
             $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
@@ -2582,18 +2609,11 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                     $affctd3 += routWkfMsg($msg_id, $fromPrsnID, $orgnlPrsnID, $userID, "Initiated", "Acknowledge;Open", 1, $msgbodyAddOn);
                     $affctd4 += updatePrsDataChangeReq($srcdocid, "Rejected");
 
-                    //Begin Email Sending Process
-                    $selSQL = "SELECT b.to_prsn_id, a.msg_hdr, a.msg_body, COALESCE((select z.action_comments
-        from wkf.wkf_actual_msgs_routng z WHERE z.msg_id=b.msg_id ORDER BY z.routing_id DESC LIMIT 1 OFFSET 0),'NONE'), b.msg_id  
-  FROM wkf.wkf_actual_msgs_hdr a, wkf.wkf_actual_msgs_routng b
-  WHERE a.msg_id=b.msg_id and a.src_doc_type='" . $srcdoctyp . "' 
-  and a.src_doc_id=" . $srcdocid . "   
-  and b.is_action_done='1' and b.action_comments!='' 
-  GROUP BY 1,2,3,4,5 
-  HAVING b.msg_id=(Select MAX(z.msg_id) from wkf.wkf_actual_msgs_hdr z WHERE z.src_doc_id=" . $srcdocid . " and z.src_doc_type='" . $srcdoctyp . "')
-     ORDER BY 1 DESC";
-                    $result = executeSQLNoParams($selSQL);
+                    //Begin Email Sending Process                    
+                    $result = getEmlDetailsAftrActn($srcdoctyp, $srcdocid);
                     $lastPrsnID = "|";
+                    $msgBatchID = getMsgBatchID();
+                    $paramRepsNVals = $prmID . "~" . $msgBatchID . "|-190~HTML";
                     while ($row = loc_db_fetch_array($result)) {
                         $frmID = $row[0];
                         if (strpos($lastPrsnID, "|" . $frmID . "|") !== FALSE || $frmID == $fromPrsnID) {
@@ -2617,7 +2637,8 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                                     "<br/><br/>Kindly <a href=\""
                                     . $app_url . "\">Login via this Link</a> to <strong>VIEW and ACT</strong> on it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
                             $errMsg = "";
-                            sendEMail(trim(str_replace(";", ",", $to), ","), $nameto, $subject, $message, $errMsg, "", "", "", $admin_name);
+                            createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
+                            //sendEMail(trim(str_replace(";", ",", $to), ","), $nameto, $subject, $message, $errMsg, "", "", "", $admin_name);
                         }
                     }
                     if ($affctd > 0) {
@@ -2771,6 +2792,41 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
                         $dsply .= trnsfrRecsFrmSelfToPrs($orgnlPrsnID);
                     }
                     $affctd4 += updatePrsDataChangeReq($srcdocid, $newStatus);
+                    if ($nxtPrsnID <= 0) {
+                        //Begin Email Sending Process                    
+                        $result = getEmlDetailsAftrActn($srcdoctyp, $srcdocid);
+                        $lastPrsnID = "|";
+                        $msgBatchID = getMsgBatchID();
+                        $paramRepsNVals = $prmID . "~" . $msgBatchID . "|-190~HTML";
+                        while ($row = loc_db_fetch_array($result)) {
+                            $frmID = $orgnlPrsnID;
+                            if (strpos($lastPrsnID, "|" . $frmID . "|") !== FALSE) {
+                                $lastPrsnID .= $frmID . "|";
+                                continue;
+                            }
+                            $lastPrsnID .= $frmID . "|";
+                            $subject = $row[1];
+                            $actSoFar = $row[3];
+                            if ($actSoFar == "") {
+                                $actSoFar = "&nbsp;&nbsp;NONE";
+                            }
+                            $msgPart = "<span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ACTIONS TAKEN SO FAR:</span><br/>" . $actSoFar . "<br/> <span style=\"font-weight:bold;text-decoration:underline;color:blue;\">ORIGINAL MESSAGE:</span><br/>&nbsp;&nbsp;" . $row[2];
+                            $docType = $srcDocType;
+                            $to = getPrsnEmail($frmID);
+                            $nameto = getPrsnFullNm($frmID);
+                            if ($docType != "" && $docType != "Login") {
+                                $message = "Dear $nameto, <br/><br/>A notification has been sent to your account in the Portal as follows:"
+                                        . "<br/><br/>"
+                                        . $msgPart .
+                                        "<br/><br/>Kindly <a href=\""
+                                        . $app_url . "\">Login via this Link</a> to <strong>VIEW</strong> it!<br/>Thank you for your cooperation!<br/><br/>Best Regards,<br/>" . $admin_name;
+                                $errMsg = "";
+                                createMessageQueue($msgBatchID, trim(str_replace(";", ",", $to), ";, "), "", "", $message, $subject, "", "Email");
+                                //sendEMail(trim(str_replace(";", ",", $to), ","), $nameto, $subject, $message, $errMsg, "", "", "", $admin_name);
+                            }
+                            break;
+                        }
+                    }
                     if ($affctd > 0) {
                         $dsply .= "<br/>Status of $affctd Workflow Document(s) successfully updated to $newStatus!";
                         $dsply .= "<br/>$affctd1 Workflow Document(s) Message Body Successfully Updated!";
@@ -2788,6 +2844,9 @@ function dataChngReqMsgActns($routingID = -1, $inptSlctdRtngs = "", $actionToPrf
             $dsply .= "<br/>|ERROR|-Update Failed! No Workflow Document(s) Selected";
             $msg = "<p style = \"text-align:left; color:#ff0000;\"><span style=\"font-style:italic;font-weight:bold;\">$dsply</span></p>";
         }
+    }
+    if ($msgBatchID > 0) {
+        generateReportRun($rptID, $paramRepsNVals, -1);
     }
     return $msg;
 }

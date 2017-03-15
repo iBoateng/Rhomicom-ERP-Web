@@ -134,8 +134,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
                     $rndm = getRandomNum(10001, 9999999);
                     $dteNm = date('dMY_His');
-                    $nwFileNm = $fldrPrfx . "dwnlds/" . $rndm . "_ReportsExport_" . $dteNm . ".csv";
-                    $dwnldUrl = $app_url . "dwnlds/" . $rndm . "_ReportsExport_" . $dteNm . ".csv";
+                    $nwFileNm = $fldrPrfx . "dwnlds/tmp/RptsExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/tmp/RptsExprt_" . $dteNm . "_" . $rndm . ".csv";
                     $opndfile = fopen($nwFileNm, "w");
                     fputcsv($opndfile, $hdngs);
                     if ($limit_size <= 0) {
@@ -164,7 +164,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z + 1) . " out of " . $total . " Reports/Process(es) exported.</span>";
                             $arr_content['msgcount'] = $total;
                         } else {
-                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\">Exporting Reports/Processes...Please Wait..." . ($z + 1) . " out of " . $total . " Reports/Process(es) exported.</span>";
+                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><br/>Exporting Reports/Processes...Please Wait..." . ($z + 1) . " out of " . $total . " Reports/Process(es) exported.</span>";
                         }
                         file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_rptsexprt_progress.rho", json_encode($arr_content));
                         $z++;
@@ -309,6 +309,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $paramName = trim(cleanInputData1($crntRow[2]));
                             $sqlRep = cleanInputData1($crntRow[3]);
                             $dfltVal = cleanInputData1($crntRow[4]);
+                            if ($dfltVal != "") {
+                                if (substr($dfltVal, 0, 1) == "'" && substr_count($dfltVal, "'") == 1) {
+                                    $dfltVal = substr($dfltVal, 1);
+                                }
+                            }
                             $prmLovNm = cleanInputData1($crntRow[5]);
                             $prmLovID = getLovID($prmLovNm);
                             $isValRqrd1 = trim(cleanInputData1($crntRow[6]));
@@ -387,8 +392,8 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     }
                     $rndm = getRandomNum(10001, 9999999);
                     $dteNm = date('dMY_His');
-                    $nwFileNm = $fldrPrfx . "dwnlds/" . $rndm . "_ParamsExport_" . $dteNm . ".csv";
-                    $dwnldUrl = $app_url . "dwnlds/" . $rndm . "_ParamsExport_" . $dteNm . ".csv";
+                    $nwFileNm = $fldrPrfx . "dwnlds/tmp/PrmsExprt_" . $dteNm . "_" . $rndm . ".csv";
+                    $dwnldUrl = $app_url . "dwnlds/tmp/PrmsExprt_" . $dteNm . "_" . $rndm . ".csv";
                     $opndfile = fopen($nwFileNm, "w");
                     fputcsv($opndfile, $hdngs);
                     if ($limit_size <= 0) {
@@ -407,7 +412,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     $total = loc_db_num_rows($result);
                     $fieldCntr = loc_db_num_fields($result);
                     while ($row = loc_db_fetch_array($result)) {
-                        $crntRw = array("" . ($z + 1), $row[8], $row[1], $row[2], $row[3], $row[9], $row[4], $row[6], $row[7]);
+                        $crntRw = array("" . ($z + 1), $row[8], $row[1], $row[2], ((substr_count($row[3], "'") <= 0) ? "'" . $row[3] : $row[3]), $row[9], $row[4], $row[6], $row[7]);
                         fputcsv($opndfile, $crntRw);
                         $percent = round((($z + 1) / $total) * 100, 2);
                         $arr_content['percent'] = $percent;
@@ -416,7 +421,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                             $arr_content['message'] = "<span style=\"color:green;\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></span><span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"> 100% Completed!..." . ($z + 1) . " out of " . $total . " Parameter(s) exported.</span>";
                             $arr_content['msgcount'] = $total;
                         } else {
-                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\">Exporting Parameter(s)...Please Wait..." . ($z + 1) . " out of " . $total . " Parameter(s) exported.</span>";
+                            $arr_content['message'] = "<span style=\"color:blue;font-size:12px;text-align: center;margin-top:0px;\"><br/>Exporting Parameter(s)...Please Wait..." . ($z + 1) . " out of " . $total . " Parameter(s) exported.</span>";
                         }
                         file_put_contents($ftp_base_db_fldr . "/bin/log_files/$lgn_num" . "_prmsexprt_progress.rho", json_encode($arr_content));
                         $z++;

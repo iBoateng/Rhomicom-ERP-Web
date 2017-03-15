@@ -1,17 +1,4 @@
 <?php
-/*
-  $rcrdExst = prsn_Record_Exist($pkID);
-  $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-  if ($rcrdExst == true) {
-  $chngRqstExst = prsn_ChngRqst_Exist($pkID);
-  if ($chngRqstExst > 0) {
-  $result = get_SelfPrsnDet($pkID);
-  } else {
-  $result = get_PrsnDet($pkID);
-  }
-  } else {
-  $result = get_PrsnDet($pkID);
-  } */
 if (array_key_exists('lgn_num', get_defined_vars())) {
     $pageNo = isset($_POST['pageNo']) ? cleanInputData($_POST['pageNo']) : 1;
     $lmtSze = isset($_POST['limitSze']) ? cleanInputData($_POST['limitSze']) : 10;
@@ -20,12 +7,14 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
     $canAddPrsn = test_prmssns($dfltPrvldgs[7], $mdlNm);
     $canEdtPrsn = test_prmssns($dfltPrvldgs[8], $mdlNm);
     $canDelPrsn = test_prmssns($dfltPrvldgs[9], $mdlNm);
+    $canMngMyFirm = test_prmssns($dfltPrvldgs[21], $mdlNm);
     $canview = test_prmssns($dfltPrvldgs[0], $mdlNm);
     $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
     $addOrEdit = isset($_POST['addOrEdit']) ? cleanInputData($_POST['addOrEdit']) : 'VIEW';
     $prsnid = $_SESSION['PRSN_ID'];
     $orgID = $_SESSION['ORG_ID'];
     $lnkdFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $prsnid);
+    $sbmtdPrsnFirmID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_org_id", $sbmtdPersonID);
     $lnkdFirmSiteID = getGnrlRecNm("prs.prsn_names_nos", "person_id", "lnkd_firm_site_id", $prsnid);
     if (($canAddPrsn === true && $addOrEdit == "ADD") || ($canEdtPrsn === true && $addOrEdit == "EDIT") || ($canview === true && $addOrEdit == "VIEW")) {
         $dsplyMode = $addOrEdit;
@@ -45,7 +34,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     insert_ChangeRequest($prsnid);
                 }
             } else {
-                echo deleteNtnlID($ntnlIDpKey);
+                if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo deleteNtnlID($ntnlIDpKey);
+                } else {
+                    restricted();
+                }
             }
         } else if ($actyp == 11) {
             $educBkgrdPkeyID = isset($_POST['educBkgrdPkeyID']) ? cleanInputData($_POST['educBkgrdPkeyID']) : -1;
@@ -58,7 +51,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     insert_ChangeRequest($prsnid);
                 }
             } else {
-                echo deleteEduc($educBkgrdPkeyID);
+                if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo deleteEduc($educBkgrdPkeyID);
+                } else {
+                    restricted();
+                }
             }
         } else if ($actyp == 12) {
             $workBkgrdPkeyID = isset($_POST['workBkgrdPkeyID']) ? cleanInputData($_POST['workBkgrdPkeyID']) : -1;
@@ -71,7 +68,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     insert_ChangeRequest($prsnid);
                 }
             } else {
-                echo deleteWork($workBkgrdPkeyID);
+                if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo deleteWork($workBkgrdPkeyID);
+                } else {
+                    restricted();
+                }
             }
         } else if ($actyp == 13) {
             $skillsPkeyID = isset($_POST['skillsPkeyID']) ? cleanInputData($_POST['skillsPkeyID']) : -1;
@@ -84,7 +85,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     insert_ChangeRequest($prsnid);
                 }
             } else {
-                echo deleteSkill($skillsPkeyID);
+                if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo deleteSkill($skillsPkeyID);
+                } else {
+                    restricted();
+                }
             }
         } else if ($actyp == 15) {
             /* Delete Attachment */
@@ -98,7 +103,11 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                     insert_ChangeRequest($prsnid);
                 }
             } else {
-                echo deletePrsnDoc($attchmentID);
+                if ($canEdtPrsn || ($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo deletePrsnDoc($attchmentID);
+                } else {
+                    restricted();
+                }
             }
         } else if ($actyp == 40) {
             $daChngRqstID = isset($_POST['daChngRqstID']) ? cleanInputData($_POST['daChngRqstID']) : -1;
@@ -111,6 +120,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $nwImgLoc = "";
             $orgid = $_SESSION['ORG_ID'];
             $inptDaPersonID = isset($_POST['daPersonID']) ? cleanInputData($_POST['daPersonID']) : -1;
+            if ($inptDaPersonID != $prsnid) {
+                $arr_content['percent'] = 100;
+                $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Data Supplied is either Invalid or Incomplete!</span>";
+                echo json_encode($arr_content);
+                exit();
+            }
             $daPrsnLocalID = isset($_POST['daPrsnLocalID']) ? cleanInputData($_POST['daPrsnLocalID']) : "";
             $daTitle = isset($_POST['daTitle']) ? cleanInputData($_POST['daTitle']) : "";
             $daFirstName = isset($_POST['daFirstName']) ? cleanInputData($_POST['daFirstName']) : "";
@@ -124,10 +139,38 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $daCompanyID = getGnrlRecID2("scm.scm_cstmr_suplr", "cust_sup_name", "cust_sup_id", $daCompany);
             $daCompanyLoc = isset($_POST['daCompanyLoc']) ? cleanInputData($_POST['daCompanyLoc']) : "";
             $daCompanyLocID = getGnrlRecIDExtr("scm.scm_cstmr_suplr_sites", "site_name", "cust_supplier_id", "cust_sup_site_id", $daCompanyLoc, $daCompanyID);
-
             $daEmail = isset($_POST['daEmail']) ? cleanInputData($_POST['daEmail']) : "";
-
+            if ($daEmail != "") {
+                $invldMailLovID = getLovID("Email Addresses to Ignore");
+                $daEmail = str_replace(" ", ",", str_replace(", ", ",", str_replace(":", ",", str_replace(";", ",", $daEmail))));
+                $tmpMails = explode(",", $daEmail);
+                $anodaEmail = "";
+                foreach ($tmpMails as $tmpMail) {
+                    if (isEmailValid($tmpMail, $invldMailLovID)) {
+                        $anodaEmail .= $tmpMail . ", ";
+                    }
+                }
+                if ($anodaEmail != "") {
+                    $daEmail = trim($anodaEmail, ", ");
+                }
+            }
             $daMobileNos = isset($_POST['daMobileNos']) ? cleanInputData($_POST['daMobileNos']) : "";
+            if ($daMobileNos != "") {
+                $daMobileNos = str_replace(" ", ",", str_replace(", ", ",", str_replace(":", ",", str_replace(";", ",", $daMobileNos))));
+                $tmpMobileNos = explode(",", $daMobileNos);
+                $anodaMobileNos = "";
+                foreach ($tmpMobileNos as $tmpMobileNo) {
+                    if (substr($tmpMobileNo, 0, 1) === '0') {
+                        $tmpMobileNo = "+233" . substr($tmpMobileNo, 1);
+                    }
+                    if (isMobileNumValid($tmpMobileNo)) {
+                        $anodaMobileNos .= $tmpMobileNo . ", ";
+                    }
+                }
+                if ($anodaMobileNos != "") {
+                    $daMobileNos = trim($anodaMobileNos, ", ");
+                }
+            }
             $daTelNos = isset($_POST['daTelNos']) ? cleanInputData($_POST['daTelNos']) : "";
             $daFaxNo = isset($_POST['daFaxNo']) ? cleanInputData($_POST['daFaxNo']) : "";
 
@@ -281,6 +324,12 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $orgid = $_SESSION['ORG_ID'];
             $nwImgLoc = "";
             $inptDaPersonID = isset($_POST['daPersonID']) ? cleanInputData($_POST['daPersonID']) : -1;
+            if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                $arr_content['percent'] = 100;
+                $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Permission Denied!</span>";
+                echo json_encode($arr_content);
+                exit();
+            }
             $daPrsnLocalID = isset($_POST['daPrsnLocalID']) ? cleanInputData($_POST['daPrsnLocalID']) : "";
             $daTitle = isset($_POST['daTitle']) ? cleanInputData($_POST['daTitle']) : "";
             $daFirstName = isset($_POST['daFirstName']) ? cleanInputData($_POST['daFirstName']) : "";
@@ -315,8 +364,37 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 $daCompanyLocID = getGnrlRecIDExtr("scm.scm_cstmr_suplr_sites", "site_name", "cust_supplier_id", "cust_sup_site_id", $daCompanyLoc, $daCompanyID);
             }
             $daEmail = isset($_POST['daEmail']) ? cleanInputData($_POST['daEmail']) : "";
-
+            if ($daEmail != "") {
+                $invldMailLovID = getLovID("Email Addresses to Ignore");
+                $daEmail = str_replace(" ", ",", str_replace(", ", ",", str_replace(":", ",", str_replace(";", ",", $daEmail))));
+                $tmpMails = explode(",", $daEmail);
+                $anodaEmail = "";
+                foreach ($tmpMails as $tmpMail) {
+                    if (isEmailValid($tmpMail, $invldMailLovID)) {
+                        $anodaEmail .= $tmpMail . ", ";
+                    }
+                }
+                if ($anodaEmail != "") {
+                    $daEmail = trim($anodaEmail, ", ");
+                }
+            }
             $daMobileNos = isset($_POST['daMobileNos']) ? cleanInputData($_POST['daMobileNos']) : "";
+            if ($daMobileNos != "") {
+                $daMobileNos = str_replace(" ", ",", str_replace(", ", ",", str_replace(":", ",", str_replace(";", ",", $daMobileNos))));
+                $tmpMobileNos = explode(",", $daMobileNos);
+                $anodaMobileNos = "";
+                foreach ($tmpMobileNos as $tmpMobileNo) {
+                    if (substr($tmpMobileNo, 0, 1) === '0') {
+                        $tmpMobileNo = "+233" . substr($tmpMobileNo, 1);
+                    }
+                    if (isMobileNumValid($tmpMobileNo)) {
+                        $anodaMobileNos .= $tmpMobileNo . ", ";
+                    }
+                }
+                if ($anodaMobileNos != "") {
+                    $daMobileNos = trim($anodaMobileNos, ", ");
+                }
+            }
             $daTelNos = isset($_POST['daTelNos']) ? cleanInputData($_POST['daTelNos']) : "";
             $daFaxNo = isset($_POST['daFaxNo']) ? cleanInputData($_POST['daFaxNo']) : "";
 
@@ -466,6 +544,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                 exit();
             }
         } else if ($actyp == 3) {
+
             $ntnlIDpKey = isset($_POST['ntnlIDpKey']) ? cleanInputData($_POST['ntnlIDpKey']) : -1;
             $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
             $ntnlIDPersonID = isset($_POST['ntnlIDPersonID']) ? cleanInputData($_POST['ntnlIDPersonID']) : -1;
@@ -477,6 +556,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $ntnlIDCardsOtherInfo = isset($_POST['ntnlIDCardsOtherInfo']) ? cleanInputData($_POST['ntnlIDCardsOtherInfo']) : "";
             $cntrRndm = getRandomNum(5000, 9999);
             $affctRws = 0;
+            if ($srcForm <= 0) {
+                if ($sbmtdPersonID != $prsnid) {
+                    echo restricted();
+                    exit();
+                }
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
             if ($ntnlIDPersonID > 0 && $ntnlIDCardsCountry != "" && $ntnlIDCardsIDTyp != "" && $ntnlIDCardsIDNo != "" && ($srcForm > 0 || $ntnlIDPersonID == $prsnid)) {
                 if (($srcForm <= 0 && $ntnlIDPersonID == $prsnid) || ($srcForm > 0)) {
                     if ($srcForm <= 0) {
@@ -566,6 +656,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $educBkgrdPkeyID = isset($_POST['educBkgrdPkeyID']) ? cleanInputData($_POST['educBkgrdPkeyID']) : -1;
             $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
             $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                if ($sbmtdPersonID != $prsnid) {
+                    echo restricted();
+                    exit();
+                }
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
             $educBkgrdCourseName = isset($_POST['educBkgrdCourseName']) ? cleanInputData($_POST['educBkgrdCourseName']) : "";
             $educBkgrdSchool = isset($_POST['educBkgrdSchool']) ? cleanInputData($_POST['educBkgrdSchool']) : "";
             $educBkgrdLoc = isset($_POST['educBkgrdLoc']) ? cleanInputData($_POST['educBkgrdLoc']) : "";
@@ -643,6 +744,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $workBkgrdPkeyID = isset($_POST['workBkgrdPkeyID']) ? cleanInputData($_POST['workBkgrdPkeyID']) : -1;
             $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
             $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                if ($sbmtdPersonID != $prsnid) {
+                    echo restricted();
+                    exit();
+                }
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
             $workBkgrdJobName = isset($_POST['workBkgrdJobName']) ? cleanInputData($_POST['workBkgrdJobName']) : "";
             $workBkgrdInstitution = isset($_POST['workBkgrdInstitution']) ? cleanInputData($_POST['workBkgrdInstitution']) : "";
             $workBkgrdLoc = isset($_POST['workBkgrdLoc']) ? cleanInputData($_POST['workBkgrdLoc']) : "";
@@ -718,6 +830,17 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $skillsPkeyID = isset($_POST['skillsPkeyID']) ? cleanInputData($_POST['skillsPkeyID']) : -1;
             $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
             $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                if ($sbmtdPersonID != $prsnid) {
+                    echo restricted();
+                    exit();
+                }
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    echo restricted();
+                    exit();
+                }
+            }
             $skillsLanguages = isset($_POST['skillsLanguages']) ? cleanInputData($_POST['skillsLanguages']) : "";
             $skillsHobbies = isset($_POST['skillsHobbies']) ? cleanInputData($_POST['skillsHobbies']) : "";
             $skillsInterests = isset($_POST['skillsInterests']) ? cleanInputData($_POST['skillsInterests']) : "";
@@ -797,6 +920,21 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             $attchmentID = isset($_POST['attchmentID']) ? cleanInputData($_POST['attchmentID']) : -1;
             $srcForm = isset($_POST['srcForm']) ? cleanInputData($_POST['srcForm']) : -1;
             $sbmtdPersonID = isset($_POST['sbmtdPersonID']) ? cleanInputData($_POST['sbmtdPersonID']) : -1;
+            if ($srcForm <= 0) {
+                if ($sbmtdPersonID != $prsnid) {
+                    $arr_content['percent'] = 100;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Permission Denied!</span>";
+                    echo json_encode($arr_content);
+                    exit();
+                }
+            } else {
+                if (!($canEdtPrsn || $canAddPrsn) && !($canMngMyFirm && $lnkdFirmID == $sbmtdPrsnFirmID && $lnkdFirmID > 0)) {
+                    $arr_content['percent'] = 100;
+                    $arr_content['message'] = "<span style=\"color:red;\"><i class=\"fa fa-exclamation-circle\" aria-hidden=\"true\"></i>Permission Denied!</span>";
+                    echo json_encode($arr_content);
+                    exit();
+                }
+            }
             $docCtrgrName = isset($_POST['docCtrgrName']) ? cleanInputData($_POST['docCtrgrName']) : "";
             $pkID = -1;
             $nwImgLoc = "";

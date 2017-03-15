@@ -1241,7 +1241,6 @@ function loadMdlsNthrRolesNLovs() {
     loadHotlMdl();
     loadMcfMdl();
     loadSelfMdl();
-    //loadPSBMdl();
     loadProjsMdl();
     loadEvoteMdl();
     loadELibraryMdl();
@@ -1374,42 +1373,6 @@ function createWkfRqrdLOVs() {
         }
     }
 
-    //Clinic App
-    $appID = getAppID('Clinical Appointments', 'Clinic/Hospital');
-    //$prgmID = getGnrlRecID2("rpt.rpt_prcss_rnnrs", "rnnr_name", "prcss_rnnr_id", "REQUESTS LISTENER PROGRAM");
-    if ($appID <= 0) {
-        createWkfApp('Clinical Appointments', 'Clinic/Hospital', 'Messages related to Clinic/Hospital Appointments');
-        $appID = getAppID('Clinical Appointments', 'Clinic/Hospital');
-    } else {
-        updateWkfApp($appID, 'Clinical Appointments', 'Clinic/Hospital', 'Messages related to Clinic/Hospital Appointments');
-    }
-
-    $actionNm = array("Open", "Reject", "Request for Information", "Close", "Respond", "Acknowledge");
-    $desc = array("User can Open the Working Document to work on it",
-        "User can Reject i.e. Refuse to work on the Document Assigning a Reason",
-        "User can Request for additional Information on the Document before working on it",
-        "User can close a working document to indicate all work on it has been done!",
-        "User can Respond to an Information Request Message",
-        "User acknowledges receipt of the Message");
-    $sqlStmnt = array("", "", "", "", "", "");
-    $exctbl = array("", "", "", "", "", "");
-    $webURL = array("index1.php?ajx=1&grp=14&typ=1&pg=2&q=Clinic/Hospital&vwtyp=0&actyp=0&wkfRtngID={:wkfRtngID}",
-        "ajx=1&grp=14&typ=1&pg=2&q=Clinic/Hospital&vwtyp=115&actyp=0&slctdRtngID={:wkfRtngID}",
-        "ajx=1&grp=14&typ=1&pg=2&q=Clinic/Hospital&vwtyp=117&actyp=0&slctdRtngID={:wkfRtngID}",
-        "index.php",
-        "index.php",
-        "index.php");
-    $isdiag = array("0", "1", "1", "1", "1", "1");
-    $isadmnonly = array("0", "0", "0", "0", "0", "0", "0");
-    for ($i = 0; $i < count($actionNm); $i++) {
-        $appActionID = getGnrlRecIDExtr("wkf.wkf_apps_actions", "action_performed_nm", "app_id", "action_sql_id", $actionNm[$i], $appID);
-        if ($appActionID <= 0) {
-            createWkfAppAction($actionNm[$i], $sqlStmnt[$i], $appID, $exctbl[$i], $webURL[$i], $isdiag[$i], $desc[$i], $isadmnonly[$i]);
-        } else {
-            updateWkfAppAction($appActionID, $actionNm[$i], $sqlStmnt[$i], $appID, $exctbl[$i], $webURL[$i], $isdiag[$i], $desc[$i], $isadmnonly[$i]);
-        }
-    }
-
     //Personal Records Change
     $appID = getAppID('Personal Records Change', 'Basic Person Data');
     //$prgmID = getGnrlRecID2("rpt.rpt_prcss_rnnrs", "rnnr_name", "prcss_rnnr_id", "REQUESTS LISTENER PROGRAM");
@@ -1447,42 +1410,6 @@ function createWkfRqrdLOVs() {
         }
     }
 
-    //Payment System Banking
-    $appID = getAppID('PSB Forms Submission', 'Payment Systems Banking');
-    //$prgmID = getGnrlRecID2("rpt.rpt_prcss_rnnrs", "rnnr_name", "prcss_rnnr_id", "REQUESTS LISTENER PROGRAM");
-    if ($appID <= 0) {
-        createWkfApp('PSB Forms Submission', 'Payment Systems Banking', 'Messages related to PSB Forms Submitted');
-        $appID = getAppID('PSB Forms Submission', 'Payment Systems Banking');
-    } else {
-        updateWkfApp($appID, 'PSB Forms Submission', 'Payment Systems Banking', 'Messages related to PSB Forms Submitted');
-    }
-
-    $actionNm = array("Open", "Reject", "Request for Information", "Respond", "Acknowledge", "Approve");
-    $desc = array(
-        "User can Open the Working Document to work on it",
-        "User can Reject i.e. Refuse to work on the Document Assigning a Reason",
-        "User can Request for additional Information on the Document before working on it",
-        "User can Respond to an Information Request Message",
-        "User acknowledges receipt of the Message",
-        "User approves submitted request");
-    $sqlStmnt = array("", "", "", "", "", "");
-    $exctbl = array("", "", "", "", "", "");
-    $webURL = array("grp=20&typ=1&q=SUBMIT&RoutingID={:wkfRtngID}&actyp={:wkfAction}",
-        "grp=20&typ=1&q=SUBMIT&RoutingID={:wkfRtngID}&actyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
-        "grp=20&typ=1&q=SUBMIT&RoutingID={:wkfRtngID}&actyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
-        "grp=20&typ=1&q=SUBMIT&RoutingID={:wkfRtngID}&actyp={:wkfAction}&actReason={:wkfActReason}&toPrsLocID={:wkfToPrsLocID}",
-        "grp=20&typ=1&q=SUBMIT&RoutingID={:wkfRtngID}&actyp={:wkfAction}",
-        "grp=20&typ=1&q=SUBMIT&RoutingID={:wkfRtngID}&actyp={:wkfAction}");
-    $isdiag = array("0", "1", "1", "1", "1", "1");
-    $isadmnonly = array("0", "0", "0", "0", "0", "0");
-    for ($i = 0; $i < count($actionNm); $i++) {
-        $appActionID = getGnrlRecIDExtr("wkf.wkf_apps_actions", "action_performed_nm", "app_id", "action_sql_id", $actionNm[$i], $appID);
-        if ($appActionID <= 0) {
-            createWkfAppAction($actionNm[$i], $sqlStmnt[$i], $appID, $exctbl[$i], $webURL[$i], $isdiag[$i], $desc[$i], $isadmnonly[$i]);
-        } else {
-            updateWkfAppAction($appActionID, $actionNm[$i], $sqlStmnt[$i], $appID, $exctbl[$i], $webURL[$i], $isdiag[$i], $desc[$i], $isadmnonly[$i]);
-        }
-    }
 }
 
 function loadAlrtMdl() {

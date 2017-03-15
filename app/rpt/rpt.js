@@ -1391,7 +1391,7 @@ function exprtRpts()
                         $button.disable();
                         $button.spin();
                         dialogItself.setClosable(false);
-                        document.getElementById("msgAreaExprt").innerHTML = "<img style=\"width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><span style=\"color:blue;font-size:11px;text-align: center;margin-top:0px;\">Working on Export...Please Wait...</span>";
+                        document.getElementById("msgAreaExprt").innerHTML = "<img style=\"width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><br/><span style=\"color:blue;font-size:11px;text-align: left;margin-top:0px;\">Working on Export...Please Wait...</span>";
                         getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");
@@ -2608,7 +2608,7 @@ function exprtRptParams()
                         $button.disable();
                         $button.spin();
                         dialogItself.setClosable(false);
-                        document.getElementById("msgAreaExprt").innerHTML = "<img style=\"width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><span style=\"color:blue;font-size:11px;text-align: center;margin-top:0px;\">Working on Export...Please Wait...</span>";
+                        document.getElementById("msgAreaExprt").innerHTML = "<img style=\"width:165px;height:20px;display:inline;float:left;margin-left:3px;margin-right:3px;margin-top:-2px;clear: left;\" src='cmn_images/ajax-loader2.gif'/><br/><span style=\"color:blue;font-size:11px;text-align: left;margin-top:0px;\">Working on Export...Please Wait...</span>";
                         getMsgAsyncSilent('grp=1&typ=11&q=Check Session', function () {
                             $body = $("body");
                             $body.removeClass("mdlloading");

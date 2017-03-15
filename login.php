@@ -260,13 +260,13 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
                         <div class="col-md-4 text-center" style="">
                             <div class="container" style="padding:25px;margin-bottom: 10px;background-color: rgba(0,0,0,0.32);min-height: 200px;">
                                 <h1>About Portal</h1>
-                                <div style="font-family: Tahoma;font-size:12px;"><?php echo $abt_portal; ?></div>
+                                <div style="font-family: Tahoma;font-size:14px;"><?php echo $abt_portal; ?></div>
                             </div>
                         </div>                                                
                         <div class="col-md-4 text-center" style="">
                             <div class="container" style="padding:25px;margin-bottom: 10px;background-color: rgba(0,0,0,0.32);min-height: 200px;">
                                 <h1>Instructions</h1>
-                                <div style="text-align: left;font-family: Tahoma;font-size:12px;padding-left: 30px;"><?php echo $instructions; ?></div>
+                                <div style="text-align: left;font-family: Tahoma;font-size:14px;padding-left: 30px;"><?php echo $instructions; ?></div>
                             </div>
                         </div>
                         <div class="col-md-4 text-center" style="">

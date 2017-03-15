@@ -13,7 +13,7 @@ if (array_key_exists('lgn_num', get_defined_vars())) {
             if ($actyp == 1) {
                 $pKeyID = isset($_POST['pKeyID']) ? cleanInputData($_POST['pKeyID']) : -1;
                 $appNm = isset($_POST['appNm']) ? cleanInputData($_POST['appNm']) : "";
-                if ($PKeyID > 0) {
+                if ($pKeyID > 0) {
                     echo deleteWkfApp($pKeyID, $appNm);
                 }
             } else if ($actyp == 2) {
